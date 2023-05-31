@@ -8,7 +8,6 @@ const navigation = [
   { name: "Blog", href: "/blogs" },
   { name: "Forum", href: "/chat" },
   { name: "dashboard", href: "/dashboard" },
-  { name: "Company", href: "#" },
 ];
 
 export default function Navigation() {

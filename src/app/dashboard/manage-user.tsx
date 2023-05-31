@@ -4,7 +4,7 @@ import Logged from "../../components/layouts/Logged";
 import Image from "next/image";
 import axios from "axios";
 import Modal from "../../components/user/Modal";
-import { getData,deleteData } from "../../lib/fetch";
+import { getData,deleteData } from "../../utils/fetch";
 
 
 const apihost = process.env.NEXT_PUBLIC_API_HOST;

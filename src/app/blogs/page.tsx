@@ -4,7 +4,7 @@ import Navigation from "@/components/header/Navigation";
 import axios from "axios";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { getData } from "@/lib/fetch";
+import { getData } from "@/utils/fetch";
 
 interface Post {
   id: string;
@@ -16,7 +16,8 @@ const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const apihost = process.env.NEXT_PUBLIC_API_HOST;
   async function getPosts() {
-     const response = await getData(apihost+"/api/v1/post")
+     const response = await getData("/api/v1/posts")
+     setposts(response.data)
   }
   useEffect(() => {
     getPosts();

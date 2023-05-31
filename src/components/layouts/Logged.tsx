@@ -10,7 +10,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { getData } from "../../lib/fetch";
+import { getData } from "../../utils/fetch";
 
 interface Propdata {
   children: React.ReactNode;

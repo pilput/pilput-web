@@ -11,7 +11,7 @@ interface PostlistProps {
 
 const Postlist: React.FC<PostlistProps> = ({post}) => {
   return (
-    <div className="w-full mt-4 px-5 py-5 bg-gray-50 border shadow-xl rounded-lg">
+    <div className="w-full mt-4 px-5 py-5 bg-gray-50 border text-gray-600 shadow-md rounded-lg">
       <div className="">
         <h2 className="font-bold capitalize">{post.title}</h2>
         <p>{post.desc}</p>

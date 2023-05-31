@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { deleteData, getData } from "../lib/fetch";
+import { deleteData, getData } from "../utils/fetch";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
