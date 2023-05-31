@@ -1,0 +1,26 @@
+import Link from "next/link";
+
+interface Post {
+  id: string;
+  title: string;
+  desc: string;
+}
+interface PostlistProps {
+  post: Post;
+}
+
+const Postlist: React.FC<PostlistProps> = ({post}) => {
+  return (
+    <div className="w-full mt-4 px-5 py-5 bg-gray-50 border shadow-xl rounded-lg">
+      <div className="">
+        <h2 className="font-bold capitalize">{post.title}</h2>
+        <p>{post.desc}</p>
+        <div className="flex justify-end">
+          <Link href={"/posts/"+post.id} className="btn">Show More</Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Postlist;
