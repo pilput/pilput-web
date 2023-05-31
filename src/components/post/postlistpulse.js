@@ -1,9 +1,9 @@
 const Postlistpulse = () => {
   const pulse = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
-    <div className=" w-full mx-auto">
+    <div className="w-full mx-auto mb-2">
       {pulse.map((key) => (
-        <div className="animate-pulse flex space-x-4 w-full mb-3 shadow-lg p-4 border" key={key}>
+        <div className="animate-pulse flex space-x-4 w-full mb-3 shadow-md p-4 border rounded-lg" key={key}>
           <div className=" bg-slate-300 h-28 w-28"></div>
           <div className="flex-1 space-y-6 py-1">
             <div className="h-3 bg-slate-300 w-80 rounded"></div>

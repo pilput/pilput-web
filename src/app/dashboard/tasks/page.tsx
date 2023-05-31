@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Logged from "../../components/layouts/Logged";
-import axios from "axios";
+import Logged from "../../../components/layouts/Logged";
 import { getCookie } from "cookies-next";
 
 const Mytask = () => {

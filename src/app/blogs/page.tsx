@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Navigation from "@/components/header/Navigation";
-import axios from "axios";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { getData } from "@/utils/fetch";

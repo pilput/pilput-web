@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ButtonPrimary from '../buttons/buttonprimary'
 
 interface Post {
   id: string;
@@ -16,7 +17,9 @@ const Postlist: React.FC<PostlistProps> = ({post}) => {
         <h2 className="font-bold capitalize">{post.title}</h2>
         <p>{post.desc}</p>
         <div className="flex justify-end">
-          <Link href={"/posts/"+post.id} className="btn">Show More</Link>
+          <Link href={"/posts/"+post.id} className="btn">
+            <ButtonPrimary title="Read More"></ButtonPrimary>
+          </Link>
         </div>
       </div>
     </div>

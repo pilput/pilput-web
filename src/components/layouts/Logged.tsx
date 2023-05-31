@@ -1,15 +1,15 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { deleteCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 import { Menu, Transition } from "@headlessui/react";
 import {
   ArrowLeftOnRectangleIcon,
   HomeIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import axios from "axios";
 import { getData } from "../../utils/fetch";
 
 interface Propdata {
@@ -18,13 +18,14 @@ interface Propdata {
 
 interface YourData {
   name:string,
+  username:string
   image:string,
 }
 
 const Logged: React.FC<Propdata> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [yourdata, setyourdata] = useState<YourData>({ name: "Loading...",image:"wwww"  });
+  const [yourdata, setyourdata] = useState<YourData>({ name: "Loading...",image:"/", username:"Loading..."  });
   const storage = process.env.NEXT_PUBLIC_STORAGE;
 
   function logout() {
@@ -33,11 +34,13 @@ const Logged: React.FC<Propdata> = ({ children }) => {
   }
   async function getyourdata() {
     const response = await getData("/api/v1/profile");
-    if (response.status >= 200 && response.status <= 299) {
-      setyourdata(response.data);
-    }
+    setyourdata(response.data);
   }
   useEffect(() => {
+    const token = getCookie("token")
+    if (!token) {
+      router.push("/login")
+    }
     getyourdata();
   }, []);
 
@@ -163,7 +166,7 @@ const Logged: React.FC<Propdata> = ({ children }) => {
                 </a>
                 <a
                   className="w-full font-thin uppercase text-gray-500 dark:text-gray-200 flex items-center p-4 my-2 transition-colors duration-200 justify-start hover:text-blue-500"
-                  href="#"
+                  href="/dashboard/settings"
                 >
                   <span className="text-left">
                     <svg
@@ -219,7 +222,7 @@ const Logged: React.FC<Propdata> = ({ children }) => {
                   </div>
                 </div>
                 <div className="relative p-1 flex items-center justify-end w-1/4 ml-5 mr-4 sm:mr-0 sm:right-auto">
-                  <span className="mr-4 font-semibold">{yourdata.name}</span>
+                  <span className="mr-4 font-semibold text-gray-700">{yourdata.name}</span>
                   <Menu>
                     <Menu.Button>
                       {yourdata.image ? (
