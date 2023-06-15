@@ -2,25 +2,17 @@ import { getCookie } from "cookies-next";
 import React, { useState, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import Link from "next/link";
+import { cookies } from 'next/headers';
 
-
-export async function getServerSideProps({ req, res }) {
-  let token = getCookie("token", { req, res });
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {}, // will be passed to the page component as props
-  };
-}
 
 const Global = () => {
-  const token = getCookie("token");
+  const cookiesStore = cookies()
+  const tokenformcookies = cookiesStore.get("token");
+  if (tokenformcookies) {
+    const tokenval = tokenformcookies;
+  }else{
+    const tokenval = "";
+  }
   const [socketUrl, setSocketUrl] = useState(
     process.env.NEXT_PUBLIC_WS_HOST + "/ws/global"
   );
@@ -29,7 +21,7 @@ const Global = () => {
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     queryParams: {
-      token: token,
+      token: tokenval,
     },
   });
 

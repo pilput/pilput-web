@@ -1,5 +1,5 @@
 const Postlistpulse = () => {
-  const pulse = [1, 2, 3, 4, 5, 6, 7, 8];
+  const pulse = [1, 2, 3, 4, 5, 6];
   return (
     <div className="w-full mx-auto mb-2">
       {pulse.map((key) => (

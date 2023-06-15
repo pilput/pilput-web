@@ -1,6 +1,6 @@
 import React from "react";
 
-function Modal({ children }) {
+function Modal({ children }:{children: React.ReactNode}) {
   return (
     <div className="relative z-50 transition ease-in-out delay-150">
       <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>

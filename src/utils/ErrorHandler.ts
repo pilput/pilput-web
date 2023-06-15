@@ -10,7 +10,7 @@ export const ErrorHandlerAPI = (error: any) => {
     error?.response?.data?.message === "invalid algorithm"
   ) {
     deleteCookie("token");
-    return { reditect: "/login", response: null };
+    return error.response;
   }
-  return { redirect: "", response: error.response };
+  return error.response;
 };

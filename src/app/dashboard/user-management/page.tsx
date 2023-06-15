@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { getCookie } from "cookies-next";
 import Logged from "../../../components/layouts/Logged";

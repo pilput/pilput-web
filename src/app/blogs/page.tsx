@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Navigation from "@/components/header/Navigation";
+import Navigation from "@/components/header/Navbar";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { getData } from "@/utils/fetch";
@@ -10,6 +10,7 @@ interface Post {
   title: string;
   desc: string;
 }
+
 
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);

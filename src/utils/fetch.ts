@@ -5,32 +5,51 @@ import { getToken } from "./Auth";
 
 const baseurl = process.env.NEXT_PUBLIC_API_HOST;
 
+const axiosIntence = axios.create({
+  baseURL: baseurl,
+  headers:{
+    Authorization: `Bearer ${getToken()}`
+  }
+})
+
 export async function getDataExternal(url:string, params: any) {
   try {
-    
     const response = await axios.get(url, { params });
     return response.data;
   } catch (error) {
-    console.log(error);
     return ErrorHandlerAPI(error);
   }
 }
 
-export async function getData(url:string, params?: any) {
+export async function getData(url:string, formData?: any): Promise<any> {
   try {
     const token = getToken()
-    return await axios.get(`${baseurl}${url}`, {
+    return await axios.get(`${baseurl}${url}`,{
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": formData ? "multipart/form-data" : "application/json",
       },
     });
   } catch (error) {
-    console.log(error);
-    return ErrorHandlerAPI(error);
+    ErrorHandlerAPI(error)
+    return error
   }
 }
 
 export async function postData(url:string, payload:any, formData = false) {
+  try {
+    const token = getToken()
+    return await axios.post(`${baseurl}${url}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": formData ? "multipart/form-data" : "application/json",
+      },
+    });
+  } catch (error) {
+    return ErrorHandlerAPI(error);
+  }
+}
+export async function postDatanoauth(url:string, payload:any, formData = false) {
   try {
     const token = getToken()
     return await axios.post(`${baseurl}${url}`, payload, {
@@ -84,14 +103,9 @@ export function postDataRQ(url:any, payload:any, formData = false) {
     return ErrorHandlerAPI(error);
   }
 }
-export function getDataRQ(url:string, params:any) {
+export function getDataRQ(url:string) {
   try {
-    const token = getToken()
-    return axios.get(`${baseurl}${url}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    return axiosIntence.get(`${baseurl}${url}`);
   } catch (error) {
     return ErrorHandlerAPI(error);
   }

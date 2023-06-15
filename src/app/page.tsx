@@ -1,7 +1,6 @@
-'use client';
-import Navigation from "@/components/header/Navigation";
-import Landing from '@/components/landing/landing';
-import Footer from '@/components/footer/Footer'
+import Navigation from "@/components/header/Navbar";
+import Landing from "@/components/landing/landing";
+import Button from "@/components/buttons/buttonprimary";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -12,9 +11,9 @@ const navigation = [
 
 export default function Home() {
   return (
-      <div className="isolate bg-white dark:bg-gray-700">
-        <Navigation />
-        <Landing />
-      </div>
+    <div className="isolate bg-white dark:bg-gray-700">
+      <Navigation />
+      <Landing />
+    </div>
   );
 }

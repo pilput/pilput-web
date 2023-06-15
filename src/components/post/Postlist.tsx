@@ -1,4 +1,5 @@
-import Link from "next/link";
+
+import Link from 'next/link';
 import ButtonPrimary from '../buttons/buttonprimary'
 
 interface Post {

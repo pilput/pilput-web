@@ -4,29 +4,16 @@ import { getCookie } from "cookies-next";
 import axios from "axios";
 import Image from "next/image";
 
-export async function getServerSideProps({ req, res }) {
-  const token = getCookie("token", { req, res });
-  const apihost = process.env.API_HOST;
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { apihost }, // will be passed to the page component as props
-  };
-}
-const Books = (props) => {
+
+const apihost = process.env.API_HOST;
+const Books = () => {
   const [books, setbooks] = useState([]);
   const token = getCookie("token");
 
   async function getBooks() {
     var config = {
       method: "GET",
-      url: props.apihost + "/api/v1/books",
+      url: apihost + "/api/v1/books",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

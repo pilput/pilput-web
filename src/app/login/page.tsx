@@ -1,49 +1,45 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { setCookie, getCookie } from "cookies-next";
+import { postDatanoauth } from "../../utils/fetch";
+import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import Loading from "@/components/modal/Loading";
 
-const apihost = process.env.NEXT_PUBLIC_API_HOST;
+const baseurl = process.env.API_HOST
 
 export default function Login() {
   const [username, setusername] = useState("guest");
   const [password, setpassword] = useState("guest");
   const [loginwait, setloginwait] = useState(false);
-  const router = useRouter();
+
+  function oauthgoogle() {
+    window.location.href = baseurl+"/api/v2/oauth"
+  }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    const id = toast.loading("Loading...");
     setloginwait(true);
-    var data = JSON.stringify({
+    e.preventDefault();
+    const data = {
       username: username,
       password: password,
-    });
-
-    var config = {
-      method: "post",
-      url: apihost + "/api/auth/login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
     };
-
-    try {
-      const response = await axios(config);
-      if (response.status === 200) {
-        console.log(response);
-        // nookies.set(null, "token", response.data.data);
-        setCookie("token", response.data.access_token);
-        router.push("/dashboard");
-        setloginwait(false);
-      }
-    } catch (error) {
-      console.log(error);
-      alert("Username or password is wrong");
+    const response = await postDatanoauth("/api/auth/login", data);
+    if (response.status === 200) {
+      toast.success("Success login", { id });
+      const expire = new Date();
+      expire.setDate(expire.getDate() + 3);
+      Cookies.set("token", response.data.access_token, {
+        secure: true,
+        sameSite: "Strict",
+        expires: expire,
+      });
+      setloginwait(false);
+      redirect("/dashboard");
+    } else {
+      toast.error("Wrong username or password", { id });
       setloginwait(false);
     }
   }
@@ -85,14 +81,49 @@ export default function Login() {
               />
 
               <div className="flex justify-center mt-6">
-                <button
-                  type="submit"
-                  className="text-xl w-48 px-4 py-2 text-white bg-gray-800 hover:bg-gray-900 rounded-2xl"
-                >
-                  Login
-                </button>
+                {loginwait ? (
+                  <button
+                    disabled
+                    type="submit"
+                    className="text-xl w-full px-4 py-2 text-white bg-gray-800 hover:bg-gray-900 rounded-lg cursor-not-allowed"
+                  >
+                    Login...
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="text-xl w-full px-4 py-2 text-white bg-gray-800 hover:bg-gray-900 rounded-lg"
+                  >
+                    Login
+                  </button>
+                )}
               </div>
             </form>
+            <center className="py-3">Or</center>
+            <div className="">
+              <button onClick={oauthgoogle}
+                type="button"
+                className="text-white w-full  bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
+              >
+                <svg
+                  className="mr-2 -ml-1 w-4 h-4"
+                  aria-hidden="true"
+                  focusable="false"
+                  data-prefix="fab"
+                  data-icon="google"
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 488 512"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+                  ></path>
+                </svg>
+                Continue with Google
+                <div></div>
+              </button>
+            </div>
             <p className="text-center mt-3 text-black">
               username: <strong>guest</strong> password: <strong>guest</strong>
             </p>
@@ -104,7 +135,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-      {loginwait ? <Loading /> : ""}
     </main>
   );
 }

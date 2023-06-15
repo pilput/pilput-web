@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { getCookie } from "cookies-next";
+
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -11,14 +10,6 @@ const navigation = [
 ];
 
 export default function Navigation() {
-  const [token, settoken] = useState("");
-
-  useEffect(() => {
-    const gettoken:string =  getCookie("token") as string;
-    settoken(gettoken);
-   
-  }, []);
-
   return (
     <header className="z-30 flex items-center w-full sm:h-24">
       <div className="container flex items-center justify-between px-6 mx-auto">
