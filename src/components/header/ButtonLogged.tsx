@@ -9,7 +9,7 @@ const ButtonLogged = () => {
       {token ? (
         <Link
           href="https://dash.pilput.dev"
-          className="text-gray-900 bg-slate-500"
+          className="text-gray-900 px-4 py-2 rounded-lg bg-green-600"
         >
           Dashboard
         </Link>

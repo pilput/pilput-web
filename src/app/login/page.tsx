@@ -4,18 +4,19 @@ import { useState } from "react";
 import { postDatanoauth } from "../../utils/fetch";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const baseurl = process.env.API_HOST
+const baseurl = process.env.API_HOST;
 
 export default function Login() {
+  const router = useRouter();
   const [username, setusername] = useState("guest");
   const [password, setpassword] = useState("guest");
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
-    window.location.href = baseurl+"/api/v2/oauth"
+    window.location.href = baseurl + "/api/v2/oauth";
   }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
@@ -37,7 +38,7 @@ export default function Login() {
         expires: expire,
       });
       setloginwait(false);
-      redirect("/dashboard");
+      router.push("https://dash.pilput.dev");
     } else {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
@@ -101,7 +102,8 @@ export default function Login() {
             </form>
             <center className="py-3">Or</center>
             <div className="">
-              <button onClick={oauthgoogle}
+              <button
+                onClick={oauthgoogle}
                 type="button"
                 className="text-white w-full  bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
               >

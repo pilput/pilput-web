@@ -1,4 +1,3 @@
-'use client';
 import Link from "next/link";
 
 export default function notFound() {
@@ -10,7 +9,10 @@ export default function notFound() {
             <h1 className="mt-12 font-sans text-5xl font-light text-center text-gray-700 lg:text-left lg:text-8xl md:mt-0">
               Sorry, this page isn&#x27;t available
             </h1>
-            <Link href="/" className="px-2 py-2 mt-16 text-lg font-light transition duration-200 ease-in bg-yellow-300 border-2 border-gray-700 w-36 hover:bg-yellow-400 focus:outline-none">
+            <Link
+              href="/"
+              className="px-2 py-2 mt-16 text-lg font-light transition duration-200 ease-in bg-yellow-300 border-2 border-gray-700 w-36 hover:bg-yellow-400 focus:outline-none"
+            >
               Go back home
             </Link>
           </div>
