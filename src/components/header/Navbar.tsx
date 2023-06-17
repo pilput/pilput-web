@@ -1,12 +1,11 @@
-
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import ButtonLogged from './ButtonLogged'
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Blog", href: "/blogs" },
   { name: "Forum", href: "/chat" },
-  { name: "dashboard", href: "/dashboard" },
 ];
 
 export default function Navigation() {
@@ -30,10 +29,17 @@ export default function Navigation() {
             ))}
           </nav>
           <button className="flex flex-col ml-4 lg:hidden">
-            <span className="w-6 h-1 mb-1 bg-gray-800 dark:bg-white"></span>
-            <span className="w-6 h-1 mb-1 bg-gray-800 dark:bg-white"></span>
-            <span className="w-6 h-1 mb-1 bg-gray-800 dark:bg-white"></span>
+            {navigation.map((to, key) => (
+              <Link
+                key={key}
+                className="w-6 h-1 mb-1 bg-gray-800 dark:bg-white"
+                href={to.href}
+              >
+                {to.name}
+              </Link>
+            ))}
           </button>
+          <ButtonLogged />
         </div>
       </div>
     </header>

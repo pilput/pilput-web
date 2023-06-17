@@ -1,8 +1,7 @@
-'use client';
+"use client";
 import React, { useState } from "react";
 import {
   ArrowRightOnRectangleIcon,
-  ArrowTopRightOnSquareIcon,
   ChatBubbleLeftIcon,
   PlusSmallIcon,
   SunIcon,
@@ -43,7 +42,7 @@ const Chat = () => {
             <div className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg">
               <TrashIcon className="h-4 w-4" /> <span>Clear Conversations</span>
             </div>
-            
+
             <div className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg">
               <svg
                 stroke="currentColor"
@@ -56,7 +55,7 @@ const Chat = () => {
               </svg>
               <span>Open Discord</span>
             </div>
-            
+
             <Link
               href="/"
               className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg"
