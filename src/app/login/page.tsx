@@ -36,6 +36,7 @@ export default function Login() {
         secure: true,
         sameSite: "Strict",
         expires: expire,
+        domain:"pilput.dev"
       });
       setloginwait(false);
       router.push("https://dash.pilput.dev");
