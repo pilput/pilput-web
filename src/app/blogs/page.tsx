@@ -11,13 +11,11 @@ interface Post {
   desc: string;
 }
 
-
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
-  const apihost = process.env.NEXT_PUBLIC_API_HOST;
   async function getPosts() {
-     const response = await getData("/api/v1/posts")
-     setposts(response.data)
+    const response = await getData("/api/v1/posts");
+    setposts(response.data);
   }
   useEffect(() => {
     getPosts();
@@ -29,7 +27,6 @@ const Blog = () => {
   } else {
     postsshow = <Postlistpulse />;
   }
-
   return (
     <div className="bg-white">
       <Navigation />
