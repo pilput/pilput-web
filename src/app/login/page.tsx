@@ -36,7 +36,7 @@ export default function Login() {
         secure: true,
         sameSite: "Strict",
         expires: expire,
-        domain: ".pilput.dev",
+        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`,
       });
       setloginwait(false);
       router.push(process.env.NEXT_PUBLIC_HOST || "/");
