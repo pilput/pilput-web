@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { getCookie } from "cookies-next";
 import Link from "next/link";

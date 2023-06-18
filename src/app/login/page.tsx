@@ -36,10 +36,10 @@ export default function Login() {
         secure: true,
         sameSite: "Strict",
         expires: expire,
-        domain:"pilput.dev"
+        domain: "pilput.dev",
       });
       setloginwait(false);
-      router.push("https://dash.pilput.dev");
+      router.push(process.env.NEXT_PUBLIC_HOST || "/");
     } else {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
