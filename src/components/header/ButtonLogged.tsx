@@ -1,10 +1,14 @@
 "use client";
-import React from "react";
 import { getCookie } from "cookies-next";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const ButtonLogged = () => {
-  const token = getCookie("token");
+  const [token, settoken] = useState("");
+  useEffect(() => {
+    settoken(getCookie("token")?.toString() || "");
+  }, []);
+
   return (
     <>
       {token ? (

@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { postDatanoauth } from "../../utils/fetch";
 import { toast } from "react-hot-toast";
-import Cookies from "js-cookie";
+import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -32,14 +32,17 @@ export default function Login() {
       toast.success("Success login", { id });
       const expire = new Date();
       expire.setDate(expire.getDate() + 3);
-      Cookies.set("token", response.data.access_token, {
-        secure: true,
-        sameSite: "Strict",
-        expires: expire,
-        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`,
+      console.log(process.env.NEXT_PUBLIC_DOMAIN);
+
+      setCookie("token", response.data.access_token, {
+        domain: ".pilput.dev", // Set the cookie for all subdomains
+        maxAge: 604800, // Cookie expiration time in seconds
+        secure: true, // Set to true if your site uses HTTPS
+        sameSite: "strict",
+        httpOnly: true,
       });
       setloginwait(false);
-      router.push(process.env.NEXT_PUBLIC_HOST || "/");
+      // router.push(process.env.NEXT_PUBLIC_HOST || "/");
     } else {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
