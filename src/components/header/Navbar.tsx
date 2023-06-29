@@ -1,6 +1,6 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import ButtonLogged from './ButtonLogged'
+import ButtonLogged from "./ButtonLogged";
 
 const navigation = [
   { name: "Home", href: "/" },

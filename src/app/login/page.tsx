@@ -1,4 +1,5 @@
 "use client";
+import { Loader2 } from "lucide-react";
 import React from "react";
 import { useState } from "react";
 import { postDatanoauth } from "../../utils/fetch";
@@ -6,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const baseurl = process.env.API_HOST;
 
@@ -87,29 +89,25 @@ export default function Login() {
 
               <div className="flex justify-center mt-6">
                 {loginwait ? (
-                  <button
-                    disabled
-                    type="submit"
-                    className="text-xl w-full px-4 py-2 text-white bg-gray-800 hover:bg-gray-900 rounded-lg cursor-not-allowed"
-                  >
-                    Login...
-                  </button>
+                  <Button disabled type="submit" size={"lg"} className="w-full">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
+                    Wait
+                  </Button>
                 ) : (
-                  <button
-                    type="submit"
-                    className="text-xl w-full px-4 py-2 text-white bg-gray-800 hover:bg-gray-900 rounded-lg"
-                  >
+                  <Button type="submit" size={"lg"} className="w-full">
                     Login
-                  </button>
+                  </Button>
                 )}
               </div>
             </form>
             <center className="py-3">Or</center>
             <div className="">
-              <button
+              <Button
                 onClick={oauthgoogle}
                 type="button"
-                className="text-white w-full  bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
+                className="w-full border border-red-500"
+                size={"lg"}
+                variant={"outline"}
               >
                 <svg
                   className="mr-2 -ml-1 w-4 h-4"
@@ -128,14 +126,14 @@ export default function Login() {
                 </svg>
                 Continue with Google
                 <div></div>
-              </button>
+              </Button>
             </div>
             <p className="text-center mt-3 text-black">
               username: <strong>guest</strong> password: <strong>guest</strong>
             </p>
             <div className="text-center">
-              <Link className="text-blue-600 underline" href="/">
-                Back Home
+              <Link href="/">
+                <Button variant={"link"}>Back to home</Button>
               </Link>
             </div>
           </div>

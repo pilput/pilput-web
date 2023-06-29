@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { getCookie } from "cookies-next";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -12,18 +13,12 @@ const ButtonLogged = () => {
   return (
     <>
       {token ? (
-        <Link
-          href="https://dash.pilput.dev"
-          className="text-gray-900 px-4 py-2 rounded-lg bg-green-600"
-        >
-          Dashboard
+        <Link href="https://dash.pilput.dev">
+          <Button>Dashboard</Button>
         </Link>
       ) : (
-        <Link
-          href="/login"
-          className="text-gray-100 bg-blue-400 px-4 py-2 rounded-xl hover:bg-blue-500"
-        >
-          Login
+        <Link href="/login">
+          <Button>Login</Button>
         </Link>
       )}
     </>
