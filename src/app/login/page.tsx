@@ -39,8 +39,7 @@ export default function Login() {
       setCookie("token", response.data.access_token, {
         domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, // Set the cookie for all subdomains
         maxAge: 604800, // Cookie expiration time in seconds
-        secure: true, // Set to true if your site uses HTTPS
-        sameSite: "strict",
+        secure: true,
         httpOnly: true,
       });
       setloginwait(false);
