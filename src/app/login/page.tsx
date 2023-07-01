@@ -42,7 +42,6 @@ export default function Login() {
       setCookie("token", response.data.access_token, {
         domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, 
         secure: true, 
-        httpOnly: true,
       });
       setloginwait(false);
       // router.push(process.env.NEXT_PUBLIC_HOST || "/");
