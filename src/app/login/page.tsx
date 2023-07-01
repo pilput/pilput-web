@@ -33,11 +33,15 @@ export default function Login() {
     if (response.status === 200) {
       toast.success("Success login", { id });
       const expire = new Date();
+      console.log(expire);
+      
       expire.setDate(expire.getDate() + 3);
+      console.log(expire);
       console.log(process.env.NEXT_PUBLIC_DOMAIN);
 
       setCookie("token", response.data.access_token, {
         domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, // Set the cookie for all subdomains
+        expires: expire,
         secure: true, // Set to true if your site uses HTTPS
         sameSite: "strict",
         httpOnly: true,
