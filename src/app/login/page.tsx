@@ -40,8 +40,7 @@ export default function Login() {
       console.log(process.env.NEXT_PUBLIC_DOMAIN);
 
       setCookie("token", response.data.access_token, {
-        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, // Set the cookie for all subdomains
-        expires: expire,
+        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, 
         secure: true, // Set to true if your site uses HTTPS
         sameSite: "strict",
         httpOnly: true,
