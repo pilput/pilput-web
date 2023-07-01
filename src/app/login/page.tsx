@@ -41,8 +41,7 @@ export default function Login() {
 
       setCookie("token", response.data.access_token, {
         domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, 
-        secure: true, // Set to true if your site uses HTTPS
-        sameSite: "strict",
+        secure: true, 
         httpOnly: true,
       });
       setloginwait(false);
