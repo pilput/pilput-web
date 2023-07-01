@@ -37,11 +37,7 @@ export default function Login() {
       console.log(process.env.NEXT_PUBLIC_DOMAIN);
 
       setCookie("token", response.data.access_token, {
-        domain: ".pilput.dev", // Set the cookie for all subdomains
-        maxAge: 604800, // Cookie expiration time in seconds
-        secure: true, // Set to true if your site uses HTTPS
-        sameSite: "strict",
-        httpOnly: true,
+        domain: ".pilput.dev",
       });
       setloginwait(false);
       // router.push(process.env.NEXT_PUBLIC_HOST || "/");
