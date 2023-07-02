@@ -14,8 +14,8 @@ interface Post {
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   async function getPosts() {
-    const response = await getData("/api/v1/posts");
-    setposts(response.data);
+    const response = await getData("/v2/posts");
+    setposts(response.data.data);
   }
   useEffect(() => {
     getPosts();

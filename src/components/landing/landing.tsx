@@ -14,6 +14,7 @@ const Landing = () => {
             <h2 className="max-w-3xl py-2 mx-auto text-5xl font-bold text-center text-gray-800 md:text-4xl dark:text-white">
               Full Stack Developer
             </h2>
+            <p>This Website is contain my experimental in web programing</p>
             <div className="flex items-center justify-center mt-4">
               {/* <Link
                 target="_blank"

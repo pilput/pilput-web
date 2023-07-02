@@ -30,7 +30,7 @@ export default function Login() {
       email: email,
       password: password,
     };
-    const response = await postDatanoauth("/api/auth/login", data);
+    const response = await postDatanoauth("/auth/login", data);
     if (response.status === 200) {
       toast.success("Success login", { id });
       const expire = new Date();
