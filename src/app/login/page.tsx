@@ -8,13 +8,14 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const baseurl = process.env.API_HOST;
 
 export default function Login() {
   const router = useRouter();
-  const [username, setusername] = useState("guest");
-  const [password, setpassword] = useState("guest");
+  const [email, setemail] = useState("guest@pilput.dev");
+  const [password, setpassword] = useState("guestguest31");
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
@@ -26,7 +27,7 @@ export default function Login() {
     setloginwait(true);
     e.preventDefault();
     const data = {
-      username: username,
+      email: email,
       password: password,
     };
     const response = await postDatanoauth("/api/auth/login", data);
@@ -34,19 +35,19 @@ export default function Login() {
       toast.success("Success login", { id });
       const expire = new Date();
       console.log(expire);
-      
+
       expire.setDate(expire.getDate() + 3);
       console.log(expire);
       console.log(process.env.NEXT_PUBLIC_DOMAIN);
 
       setCookie("token", response.data.access_token, {
-        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`, 
-        secure: true, 
+        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`,
+        secure: true,
         expires: expire,
         sameSite: "strict",
       });
       setloginwait(false);
-      // router.push(process.env.NEXT_PUBLIC_HOST || "/");
+      router.push(process.env.NEXT_PUBLIC_HOST || "/");
     } else {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
@@ -62,31 +63,28 @@ export default function Login() {
               Sign in
             </h1>
             <p className="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide cursor-pointer">
-              Lanjut aja login, ngapain baca
+              Why You so interested to read
               <br />
             </p>
           </div>
           <div>
             <form onSubmit={handleLogin} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Username"
-                required
-                value={username}
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
                 onChange={(e) => {
-                  setusername(e.target.value);
+                  setemail(e.target.value);
                 }}
-                className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
               />
-              <input
-                type="password"
-                placeholder="Password"
+
+              <Input
                 value={password}
-                required
                 onChange={(e) => {
                   setpassword(e.target.value);
                 }}
-                className="block text-sm py-3 px-4 rounded-lg w-full border outline-none"
+                type="password"
+                placeholder="Password"
               />
 
               <div className="flex justify-center mt-6">
@@ -130,9 +128,6 @@ export default function Login() {
                 <div></div>
               </Button>
             </div>
-            <p className="text-center mt-3 text-black">
-              username: <strong>guest</strong> password: <strong>guest</strong>
-            </p>
             <div className="text-center">
               <Link href="/">
                 <Button variant={"link"}>Back to home</Button>
