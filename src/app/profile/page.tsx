@@ -1,8 +1,10 @@
+"use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { deleteData, getData } from "../utils/fetch";
+import { deleteData, getData } from "../../utils/fetch";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { profileStore } from "@/stores/profilestorage";
 
 interface ProfileInterface {
   name: string;
@@ -12,17 +14,13 @@ interface ProfileInterface {
 
 const Profile = () => {
   const router = useRouter();
+  const { profile, refresh } = profileStore();
   const ASSET_UPLOAD = process.env.NEXT_PUBLIC_STORAGE;
-  const [profile, setprofile] = useState<ProfileInterface>({
-    name: "Loading...",
-    image: "wkwkw",
-    email: "awd",
-  });
 
   async function getprofile() {
     const response = await getData("/api/v1/profile");
     if (response.status >= 200 && response.status <= 299) {
-      setprofile(response.data);
+      refresh(response.data);
     }
   }
 
@@ -87,7 +85,7 @@ const Profile = () => {
         </div>
         <div className="text-center mt-2">
           <h3 className="text-2xl text-slate-700 font-bold leading-normal mb-1">
-            {profile.name}
+            {profile.fullName}
           </h3>
           <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
             <i className="fas fa-map-marker-alt mr-2 text-slate-400 opacity-75"></i>

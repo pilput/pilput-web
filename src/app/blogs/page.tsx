@@ -8,14 +8,14 @@ import { getData } from "@/utils/fetch";
 interface Post {
   id: string;
   title: string;
-  desc: string;
+  body: string;
 }
 
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   async function getPosts() {
-    const response = await getData("/api/v2/posts");
-    setposts(response.data.data);
+    const response = await getData("/posts");
+    setposts(response.data);
   }
   useEffect(() => {
     getPosts();
