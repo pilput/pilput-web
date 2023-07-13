@@ -94,8 +94,8 @@ const Profile = () => {
                 Melbourne-raised, Brooklyn-based Nick Murphy writes, performs
                 and records all of his own music, giving it a warm.
               </p>
-              <Link href="/dashboard" className="text-blue-500 underline">
-                Back to Dashboard
+              <Link href="/" className="text-blue-500 underline">
+                Back to home
               </Link>
             </div>
           </div>
