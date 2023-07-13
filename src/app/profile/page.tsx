@@ -6,26 +6,20 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { profileStore } from "@/stores/profilestorage";
 
-interface ProfileInterface {
-  name: string;
-  image: string;
-  email: string;
-}
-
 const Profile = () => {
   const router = useRouter();
   const { profile, refresh } = profileStore();
   const ASSET_UPLOAD = process.env.NEXT_PUBLIC_STORAGE;
 
   async function getprofile() {
-    const response = await getData("/api/v1/profile");
+    const response = await getData("/auth/profile");
     if (response.status >= 200 && response.status <= 299) {
       refresh(response.data);
     }
   }
 
   async function deletepicture() {
-    const response = await deleteData("/api/v1/profile/avatar");
+    const response = await deleteData("/auth/profile/avatar");
     if (response.status >= 200 && response.status <= 299) {
       router.push("/profile");
     }
