@@ -1,6 +1,6 @@
-
-import Link from 'next/link';
-import ButtonPrimary from '../buttons/buttonprimary'
+import Link from "next/link";
+import ButtonPrimary from "../buttons/buttonprimary";
+import WordLimit from "@/components/word/WordLimit";
 
 interface Post {
   id: string;
@@ -11,14 +11,16 @@ interface PostlistProps {
   post: Post;
 }
 
-const Postlist: React.FC<PostlistProps> = ({post}) => {
+const Postlist: React.FC<PostlistProps> = ({ post }) => {
   return (
     <div className="w-full mt-4 px-5 py-5 bg-gray-50 border text-gray-600 shadow-md rounded-lg">
       <div className="">
         <h2 className="font-bold capitalize">{post.title}</h2>
-        <p>{post.body}</p>
+        <p>
+          <WordLimit text={post.body} limit={50} />
+        </p>
         <div className="flex justify-end">
-          <Link href={"/posts/"+post.id} className="btn">
+          <Link href={"/posts/" + post.id} className="btn">
             <ButtonPrimary title="Read More"></ButtonPrimary>
           </Link>
         </div>
