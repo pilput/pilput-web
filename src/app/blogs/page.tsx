@@ -15,7 +15,7 @@ const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   async function getPosts() {
     const response = await getData("/posts");
-    setposts(response.data);
+    setposts(response.data.data);
   }
   useEffect(() => {
     getPosts();
