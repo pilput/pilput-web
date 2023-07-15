@@ -20,7 +20,7 @@ const Postlist: React.FC<PostlistProps> = ({ post }) => {
           <WordLimit text={post.body} limit={50} />
         </p>
         <div className="flex justify-end">
-          <Link href={"/posts/" + post.id} className="btn">
+          <Link href={"/blogs/" + post.id} className="btn">
             <ButtonPrimary title="Read More"></ButtonPrimary>
           </Link>
         </div>
