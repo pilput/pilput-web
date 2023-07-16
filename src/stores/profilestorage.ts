@@ -1,4 +1,7 @@
+import { getData } from "@/utils/fetch";
+import axios from "axios";
 import { create } from "zustand";
+import { getToken } from "@/utils/Auth";
 
 interface Profile {
   id: string;
@@ -14,12 +17,12 @@ interface Profile {
 
 type Store = {
   profile: Profile;
-  refresh: (data: Profile) => void;
+  refresh: () => void;
 };
 
 export const profileStore = create<Store>()((set) => ({
   profile: {
-    id: "1",
+    id: "",
     email: "temp@gmail.com",
     first_name: "temp",
     last_name: "admin",
@@ -29,5 +32,19 @@ export const profileStore = create<Store>()((set) => ({
     updated_at: "2023-06-13T09:58:56.003Z",
     fullName: "temp",
   },
-  refresh: (newdata) => set({profile:newdata}),
+  refresh: () => {
+    axios
+      .get("https://api.example.com/data", {
+        headers: {
+          Authorization: `Bearer ${getToken}`,
+        },
+      })
+      .then((response) => {
+        const data = response.data;
+        set({ profile: data });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
 }));

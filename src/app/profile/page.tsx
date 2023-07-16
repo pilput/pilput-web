@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { deleteData, getData } from "../../utils/fetch";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -9,14 +9,10 @@ import { profileStore } from "@/stores/profilestorage";
 const Profile = () => {
   const router = useRouter();
   const { profile, refresh } = profileStore();
-  const ASSET_UPLOAD = process.env.NEXT_PUBLIC_STORAGE;
-
-  async function getprofile() {
-    const response = await getData("/auth/profile");
-    if (response.status >= 200 && response.status <= 299) {
-      refresh(response.data);
-    }
+  if (!(profile.id)) {
+    refresh()
   }
+  const ASSET_UPLOAD = process.env.NEXT_PUBLIC_STORAGE;
 
   async function deletepicture() {
     const response = await deleteData("/auth/profile/avatar");
@@ -25,9 +21,6 @@ const Profile = () => {
     }
   }
 
-  useEffect(() => {
-    getprofile();
-  }, []);
 
   return (
     <div className="flex justify-center mb-10 ">
