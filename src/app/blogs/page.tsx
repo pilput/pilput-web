@@ -28,7 +28,7 @@ const Blog = async () => {
     <div className="bg-white">
       <Navigation />
       <div className="mx-auto p-3 max-w-7xl min-h-screen">
-        <h2 className="text-2xl font-semibold">Post</h2>
+        <h2 className="text-2xl font-semibold">Posts</h2>
         <div className="mb-10"></div>
         {postsshow}
       </div>

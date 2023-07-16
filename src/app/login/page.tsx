@@ -15,7 +15,7 @@ const baseurl = process.env.API_HOST;
 export default function Login() {
   const router = useRouter();
   const [email, setemail] = useState("guest@pilput.dev");
-  const [password, setpassword] = useState("guestguest31");
+  const [password, setpassword] = useState("guestguest");
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
