@@ -2,6 +2,7 @@ import { getData } from "@/utils/fetch";
 import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
+import {baseurl} from '@/utils/fetch'
 
 interface Profile {
   id: string;
@@ -34,7 +35,7 @@ export const profileStore = create<Store>()((set) => ({
   },
   refresh: () => {
     axios
-      .get("https://api.example.com/data", {
+      .get(baseurl+"/auth/profile", {
         headers: {
           Authorization: `Bearer ${getToken}`,
         },

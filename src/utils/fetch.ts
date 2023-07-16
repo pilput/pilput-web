@@ -3,7 +3,7 @@ import { ErrorHandlerAPI } from "./ErrorHandler";
 import { getToken } from "./Auth";
 
 
-const baseurl = process.env.NEXT_PUBLIC_API_HOST;
+export const baseurl = process.env.NEXT_PUBLIC_API_HOST;
 
 const axiosIntence = axios.create({
   baseURL: baseurl,
