@@ -37,7 +37,7 @@ export const profileStore = create<Store>()((set) => ({
     axios
       .get(baseurl+"/auth/profile", {
         headers: {
-          Authorization: `Bearer ${getToken}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       })
       .then((response) => {
