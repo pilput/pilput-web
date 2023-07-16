@@ -1,11 +1,11 @@
 import Navigation from "@/components/header/Navbar";
-import Landing from "@/components/landing/landing";
+import Hero from "@/components/landing/Hero";
 
 export default function Home() {
   return (
     <div className="isolate bg-white dark:bg-gray-700">
       <Navigation />
-      <Landing />
+      <Hero />
     </div>
   );
 }

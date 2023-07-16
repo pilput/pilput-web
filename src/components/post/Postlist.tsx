@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ButtonPrimary from "../buttons/buttonprimary";
+import {Button} from "@/components/ui/button";
 import WordLimit from "@/components/word/WordLimit";
 
 interface Post {
@@ -21,7 +21,7 @@ const Postlist: React.FC<PostlistProps> = ({ post }) => {
         </p>
         <div className="flex justify-end">
           <Link href={"/blogs/" + post.id} className="btn">
-            <ButtonPrimary title="Read More"></ButtonPrimary>
+            <Button>Read More</Button>
           </Link>
         </div>
       </div>

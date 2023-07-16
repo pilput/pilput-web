@@ -10,11 +10,10 @@ const navigation = [
 
 export default function Navigation() {
   return (
-    <header className="z-30 flex items-center w-full sm:h-24">
+    <header className="z-30 flex items-center w-full sm:h-20 shadow-md">
       <div className="container flex items-center justify-between px-6 mx-auto">
-        <div className="flex items-center text-3xl font-black text-gray-800 dark:text-white">
-          <EnvelopeIcon className="h-6" />
-          <span className="mt-1 ml-3 text-xs">cecepjanuardi31@gmail.com</span>
+        <div className="flex items-center text-3xl text-gray-800 dark:text-white">
+          <span className="mt-1 ml-3">pilput</span>
         </div>
         <div className="flex items-center">
           <nav className="items-center hidden text-lg text-gray-800 font-sen dark:text-white lg:flex">

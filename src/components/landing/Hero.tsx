@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Landing = () => {
   return (
-    <main className="relative h-screen overflow-hidden font-mono bg-dark-200 dark:bg-gray-800">
+    <main className="relative overflow-hidden font-mono bg-dark-200 dark:bg-gray-800 " style={{height:"650px"}}>
       <div className="absolute hidden md:block -bottom-32 -left-32 w-96 h-96 text-blue-500"></div>
       <div className="relative z-20 h-full flex items-center">
         <div className="container relative flex flex-col mb-36 items-center justify-between px-6 py-4 mx-auto">

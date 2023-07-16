@@ -1,4 +1,4 @@
-"use client";
+
 import React, { useEffect, useState } from "react";
 import Navigation from "@/components/header/Navbar";
 import Postlist from "@/components/post/Postlist";
@@ -11,19 +11,16 @@ interface Post {
   body: string;
 }
 
-const Blog = () => {
-  const [posts, setposts] = useState<Post[]>([]);
-  async function getPosts() {
-    const response = await getData("/posts");
-    setposts(response.data.data);
-  }
-  useEffect(() => {
-    getPosts();
-  }, []);
+async function FetchPost() {
+  const response = await getData("/posts");
+  return response.data.data
+}
 
+const Blog = async () => {
+  const posts = await FetchPost()
   let postsshow;
   if (posts.length) {
-    postsshow = posts.map((post) => <Postlist key={post.id} post={post} />);
+    postsshow = posts.map((post: Post) => <Postlist key={post.id} post={post} />);
   } else {
     postsshow = <Postlistpulse />;
   }
