@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { apibaseurl } from "@/utils/fetch";
+import { apibaseurl,dashbaseurl } from "@/utils/fetch";
 
 export default function Login() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function Login() {
         sameSite: "strict",
       });
       setloginwait(false);
-      router.push(process.env.NEXT_PUBLIC_HOST || "/");
+      router.push(dashbaseurl);
     } else {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
