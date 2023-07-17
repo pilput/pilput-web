@@ -3,10 +3,15 @@ import { ErrorHandlerAPI } from "./ErrorHandler";
 import { getToken } from "./Auth";
 
 
-export const baseurl = process.env.NEXT_PUBLIC_API_HOST;
+export const apibaseurl = process.env.NEXT_PUBLIC_API_URL || "";
+export const dashbaseurl = process.env.NEXT_PUBLIC_DASH_URL || "";
+export const wsbaseurl = process.env.NEXT_PUBLIC_WS_URL || "";
+export const storagebaseurl = process.env.NEXT_PUBLIC_STORAGE_URL || "";
+export const mainbaseurl = process.env.NEXT_PUBLIC_MAIN_URL || "";
+
 
 const axiosIntence = axios.create({
-  baseURL: baseurl,
+  baseURL: apibaseurl,
   headers:{
     Authorization: `Bearer ${getToken()}`
   }
@@ -24,7 +29,7 @@ export async function getDataExternal(url:string, params: any) {
 export async function getData(url:string, formData?: any): Promise<any> {
   try {
     const token = getToken()
-    return await axios.get(`${baseurl}${url}`,{
+    return await axios.get(`${apibaseurl}${url}`,{
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": formData ? "multipart/form-data" : "application/json",
@@ -39,7 +44,7 @@ export async function getData(url:string, formData?: any): Promise<any> {
 export async function postData(url:string, payload:any, formData = false) {
   try {
     const token = getToken()
-    return await axios.post(`${baseurl}${url}`, payload, {
+    return await axios.post(`${apibaseurl}${url}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": formData ? "multipart/form-data" : "application/json",
@@ -52,7 +57,7 @@ export async function postData(url:string, payload:any, formData = false) {
 export async function postDatanoauth(url:string, payload:any, formData = false) {
   try {
     const token = getToken()
-    return await axios.post(`${baseurl}${url}`, payload, {
+    return await axios.post(`${apibaseurl}${url}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": formData ? "multipart/form-data" : "application/json",
@@ -66,7 +71,7 @@ export async function postDatanoauth(url:string, payload:any, formData = false) 
 export async function putData(url:string, payload:any, formData = false) {
   try {
     const token = getToken()
-    return await axios.put(`${baseurl}${url}`, payload, {
+    return await axios.put(`${apibaseurl}${url}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": formData ? "multipart/form-data" : "application/json",
@@ -80,7 +85,7 @@ export async function putData(url:string, payload:any, formData = false) {
 export async function deleteData(url:string) {
   try {
     const token = getToken()
-    return await axios.delete(`${baseurl}${url}`, {
+    return await axios.delete(`${apibaseurl}${url}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -93,7 +98,7 @@ export async function deleteData(url:string) {
 export function postDataRQ(url:any, payload:any, formData = false) {
   try {
     const token = getToken()
-    return axios.post(`${baseurl}${url}`, payload, {
+    return axios.post(`${apibaseurl}${url}`, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": formData ? "multipart/form-data" : "application/json",
@@ -105,7 +110,7 @@ export function postDataRQ(url:any, payload:any, formData = false) {
 }
 export function getDataRQ(url:string) {
   try {
-    return axiosIntence.get(`${baseurl}${url}`);
+    return axiosIntence.get(`${apibaseurl}${url}`);
   } catch (error) {
     return ErrorHandlerAPI(error);
   }

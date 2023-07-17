@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getCookie } from "cookies-next";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import {dashbaseurl} from '@/utils/fetch'
 
 const ButtonLogged = () => {
   const [token, settoken] = useState("");
@@ -13,7 +14,7 @@ const ButtonLogged = () => {
   return (
     <>
       {token ? (
-        <Link href="https://dash.pilput.dev">
+        <Link href={dashbaseurl || ""}>
           <Button>Dashboard</Button>
         </Link>
       ) : (

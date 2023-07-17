@@ -9,8 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const baseurl = process.env.API_HOST;
+import { apibaseurl } from "@/utils/fetch";
 
 export default function Login() {
   const router = useRouter();
@@ -19,7 +18,7 @@ export default function Login() {
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
-    window.location.href = baseurl + "/api/v2/oauth";
+    window.location.href = apibaseurl + "/api/v2/oauth";
   }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
@@ -42,7 +41,7 @@ export default function Login() {
 
       setCookie("token", response.data.access_token, {
         domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`,
-        secure: true,
+        // secure: true,
         expires: expire,
         sameSite: "strict",
       });

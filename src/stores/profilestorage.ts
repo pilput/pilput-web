@@ -2,7 +2,7 @@ import { getData } from "@/utils/fetch";
 import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
-import {baseurl} from '@/utils/fetch'
+import {storagebaseurl} from '@/utils/fetch'
 
 interface Profile {
   id: string;
@@ -35,7 +35,7 @@ export const profileStore = create<Store>()((set) => ({
   },
   refresh: () => {
     axios
-      .get(baseurl+"/auth/profile", {
+      .get(storagebaseurl+"/auth/profile", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
