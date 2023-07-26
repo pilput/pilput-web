@@ -27,7 +27,6 @@ const Global = () => {
 
   useEffect(() => {
     if (lastMessage !== null) {
-      console.log(lastMessage);
       setMessageHistory((prev) => prev.concat(lastMessage));
     }
     // console.log(messageHistory);
