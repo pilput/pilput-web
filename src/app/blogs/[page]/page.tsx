@@ -1,8 +1,13 @@
 import { getData } from "@/utils/fetch";
+import { notFound } from "next/navigation";
 import React from "react";
 
 async function getpost(id: string) {
+
   const res = await getData("/posts/" + id);
+  if (res.status != 200) {
+    return notFound();
+  }
   return res.data;
 }
 const page = async ({ params }: { params: { page: string } }) => {
