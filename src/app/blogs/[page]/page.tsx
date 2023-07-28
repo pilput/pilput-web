@@ -6,7 +6,7 @@ async function getpost(id: string) {
 
   const res = await getData("/posts/" + id);
   if (res.status != 200) {
-    return notFound();
+    throw notFound()
   }
   return res.data;
 }
