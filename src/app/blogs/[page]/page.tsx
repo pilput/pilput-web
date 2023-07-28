@@ -1,4 +1,3 @@
-import Navigation from "@/components/header/Navbar";
 import { getData } from "@/utils/fetch";
 import React from "react";
 
@@ -17,7 +16,6 @@ const page = async ({ params }: { params: { page: string } }) => {
           </h2>
         </div>
         <div className="my-10 mx-auto flex justify-center ">
-          {/* {data.body} */}
           <div
             className="prose"
             dangerouslySetInnerHTML={{ __html: data.body }}

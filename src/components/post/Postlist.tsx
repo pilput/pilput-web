@@ -1,11 +1,12 @@
 import Link from "next/link";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import WordLimit from "@/components/word/WordLimit";
 
 interface Post {
   id: string;
   title: string;
   body: string;
+  slug: string;
 }
 interface PostlistProps {
   post: Post;
@@ -20,7 +21,7 @@ const Postlist: React.FC<PostlistProps> = ({ post }) => {
           <WordLimit text={post.body} limit={50} />
         </p>
         <div className="flex justify-end">
-          <Link href={"/blogs/" + post.id} className="btn">
+          <Link href={"/blogs/" + post.slug} className="btn">
             <Button>Read More</Button>
           </Link>
         </div>
