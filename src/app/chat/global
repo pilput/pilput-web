@@ -29,7 +29,6 @@ const Global = () => {
     if (lastMessage !== null) {
       setMessageHistory((prev) => prev.concat(lastMessage));
     }
-    // console.log(messageHistory);
   }, [lastMessage]);
 
   const handleClickChangeSocketUrl = () => {
