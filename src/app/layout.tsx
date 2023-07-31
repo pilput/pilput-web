@@ -18,7 +18,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-gray-50">
       <body className={inter.className}>
-        <Navigation />.
         {children}
         <Toaster />
       </body>

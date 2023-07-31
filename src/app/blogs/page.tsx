@@ -4,6 +4,7 @@ import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { getData } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
+import Navigation from "@/components/header/Navbar";
 
 interface Post {
   id: string;
@@ -36,6 +37,7 @@ const Blog = () => {
   }
   return (
     <>
+      <Navigation />
       <div className="mx-auto p-3 max-w-7xl min-h-screen">
         <h2 className="text-2xl font-semibold">Posts</h2>
         <div className="mb-10"></div>
