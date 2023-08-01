@@ -1,32 +1,46 @@
 "use client";
 import { wsbaseurl } from "@/utils/fetch";
 import useSocket from "@/utils/socketio";
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+import React, { useEffect, useRef, useState } from "react";
+import io, {Socket} from "socket.io-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../ui/textarea";
 
+
+
+interface CommentData {
+  id: string;
+  text: string;
+  repies: CommentData;
+}
+
+
 const Comment = ({ post_id }: { post_id: string }) => {
-  const [comment, setcomment] = useState("");
-  const [comments, setcomments] = useState([{ id: "", text: ""}]);
-  const socket = io(wsbaseurl + "/posts", { query: { post_id: post_id } });
+  const [comment, setcomment] = useState<string>("");
+  const [comments, setcomments] = useState<CommentData[]>([]);
+  const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
-    socket.on("newComment", (message) => {
-      setcomments(message);
-    });
+    socketRef.current = io(wsbaseurl + "/posts", { query: { post_id: post_id } });
+    if (socketRef.current) {
+      socketRef.current.on("newComment", (message: CommentData[]) => {
+        setcomments(message);
+      });
+    }
   }, []);
+  
   function refresh() {
-    if (socket) {
-      socket.emit("getAllComments");
+    if (socketRef.current) {
+      socketRef.current.emit("getAllComments");
     }
   }
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("masuk submit");
 
-    if (socket) {
-      socket.emit("sendComment", { text: comment });
+    if (socketRef.current) {
+      socketRef.current.emit("sendComment", { text: comment });
       setcomment("");
     }
   }
