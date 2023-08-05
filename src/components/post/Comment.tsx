@@ -1,13 +1,9 @@
 "use client";
 import { wsbaseurl } from "@/utils/fetch";
-import useSocket from "@/utils/socketio";
 import React, { useEffect, useRef, useState } from "react";
-import io, {Socket} from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "../ui/textarea";
-
-
 
 interface CommentData {
   id: string;
@@ -15,21 +11,22 @@ interface CommentData {
   repies: CommentData;
 }
 
-
 const Comment = ({ post_id }: { post_id: string }) => {
   const [comment, setcomment] = useState<string>("");
   const [comments, setcomments] = useState<CommentData[]>([]);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socketRef.current = io(wsbaseurl + "/posts", { query: { post_id: post_id } });
+    socketRef.current = io(wsbaseurl + "/posts", {
+      query: { post_id: post_id },
+    });
     if (socketRef.current) {
       socketRef.current.on("newComment", (message: CommentData[]) => {
         setcomments(message);
       });
     }
   }, []);
-  
+
   function refresh() {
     if (socketRef.current) {
       socketRef.current.emit("getAllComments");
@@ -48,9 +45,7 @@ const Comment = ({ post_id }: { post_id: string }) => {
     <div className="max-w-2xl border rounded-lg py-6 px-5">
       <h1 className="text-2xl font-semibold my-6">Comments</h1>
       <form onSubmit={sendComment} className="w-full flex space-x-4">
-        {/* <input className="" type="text" value={comment} onChange={} placeholder="type your comment" /> */}
-
-        <Textarea
+        <Input
           value={comment}
           onChange={(e) => setcomment(e.target.value)}
           placeholder="type your comment"
