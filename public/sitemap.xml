@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+    <loc>https://pilput.dev</loc>
+    <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+    <loc>https://pilput.dev/chat</loc>
+    <lastmod>2023-08-08</lastmod>
+</url>
+<url>
     <loc>https://pilput.dev/blogs</loc>
     <lastmod>2023-08-08</lastmod>
 </url>
@@ -14,6 +22,38 @@
 </url>
 <url>
    <loc>https://pilput.dev/login</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/harnessing_the_power_of_rabbitmq_as_a_message_broker</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/exploring_the_power_of_nginx_load_balancer_for_scalable_web_applications</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/understanding_pass_by_value_and_pass_by_reference_in_programming</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/a_comparative_analysis_golang_vs_nodejs_for_backend_development</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/scaling_your_application_with_aws_best_practices_for_scalability_and_performance</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/the_impact_of_ai_on_developers_transforming_the_future_of_software_development</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/exploring_the_benefits_and_challenges_of_microservices_architecture</loc>
+   <lastmod>2023-08-08</lastmod>
+</url>
+<url>
+   <loc>https://pilput.dev/blogs/an_introduction_to_aws_ecs_elastic_container_service</loc>
    <lastmod>2023-08-08</lastmod>
 </url>
 </urlset>
