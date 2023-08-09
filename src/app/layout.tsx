@@ -1,7 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import "./global.css";
 import { Inter } from "next/font/google";
-import Navigation from "@/components/header/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 

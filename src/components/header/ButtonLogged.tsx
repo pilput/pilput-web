@@ -15,11 +15,11 @@ const ButtonLogged = () => {
     <>
       {token ? (
         <Link href={dashbaseurl || ""}>
-          <Button>Dashboard</Button>
+          <Button variant={"default"}>Dashboard</Button>
         </Link>
       ) : (
         <Link href="/login">
-          <Button>Login</Button>
+          <Button variant={"default"}>Login</Button>
         </Link>
       )}
     </>
