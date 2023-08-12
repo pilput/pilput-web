@@ -9,7 +9,7 @@ const navigation = [
   //   { name: "Forum", href: "/chat" },
 ];
 
-const Navbar = () => {
+const NewNavbar = () => {
   const [showmenu, setshowmenu] = useState(false);
   function toggleMenu() {
     setshowmenu((prev) => !prev);
@@ -67,4 +67,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NewNavbar;

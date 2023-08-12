@@ -14,12 +14,12 @@ const ButtonLogged = () => {
   return (
     <>
       {token ? (
-        <Link href={dashbaseurl || ""}>
-          <Button variant={"default"}>Dashboard</Button>
+        <Link className="flex items-center" href={dashbaseurl || ""}>
+          <Button variant={"secondary"}>Dashboard</Button>
         </Link>
       ) : (
-        <Link href="/login">
-          <Button variant={"default"}>Login</Button>
+        <Link className="flex items-center" href="/login">
+          <Button variant={"secondary"}>Login</Button>
         </Link>
       )}
     </>
