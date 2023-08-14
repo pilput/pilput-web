@@ -1,13 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import {
-  ArrowRightOnRectangleIcon,
-  ChatBubbleLeftIcon,
-  PlusSmallIcon,
-  SunIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
-import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 const Chat = () => {
@@ -28,19 +20,61 @@ const Chat = () => {
         <div className="relative hidden h-screen shadow-lg lg:block w-80   ">
           <div className="flex h-full flex-col flex-1 space-y-1 bg-zinc-800 dark:bg-gray-700 text-gray-200 p-2 text-sm">
             <button className="flex w-full hover:bg-zinc-700 items-center justify-start py-3 px-2 border rounded-lg">
-              <PlusSmallIcon className="h-4 w-4" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6v12m6-6H6"
+                />
+              </svg>
+
               <span className="ml-2">New chat</span>
             </button>
             <nav className="mt-6 overflow-y-auto flex flex-1 flex-col space-y-3 border-b border-white/50">
               <button className="flex items-center my-2 justify-start w-full py-3 px-3 transition-colors duration-200 hover:bg-zinc-700 rounded-lg dark:text-white">
-                <ChatBubbleLeftIcon className="h-4" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                  />
+                </svg>
+
                 <span className="mx-2 text-gray-200 font-normal">
                   Read the book without see
                 </span>
               </button>
             </nav>
             <div className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg">
-              <TrashIcon className="h-4 w-4" /> <span>Clear Conversations</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                />
+              </svg>
+              <span>Clear Conversations</span>
             </div>
 
             <div className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg">
@@ -60,7 +94,21 @@ const Chat = () => {
               href="/"
               className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg"
             >
-              <ArrowRightOnRectangleIcon className="h-4 w-4" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+
               <span>Log out</span>
             </Link>
           </div>
@@ -89,7 +137,21 @@ const Chat = () => {
                 onSubmit={sendQuestion}
                 className="relative flex items-center justify-center mx-72 p-1 space-x-4"
               >
-                <PaperAirplaneIcon className="absolute text-zinc-400 right-5 h-5" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="absolute text-zinc-400 right-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                  />
+                </svg>
+
                 <input
                   value={question}
                   onChange={(e) => setquestion(e.target.value)}
