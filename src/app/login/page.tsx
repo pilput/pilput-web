@@ -18,7 +18,10 @@ interface Form {
 export default function Login() {
   const router = useRouter();
   const [email, setemail] = useState("guest@pilput.dev");
-  const [form, setform] = useState<Form | null>();
+  const [form, setform] = useState<Form | null>({
+    email: "guest@pilput.dev",
+    password: "guestguest",
+  });
   const [password, setpassword] = useState("guestguest");
   const [loginwait, setloginwait] = useState(false);
 
@@ -27,11 +30,9 @@ export default function Login() {
   }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    console.log(form);
-
+    e.preventDefault();
     const id = toast.loading("Loading...");
     setloginwait(true);
-    e.preventDefault();
     const data = {
       email: email,
       password: password,
@@ -104,9 +105,9 @@ export default function Login() {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="feather feather-loader mr-2 h-4 w-4 animate-spin"
                     >
                       <line x1="12" y1="2" x2="12" y2="6"></line>
