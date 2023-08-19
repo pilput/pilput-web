@@ -26,7 +26,7 @@ export default function Login() {
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
-    window.location.href = apibaseurl + "/api/v2/oauth";
+    window.location.href = apibaseurl + "/auth/oauth";
   }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
