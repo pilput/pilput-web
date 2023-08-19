@@ -27,11 +27,6 @@ const Comment = ({ post_id }: { post_id: string }) => {
     }
   }, []);
 
-  function refresh() {
-    if (socketRef.current) {
-      socketRef.current.emit("getAllComments");
-    }
-  }
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("masuk submit");
