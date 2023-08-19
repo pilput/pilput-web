@@ -12,24 +12,25 @@ async function getpost(slug: string) {
     throw notFound();
   }
 }
+
 const page = async ({ params }: { params: { slug: string } }) => {
-  const data = await getpost(params.slug);
+  const post = await getpost(params.slug);
   return (
     <>
       <Navigation />
       <div className="mx-auto p-3 max-w-2xl min-h-screen">
         <div className="border-b-2">
           <h2 className="text-2xl max-w-2xl mx-auto my-7 font-bold">
-            {data.title}
+            {post.title}
           </h2>
         </div>
         <div className="my-10 mx-auto flex justify-center ">
           <div
             className="prose"
-            dangerouslySetInnerHTML={{ __html: data.body }}
+            dangerouslySetInnerHTML={{ __html: post.body }}
           ></div>
         </div>
-        <Comment post_id={data.id} />
+        <Comment post_id={post.id} />
       </div>
     </>
   );
