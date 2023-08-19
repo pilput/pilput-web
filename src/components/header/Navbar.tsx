@@ -20,7 +20,7 @@ const Navbar = () => {
         <div className="flex flex-no-shrink items-stretch h-20">
           <Link
             href="/"
-            className="flex-no-grow flex-no-shrink relative py-2 px-4 leading-normal text-white no-underline flex items-center hover:bg-grey-dark"
+            className="flex-no-grow flex-no-shrink relative py-2 px-4 leading-normal text-white no-underline flex items-center hover:bg-grey-dark font-bold"
           >
             PILPUT
           </Link>

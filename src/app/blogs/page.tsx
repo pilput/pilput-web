@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { getData } from "@/utils/fetch";
+import { axiosIntence, getData } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 
@@ -11,15 +11,16 @@ interface Post {
   title: string;
   body: string;
   slug: string;
+  creator: any;
 }
 
 const Blog = () => {
   const [posts, setposts] = useState([]);
   async function FetchPost() {
-    const response = await getData("/posts");
-    if (response.status == 200) {
-      setposts(response.data.data);
-    } else {
+    try {
+      const response = await axiosIntence("/api/v2/posts");
+      setposts(response.data);
+    } catch (error) {
       toast.error("Error check your connection");
     }
   }

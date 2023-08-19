@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { postDatanoauth } from "../../utils/fetch";
+import { axiosIntence, postDatanoauth } from "../../utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -10,9 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apibaseurl, dashbaseurl } from "@/utils/fetch";
 
+interface Form {
+  email: string;
+  password: string;
+}
+
 export default function Login() {
   const router = useRouter();
   const [email, setemail] = useState("guest@pilput.dev");
+  const [form, setform] = useState<Form | null>();
   const [password, setpassword] = useState("guestguest");
   const [loginwait, setloginwait] = useState(false);
 
@@ -21,6 +27,8 @@ export default function Login() {
   }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    console.log(form);
+
     const id = toast.loading("Loading...");
     setloginwait(true);
     e.preventDefault();
@@ -29,7 +37,8 @@ export default function Login() {
       password: password,
     };
     const response = await postDatanoauth("/auth/login", data);
-    if (response.status === 200) {
+    try {
+      const response = await axiosIntence.post("/auth/login", data);
       toast.success("Success login", { id });
       const expire = new Date();
 
@@ -37,13 +46,12 @@ export default function Login() {
 
       setCookie("token", response.data.access_token, {
         domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`,
-        // secure: true,
         expires: expire,
         sameSite: "strict",
       });
       setloginwait(false);
       router.push(dashbaseurl);
-    } else {
+    } catch (error) {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
     }
@@ -67,17 +75,21 @@ export default function Login() {
               <Input
                 type="email"
                 placeholder="Email"
-                value={email}
+                value={form?.email}
                 onChange={(e) => {
-                  setemail(e.target.value);
+                  setform({ ...form, email: e.target.value, password });
                 }}
               />
 
               <Input
-                value={password}
-                onChange={(e) => {
-                  setpassword(e.target.value);
-                }}
+                value={form?.password}
+                onChange={(e) =>
+                  setform((prevForm) => ({
+                    ...prevForm,
+                    password: e.target.value,
+                    email,
+                  }))
+                }
                 type="password"
                 placeholder="Password"
               />
@@ -106,8 +118,7 @@ export default function Login() {
                       <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
                       <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
                     </svg>
-                     Please
-                    Wait
+                    Please Wait
                   </Button>
                 ) : (
                   <Button type="submit" size={"lg"} className="w-full">

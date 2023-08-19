@@ -8,11 +8,8 @@ export const wsbaseurl = process.env.NEXT_PUBLIC_WS_URL || "";
 export const storagebaseurl = process.env.NEXT_PUBLIC_STORAGE_URL || "";
 export const mainbaseurl = process.env.NEXT_PUBLIC_MAIN_URL || "";
 
-const axiosIntence = axios.create({
+export const axiosIntence = axios.create({
   baseURL: apibaseurl,
-  headers: {
-    Authorization: `Bearer ${getToken()}`,
-  },
 });
 
 export async function getDataExternal(url: string, params: any) {
