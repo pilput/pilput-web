@@ -2,11 +2,9 @@ import Link from "next/link";
 
 const Landing = () => {
   return (
-    <main className="relative overflow-hidden font-mono bg-dark-200 dark:bg-gray-800 " style={{height:"670px"}}>
-      <div className="absolute hidden md:block -bottom-32 -left-32 w-96 h-96 text-blue-500"></div>
-      <div className="relative z-20 h-full flex items-center">
-        <div className="container relative flex flex-col mb-36 items-center justify-between py-4 mx-auto">
-          <div className="flex flex-col items-center h-full">
+    <div className="font-mono flex justify-center items-center w-full" style={{height:"670px"}}>
+      <div className="relative z-20 h-full flex justify-center items-center">
+          <div className="flex flex-col items-center ">
             <p className="my-6 font-bold text-6xl text-center text-black dark:text-white">
               Hi, I&#x27;m{" "}
               <span className="text-blue-600 ">CECEP JANUARDI</span>
@@ -16,13 +14,6 @@ const Landing = () => {
             </h2>
             <p>This website contains my experiments in web programming.</p>
             <div className="flex items-center justify-center mt-4">
-              {/* <Link
-                target="_blank"
-                href="https://rxresu.me/cecepjanuardi31/cecep-januardi"
-                className="px-5 py-2 my-2 text-gray-800 uppercase bg-transparent border-2 border-gray-800 rounded-lg dark:text-gray-800 dark:bg-white hover:dark:bg-gray-100 hover:bg-gray-800 hover:text-white text-md"
-              >
-                Resume
-              </Link> */}
               <Link
                 href="https://github.com/cecep31"
                 className="text-gray-700 ml-3 hover:text-gray-50 bg-gray-100 hover:bg-gray-800 p-2 rounded-xl"
@@ -65,9 +56,8 @@ const Landing = () => {
               </Link>
             </div>
           </div>
-        </div>
       </div>
-    </main>
+    </div>
   );
 };
 

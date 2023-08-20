@@ -19,7 +19,7 @@ export default function RootLayout({
       <head>
         <meta name="robots" content="all" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-gray-100`}>
         {children}
         <Toaster />
       </body>

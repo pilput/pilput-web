@@ -59,7 +59,7 @@ export default function Login() {
   }
 
   return (
-    <main className="dark:bg-gray-800 bg-white relative overflow-hidden h-screen">
+    <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
       <div className="min-h-screen flex justify-center items-center">
         <div className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20">
           <div>
