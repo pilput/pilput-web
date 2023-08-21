@@ -18,8 +18,10 @@ const Blog = () => {
   const [posts, setposts] = useState([]);
   async function FetchPost() {
     try {
-      const response = await axiosIntence("/api/v2/posts");
-      setposts(response.data);
+      const response = await axiosIntence.get("/api/v2/posts", {
+        params: { per_page: 8 },
+      });
+      setposts(response.data.data);
     } catch (error) {
       toast.error("Error check your connection");
     }
