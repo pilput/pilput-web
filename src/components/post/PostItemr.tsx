@@ -1,5 +1,7 @@
 import Image from "next/image";
 import WordLimit from "../word/WordLimit";
+import { mainbaseurl } from "@/utils/fetch";
+import Link from "next/link";
 interface Post {
   id: string;
   title: string;
@@ -21,12 +23,12 @@ const PostItemr = ({ post }: { post: Post }) => {
           />
         </div> */}
         <div className="p-8">
-          <a
-            href="#"
+          <Link
+            href={mainbaseurl+`/blogs/`+post.slug}
             className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
           >
             {post.title}
-          </a>
+          </Link>
           <div className="mt-2 text-gray-500">
               <WordLimit text={plaintext} limit={20} />
           </div>
