@@ -1,7 +1,7 @@
-import Image from "next/image";
 import WordLimit from "../word/WordLimit";
 import { mainbaseurl } from "@/utils/fetch";
 import Link from "next/link";
+
 interface Post {
   id: string;
   title: string;
