@@ -9,7 +9,7 @@ const Footer = () => {
             <h3 className="font-bold mb-2">ABOUT</h3>
             <ul className="space-y-1">
               <li>Frequently Asked Questions</li>
-              <li>About Ruby Lane</li>
+              <li>About Cecep Januardi</li>
               <li>Community Standards</li>
               <li>Organizational Structure</li>
               <li>Security Status</li>
@@ -18,7 +18,7 @@ const Footer = () => {
           <div>
             <h3 className="font-bold mb-2">GET INVOLVED</h3>
             <ul className="space-y-1">
-              <li>Contribute</li>
+              <li><a href="https://github.com/cecep31" target="_blank" className="hover:underline">Contribute</a></li>
               <li>Submit Bugs</li>
               <li>Donate</li>
             </ul>
@@ -27,8 +27,7 @@ const Footer = () => {
             <h3 className="font-bold mb-2">DOCUMENTATION</h3>
             <ul className="space-y-1">
               <li>Guidelines</li>
-              <li>Wiki</li>
-              <li>GPG Key Info</li>
+              <li><a href="https://wiki.pilput.dev" className="hover:underline">Wiki</a></li>
             </ul>
           </div>
           <div>
