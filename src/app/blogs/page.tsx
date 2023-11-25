@@ -18,8 +18,12 @@ const Blog = () => {
   const [posts, setposts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [endPage, setendPage] = useState(false)
 
   async function FetchPost() {
+    if (endPage) {
+      return;
+    }
     setIsLoading(true);
     try {
       const response = await axiosIntence.get("/api/v2/posts", {
@@ -28,8 +32,11 @@ const Blog = () => {
       if (page === 1) {
         setposts(response.data.data);
       } else {
-        let baru = response.data.data;
-        setposts((prev) => [...prev, ...baru]);
+        let newData = response.data.data;
+        if (newData.length !== 0) {
+          setendPage(true);
+          setposts((prev) => [...prev, ...newData]);
+        }
       }
       setIsLoading(false);
     } catch (error) {
