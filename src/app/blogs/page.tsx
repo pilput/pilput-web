@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { axiosIntence, getData } from "@/utils/fetch";
+import { axiosIntence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 
