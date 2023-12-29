@@ -18,15 +18,14 @@ const page = async ({ params }: { params: { slug: string } }) => {
   return (
     <>
       <Navigation />
-      <div className="mx-auto p-3 max-w-2xl min-h-screen">
+      <div className="mx-auto p-3 min-h-screen prose prose-sm sm:prose lg:prose-lg xl:prose-2xl">
         <div className="border-b-2">
-          <h2 className="text-2xl max-w-2xl mx-auto my-7 font-bold">
+          <div className="text-5xl text-gray-950 mx-auto my-7 font-bold">
             {post.title}
-          </h2>
+          </div>
         </div>
         <div className="my-10 mx-auto flex justify-center ">
           <div
-            className="prose"
             dangerouslySetInnerHTML={{ __html: post.body }}
           ></div>
         </div>

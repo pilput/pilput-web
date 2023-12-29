@@ -37,8 +37,8 @@ const Comment = ({ post_id }: { post_id: string }) => {
     }
   }
   return (
-    <div className="max-w-2xl border rounded-lg py-6 px-5">
-      <h1 className="text-2xl font-semibold my-6">Comments</h1>
+    <div className="mx-auto border rounded-lg py-6 px-5">
+      <div className="text-3xl text-gray-900 font-semibold my-6">Comments</div>
       <form onSubmit={sendComment} className="w-full flex space-x-4">
         <Input
           value={comment}
@@ -55,7 +55,7 @@ const Comment = ({ post_id }: { post_id: string }) => {
             className="w-full rounded-lg border px-3 py-3 flex flex-col mb-2"
           >
             <div>Unkown</div>
-            <p>{data.text}</p>
+            <div>{data.text}</div>
           </div>
         ))}
       </div>
