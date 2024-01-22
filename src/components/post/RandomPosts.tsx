@@ -35,7 +35,7 @@ const PostsRandomList = () => {
   let content;
   if (posts.length) {
     content = (
-      <div className="grid grid-cols-3 gap-3 justify-around ">
+      <div className="grid grid-cols-3 gap-3 justify-around">
         {posts.map((post) => (
           <PostItemr key={post.id} post={post} />
         ))}
