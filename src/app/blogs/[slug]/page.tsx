@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           <Image
             className="mx-auto h-auto w-auto"
             priority={false}
-            src={post.photo_url}
+            src={process.env.NEXT_PUBLIC_STORAGE_URL+""+post.photo_url}
             alt={post.photo_url}
             width={300}
             height={200}
