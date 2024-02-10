@@ -6,13 +6,6 @@ import { axiosIntence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 
-interface Post {
-  id: string;
-  title: string;
-  body: string;
-  slug: string;
-  creator: any;
-}
 
 const Blog = () => {
   const [posts, setposts] = useState<any[]>([]);
