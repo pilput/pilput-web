@@ -5,14 +5,6 @@ import { axiosIntence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemrPulse from "./PostItemrpulse";
 
-interface Post {
-  id: string;
-  title: string;
-  body: string;
-  slug: string;
-  creator: any;
-}
-
 const PostsRandomList = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const tempposts = [1, 2, 3, 4, 5, 6];
