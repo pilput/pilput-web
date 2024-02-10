@@ -2,16 +2,9 @@ import WordLimit from "../word/WordLimit";
 import { mainbaseurl } from "@/utils/fetch";
 import Link from "next/link";
 
-interface Post {
-  id: string;
-  title: string;
-  body: string;
-  slug: string;
-  creator: any;
-}
 
 const PostItemr = ({ post }: { post: Post }) => {
-  const plaintext = post.body.replace(/(<([^>]+)>)/gi, "");
+  const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden w-full m-3 h-64">
       <div className="p-8">
