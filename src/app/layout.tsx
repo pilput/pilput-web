@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="en" className="bg-gray-50">
       <head>
         <meta name="robots" content="all" />
-
       </head>
       <body className={`${inter.className} bg-gray-100`}>
         <Google />
