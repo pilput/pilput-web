@@ -4,19 +4,32 @@ import WordLimit from "@/components/word/WordLimit";
 import Image from "next/image";
 import { storagebaseurl } from "@/utils/getCofig";
 
-interface PostlistProps {
-  post: Post;
-}
-
-const Postlist: React.FC<PostlistProps> = ({ post }) => {
-  const plaintext = post.body.replace(/(<([^>]+)>)/gi, "");
+const Postlist = ({ post }: { post: Post }) => {
+  const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
     <div className="w-full mt-4 px-5 py-5 bg-gray-50 border text-gray-600 shadow-md rounded-lg ">
+      <div className="flex items-center gap-2 mb-3">
+        <div>
+          {post.creator?.image && (
+            <Image
+              className="rounded-full object-cover h-7 w-7"
+              src={storagebaseurl + post.creator?.image}
+              width={50}
+              height={50}
+              alt={post.creator?.first_name}
+            />
+          )}
+        </div>
+        <div className="font-bold">
+          {post.creator?.first_name} {post.creator?.last_name}
+        </div>
+        <div>{post.created_at}</div>
+      </div>
       <div className="flex gap-3">
         {post.photo_url && (
           <Image
             className="object-cover"
-            src={storagebaseurl + post.photo_url}
+            src={storagebaseurl + "/" + post.photo_url}
             alt=""
             width={150}
             height={150}
@@ -31,11 +44,6 @@ const Postlist: React.FC<PostlistProps> = ({ post }) => {
           <p className="px-4">
             <WordLimit text={plaintext} limit={50} />
           </p>
-          <div className="flex justify-end">
-            <Link href={"/blogs/" + post.slug} className="btn">
-              <Button>Read More</Button>
-            </Link>
-          </div>
         </div>
       </div>
     </div>

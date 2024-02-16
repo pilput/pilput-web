@@ -12,8 +12,6 @@ const navigation = [
 
 const Navbar = () => {
   const pathname = usePathname();
-  console.log(pathname);
-  
   const [showmenu, setshowmenu] = useState(false);
   function toggleMenu() {
     setshowmenu((prev) => !prev);
