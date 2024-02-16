@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import ButtonLogged from "./ButtonLogged";
+import { usePathname } from "next/navigation";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -10,6 +11,9 @@ const navigation = [
 ];
 
 const Navbar = () => {
+  const pathname = usePathname();
+  console.log(pathname);
+  
   const [showmenu, setshowmenu] = useState(false);
   function toggleMenu() {
     setshowmenu((prev) => !prev);
@@ -46,13 +50,17 @@ const Navbar = () => {
         </div>
         <div className="lg:flex lg:items-stretch lg:flex-no-shrink lg:flex-grow items-center">
           <div
-            className={`${showmenu ? "" : "hidden"} lg:flex lg:items-stretch lg:justify-end ml-auto`}
+            className={`${
+              showmenu ? "" : "hidden"
+            } lg:flex lg:items-stretch lg:justify-end ml-auto`}
           >
             {navigation.map((data, id) => (
               <Link
                 key={id}
                 href={data.href}
-                className="flex-no-grow flex-no-shrink relative py-2 px-4 leading-normal text-white no-underline flex items-center hover:bg-grey-dark"
+                className={`flex-no-grow flex-no-shrink relative py-2 px-4 leading-normal text-white flex items-center hover:bg-grey-dark ${
+                  pathname === data.href ? "underline" : ""
+                }`}
               >
                 {data.name}
               </Link>

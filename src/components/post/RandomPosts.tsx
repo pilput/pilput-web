@@ -44,7 +44,6 @@ const PostsRandomList = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="text-2xl font-semibold">Posts</div>
-
       {content}
     </div>
   );
