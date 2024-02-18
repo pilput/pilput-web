@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import WordLimit from "@/components/word/WordLimit";
 import Image from "next/image";
 import { storagebaseurl } from "@/utils/getCofig";
-import { getProfilePicture } from "@/utils/getImage";
+import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
@@ -17,6 +17,7 @@ const Postlist = ({ post }: { post: Post }) => {
               src={getProfilePicture(post.creator?.image)}
               width={50}
               height={50}
+              loading="lazy"
               alt={post.creator?.first_name}
             />
           )}
@@ -30,7 +31,7 @@ const Postlist = ({ post }: { post: Post }) => {
         {post.photo_url && (
           <Image
             className="object-cover"
-            src={storagebaseurl + "/" + post.photo_url}
+            src={getUrlImage(post.photo_url)}
             alt=""
             width={150}
             height={150}

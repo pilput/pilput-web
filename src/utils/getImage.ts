@@ -10,3 +10,6 @@ export function getProfilePicture(url: string) {
         return storagebaseurl + url
     }
 }
+export function getUrlImage(path: string): string {
+    return storagebaseurl + path
+}
