@@ -1,4 +1,4 @@
-import { storagebaseurl } from "./fetch";
+import { storagebaseurl } from "./getCofig";
 
 function isFullUrl(url: string): boolean {
     return url.startsWith('http://') || url.startsWith('https://');
