@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <Navigation />
-      <div className="mx-auto p-3 min-h-screen prose prose-sm sm:prose lg:prose-lg">
+      <div className="mx-auto p-3 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
         {post.photo_url && (
           <Image
             className="mx-auto h-auto w-auto"
@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             {post.title}
           </div>
         </div>
-        <div className="my-10 mx-auto flex justify-center ">
+        <div className="my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg">
           <div
             className="w-full"
             dangerouslySetInnerHTML={{ __html: post.body }}
