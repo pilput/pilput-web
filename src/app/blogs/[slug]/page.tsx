@@ -5,6 +5,7 @@ import { axiosIntence } from "@/utils/fetch";
 import { storagebaseurl } from "@/utils/getCofig";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getUrlImage } from "../../../utils/getImage";
 
 async function getpost(slug: string) {
   try {
@@ -25,8 +26,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
           <Image
             className="mx-auto h-auto w-auto"
             priority={false}
-            src={storagebaseurl+"/"+post.photo_url}
-            alt={post.photo_url}
+            src={getUrlImage(post.photo_url)}
+            alt={post.title}
             width={300}
             height={200}
           />
