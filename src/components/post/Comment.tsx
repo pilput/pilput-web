@@ -5,11 +5,13 @@ import io, { Socket } from "socket.io-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getToken } from "@/utils/Auth";
+import Image from "next/image";
 
 interface CommentData {
   id: string;
   text: string;
   repies: CommentData;
+  creator: any;
 }
 
 const Comment = ({ post_id }: { post_id: string }) => {
@@ -30,7 +32,6 @@ const Comment = ({ post_id }: { post_id: string }) => {
 
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("masuk submit");
 
     if (socketRef.current) {
       socketRef.current.emit("sendComment", { text: comment });
@@ -55,7 +56,23 @@ const Comment = ({ post_id }: { post_id: string }) => {
             key={data.id}
             className="w-full rounded-lg border px-3 py-3 flex flex-col mb-2"
           >
-            <div>Unkown</div>
+            {data.creator?.first_name ? (
+              <div className="flex gap-2">
+                <Image
+                  className="rounded-full object-cover h-7 w-7"
+                  src={data.creator?.image}
+                  width={50}
+                  height={50}
+                  alt={data.creator?.first_name}
+                />{" "}
+                <div>
+
+                {data.creator?.first_name}
+                </div>
+              </div>
+            ) : (
+              <div>Anonymous</div>
+            )}
             <div>{data.text}</div>
           </div>
         ))}
