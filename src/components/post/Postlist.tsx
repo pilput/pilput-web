@@ -32,7 +32,7 @@ const Postlist = ({ post }: { post: Post }) => {
           <Image
             className="object-cover"
             src={getUrlImage(post.photo_url)}
-            alt=""
+            alt={post.title}
             width={150}
             height={150}
           />
