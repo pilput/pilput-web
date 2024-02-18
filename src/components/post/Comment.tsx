@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getToken } from "@/utils/Auth";
 
 interface CommentData {
   id: string;
@@ -18,7 +19,7 @@ const Comment = ({ post_id }: { post_id: string }) => {
 
   useEffect(() => {
     socketRef.current = io(wsbaseurl + "/posts", {
-      query: { post_id: post_id },
+      query: { post_id: post_id, token: getToken() },
     });
     if (socketRef.current) {
       socketRef.current.on("newComment", (message: CommentData[]) => {
