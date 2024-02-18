@@ -1,13 +1,14 @@
 "use client";
-import { storagebaseurl, wsbaseurl } from "@/utils/getCofig";
+import { wsbaseurl } from "@/utils/getCofig";
 import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getToken } from "@/utils/Auth";
-import {getProfilePicture} from '@/utils/getImage';
-import Image from "next/image";
-import Moment from "moment";
+import { getProfilePicture } from "@/utils/getImage";
+import Days from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
 
 interface CommentData {
   id: string;
@@ -18,6 +19,7 @@ interface CommentData {
 }
 
 const Comment = ({ post_id }: { post_id: string }) => {
+  dayjs.extend(relativeTime);
   const [comment, setcomment] = useState<string>("");
   const [comments, setcomments] = useState<CommentData[]>([]);
   const socketRef = useRef<Socket | null>(null);
@@ -68,7 +70,7 @@ const Comment = ({ post_id }: { post_id: string }) => {
                     {data.creator?.first_name} {data.creator?.last_name}
                   </div>
                   <div className="text-gray-500">
-                    {Moment(data.created_at).fromNow()}
+                    {Days(data.created_at).fromNow()}
                   </div>
                 </div>
               </div>
