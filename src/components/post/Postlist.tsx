@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import WordLimit from "@/components/word/WordLimit";
 import Image from "next/image";
 import { storagebaseurl } from "@/utils/getCofig";
+import { getProfilePicture } from "@/utils/getImage";
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
@@ -11,9 +12,9 @@ const Postlist = ({ post }: { post: Post }) => {
       <div className="flex items-center gap-2 mb-3">
         <div>
           {post.creator?.image && (
-            <Image
+            <img
               className="rounded-full object-cover h-7 w-7"
-              src={storagebaseurl + post.creator?.image}
+              src={getProfilePicture(post.creator?.image)}
               width={50}
               height={50}
               alt={post.creator?.first_name}

@@ -5,6 +5,7 @@ import io, { Socket } from "socket.io-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getToken } from "@/utils/Auth";
+import {getProfilePicture} from '@/utils/getImage';
 import Image from "next/image";
 import Moment from "moment";
 
@@ -55,9 +56,9 @@ const Comment = ({ post_id }: { post_id: string }) => {
           >
             {data.creator?.first_name ? (
               <div className="flex gap-2 items-center">
-                <Image
+                <img
                   className="rounded-full object-cover h-7 w-7"
-                  src={storagebaseurl + data.creator?.image}
+                  src={getProfilePicture(data.creator?.image)}
                   width={20}
                   height={20}
                   alt={data.creator?.first_name}
