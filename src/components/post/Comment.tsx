@@ -84,6 +84,7 @@ const Comment = ({ post_id }: { post_id: string }) => {
       <form onSubmit={sendComment} className="w-full flex space-x-4">
         <Input
           value={comment}
+          required
           onChange={(e) => setcomment(e.target.value)}
           placeholder="type your comment"
         />
