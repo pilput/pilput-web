@@ -10,18 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apibaseurl, dashbaseurl } from "@/utils/fetch";
 
-interface Form {
-  email: string;
-  password: string;
-}
-
 export default function Login() {
   const router = useRouter();
   const [email, setemail] = useState("guest@pilput.dev");
-  const [form, setform] = useState<Form | null>({
-    email: "guest@pilput.dev",
-    password: "guestguest",
-  });
   const [password, setpassword] = useState("guestguest");
   const [loginwait, setloginwait] = useState(false);
 
@@ -37,7 +28,6 @@ export default function Login() {
       email: email,
       password: password,
     };
-    const response = await postDatanoauth("/auth/login", data);
     try {
       const response = await axiosIntence.post("/auth/login", data);
       toast.success("Success login", { id });
@@ -76,20 +66,16 @@ export default function Login() {
               <Input
                 type="email"
                 placeholder="Email"
-                value={form?.email}
+                value={email}
                 onChange={(e) => {
-                  setform({ ...form, email: e.target.value, password });
+                  setemail(e.target.value);
                 }}
               />
 
               <Input
-                value={form?.password}
+                value={password}
                 onChange={(e) =>
-                  setform((prevForm) => ({
-                    ...prevForm,
-                    password: e.target.value,
-                    email,
-                  }))
+                  setpassword(e.target.value)
                 }
                 type="password"
                 placeholder="Password"
