@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "d42zd71vraxqs.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "storage.pilput.dev",
+      }
     ],
   },
 };
