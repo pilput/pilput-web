@@ -9,25 +9,23 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apibaseurl, dashbaseurl } from "@/utils/fetch";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type Inputs = {
+  email: string;
+  password: string;
+};
 
 export default function Login() {
-  const router = useRouter();
-  const [email, setemail] = useState("guest@pilput.dev");
-  const [password, setpassword] = useState("guestguest");
-  const [loginwait, setloginwait] = useState(false);
-
-  function oauthgoogle() {
-    window.location.href = apibaseurl + "/auth/oauth";
-  }
-
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     setloginwait(true);
-    const data = {
-      email: email,
-      password: password,
-    };
     try {
       const response = await axiosIntence.post("/auth/login", data);
       toast.success("Success login", { id });
@@ -46,6 +44,14 @@ export default function Login() {
       toast.error("Wrong username or password", { id });
       setloginwait(false);
     }
+  };
+  const router = useRouter();
+  const [email, setemail] = useState("guest@pilput.dev");
+  const [password, setpassword] = useState("guestguest");
+  const [loginwait, setloginwait] = useState(false);
+
+  function oauthgoogle() {
+    window.location.href = apibaseurl + "/auth/oauth";
   }
 
   return (
@@ -61,24 +67,37 @@ export default function Login() {
               <br />
             </p>
           </div>
+          <div className="py-3">
+            <ol className="text-sm">
+              {errors.email?.type == "required" && (
+                <li className="text-red-500">The Email field is required</li>
+              )}
+              {errors.password?.type == "required" && (
+                <li className="text-red-500">The Password field is required</li>
+              )}
+            </ol>
+          </div>
           <div>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                type="email"
                 placeholder="Email"
-                value={email}
-                onChange={(e) => {
-                  setemail(e.target.value);
-                }}
+                {...register("email", { required: true })}
+                aria-invalid={errors.email ? "true" : "false"}
+                defaultValue={"guest@pilput.dev"}
+                className={
+                  errors.email ? "border text-red-400 border-red-400" : ""
+                }
               />
 
               <Input
-                value={password}
-                onChange={(e) =>
-                  setpassword(e.target.value)
-                }
+                {...register("password", { required: true, minLength: 8 })}
                 type="password"
                 placeholder="Password"
+                aria-invalid={errors.password ? "true" : "false"}
+                defaultValue={"guestguest"}
+                className={
+                  errors.password ? "border text-red-400 border-red-400" : ""
+                }
               />
 
               <div className="flex justify-center mt-6">
