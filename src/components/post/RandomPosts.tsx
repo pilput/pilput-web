@@ -9,19 +9,19 @@ const PostsRandomList = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const tempposts = [1, 2, 3, 4, 5, 6];
 
-  async function GetPostsRandom() {
+  const fetchRandomPosts = async () => {
     try {
-      const res = await axiosIntence.get("/api/v2/posts", {
+      const response = await axiosIntence.get("/api/v2/posts", {
         params: { random: true },
       });
-      setposts(res.data);
-    } catch (error) {
-      toast.error("Cannot connect with server");
+      setposts(response.data);
+    } catch {
+      toast.error("Failed to fetch random posts");
     }
-  }
+  };
 
   useEffect(() => {
-    GetPostsRandom();
+    fetchRandomPosts();
   }, []);
 
   let content;

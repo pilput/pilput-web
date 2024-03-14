@@ -2,22 +2,21 @@ import Footer from "@/components/footer/Footer";
 import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
 import { axiosIntence } from "@/utils/fetch";
-import { storagebaseurl } from "@/utils/getCofig";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getUrlImage } from "../../../utils/getImage";
+import { getUrlImage } from "@/utils/getImage";
 
-async function getpost(slug: string) {
+export const getPost = async (postSlug: string) => {
   try {
-    const res = await axiosIntence("/api/v2/posts/" + slug);
-    return res.data;
-  } catch (error) {
+    const { data } = await axiosIntence(`/api/v2/posts/${postSlug}`);
+    return data;
+  } catch {
     throw notFound();
   }
-}
+};
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const post = await getpost(params.slug);
+  const post = await getPost(params.slug);
   return (
     <>
       <Navigation />

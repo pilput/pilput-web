@@ -13,32 +13,23 @@ const Blog = () => {
   const [page, setPage] = useState(1);
   const [endPage, setendPage] = useState(false)
 
-  async function FetchPost() {
-    if (endPage) {
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const response = await axiosIntence.get("/api/v2/posts", {
-        params: { per_page: 8, page: page },
-      });
-      if (page === 1) {
-        setposts(response.data.data);
-      } else {
-        let newData = response.data.data;
-        if (newData.length !== 0) {
-          setendPage(true);
-          setposts((prev) => [...prev, ...newData]);
-        }
-      }
-      setIsLoading(false);
-    } catch (error) {
-      toast.error("Error check your connection");
-    }
+async function fetchPosts() {
+  if (endPage) return;
+  setIsLoading(true);
+  try {
+    const { data } = await axiosIntence.get("/api/v2/posts", {
+      params: { per_page: 8, page },
+    });
+    setposts(page === 1 ? data.data : [...posts, ...data.data]);
+    setendPage(data.data.length === 0);
+  } catch (error) {
+    toast.error("Error checking connection");
   }
+  setIsLoading(false);
+}
 
   useEffect(() => {
-    FetchPost();
+    fetchPosts();
   }, []);
 
   const handleScroll = () => {
@@ -50,7 +41,7 @@ const Blog = () => {
       return;
     }
     setPage((prevPage) => prevPage + 1);
-    FetchPost();
+    fetchPosts();
   };
 
   useEffect(() => {
