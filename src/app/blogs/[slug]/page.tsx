@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             dangerouslySetInnerHTML={{ __html: post.body }}
           ></div>
         </div>
-        <Comment post_id={post.id} />
+        <Comment postId={post.id} />
       </div>
       <Footer />
     </>

@@ -18,7 +18,7 @@ interface CommentData {
   creator: any;
 }
 
-const Comment = ({ post_id }: { post_id: string }) => {
+const Comment = ({ postId }: { postId: string }) => {
   dayjs.extend(relativeTime);
   const [comment, setcomment] = useState<string>("");
   const [comments, setcomments] = useState<CommentData[]>([]);
@@ -26,7 +26,10 @@ const Comment = ({ post_id }: { post_id: string }) => {
 
   useEffect(() => {
     socketRef.current = io(wsbaseurl + "/posts", {
-      query: { post_id: post_id, token: getToken() },
+      query: { post_id: postId, token: getToken() },
+      extraHeaders: {
+        Authorization: `Bearer ${getToken()}`,
+      }
     });
     if (socketRef.current) {
       socketRef.current.on("newComment", (message: CommentData[]) => {
