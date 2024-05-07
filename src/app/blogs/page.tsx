@@ -8,25 +8,25 @@ import Navigation from "@/components/header/Navbar";
 
 
 const Blog = () => {
-  const [posts, setposts] = useState<any[]>([]);
+  const [posts, setposts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [endPage, setendPage] = useState(false)
+  const [endPage, setendPage] = useState(false);
 
-async function fetchPosts() {
-  if (endPage) return;
-  setIsLoading(true);
-  try {
-    const { data } = await axiosIntence.get("/api/v2/posts", {
-      params: { per_page: 8, page },
-    });
-    setposts(page === 1 ? data.data : [...posts, ...data.data]);
-    setendPage(data.data.length === 0);
-  } catch (error) {
-    toast.error("Error checking connection");
+  async function fetchPosts() {
+    if (endPage) return;
+    setIsLoading(true);
+    try {
+      const { data } = await axiosIntence.get("/api/v2/posts", {
+        params: { per_page: 8, page },
+      });
+      setposts(page === 1 ? data.data : [...posts, ...data.data]);
+      setendPage(data.data.length === 0);
+    } catch (error) {
+      toast.error("Error checking connection");
+    }
+    setIsLoading(false);
   }
-  setIsLoading(false);
-}
 
   useEffect(() => {
     fetchPosts();
@@ -47,7 +47,7 @@ async function fetchPosts() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isLoading]);
+  }, []);
 
   return (
     <>

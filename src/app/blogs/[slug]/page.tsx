@@ -3,10 +3,10 @@ import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
 import { axiosIntence } from "@/utils/fetch";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound } from "next/navigation"; // Added import statement
 import { getUrlImage } from "@/utils/getImage";
 
-export const getPost = async (postSlug: string) => {
+const getPost = async (postSlug: string): Promise<Post> => {
   try {
     const { data } = await axiosIntence(`/api/v2/posts/${postSlug}`);
     return data;
@@ -33,11 +33,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
         )}
 
         <div className="border-b-2">
-          <div className="text-5xl text-gray-950 mx-auto my-7 font-bold">
+          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-7 font-bold">
             {post.title}
           </div>
         </div>
-        <div className="my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg">
+        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
           <div
             className="w-full"
             dangerouslySetInnerHTML={{ __html: post.body }}

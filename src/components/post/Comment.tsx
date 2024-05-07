@@ -21,7 +21,7 @@ interface CommentData {
 const Comment = ({ postId }: { postId: string }) => {
   dayjs.extend(relativeTime);
   const [comment, setcomment] = useState<string>("");
-  const [comments, setcomments] = useState<CommentData[]>([]);
+  const [comments, setcomments] = useState<Comment[]>([]);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Comment = ({ postId }: { postId: string }) => {
       }
     });
     if (socketRef.current) {
-      socketRef.current.on("newComment", (message: CommentData[]) => {
+      socketRef.current.on("newComment", (message: Comment[]) => {
         setcomments(message);
       });
     }

@@ -8,3 +8,11 @@ interface Post {
     created_at: string;
     updated_at: string;
 }
+
+interface Comment {
+    id: string;
+    text: string;
+    repies: Comment;
+    created_at: string;
+    creator: any;
+}
