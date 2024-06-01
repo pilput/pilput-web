@@ -12,35 +12,38 @@ const Blog = () => {
   const [page, setPage] = useState(0);
   const [endPage, setendPage] = useState(false);
 
-  async function fetchPosts() {
-    if (endPage) return;
-    setIsLoading(true);
-    try {
-      const { data } = await axiosIntence.get("/api/v2/posts", {
-        params: { limit: 5, offset: page * 5 },
-      });
-      setposts(page === 0 ? data.data : [...posts, ...data.data]);
-      setendPage(data.total === posts.length);
-    } catch (error) {
-      toast.error("Error checking connection");
+  useEffect(() => {
+    async function fetchPosts() {
+      if (endPage) return;
+      setIsLoading(true);
+      try {
+        const { data } = await axiosIntence.get("/api/v2/posts", {
+          params: { limit: 5, offset: page * 5 },
+        });
+        setposts(page === 0 ? data.data : [...posts, ...data.data]);
+        setendPage(data.total === posts.length);
+      } catch (error) {
+        toast.error("Error checking connection");
+      }
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  }
+    fetchPosts();
+  }, [page]);
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
-  const loadMore = () => {
-    if (page === 0) {
-      console.log("pagenya satu");
-      setPage(1);
-    } else {
-      console.log("pagenya bukan satu");
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !==
+          document.documentElement.offsetHeight ||
+        isLoading
+      ) {
+        return;
+      }
       setPage((prevPage) => prevPage + 1);
-    }
-
-    fetchPosts();
-  };
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLoading]);
 
   return (
     <>
@@ -52,28 +55,6 @@ const Blog = () => {
             <Postlist key={post.id} post={post} />
           ))}
           {isLoading && <Postlistpulse />}
-          {!endPage && (
-            <div className="flex justify-center mt-5">
-              <button
-                className="flex flex-col items-center group hover:gap-1"
-                onClick={loadMore}
-              >
-                <span className="group-hover:underline">Load More</span>{" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="size-6 group-hover:mt-2"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </>
