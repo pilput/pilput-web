@@ -3,10 +3,24 @@ interface Post {
     title: string;
     body: string;
     slug: string;
-    creator: any;
+    creator: Creator;
     photo_url: string;
     created_at: string;
     updated_at: string;
+    tags: Tags[]
+}
+
+interface Creator {
+    id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    image: string;
+}
+
+interface Tags {
+    id: number
+    name: string
 }
 
 interface Comment {

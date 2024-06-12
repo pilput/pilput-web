@@ -17,6 +17,7 @@ const getPost = async (postSlug: string): Promise<Post> => {
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug);
+  
   return (
     <>
       <Navigation />
@@ -43,6 +44,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
             dangerouslySetInnerHTML={{ __html: post.body }}
           ></div>
         </div>
+        {post.tags != null && (
+          <div className="flex gap-2 flex-wrap mb-6">
+            {post.tags.map((tag) => (
+              <div key={tag.id} className="py-2 px-4 rounded-2xl bg-slate-200">{tag.name}</div>
+            ))}
+          </div>
+        )}
+        <div></div>
         <Comment postId={post.id} />
       </div>
       <Footer />
