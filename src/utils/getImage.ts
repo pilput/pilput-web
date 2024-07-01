@@ -11,5 +11,9 @@ export function getProfilePicture(url: string) {
     }
 }
 export function getUrlImage(path: string): string {
-    return storagebaseurl + path
+    if (isFullUrl(path)) {
+        return path;
+    } else {
+        return storagebaseurl + path
+    }
 }

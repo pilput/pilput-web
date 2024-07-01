@@ -17,26 +17,49 @@ const getPost = async (postSlug: string): Promise<Post> => {
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug);
-  
+
   return (
     <>
       <Navigation />
-      <div className="mx-auto p-3 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+      <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+        <div className="flex gap-2 items-center">
+          <img
+            className="w-14 h-14 rounded-full object-cover"
+            src={getUrlImage(post.creator.image)}
+            alt={post.creator.image}
+            width={60}
+            height={60}
+          />
+          <div>
+            <div className="text-gray-700">
+              {post.creator.first_name} {post.creator.last_name}
+            </div>
+            <a
+              href={`/${post.creator.username}`}
+              className="text-blue-600 font-semibold hover:underline"
+            >
+              @{post.creator.username}
+            </a>
+          </div>
+        </div>
+        
+
+        <div className="border-b-2 mb-8">
+          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-6 font-bold">
+            {post.title}
+          </div>
+        </div>
+        <div>
         {post.photo_url && (
           <Image
-            className="mx-auto h-auto w-auto"
+            className="mx-auto h-72 object-cover w-full"
             priority={false}
             src={getUrlImage(post.photo_url)}
             alt={post.title}
-            width={300}
-            height={200}
+            width={400}
+            height={400}
           />
         )}
-
-        <div className="border-b-2">
-          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-7 font-bold">
-            {post.title}
-          </div>
         </div>
         <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
           <div
@@ -47,7 +70,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
         {post.tags != null && (
           <div className="flex gap-2 flex-wrap mb-6">
             {post.tags.map((tag) => (
-              <div key={tag.id} className="py-2 px-4 rounded-2xl bg-slate-200">{tag.name}</div>
+              <div key={tag.id} className="py-2 px-4 rounded-2xl bg-slate-200">
+                {tag.name}
+              </div>
             ))}
           </div>
         )}
