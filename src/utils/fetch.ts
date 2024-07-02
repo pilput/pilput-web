@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ErrorHandlerAPI } from "./ErrorHandler";
 import { getToken } from "./Auth";
+import { apibaseurl2 } from "./getCofig";
 
 export const apibaseurl = process.env.NEXT_PUBLIC_API_URL || "";
 export const dashbaseurl = process.env.NEXT_PUBLIC_DASH_URL || "";
@@ -10,6 +11,9 @@ export const mainbaseurl = process.env.NEXT_PUBLIC_MAIN_URL || "";
 
 export const axiosIntence = axios.create({
   baseURL: apibaseurl,
+});
+export const axiosIntence2 = axios.create({
+  baseURL: apibaseurl2,
 });
 
 export async function getDataExternal(url: string, params: any) {

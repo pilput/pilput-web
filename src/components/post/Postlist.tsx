@@ -12,14 +12,16 @@ const Postlist = ({ post }: { post: Post }) => {
       <div className="flex items-center gap-2 mb-3">
         <div>
           {post.creator?.image && (
-            <img
-              className="rounded-full object-cover h-7 w-7"
-              src={getProfilePicture(post.creator?.image)}
-              width={50}
-              height={50}
-              loading="lazy"
-              alt={post.creator?.first_name}
-            />
+            <a href={`/${post.creator.username}`} >
+              <img
+                className="rounded-full object-cover h-7 w-7 hover:ring-2 ring-blue-500"
+                src={getProfilePicture(post.creator?.image)}
+                width={50}
+                height={50}
+                loading="lazy"
+                alt={post.creator?.first_name}
+              />
+            </a>
           )}
         </div>
         <div className="font-bold">
