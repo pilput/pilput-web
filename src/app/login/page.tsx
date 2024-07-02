@@ -34,12 +34,11 @@ export default function Login() {
       expire.setDate(expire.getDate() + 3);
 
       setCookie("token", response.data.access_token, {
-        domain: `.${process.env.NEXT_PUBLIC_DOMAIN}`,
         expires: expire,
         sameSite: "strict",
       });
       setloginwait(false);
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       toast.error("Wrong username or password", { id });
       setloginwait(false);

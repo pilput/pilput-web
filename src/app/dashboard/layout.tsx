@@ -1,3 +1,4 @@
+import DashboardTopBar from "@/components/header/DashboardTopBar";
 import Link from "next/link";
 import React from "react";
 
@@ -66,7 +67,10 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               </nav>
 
-              <Link href="/" className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg">
+              <Link
+                href="/"
+                className="cursor-pointer flex space-x-2 py-3 items-center px-3 hover:bg-zinc-700 rounded-lg"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -87,6 +91,7 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <div className="flex flex-col relative w-full h-screen p-3 bg-gray-200">
+            <DashboardTopBar />
             <div className="h-full mt-5 overflow-y-auto">{children}</div>
           </div>
         </div>
