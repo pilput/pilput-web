@@ -1,7 +1,10 @@
+import PostsChart from "@/components/dashboard/PostChart"
 
 function page() {
   return (
-    <div>page</div>
+    <div className="flex">
+        <PostsChart />
+    </div>
   )
 }
 
