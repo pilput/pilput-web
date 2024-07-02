@@ -39,7 +39,7 @@ export default function Login() {
         sameSite: "strict",
       });
       setloginwait(false);
-      router.push(dashbaseurl);
+      router.push("/dashboard");
     } catch (error) {
       toast.error("Wrong username or password", { id });
       setloginwait(false);

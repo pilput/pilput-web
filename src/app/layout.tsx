@@ -16,11 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="bg-gray-50">
+    <html lang="en">
       <head>
         <meta name="robots" content="all" />
       </head>
-      <body className={`${inter.className} bg-gray-100`}>
+      <body className={`${inter.className}`}>
         <Google />
         {children}
         <Toaster />

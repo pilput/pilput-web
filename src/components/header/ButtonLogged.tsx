@@ -14,7 +14,7 @@ const ButtonLogged = () => {
   return (
     <>
       {token ? (
-        <Link className="flex items-center" href={dashbaseurl || ""}>
+        <Link className="flex items-center" href="/dashboard">
           <Button variant={"secondary"}>Dashboard</Button>
         </Link>
       ) : (
