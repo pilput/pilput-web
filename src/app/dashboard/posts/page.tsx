@@ -28,7 +28,7 @@ export default function Posts() {
     <div className="px-5 bg-white shadow-md py-4 rounded-lg">
       <div className="text-xl font-semibold my-3">Posts</div>
       <div>
-        <Link href={"/posts/create"}>
+        <Link href={"/dashboard/posts/create"}>
           <Button variant="secondary" className="border">
             Add new post
           </Button>

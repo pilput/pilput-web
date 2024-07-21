@@ -10,6 +10,24 @@ interface Post {
     tags: Tags[]
 }
 
+interface PostCreate {
+    title: string;
+    body: string;
+    slug: string;
+    photo_url: string;
+    tags: Tags[]
+}
+
+interface ErrorCreatePost {
+    error: {
+        name: string,
+        issues: {
+            path: string[],
+            message: string
+        }[]
+    }
+}
+
 interface Creator {
     id: string;
     username: string;
