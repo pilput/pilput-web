@@ -2,6 +2,7 @@ import { Toaster } from "react-hot-toast";
 import "./global.css";
 import { Inter } from "next/font/google";
 import Google from "@/components/analitics/Google";
+import { Analytics } from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <Analytics />
         <meta name="robots" content="all" />
       </head>
       <body className={`${inter.className}`}>
