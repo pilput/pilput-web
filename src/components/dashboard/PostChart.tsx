@@ -1,7 +1,7 @@
 "use client";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 
-const PostsChart = () => {
+const PostsChart: React.FC = () => {
   const data = [
     {
       name: "Page A",
