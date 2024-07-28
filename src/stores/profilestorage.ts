@@ -1,8 +1,8 @@
-import { apibaseurl, getData } from "@/utils/fetch";
+import { apibaseurl } from "@/utils/getCofig";
 import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
-import {storagebaseurl} from '@/utils/fetch'
+// import {storagebaseurl} from '@/utils/getCofig'
 
 interface Profile {
   id: string;

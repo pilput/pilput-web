@@ -36,6 +36,7 @@ const DashboardTopBar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 {yourstore.data.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     alt="profil"
                     width={50}
@@ -44,6 +45,7 @@ const DashboardTopBar = () => {
                     className="mx-auto object-cover rounded-full h-10 w-10"
                   />
                 ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     alt="profil"
                     width={50}
@@ -58,7 +60,7 @@ const DashboardTopBar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <Link
-                    href="/"
+                    href={`/${yourstore.data.username}`}
                     className="py-1 w-full flex gap-1 items-center"
                   >
                     <svg

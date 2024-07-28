@@ -1,9 +1,10 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Modal from "@/components/user/Modal";
-import { getAuth, getToken } from "@/utils/Auth";
+import { getAuth, getToken, RemoveToken } from "@/utils/Auth";
 import { axiosIntence, axiosIntence2 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -36,6 +37,12 @@ export default function ManageUser() {
 
       setusers(response.data);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          RemoveToken();
+          window.location.href = "/login";
+        }
+      }
       toast.error("Cannot connecting with server");
     }
   }

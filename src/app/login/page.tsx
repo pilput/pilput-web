@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { axiosIntence } from "@/utils/fetch";
+import { axiosIntence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { apibaseurl, dashbaseurl } from "@/utils/fetch";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { apibaseurl } from "@/utils/getCofig";
 
 type Inputs = {
   email: string;
@@ -27,7 +27,7 @@ export default function Login() {
     const id = toast.loading("Loading...");
     setloginwait(true);
     try {
-      const response = await axiosIntence.post("/auth/login", data);
+      const response = await axiosIntence2.post("/auth/login", data);
       toast.success("Success login", { id });
       const expire = new Date();
 
@@ -40,7 +40,8 @@ export default function Login() {
       setloginwait(false);
       router.push("/");
     } catch (error) {
-      toast.error("Wrong username or password", { id });
+
+      toast.error("Invalid username or password. Please try again.", { id });
       setloginwait(false);
     }
   };
