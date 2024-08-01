@@ -2,14 +2,13 @@ import WordLimit from "../word/WordLimit";
 import { mainbaseurl } from "@/utils/getCofig";
 import Link from "next/link";
 
-
 const PostItemr = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden w-full m-3 h-64">
+    <div className="max-w-md border mx-auto bg-white rounded-xl shadow-md overflow-hidden w-full m-3 h-64">
       <div className="p-8">
         <Link
-          href={mainbaseurl + `/blogs/` + post.slug}
+          href={`/blogs/` + post.slug}
           className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
         >
           {post.title}
