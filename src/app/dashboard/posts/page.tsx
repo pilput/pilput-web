@@ -16,13 +16,8 @@ import { getProfilePicture } from "@/utils/getImage";
 import { useEffect, useState } from "react";
 import Days from "dayjs";
 import Link from "next/link";
-import { Paginate } from "@/components/common/Paginate";
-import { useSearchParams } from "next/navigation";
 
 export default function Posts() {
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page");
-  const [currentPage, setCurrentPage] = useState(page ? parseInt(page) : 1);
   const limit = 10;
   const [Offset, setOffset] = useState(0);
   const poststore = postsStore();
