@@ -16,9 +16,6 @@ export default function PostCreate() {
     const [errortitle, seterrortitle] = useState("");
     const [errorimage, seterrorimage] = useState("");
     const token = getToken();
-    // const editor = useEditor();
-    // console.log(editor?.getHTML());
-    console.log(editor?.getHTML());
     const { post, updatetitle, updatebody, updatePhoto_url, updateSlug } =
       postsStore();
   
@@ -49,7 +46,6 @@ export default function PostCreate() {
           // Update the post's photo URL
           // You might need to modify your store method based on your implementation
           // For example, if you have an updatePhoto method, use it accordingly
-          console.log(photoUrl);
           updatePhoto_url(photoUrl);
         } catch (error) {
           console.error("Error uploading file:", error);

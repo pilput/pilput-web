@@ -24,7 +24,6 @@ export const authStore = create<authDataState>()((set) => ({
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       set({ data: response.data });
-      console.log(response.data);
       
     } catch (error) {
       if (error instanceof AxiosError) {

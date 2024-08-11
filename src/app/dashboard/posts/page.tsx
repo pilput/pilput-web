@@ -16,14 +16,24 @@ import { getProfilePicture } from "@/utils/getImage";
 import { useEffect, useState } from "react";
 import Days from "dayjs";
 import Link from "next/link";
+import { Paginate } from "@/components/common/Paginate";
+import { useSearchParams } from "next/navigation";
 
 export default function Posts() {
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const [currentPage, setCurrentPage] = useState(page ? parseInt(page) : 1);
   const limit = 10;
   const [Offset, setOffset] = useState(0);
   const poststore = postsStore();
   useEffect(() => {
     poststore.fetch(limit, Offset);
   }, [Offset]);
+
+  function prevPaginate() {
+    setOffset((prev) => prev + limit);
+  }
+
   return (
     <div className="px-5 bg-white shadow-md py-4 rounded-lg">
       <div className="text-xl font-semibold my-3">Posts</div>
@@ -49,7 +59,7 @@ export default function Posts() {
           {poststore.posts.map((post) => (
             <TableRow key={post.id}>
               <TableCell>
-                {(poststore.posts.indexOf(post) + 1)+Offset}
+                {poststore.posts.indexOf(post) + 1 + Offset}
               </TableCell>
               <TableCell>
                 <div className="flex gap-2 items-center">
@@ -94,9 +104,29 @@ export default function Posts() {
         </TableFooter>
       </Table>
       <div className="flex gap-2">
-        <button disabled={Offset <= 0} onClick={() => setOffset((prev) => prev - limit)}>Previous</button>
-        <button onClick={() => setOffset((prev) => prev + limit)} disabled={poststore.posts.length + Offset >= poststore.total}>Next</button>
+        <button
+          disabled={Offset <= 0}
+          onClick={() => setOffset((prev) => prev - limit)}
+        >
+          Previous
+        </button>
+        <button
+          onClick={() => setOffset((prev) => prev + limit)}
+          disabled={poststore.posts.length + Offset >= poststore.total}
+        >
+          Next
+        </button>
       </div>
+      {/* <Paginate
+        key={"paginate"}
+        prev={() => setOffset((prev) => prev - limit)}
+        Offset={Offset}
+        limit={limit}
+        next={() => setOffset((prev) => prev + limit)}
+        total={poststore.total}
+        length={poststore.posts.length}
+        currentPage={currentPage}
+      /> */}
     </div>
   );
 }

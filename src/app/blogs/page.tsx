@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { axiosIntence } from "@/utils/fetch";
+import { axiosIntence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 
@@ -17,7 +17,7 @@ const Blog = () => {
       if (endPage) return;
       setIsLoading(true);
       try {
-        const { data } = await axiosIntence.get("/api/v2/posts", {
+        const { data } = await axiosIntence2.get("/posts", {
           params: { limit: 5, offset: page * 5 },
         });
         setposts(page === 0 ? data.data : [...posts, ...data.data]);
