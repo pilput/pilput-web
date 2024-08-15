@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import PostItemr from "./PostItemr";
-import { axiosIntence, axiosIntence2 } from "@/utils/fetch";
+import { axiosIntence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemrPulse from "./PostItemrpulse";
 
@@ -11,7 +11,7 @@ const PostsRandomList = () => {
 
   const fetchRandomPosts = async () => {
     try {
-      const response = await axiosIntence2.get("/posts", {
+      const response = await axiosIntence.get("/api/v2/posts", {
         params: { random: true },
       });
       setposts(response.data);
@@ -34,11 +34,13 @@ const PostsRandomList = () => {
       </div>
     );
   } else {
-    content =  <div className="grid grid-cols-3 gap-3 justify-around ">
-    {tempposts.map((post) => (
-      <PostItemrPulse key={post} />
-  ))}
-    </div>
+    content = (
+      <div className="grid grid-cols-3 gap-3 justify-around ">
+        {tempposts.map((post) => (
+          <PostItemrPulse key={post} />
+        ))}
+      </div>
+    );
   }
 
   return (
