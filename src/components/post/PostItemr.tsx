@@ -9,7 +9,7 @@ const PostItemr = ({ post }: { post: Post }) => {
       <div className="p-8">
         <Link
           href={`/blogs/` + post.slug}
-          className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
+          className="block mt-1 text-lg leading-tight font-medium text-black text-pretty hover:underline"
         >
           {post.title}
         </Link>

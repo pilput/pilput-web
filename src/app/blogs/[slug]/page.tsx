@@ -23,16 +23,23 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <Navigation />
       <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
         <div className="flex gap-2 items-center">
-          <img
-            className="w-14 h-14 rounded-full object-cover"
-            src={getUrlImage(post.creator.image)}
-            alt={post.creator.image}
-            width={60}
-            height={60}
-          />
+          <a href={`/${post.creator.username}`}>
+            <img
+              className="w-14 h-14 rounded-full object-cover hover:ring-2 ring-blue-500"
+              src={getUrlImage(post.creator.image)}
+              alt={post.creator.image}
+              width={60}
+              height={60}
+            />
+          </a>
           <div>
-            <div className="text-gray-700">
-              {post.creator.first_name} {post.creator.last_name}
+            <div>
+              <a
+                href={`/${post.creator.username}`}
+                className="text-gray-700 font-medium hover:font-semibold "
+              >
+                {post.creator.first_name} {post.creator.last_name}
+              </a>
             </div>
             <a
               href={`/${post.creator.username}`}
@@ -42,7 +49,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </a>
           </div>
         </div>
-        
 
         <div className="border-b-2 mb-8">
           <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-6 font-bold">
@@ -50,16 +56,16 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
         </div>
         <div>
-        {post.photo_url && (
-          <Image
-            className="mx-auto h-72 object-cover w-full"
-            priority={false}
-            src={getUrlImage(post.photo_url)}
-            alt={post.title}
-            width={400}
-            height={400}
-          />
-        )}
+          {post.photo_url && (
+            <Image
+              className="mx-auto h-72 object-cover w-full"
+              priority={false}
+              src={getUrlImage(post.photo_url)}
+              alt={post.title}
+              width={400}
+              height={400}
+            />
+          )}
         </div>
         <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
           <div
@@ -70,7 +76,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
         {post.tags != null && (
           <div className="flex gap-2 flex-wrap mb-6">
             {post.tags.map((tag) => (
-              <div key={tag.tag.id} className="py-2 px-4 rounded-2xl bg-slate-200">
+              <div
+                key={tag.tag.id}
+                className="py-2 px-4 rounded-2xl bg-slate-200"
+              >
                 {tag.tag.name}
               </div>
             ))}
