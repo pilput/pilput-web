@@ -22,7 +22,7 @@ export default async function page({
     <>
       <Navigation />
       <div className="mx-auto max-w-7xl min-h-screen">
-        <div className="my-10 bg-white rounded-lg shadow-md p-5">
+        <div className="my-10 bg-white rounded-lg shadow-md border p-5">
           <img
             className="w-32 h-32 rounded-full mx-auto"
             src={getUrlImage(writer.image)}

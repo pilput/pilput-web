@@ -5,6 +5,7 @@ import { axiosIntence2 } from "@/utils/fetch";
 import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
 import { getUrlImage } from "@/utils/getImage";
+import Link from "next/link";
 
 const getPost = async (postSlug: string): Promise<Post> => {
   try {
@@ -23,7 +24,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <Navigation />
       <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
         <div className="flex gap-2 items-center">
-          <a href={`/${post.creator.username}`}>
+          <Link href={`/${post.creator.username}`}>
             <img
               className="w-14 h-14 rounded-full object-cover hover:ring-2 ring-blue-500"
               src={getUrlImage(post.creator.image)}
@@ -31,15 +32,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
               width={60}
               height={60}
             />
-          </a>
+          </Link>
           <div>
             <div>
-              <a
+              <Link
                 href={`/${post.creator.username}`}
                 className="text-gray-700 font-medium hover:font-semibold "
               >
                 {post.creator.first_name} {post.creator.last_name}
-              </a>
+              </Link>
             </div>
             <a
               href={`/${post.creator.username}`}
