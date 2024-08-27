@@ -40,14 +40,11 @@ export default function Login() {
       setloginwait(false);
       router.push("/");
     } catch (error) {
-
       toast.error("Invalid username or password. Please try again.", { id });
       setloginwait(false);
     }
   };
   const router = useRouter();
-  const [email, setemail] = useState("guest@pilput.dev");
-  const [password, setpassword] = useState("guestguest");
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
@@ -57,7 +54,7 @@ export default function Login() {
   return (
     <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
       <div className="min-h-screen flex justify-center items-center">
-        <div className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20">
+        <div className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20 border">
           <div>
             <h1 className="text-3xl font-bold text-center text-gray-700 mb-4 cursor-pointer">
               Sign in
@@ -67,23 +64,26 @@ export default function Login() {
               <br />
             </p>
           </div>
-          <div className="py-3">
-            <ol className="text-sm">
-              {errors.email?.type == "required" && (
-                <li className="text-red-500">The Email field is required</li>
-              )}
-              {errors.password?.type == "required" && (
-                <li className="text-red-500">The Password field is required</li>
-              )}
-            </ol>
-          </div>
+          {(errors.email || errors.password) && (
+            <div className="py-3">
+              <ol className="text-sm">
+                {errors.email?.type == "required" && (
+                  <li className="text-red-500">The Email field is required</li>
+                )}
+                {errors.password?.type == "required" && (
+                  <li className="text-red-500">
+                    The Password field is required
+                  </li>
+                )}
+              </ol>
+            </div>
+          )}
           <div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                placeholder="Email"
+                placeholder="Username or Email"
                 {...register("email", { required: true })}
                 aria-invalid={errors.email ? "true" : "false"}
-                defaultValue={"guest@pilput.dev"}
                 className={
                   errors.email ? "border text-red-400 border-red-400" : ""
                 }
@@ -94,7 +94,6 @@ export default function Login() {
                 type="password"
                 placeholder="Password"
                 aria-invalid={errors.password ? "true" : "false"}
-                defaultValue={"guestguest"}
                 className={
                   errors.password ? "border text-red-400 border-red-400" : ""
                 }
