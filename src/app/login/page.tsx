@@ -160,10 +160,9 @@ export default function Login() {
                 <div></div>
               </Button>
             </div>
-            <div className="text-center">
-              <Link href="/">
-                <Button variant={"link"}>Back to home</Button>
-              </Link>
+            <div className="text-center mt-4 text-sm">
+              <p>dont have an account?</p>
+              <Link href="/register" className="underline text-blue-500 hover:text-blue-600 hover:font-medium">Sign up</Link>
             </div>
           </div>
         </div>

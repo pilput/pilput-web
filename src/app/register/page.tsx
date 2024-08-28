@@ -9,13 +9,19 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { apibaseurl } from "@/utils/getCofig";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Inputs = {
   email: string;
   username: string;
   password: string;
 };
+const UserSchema: z.ZodType<Inputs> = z.object({
+  username: z.string().min(5).max(20),
+  email: z.string().email(),
+  password: z.string().min(6).max(255),
+});
 
 export default function Signup() {
   const {
@@ -23,13 +29,15 @@ export default function Signup() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    resolver: zodResolver(UserSchema),
+  });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     setloginwait(true);
     try {
-      const response = await axiosIntence2.post("/auth/login", data);
-      toast.success("Success login", { id });
+      const response = await axiosIntence2.post("/auth/register", data);
+      toast.success("Success Create Account", { id });
       const expire = new Date();
 
       expire.setDate(expire.getDate() + 3);
@@ -41,17 +49,28 @@ export default function Signup() {
       setloginwait(false);
       router.push("/");
     } catch (error) {
-
       toast.error("Invalid username or password. Please try again.", { id });
       setloginwait(false);
     }
   };
+
+  function checkUsername(username: string) {
+    if (username.length >= 5) {
+      axiosIntence2.get("/auth/username/" + username).then((res) => {
+        if (res.data.exist) {
+          toast.error("Username already exists. Please try again.", {
+            id: "username",
+          });
+        } else {
+          toast.success("username available", { id: "username" });
+        }
+      });
+    }
+  }
+
   const router = useRouter();
   const [loginwait, setloginwait] = useState(false);
-
-  function oauthgoogle() {
-    window.location.href = apibaseurl + "/auth/oauth";
-  }
+  console.log(errors);
 
   return (
     <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
@@ -66,44 +85,66 @@ export default function Signup() {
               <br />
             </p>
           </div>
-          <div className="py-3">
-            <ol className="text-sm">
-              {errors.email?.type == "required" && (
-                <li className="text-red-500">The Email field is required</li>
-              )}
-              {errors.password?.type == "required" && (
-                <li className="text-red-500">The Password field is required</li>
-              )}
-            </ol>
-          </div>
           <div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <Input
-                placeholder="Email"
-                {...register("email", { required: true })}
-                aria-invalid={errors.email ? "true" : "false"}
-                className={
-                  errors.email ? "border text-red-400 border-red-400" : ""
-                }
-              />
-              <Input
-                placeholder="Username"
-                {...register("username", { required: true })}
-                aria-invalid={errors.username ? "true" : "false"}
-                className={
-                  errors.email ? "border text-red-400 border-red-400" : ""
-                }
-              />
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-5"
+            >
+              <div className="flex flex-col gap-2">
+                <label htmlFor="username">Username</label>
+                <Input
+                  id="username"
+                  placeholder="Username"
+                  {...register("username")}
+                  aria-invalid={errors.username ? "true" : "false"}
+                  className={
+                    errors.username ? "border text-red-400 border-red-400" : ""
+                  }
+                  onBlur={(e) => checkUsername(e.target.value)}
+                />
+                {errors.username && (
+                  <div className="text-red-500 text-xs">
+                    {errors.username.message}
+                  </div>
+                )}
+              </div>
 
-              <Input
-                {...register("password", { required: true, minLength: 8 })}
-                type="password"
-                placeholder="Password"
-                aria-invalid={errors.password ? "true" : "false"}
-                className={
-                  errors.password ? "border text-red-400 border-red-400" : ""
-                }
-              />
+              <div className="flex flex-col gap-2">
+                <label htmlFor="email">Email</label>
+                <Input
+                  id="email"
+                  placeholder="Email"
+                  {...register("email")}
+                  aria-invalid={errors.email ? "true" : "false"}
+                  className={
+                    errors.email ? "border text-red-400 border-red-400" : ""
+                  }
+                />
+                {errors.email && (
+                  <div className="text-red-500 text-xs">
+                    {errors.email.message}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="password">Password</label>
+                <Input
+                  id="password"
+                  {...register("password")}
+                  type="password"
+                  placeholder="Password"
+                  aria-invalid={errors.password ? "true" : "false"}
+                  className={
+                    errors.password ? "border text-red-400 border-red-400" : ""
+                  }
+                />
+                {errors.password && (
+                  <div className="text-red-500 text-xs">
+                    {errors.password.message}
+                  </div>
+                )}
+              </div>
 
               <div className="flex justify-center mt-6">
                 {loginwait ? (
@@ -133,39 +174,11 @@ export default function Signup() {
                   </Button>
                 ) : (
                   <Button type="submit" size={"lg"} className="w-full">
-                    Submit
+                    Create an account
                   </Button>
                 )}
               </div>
             </form>
-            <center className="py-3">Or</center>
-            <div className="">
-              <Button
-                onClick={oauthgoogle}
-                type="button"
-                className="w-full border border-red-500"
-                size={"lg"}
-                variant={"outline"}
-              >
-                <svg
-                  className="mr-2 -ml-1 w-4 h-4"
-                  aria-hidden="true"
-                  focusable="false"
-                  data-prefix="fab"
-                  data-icon="google"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 488 512"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-                  ></path>
-                </svg>
-                Continue with Google
-                <div></div>
-              </Button>
-            </div>
             <div className="text-center">
               <Link href="/">
                 <Button variant={"link"}>Back to home</Button>
