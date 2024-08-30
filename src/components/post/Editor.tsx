@@ -20,7 +20,7 @@ const Tiptap = ({
   onchange: (data: string) => void;
 }) => {
   return (
-    <div className="border w-full">
+    <div className="w-full">
       <EditorProvider
         editorProps={{
           attributes: {

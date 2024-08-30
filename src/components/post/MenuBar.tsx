@@ -41,7 +41,7 @@ const MenuBar = () => {
     }
   }
   return (
-    <div className="px-2 mx-1 flex space-x-1 bg-gray-100 py-3 rounded-xl shadow-xl my-3 border">
+    <div className="px-2 flex space-x-1 bg-gray-100 py-3 rounded-2xl shadow-xl my-3 border">
       <button
         onClick={() => editor.commands.toggleBold()}
         className={`${
