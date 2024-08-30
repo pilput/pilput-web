@@ -4,10 +4,13 @@
 import { EditorProvider } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Undelineextention from "@tiptap/extension-underline";
+import Youtube from '@tiptap/extension-youtube'
 import MenuBar from "./MenuBar";
+import Image from '@tiptap/extension-image'
+
 
 // define your extension array
-const extensions = [StarterKit, Undelineextention];
+const extensions = [StarterKit, Undelineextention, Youtube, Image];
 
 const Tiptap = ({
   content,
