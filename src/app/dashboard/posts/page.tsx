@@ -16,6 +16,7 @@ import { getProfilePicture } from "@/utils/getImage";
 import { useEffect, useState } from "react";
 import Days from "dayjs";
 import Link from "next/link";
+import ActionComponent from "@/components/post/dashboard/action";
 
 export default function Posts() {
   const limit = 10;
@@ -48,6 +49,7 @@ export default function Posts() {
             <TableHead>Title</TableHead>
             <TableHead>Body</TableHead>
             <TableHead>Date</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -86,6 +88,9 @@ export default function Posts() {
 
               <TableCell>
                 {Days(post.created_at).format("DD MMM YYYY")}
+              </TableCell>
+              <TableCell>
+                <ActionComponent id={post.id} />
               </TableCell>
             </TableRow>
           ))}
