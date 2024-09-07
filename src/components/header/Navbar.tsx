@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import ButtonLogged from "./ButtonLogged";
 import { usePathname } from "next/navigation";
+import DarkModeButton from './Darkmode'
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -45,6 +46,7 @@ const Navbar = () => {
               <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
             </svg>
           </button>
+          
         </div>
         <div className="lg:flex lg:items-stretch lg:flex-no-shrink lg:flex-grow items-center">
           <div
@@ -66,6 +68,8 @@ const Navbar = () => {
             <div className="flex items-center py-4 mx-3">
               <ButtonLogged />
             </div>
+            <DarkModeButton />
+            
           </div>
         </div>
       </nav>

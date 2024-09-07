@@ -1,4 +1,5 @@
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "next-themes";
 import "./global.css";
 import { Inter } from "next/font/google";
 import Google from "@/components/analitics/Google";
@@ -16,13 +17,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="robots" content="all" />
       </head>
       <body className={`${inter.className}`}>
         <Google />
-        {children}
+        <ThemeProvider attribute="class" >{children}</ThemeProvider>
         <Toaster />
       </body>
     </html>
