@@ -8,7 +8,7 @@ import Days from 'dayjs'
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
-    <div className="w-full mt-4 px-5 py-5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-800 text-gray-600 shadow-md rounded-lg ">
+    <div className="w-full mt-4 px-5 py-5 bg-gray-50 dark:bg-slate-800 border text-gray-600 shadow-md rounded-lg">
       <div className="flex items-center gap-2 mb-3">
         <div>
           {post.creator?.image && (

@@ -75,7 +75,7 @@ export default function Signup() {
   return (
     <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
       <div className="min-h-screen flex justify-center items-center">
-        <div className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20">
+        <div className="py-12 px-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl z-20">
           <div>
             <h1 className="text-3xl font-bold text-center text-gray-700 mb-4 cursor-pointer">
               Sign up
