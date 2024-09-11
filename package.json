@@ -27,10 +27,10 @@
     "clsx": "^2.1.1",
     "cookies-next": "^4.2.1",
     "dayjs": "^1.11.13",
-    "eslint": "^9.9.1",
-    "eslint-config-next": "^14.2.8",
+    "eslint": "^9.10.0",
+    "eslint-config-next": "^14.2.9",
     "lucide-react": "^0.439.0",
-    "next": "^14.2.8",
+    "next": "^14.2.9",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -52,7 +52,7 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.10",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   },
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
