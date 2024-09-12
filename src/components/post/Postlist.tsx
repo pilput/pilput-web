@@ -24,7 +24,7 @@ const Postlist = ({ post }: { post: Post }) => {
             </a>
           )}
         </div>
-        <div className="font-bold">
+        <div className="font-bold dark:text-gray-400">
           {post.creator?.first_name} {post.creator?.last_name}
         </div>
         <div>{Days(post.created_at).format("DD MMM YYYY")}</div>
@@ -41,11 +41,11 @@ const Postlist = ({ post }: { post: Post }) => {
         )}
         <div className="flex-grow">
           <Link href={"/blogs/" + post.slug}>
-            <Button variant={"link"} className="font-bold capitalize text-xl">
+            <Button variant={"link"} className="font-bold capitalize text-xl dark:text-gray-300">
               {post.title}
             </Button>
           </Link>
-          <p className="px-4">
+          <p className="px-4 dark:text-gray-400">
             <WordLimit text={plaintext} limit={50} />
           </p>
         </div>

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft } from "lucide-react";
 
 type Inputs = {
   email: string;
@@ -74,6 +75,13 @@ export default function Signup() {
 
   return (
     <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
+      <a
+        className="fixed top-5 left-5 flex gap-2 items-center bg-white dark:bg-slate-900 rounded-md p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+        href="/"
+      >
+        <ArrowLeft />
+        Back to home
+      </a>
       <div className="min-h-screen flex justify-center items-center">
         <div className="py-12 px-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl z-20">
           <div>
