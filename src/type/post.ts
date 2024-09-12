@@ -7,6 +7,7 @@ interface Post {
   photo_url: string;
   created_at: string;
   updated_at: string;
+  published: boolean;
   tags: { tag: Tags }[];
 }
 

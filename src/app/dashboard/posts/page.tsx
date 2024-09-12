@@ -48,7 +48,8 @@ export default function Posts() {
               <TableHead>#</TableHead>
               <TableHead>Author</TableHead>
               <TableHead>Title</TableHead>
-              <TableHead>Body</TableHead>
+              {/* <TableHead>Body</TableHead> */}
+              <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
@@ -81,17 +82,30 @@ export default function Posts() {
                 <TableCell className="font-semibold">
                   <div className="max-w-96 overflow-auto">{post.title}</div>
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   {post.body.replace(/<.*?>/g, "").length > 5
                     ? post.body.replace(/<.*?>/g, "").substring(0, 70) + "..."
                     : post.body.replace(/<.*?>/g, "")}
-                </TableCell>
+                </TableCell> */}
 
+                <TableCell>
+                  <div className="flex justify-center items-center">
+                    {post.published ? (
+                      <div className="text-green-500 border border-green-500 rounded-md px-2 py-1">
+                        Published
+                      </div>
+                    ) : (
+                      <div className="text-red-500 border border-red-500 rounded-md px-2 py-1">
+                        Draft
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   {Days(post.created_at).format("DD MMM YYYY")}
                 </TableCell>
                 <TableCell>
-                  <ActionComponent id={post.id} />
+                  <ActionComponent post={post} />
                 </TableCell>
               </TableRow>
             ))}
