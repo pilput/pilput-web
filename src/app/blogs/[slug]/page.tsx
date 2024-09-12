@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <div>
               <Link
                 href={`/${post.creator.username}`}
-                className="text-gray-700 font-medium hover:font-semibold "
+                className="text-gray-700 font-medium hover:font-semibold dark:text-gray-300"
               >
                 {post.creator.first_name} {post.creator.last_name}
               </Link>
@@ -52,7 +52,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
 
         <div className="border-b-2 mb-8">
-          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-6 font-bold">
+          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-6 font-bold dark:text-gray-300">
             {post.title}
           </div>
         </div>
@@ -68,7 +68,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             />
           )}
         </div>
-        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
+        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert">
           <div
             className="w-full"
             dangerouslySetInnerHTML={{ __html: post.body }}

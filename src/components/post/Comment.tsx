@@ -48,7 +48,7 @@ const Comment = ({ postId }: { postId: string }) => {
   }
   return (
     <div className="mx-auto border rounded-lg py-6 px-5">
-      <div className="text-3xl text-gray-900 font-semibold my-6">Comments</div>
+      <div className="text-3xl text-gray-900 font-semibold my-6 dark:text-gray-300">Comments</div>
 
       <div className="mt-3">
         {comments.length === 0 && (
