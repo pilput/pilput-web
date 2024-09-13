@@ -3,7 +3,7 @@ const Postlistpulse = () => {
   return (
     <div className="w-full mx-auto mb-2 mt-4">
       {pulse.map((key) => (
-        <div className="animate-pulse flex space-x-4 w-full mb-3 shadow-md p-4 border rounded-lg" key={key}>
+        <div className="animate-pulse flex space-x-4 w-full mb-3 shadow-md p-4 border dark:border-gray-700 rounded-lg dark:bg-slate-700" key={key}>
           <div className=" bg-slate-300 h-28 w-28"></div>
           <div className="flex-1 space-y-6 py-1">
             <div className="h-3 bg-slate-300 w-80 rounded"></div>

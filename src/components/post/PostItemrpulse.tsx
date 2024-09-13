@@ -10,7 +10,7 @@ interface Post {
 
 const PostItemrPulse = () => {
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden w-full m-3 h-64">
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden w-full m-3 h-64 dark:bg-slate-700">
       <div className="md:flex">
         <div className="p-8">
           <div>

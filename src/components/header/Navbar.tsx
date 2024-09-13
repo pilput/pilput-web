@@ -68,7 +68,9 @@ const Navbar = () => {
             <div className="flex items-center py-4 mx-3">
               <ButtonLogged />
             </div>
-            <DarkModeButton />
+            <div className="flex items-center py-4 mx-3">
+              <DarkModeButton />
+            </div>
             
           </div>
         </div>

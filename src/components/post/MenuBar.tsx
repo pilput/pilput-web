@@ -106,10 +106,7 @@ const MenuBar = () => {
       >
         <Underline />
       </button>
-      <button
-        className="p-2 hover:bg-gray-200 rounded-lg"
-        onClick={addImage}
-      >
+      <button className="p-2 hover:bg-gray-200 rounded-lg" onClick={addImage}>
         <Image />
       </button>
       <button
