@@ -11,7 +11,6 @@ const getPost = async (username: string, postSlug: string): Promise<Post> => {
     const { data } = await axiosIntence2(`/posts/${username}/${postSlug}`);
     return data;
   } catch (error) {
-    console.log(error);
     throw notFound();
   }
 };
