@@ -8,7 +8,7 @@ const PostItemr = ({ post }: { post: Post }) => {
     <div className="max-w-md border mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden w-full m-3 h-64">
       <div className="p-8">
         <Link
-          href={`/blogs/` + post.slug}
+          href={`/${post.creator.username}/${post.slug}`}
           className="block mt-1 text-lg leading-tight font-medium text-black dark:text-gray-200 text-pretty hover:underline"
         >
           {post.title}
