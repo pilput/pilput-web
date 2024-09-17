@@ -35,7 +35,7 @@ export default async function Page({
             height={60}
           />
           <div>
-            <div className="text-gray-700">
+            <div className="text-gray-700 dark:text-gray-300">
               {post.creator.first_name} {post.creator.last_name}
             </div>
             <a
@@ -48,7 +48,7 @@ export default async function Page({
         </div>
 
         <div className="border-b-2 mb-8">
-          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-6 font-bold">
+          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 dark:text-gray-50 mx-auto my-6 font-bold">
             {post.title}
           </div>
         </div>
@@ -64,7 +64,7 @@ export default async function Page({
             />
           )}
         </div>
-        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
+        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert">
           <div
             className="w-full"
             dangerouslySetInnerHTML={{ __html: post.body }}
