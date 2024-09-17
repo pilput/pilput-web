@@ -26,6 +26,10 @@ export default function Posts() {
     poststore.fetch(limit, Offset);
   }, [Offset]);
 
+  const refetchPosts = () => {
+    poststore.fetch(limit, Offset);
+  }
+
   function prevPaginate() {
     setOffset((prev) => prev + limit);
   }
@@ -105,7 +109,7 @@ export default function Posts() {
                   {Days(post.created_at).format("DD MMM YYYY")}
                 </TableCell>
                 <TableCell>
-                  <ActionComponent post={post} />
+                  <ActionComponent post={post} refetchPosts={refetchPosts} />
                 </TableCell>
               </TableRow>
             ))}

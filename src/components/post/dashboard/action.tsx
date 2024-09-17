@@ -11,14 +11,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { axiosIntence2 } from "@/utils/fetch";
 import toast from "react-hot-toast";
+import { getToken } from "@/utils/Auth";
 
-const ActionComponent = ({ post }: { post: Post }) => {
+const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () => void }) => {
   const onPublish = async () => {
     const id = toast.loading("Updating publish...");
     try {
-      const response = await axiosIntence2.patch(`/posts/${post.id}`, {
-        published: !post.published,
-      });
+      const response = await axiosIntence2.patch(
+        `/posts/${post.id}/published`,
+        {
+          published: !post.published,
+        },
+        { headers: { Authorization: `Bearer ${getToken()}` } }
+      );
+      refetchPosts();
       toast.success("Update publish", { id });
     } catch (error) {
       console.log(error);
@@ -29,7 +35,7 @@ const ActionComponent = ({ post }: { post: Post }) => {
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await axiosIntence2.delete(`/posts/${post.id}`);
+      const response = await axiosIntence2.delete(`/posts/${post.id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
       toast.success("Delete post", { id });
     } catch (error) {
       console.log(error);
@@ -47,14 +53,18 @@ const ActionComponent = ({ post }: { post: Post }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem>
-          <a href={`/blogs/${post.slug}`} target="_blank" className="flex items-center">
+          <a
+            href={`/blogs/${post.slug}`}
+            target="_blank"
+            className="flex items-center"
+          >
             <Eye className="mr-2 h-4 w-4" />
             <span>View</span>
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" onClick={onPublish}>
           <Send className="mr-2 h-4 w-4" />
-          {post.published ? <span>Publish</span> : <span>Unpublish</span>}
+          {post.published ? <span>Unpublish</span> : <span>Publish</span>}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer" onClick={onDelete}>
