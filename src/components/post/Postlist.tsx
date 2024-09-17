@@ -40,7 +40,7 @@ const Postlist = ({ post }: { post: Post }) => {
           />
         )}
         <div className="flex-grow">
-          <Link href={"/blogs/" + post.slug}>
+          <Link href={`/${post.creator.username}/${post.slug}`}>
             <Button variant={"link"} className="font-bold capitalize text-xl dark:text-gray-300">
               {post.title}
             </Button>

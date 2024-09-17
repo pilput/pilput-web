@@ -6,17 +6,22 @@ import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
 import { getUrlImage } from "@/utils/getImage";
 
-const getPost = async (postSlug: string): Promise<Post> => {
+const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosIntence2(`/posts/slug/${postSlug}`);
+    const { data } = await axiosIntence2(`/posts/${username}/${postSlug}`);
     return data;
-  } catch {
+  } catch (error) {
+    console.log(error);
     throw notFound();
   }
 };
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug);
+export default async function Page({
+  params,
+}: {
+  params: { slug: string; username: string };
+}) {
+  const post = await getPost(params.username, params.slug);
 
   return (
     <>
@@ -42,7 +47,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
             </a>
           </div>
         </div>
-        
 
         <div className="border-b-2 mb-8">
           <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 mx-auto my-6 font-bold">
@@ -50,16 +54,16 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
         </div>
         <div>
-        {post.photo_url && (
-          <Image
-            className="mx-auto h-72 object-cover w-full"
-            priority={false}
-            src={getUrlImage(post.photo_url)}
-            alt={post.title}
-            width={400}
-            height={400}
-          />
-        )}
+          {post.photo_url && (
+            <Image
+              className="mx-auto h-72 object-cover w-full"
+              priority={false}
+              src={getUrlImage(post.photo_url)}
+              alt={post.title}
+              width={400}
+              height={400}
+            />
+          )}
         </div>
         <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
           <div
@@ -70,7 +74,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
         {post.tags != null && (
           <div className="flex gap-2 flex-wrap mb-6">
             {post.tags.map((tag) => (
-              <div key={tag.tag.id} className="py-2 px-4 rounded-2xl bg-slate-200">
+              <div
+                key={tag.tag.id}
+                className="py-2 px-4 rounded-2xl bg-slate-200"
+              >
                 {tag.tag.name}
               </div>
             ))}
