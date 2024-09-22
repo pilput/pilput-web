@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { logOut } from "@/utils/Auth";
 import { authStore } from "@/stores/userStore";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const DashboardTopBar = () => {
   const yourstore = authStore();
@@ -35,25 +36,13 @@ const DashboardTopBar = () => {
           <div className="relative p-1 flex items-center justify-end w-1/4 ml-5 mr-4 sm:mr-0 sm:right-auto">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                {yourstore.data.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    alt="profil"
-                    width={50}
-                    height={50}
+                <Avatar>
+                  <AvatarImage
                     src={getProfilePicture(yourstore.data.image)}
-                    className="mx-auto object-cover rounded-full h-10 w-10"
+                    alt={`@${yourstore.data.username}`}
                   />
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    alt="profil"
-                    width={50}
-                    height={50}
-                    src="https://placeimg.com/640/480/any"
-                    className="mx-auto object-cover rounded-full h-10 w-10"
-                  />
-                )}
+                  <AvatarFallback>{yourstore.data.username[0]}</AvatarFallback>
+                </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="mr-9 w-[200px]">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>

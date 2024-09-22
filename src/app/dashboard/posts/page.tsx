@@ -28,7 +28,7 @@ export default function Posts() {
 
   const refetchPosts = () => {
     poststore.fetch(limit, Offset);
-  }
+  };
 
   function prevPaginate() {
     setOffset((prev) => prev + limit);
@@ -66,17 +66,13 @@ export default function Posts() {
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2 items-center">
+                    {post.creator.image}
                     <Avatar>
                       <AvatarImage
-                        src={getProfilePicture(post.creator?.image)}
-                        width={5}
-                        height={5}
-                        alt="Avatar"
+                        src={getProfilePicture(post.creator.image)}
+                        alt={`@${post.creator.username}`}
                       ></AvatarImage>
-                      {post.creator?.email}
-                      <AvatarFallback>
-                        {post.creator?.first_name[0]}
-                      </AvatarFallback>
+                      <AvatarFallback>{post.creator.username[0]}</AvatarFallback>
                     </Avatar>
                     <div className="font-semibold">
                       {post.creator?.first_name} {post.creator?.last_name}

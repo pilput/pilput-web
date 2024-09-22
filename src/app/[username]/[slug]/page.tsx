@@ -4,7 +4,8 @@ import Comment from "@/components/post/Comment";
 import { axiosIntence2 } from "@/utils/fetch";
 import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
-import { getUrlImage } from "@/utils/getImage";
+import { getProfilePicture, getUrlImage } from "@/utils/getImage";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
@@ -27,13 +28,13 @@ export default async function Page({
       <Navigation />
       <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
         <div className="flex gap-2 items-center">
-          <img
-            className="w-14 h-14 rounded-full object-cover"
-            src={getUrlImage(post.creator.image)}
-            alt={post.creator.image}
-            width={60}
-            height={60}
-          />
+          <Avatar>
+            <AvatarImage
+              src={getProfilePicture(post.creator.image)}
+              alt={`@${post.creator.username}`}
+            />
+            <AvatarFallback>{post.creator.username[0]}</AvatarFallback>
+          </Avatar>
           <div>
             <div className="text-gray-700 dark:text-gray-300">
               {post.creator.first_name} {post.creator.last_name}
