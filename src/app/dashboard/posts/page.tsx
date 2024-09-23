@@ -17,15 +17,29 @@ import { useEffect, useState } from "react";
 import Days from "dayjs";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function Posts() {
   const limit = 10;
   const [Offset, setOffset] = useState(0);
   const poststore = postsStore();
+  const totalPages = Math.ceil(poststore.total / limit);
+  const currentPage = Math.floor(Offset / limit) + 1;
   useEffect(() => {
     poststore.fetch(limit, Offset);
   }, [Offset]);
-
+  function changeOffset(newOffset: number) {
+    if (newOffset >= 0 && newOffset < poststore.total) {
+      setOffset(newOffset);
+    }
+  }
   const refetchPosts = () => {
     poststore.fetch(limit, Offset);
   };
@@ -72,7 +86,9 @@ export default function Posts() {
                         src={getProfilePicture(post.creator.image)}
                         alt={`@${post.creator.username}`}
                       ></AvatarImage>
-                      <AvatarFallback>{post.creator.username[0]}</AvatarFallback>
+                      <AvatarFallback>
+                        {post.creator.username[0]}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="font-semibold">
                       {post.creator?.first_name} {post.creator?.last_name}
@@ -131,6 +147,40 @@ export default function Posts() {
           >
             Next
           </button>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => changeOffset(Offset - limit)}
+                  // disabled={Offset === 0}
+                  className="cursor-pointer"
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, index) => {
+                const pageOffset = index * limit;
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      className="cursor-pointer"
+                      onClick={() => changeOffset(pageOffset)}
+                      isActive={Offset === pageOffset}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              <PaginationItem>
+                <PaginationNext
+                  className="cursor-pointer"
+                  onClick={() => changeOffset(Offset + limit)}
+                  // disabled={Offset + limit >= poststore.total}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
         {/* <Paginate
         key={"paginate"}
