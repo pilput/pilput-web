@@ -80,7 +80,6 @@ export default function Posts() {
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2 items-center">
-                    {post.creator.image}
                     <Avatar>
                       <AvatarImage
                         src={getProfilePicture(post.creator.image)}
