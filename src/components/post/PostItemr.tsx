@@ -5,7 +5,7 @@ import Link from "next/link";
 const PostItemr = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
-    <div className="max-w-md border mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden w-full m-3 h-64">
+    <div className="max-w-md border mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden w-full m-3 h-64 hover:shadow-xl">
       <div className="p-8">
         <Link
           href={`/${post.creator.username}/${post.slug}`}
