@@ -7,10 +7,17 @@ import { notFound } from "next/navigation"; // Added import statement
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+interface succesResponse {
+  data: Post;
+  message: string;
+  success: boolean;
+}
+
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
     const { data } = await axiosIntence2(`/posts/${username}/${postSlug}`);
-    return data;
+    const result = data as succesResponse;
+    return result.data;
   } catch (error) {
     throw notFound();
   }

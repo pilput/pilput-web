@@ -17,6 +17,16 @@ type Inputs = {
   password: string;
 };
 
+interface succesResponse {
+  data: {
+    access_token: string;
+    refresh_token: string;
+  };
+  message: string;
+  success: boolean;
+  error: any;
+}
+
 export default function Login() {
   const {
     register,
@@ -24,17 +34,23 @@ export default function Login() {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (form) => {
     const id = toast.loading("Loading...");
     setloginwait(true);
     try {
-      const response = await axiosIntence2.post("/auth/login", data);
+      const { data } = await axiosIntence2.post("/auth/login", form);
+      const result = data as succesResponse;
+
+      if (!result.success) {
+        throw new Error(result.message || "Login failed");
+      }
+
       toast.success("Success login", { id });
       const expire = new Date();
 
       expire.setDate(expire.getDate() + 3);
 
-      setCookie("token", response.data.access_token, {
+      setCookie("token", result.data.access_token, {
         expires: expire,
         sameSite: "strict",
       });

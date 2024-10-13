@@ -7,7 +7,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "pilput",
-  description: "Welcome to Next.js",
+  description: "Welcome to pilput.dev",
 };
 
 const inter = Inter({ subsets: ["latin"] });

@@ -20,6 +20,8 @@ const Blog = () => {
         const { data } = await axiosIntence2.get("/posts", {
           params: { limit: 5, offset: page * 5 },
         });
+        console.log(data);
+        
         setposts(page === 0 ? data.data : [...posts, ...data.data]);
         setendPage(data.total === posts.length);
       } catch (error) {

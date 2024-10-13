@@ -3,10 +3,17 @@ import { axiosIntence2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 
+interface succesResponse {
+  data: Writer;
+  message: string;
+  success: boolean;
+}
+
 const getWriter = async (username: string): Promise<Writer> => {
   try {
     const { data } = await axiosIntence2(`/writers/${username}`);
-    return data;
+    const result = data as succesResponse;
+    return result.data;
   } catch {
     throw notFound();
   }
