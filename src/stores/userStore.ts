@@ -10,6 +10,12 @@ interface authDataState {
   error: boolean;
 }
 
+interface responseSuccess {
+  data: Auth;
+  message: string;
+  success: boolean;
+}
+
 export const authStore = create<authDataState>()((set) => ({
   data: {
     username: "loading...",
@@ -20,9 +26,11 @@ export const authStore = create<authDataState>()((set) => ({
   },
   fetch: async () => {
     try {
-      const response = await axiosIntence2.get("/users/me", {
+      const {data} = await axiosIntence2.get("/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
+      const response = data as responseSuccess;
+
       set({ data: response.data });
       
     } catch (error) {
