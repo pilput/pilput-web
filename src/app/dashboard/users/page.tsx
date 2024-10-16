@@ -23,19 +23,26 @@ export default function ManageUser() {
   }
   useEffect(() => {
     getUsers();
-
     localGetAuth();
   }, []);
 
   async function getUsers() {
     try {
-      const response = await axiosIntence2.get("/users", {
+      const { data } = await axiosIntence2.get("/users", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-
-      setusers(response.data);
+      const response = data as {
+        data: User[];
+        success: boolean;
+        metadata: { totalItems: number };
+      };
+      if (response.success) {
+        setusers(response.data);
+      } else {
+        toast.error("Cannot connecting with server");
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {

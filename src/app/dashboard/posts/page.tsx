@@ -34,6 +34,7 @@ export default function Posts() {
   const currentPage = Math.floor(Offset / limit) + 1;
   useEffect(() => {
     poststore.fetch(limit, Offset);
+    
   }, [Offset]);
   function changeOffset(newOffset: number) {
     if (newOffset >= 0 && newOffset < poststore.total) {

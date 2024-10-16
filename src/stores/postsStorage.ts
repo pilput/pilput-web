@@ -13,11 +13,14 @@ export const postsStore = create<PostsState>()((set) => ({
     posts: [],
     fetch: async (limit = 10, offset = 0) => {
         try {
-            const response = await axiosIntence2.get("/posts/mine", { params: { limit: limit, offset: offset }, headers: { "Authorization": `Bearer ${getToken()}` } })
-            console.log(response.data);
-
-            set({ posts: response.data.data })
-            set({ total: response.data.total })
+            const { data } = await axiosIntence2.get("/posts/mine", { params: { limit: limit, offset: offset }, headers: { "Authorization": `Bearer ${getToken()}` } })
+            const response = data as { data: Post[], success: boolean, metadata: { totalItems: number } }
+            if (response.success) {
+                set({ posts: response.data })
+                set({ total: response.metadata.totalItems })
+            } else {
+                set({ error: true })
+            }
         } catch (error) {
             console.error(error);
         }
