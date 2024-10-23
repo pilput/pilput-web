@@ -23,11 +23,12 @@ const getPost = async (username: string, postSlug: string): Promise<Post> => {
   }
 };
 
-export default async function Page({
-  params,
-}: {
-  params: { slug: string; username: string };
-}) {
+export default async function Page(
+  props: {
+    params: Promise<{ slug: string; username: string }>;
+  }
+) {
+  const params = await props.params;
   const post = await getPost(params.username, params.slug);
 
   return (

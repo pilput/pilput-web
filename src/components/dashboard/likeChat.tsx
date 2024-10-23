@@ -53,7 +53,7 @@ export default function Component() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value: any) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}

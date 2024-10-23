@@ -33,7 +33,7 @@ export default function Signup() {
   } = useForm<Inputs>({
     resolver: zodResolver(UserSchema),
   });
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
     const id = toast.loading("Loading...");
     setloginwait(true);
     try {
@@ -75,13 +75,13 @@ export default function Signup() {
 
   return (
     <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
-      <a
+      <Link
         className="fixed top-5 left-5 flex gap-2 items-center bg-white dark:bg-slate-900 rounded-md p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
         href="/"
       >
         <ArrowLeft />
         Back to home
-      </a>
+      </Link>
       <div className="min-h-screen flex justify-center items-center">
         <div className="py-12 px-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl z-20">
           <div>

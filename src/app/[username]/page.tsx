@@ -19,11 +19,12 @@ const getWriter = async (username: string): Promise<Writer> => {
   }
 };
 
-export default async function page({
-  params,
-}: {
-  params: { username: string };
-}) {
+export default async function page(
+  props: {
+    params: Promise<{ username: string }>;
+  }
+) {
+  const params = await props.params;
   const writer = await getWriter(params.username);
   return (
     <>
