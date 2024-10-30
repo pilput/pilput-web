@@ -1,7 +1,7 @@
 import Footer from "@/components/footer/Footer";
 import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
-import { axiosIntence2 } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
 import { getUrlImage } from "@/utils/getImage";
@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const getPost = async (postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosIntence2(`/posts/slug/${postSlug}`);
+    const { data } = await axiosInstence2(`/posts/slug/${postSlug}`);
     return data;
   } catch {
     throw notFound();

@@ -3,10 +3,10 @@ import { ErrorHandlerAPI } from "./ErrorHandler";
 import { getToken } from "./Auth";
 import { apibaseurl, apibaseurl2 } from "./getCofig";
 
-export const axiosIntence = axios.create({
+export const axiosInstence = axios.create({
   baseURL: apibaseurl,
 });
-export const axiosIntence2 = axios.create({
+export const axiosInstence2 = axios.create({
   baseURL: apibaseurl2,
 });
 
@@ -107,7 +107,7 @@ export function postDataRQ(url: any, payload: any, formData = false) {
 }
 export function getDataRQ(url: string) {
   try {
-    return axiosIntence.get(`${apibaseurl}${url}`);
+    return axiosInstence.get(`${apibaseurl}${url}`);
   } catch (error) {
     return ErrorHandlerAPI(error);
   }

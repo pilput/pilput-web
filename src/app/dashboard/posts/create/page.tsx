@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { postsStore } from "@/stores/createPostStore";
 import { getToken } from "@/utils/Auth";
-import { axiosIntence, axiosIntence2 } from "@/utils/fetch";
+import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import { useCurrentEditor } from "@tiptap/react";
@@ -32,7 +32,7 @@ export default function PostCreate() {
         formData.append("image", file);
 
         // Adjust the URL for your file upload endpoint
-        const response = await axiosIntence.post(
+        const response = await axiosInstence.post(
           "/api/v2/posts/image",
           formData,
           {
@@ -56,7 +56,7 @@ export default function PostCreate() {
   async function pulishHandler() {
     const toastid = toast.loading("Loading...");
     try {
-      await axiosIntence2.post("/posts", post, {
+      await axiosInstence2.post("/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       seterrortitle("");

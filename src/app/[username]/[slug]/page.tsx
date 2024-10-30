@@ -1,7 +1,7 @@
 import Footer from "@/components/footer/Footer";
 import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
-import { axiosIntence2 } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
@@ -15,7 +15,7 @@ interface succesResponse {
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosIntence2(`/posts/${username}/${postSlug}`);
+    const { data } = await axiosInstence2(`/posts/${username}/${postSlug}`);
     const result = data as succesResponse;
     return result.data;
   } catch (error) {

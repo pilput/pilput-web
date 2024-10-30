@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { axiosIntence2 } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import toast from "react-hot-toast";
 import { getToken } from "@/utils/Auth";
 
@@ -17,7 +17,7 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
   const onPublish = async () => {
     const id = toast.loading("Updating publish...");
     try {
-      const response = await axiosIntence2.patch(
+      const response = await axiosInstence2.patch(
         `/posts/${post.id}/published`,
         {
           published: !post.published,
@@ -35,7 +35,7 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await axiosIntence2.delete(`/posts/${post.id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
+      const response = await axiosInstence2.delete(`/posts/${post.id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
       toast.success("Delete post", { id });
     } catch (error) {
       console.log(error);

@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Modal from "@/components/user/Modal";
 import { getAuth, getToken, RemoveToken } from "@/utils/Auth";
-import { axiosIntence, axiosIntence2 } from "@/utils/fetch";
+import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ export default function ManageUser() {
 
   async function getUsers() {
     try {
-      const { data } = await axiosIntence2.get("/users", {
+      const { data } = await axiosInstence2.get("/users", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -56,7 +56,7 @@ export default function ManageUser() {
 
   async function deleteUser(id: string) {
     const toastid = toast.loading("Loading...");
-    const response = await axiosIntence.delete("/api/v2/users/" + id);
+    const response = await axiosInstence.delete("/api/v2/users/" + id);
     if (response.status === 200) {
       toast.success("User Deleted", { id: toastid });
     } else if (response.status === 403) {

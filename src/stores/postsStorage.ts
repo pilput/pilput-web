@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { axiosIntence2 } from '@/utils/fetch'
+import { axiosInstence2 } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
 
 interface PostsState {
@@ -13,7 +13,7 @@ export const postsStore = create<PostsState>()((set) => ({
     posts: [],
     fetch: async (limit = 10, offset = 0) => {
         try {
-            const { data } = await axiosIntence2.get("/posts/mine", { params: { limit: limit, offset: offset }, headers: { "Authorization": `Bearer ${getToken()}` } })
+            const { data } = await axiosInstence2.get("/posts/mine", { params: { limit: limit, offset: offset }, headers: { "Authorization": `Bearer ${getToken()}` } })
             const response = data as { data: Post[], success: boolean, metadata: { totalItems: number } }
             if (response.success) {
                 set({ posts: response.data })
