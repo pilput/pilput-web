@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import WordLimit from "@/components/word/WordLimit";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
-import {format} from "date-fns"
+import { format } from "date-fns";
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
@@ -12,7 +12,7 @@ const Postlist = ({ post }: { post: Post }) => {
       <div className="flex items-center gap-2 mb-3">
         <div>
           {post.creator?.image && (
-            <a href={`/${post.creator.username}`} >
+            <a href={`/${post.creator.username}`}>
               <img
                 className="rounded-full object-cover h-7 w-7 hover:ring-2 ring-blue-500"
                 src={getProfilePicture(post.creator?.image)}
@@ -27,7 +27,7 @@ const Postlist = ({ post }: { post: Post }) => {
         <div className="font-bold dark:text-gray-400">
           {post.creator?.first_name} {post.creator?.last_name}
         </div>
-        <div>{format(post.created_at, "HH:mm:ss")}</div>
+        <div>{format(post.created_at, "dd MMM yyyy")}</div>
       </div>
       <div className="flex gap-3">
         {post.photo_url && (
@@ -41,7 +41,10 @@ const Postlist = ({ post }: { post: Post }) => {
         )}
         <div className="flex-grow">
           <Link href={`/${post.creator.username}/${post.slug}`}>
-            <Button variant={"link"} className="font-bold capitalize text-xl dark:text-gray-300">
+            <Button
+              variant={"link"}
+              className="font-bold capitalize text-xl dark:text-gray-300"
+            >
               {post.title}
             </Button>
           </Link>

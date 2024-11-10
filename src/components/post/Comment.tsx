@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getToken } from "@/utils/Auth";
 import { getProfilePicture } from "@/utils/getImage";
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from "date-fns";
 
 interface CommentData {
   id: string;
@@ -26,7 +26,7 @@ const Comment = ({ postId }: { postId: string }) => {
       query: { post_id: postId, token: getToken() },
       extraHeaders: {
         Authorization: `Bearer ${getToken()}`,
-      }
+      },
     });
     if (socketRef.current) {
       socketRef.current.on("newComment", (message: Comment[]) => {
@@ -45,7 +45,9 @@ const Comment = ({ postId }: { postId: string }) => {
   }
   return (
     <div className="mx-auto border rounded-lg py-6 px-5">
-      <div className="text-3xl text-gray-900 font-semibold my-6 dark:text-gray-300">Comments</div>
+      <div className="text-3xl text-gray-900 font-semibold my-6 dark:text-gray-300">
+        Comments
+      </div>
 
       <div className="mt-3">
         {comments.length === 0 && (
@@ -70,7 +72,6 @@ const Comment = ({ postId }: { postId: string }) => {
                     {data.creator?.first_name} {data.creator?.last_name}
                   </div>
                   <div className="text-gray-500">
-                    {/* {Days(data.created_at).fromNow()} */}
                     {formatDistanceToNow(data.created_at)}
                   </div>
                 </div>
