@@ -14,7 +14,6 @@ import {
 import { postsStore } from "@/stores/postsStorage";
 import { getProfilePicture } from "@/utils/getImage";
 import { useEffect, useState } from "react";
-import Days from "dayjs";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
 import {
@@ -25,6 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { format} from "date-fns"
 
 export default function Posts() {
   const limit = 10;
@@ -118,7 +118,7 @@ export default function Posts() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {Days(post.created_at).format("DD MMM YYYY")}
+                  {format(post.created_at, "DD MMM YYYY")}
                 </TableCell>
                 <TableCell>
                   <ActionComponent post={post} refetchPosts={refetchPosts} />

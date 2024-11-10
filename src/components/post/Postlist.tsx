@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import WordLimit from "@/components/word/WordLimit";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
-import Days from 'dayjs'
+import {format} from "date-fns"
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
@@ -27,7 +27,7 @@ const Postlist = ({ post }: { post: Post }) => {
         <div className="font-bold dark:text-gray-400">
           {post.creator?.first_name} {post.creator?.last_name}
         </div>
-        <div>{Days(post.created_at).format("DD MMM YYYY")}</div>
+        <div>{format(post.created_at, "HH:mm:ss")}</div>
       </div>
       <div className="flex gap-3">
         {post.photo_url && (

@@ -6,9 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getToken } from "@/utils/Auth";
 import { getProfilePicture } from "@/utils/getImage";
-import Days from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import dayjs from "dayjs";
+import { formatDistanceToNow } from 'date-fns'
 
 interface CommentData {
   id: string;
@@ -19,7 +17,6 @@ interface CommentData {
 }
 
 const Comment = ({ postId }: { postId: string }) => {
-  dayjs.extend(relativeTime);
   const [comment, setcomment] = useState<string>("");
   const [comments, setcomments] = useState<Comment[]>([]);
   const socketRef = useRef<Socket | null>(null);
@@ -73,7 +70,8 @@ const Comment = ({ postId }: { postId: string }) => {
                     {data.creator?.first_name} {data.creator?.last_name}
                   </div>
                   <div className="text-gray-500">
-                    {Days(data.created_at).fromNow()}
+                    {/* {Days(data.created_at).fromNow()} */}
+                    {formatDistanceToNow(data.created_at)}
                   </div>
                 </div>
               </div>
