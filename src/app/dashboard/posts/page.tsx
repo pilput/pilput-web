@@ -118,7 +118,7 @@ export default function Posts() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {format(post.created_at, "DD MMM YYYY")}
+                  {format(post.created_at, "dd MMM yyyy")}
                 </TableCell>
                 <TableCell>
                   <ActionComponent post={post} refetchPosts={refetchPosts} />
