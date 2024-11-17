@@ -8,7 +8,7 @@ interface Post {
   created_at: string;
   updated_at: string;
   published: boolean;
-  tags: { tag: Tags }[];
+  tags: Tags[];
 }
 
 interface PostCreate {

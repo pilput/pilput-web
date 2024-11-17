@@ -83,10 +83,10 @@ export default async function Page(
           <div className="flex gap-2 flex-wrap mb-6">
             {post.tags.map((tag) => (
               <div
-                key={tag.tag.id}
+                key={tag.id}
                 className="py-2 px-4 rounded-2xl bg-slate-200"
               >
-                {tag.tag.name}
+                {tag.name}
               </div>
             ))}
           </div>
