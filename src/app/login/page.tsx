@@ -9,7 +9,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { apibaseurl } from "@/utils/getCofig";
 import { ArrowLeft, Github, GithubIcon } from "lucide-react";
 
 type Inputs = {
@@ -27,16 +26,18 @@ interface succesResponse {
   error: any;
 }
 
-export default function Login() {
+export default function LoginPage() {
+  const [loginWait, setLoginWait] = useState(false);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = async (form) => {
-    const id = toast.loading("Loading...");
-    setloginwait(true);
+    setLoginWait(true);
     try {
       const { data } = await axiosInstence.post("/v1/auth/login", form);
       const result = data as succesResponse;
@@ -45,29 +46,22 @@ export default function Login() {
         throw new Error(result.message || "Login failed");
       }
 
-      toast.success("Success login", { id });
       const expire = new Date();
-
       expire.setDate(expire.getDate() + 3);
 
       setCookie("token", result.data.access_token, {
         expires: expire,
         sameSite: "strict",
       });
-      setloginwait(false);
+      setLoginWait(false);
       router.push("/");
     } catch (error) {
-      toast.error("Invalid username or password. Please try again.", { id });
-      setloginwait(false);
+      toast.error("Invalid username or password. Please try again.");
+      setLoginWait(false);
     }
   };
-  const router = useRouter();
-  const [loginwait, setloginwait] = useState(false);
 
-  function oauthgoogle() {
-    window.location.href = apibaseurl + "/auth/oauth";
-  }
-  function oauthgithub() {
+  function oauthGithub() {
     window.location.href = "https://hono.pilput.dev/auth/oauth/github";
   }
 
@@ -83,10 +77,10 @@ export default function Login() {
       <div className="min-h-screen flex justify-center items-center">
         <div className="py-12 px-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl z-20 border">
           <div>
-            <h1 className="text-3xl font-bold text-center text-gray-700 mb-4 cursor-pointer">
+            <h1 className="text-3xl font-bold text-center text-gray-700 mb-4">
               Sign in
             </h1>
-            <p className="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide cursor-pointer">
+            <p className="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide">
               Why You so interested to read
               <br />
             </p>
@@ -111,9 +105,7 @@ export default function Login() {
                 placeholder="Username or Email"
                 {...register("email", { required: true })}
                 aria-invalid={errors.email ? "true" : "false"}
-                className={
-                  errors.email ? "border text-red-400 border-red-400" : ""
-                }
+                className={errors.email ? "border text-red-400 border-red-400" : ""}
               />
 
               <Input
@@ -121,13 +113,11 @@ export default function Login() {
                 type="password"
                 placeholder="Password"
                 aria-invalid={errors.password ? "true" : "false"}
-                className={
-                  errors.password ? "border text-red-400 border-red-400" : ""
-                }
+                className={errors.password ? "border text-red-400 border-red-400" : ""}
               />
 
               <div className="flex justify-center mt-6">
-                {loginwait ? (
+                {loginWait ? (
                   <Button disabled type="submit" size={"lg"} className="w-full">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +152,7 @@ export default function Login() {
             <center className="py-3">Or</center>
             <div className="">
               <Button
-                onClick={oauthgithub}
+                onClick={oauthGithub}
                 type="button"
                 className="w-full border border-red-500"
                 size={"lg"}
