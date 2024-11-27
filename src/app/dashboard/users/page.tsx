@@ -56,7 +56,7 @@ export default function ManageUser() {
 
   async function deleteUser(id: string) {
     const toastid = toast.loading("Loading...");
-    const response = await axiosInstence.delete("/api/v2/users/" + id);
+    const response = await axiosInstence.delete("/v1/users/" + id);
     if (response.status === 200) {
       toast.success("User Deleted", { id: toastid });
     } else if (response.status === 403) {
