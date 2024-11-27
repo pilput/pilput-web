@@ -26,7 +26,7 @@ export const authStore = create<authDataState>()((set) => ({
   },
   fetch: async () => {
     try {
-      const {data} = await axiosInstence2.get("/users/me", {
+      const {data} = await axiosInstence2.get("/v1/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const response = data as responseSuccess;

@@ -27,7 +27,7 @@ export default function Login() {
     const id = toast.loading("Loading...");
     setloginwait(true);
     try {
-      const response = await axiosInstence2.post("/auth/login", data);
+      const response = await axiosInstence2.post("/v1/auth/login", data);
       toast.success("Success login", { id });
       const expire = new Date();
 

@@ -18,7 +18,7 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
     const id = toast.loading("Updating publish...");
     try {
       const response = await axiosInstence2.patch(
-        `/posts/${post.id}/published`,
+        `/v1/posts/${post.id}/published`,
         {
           published: !post.published,
         },
@@ -35,7 +35,7 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await axiosInstence2.delete(`/posts/${post.id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
+      const response = await axiosInstence2.delete(`/v1/posts/${post.id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
       toast.success("Delete post", { id });
     } catch (error) {
       console.log(error);

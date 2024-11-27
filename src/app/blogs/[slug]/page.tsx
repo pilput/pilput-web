@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const getPost = async (postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosInstence2(`/posts/slug/${postSlug}`);
+    const { data } = await axiosInstence2(`/v1/posts/slug/${postSlug}`);
     return data;
   } catch {
     throw notFound();

@@ -37,7 +37,7 @@ export default function Signup() {
     const id = toast.loading("Loading...");
     setloginwait(true);
     try {
-      const response = await axiosInstence2.post("/auth/register", data);
+      const response = await axiosInstence2.post("/v1/auth/register", data);
       toast.success("Success Create Account", { id });
       const expire = new Date();
 
@@ -57,7 +57,7 @@ export default function Signup() {
 
   function checkUsername(username: string) {
     if (username.length >= 5) {
-      axiosInstence2.get("/auth/username/" + username).then((res) => {
+      axiosInstence2.get("/v1/auth/username/" + username).then((res) => {
         if (res.data.exist) {
           toast.error("Username already exists. Please try again.", {
             id: "username",

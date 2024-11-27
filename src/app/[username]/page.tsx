@@ -32,7 +32,7 @@ interface succesResponse {
 
 const getWriter = async (username: string): Promise<Writer> => {
   try {
-    const { data } = await axiosInstence2(`/writers/${username}`);
+    const { data } = await axiosInstence2(`/v1/writers/${username}`);
     const result = data as succesResponse;
     return result.data;
   } catch {

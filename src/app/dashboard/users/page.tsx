@@ -28,7 +28,7 @@ export default function ManageUser() {
 
   async function getUsers() {
     try {
-      const { data } = await axiosInstence2.get("/users", {
+      const { data } = await axiosInstence2.get("/v1/users", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

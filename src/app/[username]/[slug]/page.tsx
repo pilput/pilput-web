@@ -15,7 +15,7 @@ interface succesResponse {
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosInstence2(`/posts/${username}/${postSlug}`);
+    const { data } = await axiosInstence2(`/v1/posts/${username}/${postSlug}`);
     const result = data as succesResponse;
     return result.data;
   } catch (error) {

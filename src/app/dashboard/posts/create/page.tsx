@@ -56,7 +56,7 @@ export default function PostCreate() {
   async function pulishHandler() {
     const toastid = toast.loading("Loading...");
     try {
-      await axiosInstence2.post("/posts", post, {
+      await axiosInstence2.post("/v1/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       seterrortitle("");
