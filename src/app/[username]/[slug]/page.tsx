@@ -57,9 +57,9 @@ export default async function Page(
         </div>
 
         <div className="border-b-2 mb-8">
-          <div className="text-xl md:text-3xl lg:text-5xl text-gray-950 dark:text-gray-50 mx-auto my-6 font-bold">
+          <h1 className="text-xl md:text-3xl lg:text-5xl text-gray-950 dark:text-gray-50 mx-auto my-6 font-bold">
             {post.title}
-          </div>
+          </h1>
         </div>
         <div>
           {post.photo_url && (
