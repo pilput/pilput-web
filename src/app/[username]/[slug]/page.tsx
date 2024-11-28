@@ -34,7 +34,7 @@ export default async function Page(
   return (
     <>
       <Navigation />
-      <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+      <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-4xl">
         <div className="flex gap-2 items-center">
           <Avatar>
             <AvatarImage
@@ -73,7 +73,7 @@ export default async function Page(
             />
           )}
         </div>
-        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert">
+        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert !max-w-none">
           <div
             className="w-full"
             dangerouslySetInnerHTML={{ __html: post.body }}
