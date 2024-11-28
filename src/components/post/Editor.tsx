@@ -4,13 +4,21 @@
 import { EditorProvider } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Undelineextention from "@tiptap/extension-underline";
-import Youtube from '@tiptap/extension-youtube'
+import Youtube from "@tiptap/extension-youtube";
 import MenuBar from "./MenuBar";
-import Image from '@tiptap/extension-image'
-
+import Image from "@tiptap/extension-image";
+import { Placeholder } from "@tiptap/extension-placeholder";
 
 // define your extension array
-const extensions = [StarterKit, Undelineextention, Youtube, Image];
+const extensions = [
+  StarterKit,
+  Undelineextention,
+  Youtube,
+  Placeholder.configure({
+    placeholder: "Write something …",
+  }),
+  Image,
+];
 
 const Tiptap = ({
   content,
