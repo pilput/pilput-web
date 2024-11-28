@@ -73,7 +73,7 @@ export default async function Page(
             />
           )}
         </div>
-        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert !max-w-none">
+        <div className="mb-10 mt-4 md:my-10 mx-auto flex justify-center prose prose-sm sm:prose lg:prose-lg dark:prose-invert !max-w-none">
           <div
             className="w-full"
             dangerouslySetInnerHTML={{ __html: post.body }}
