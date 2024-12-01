@@ -1,7 +1,7 @@
 import Navigation from "@/components/header/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,16 +13,12 @@ import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import {
   CalendarDays,
-  BookOpen,
-  Heart,
-  MessageSquare,
   Users,
   Edit2,
   MoreHorizontal,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import PostsUser from "@/components/writer/posts"
 
 interface succesResponse {
   data: Writer;
@@ -45,6 +41,7 @@ export default async function page(props: {
 }) {
   const params = await props.params;
   const writer = await getWriter(params.username);
+
   return (
     <>
       <Navigation />
@@ -116,80 +113,7 @@ export default async function page(props: {
         </Card>
 
         {/* Content Tabs */}
-        <Tabs defaultValue="articles">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="articles">Articles</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
-            <TabsTrigger value="saved">Saved</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="articles" className="space-y-6">
-            {/* {profile.articles.map((article) => (
-              <Card key={article.id}>
-                <CardContent className="pt-6">
-                  <h3 className="text-lg font-semibold hover:text-blue-600 cursor-pointer">
-                    {article.title}
-                  </h3>
-                  <p className="text-muted-foreground mt-2">
-                    {article.preview}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {article.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center space-x-4 mt-4 text-sm text-muted-foreground">
-                    <span className="flex items-center">
-                      <CalendarDays className="w-4 h-4 mr-1" />
-                      {article.date}
-                    </span>
-                    <span className="flex items-center">
-                      <Heart className="w-4 h-4 mr-1" />
-                      {article.likes} likes
-                    </span>
-                    <span className="flex items-center">
-                      <MessageSquare className="w-4 h-4 mr-1" />
-                      {article.comments} comments
-                    </span>
-                    <span className="flex items-center">
-                      <BookOpen className="w-4 h-4 mr-1" />5 min read
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))} */}
-          </TabsContent>
-
-          <TabsContent value="about">
-            <Card>
-              <CardHeader>
-                <CardTitle>About</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Full profile information and extended bio would go here.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="saved">
-            <Card>
-              <CardHeader>
-                <CardTitle>Saved Articles</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Bookmarked and saved articles would appear here.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        <PostsUser usename={params.username} />
       </div>
     </>
   );
