@@ -8,7 +8,7 @@ import { format } from "date-fns";
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
-    <div className="w-full mt-4 px-5 py-5 bg-gray-50 dark:bg-slate-800 border dark:border-gray-700 text-gray-600 shadow-md rounded-lg">
+    <div className="mt-4 px-5 py-5 bg-gray-50 dark:bg-slate-800 border dark:border-gray-700 text-gray-600 shadow-md rounded-lg">
       <div className="flex items-center gap-2 mb-3">
         <div>
           {post.creator?.image && (
@@ -32,23 +32,20 @@ const Postlist = ({ post }: { post: Post }) => {
       <div className="flex gap-3">
         {post.photo_url && (
           <Image
-            className="object-cover"
+            className="object-cover mx-auto rounded-md"
             src={getUrlImage(post.photo_url)}
             alt={post.title}
             width={150}
             height={150}
           />
         )}
-        <div className="flex-grow">
+        <div className="px-4">
           <Link href={`/${post.creator.username}/${post.slug}`}>
-            <Button
-              variant={"link"}
-              className="font-bold capitalize text-xl dark:text-gray-300"
-            >
+            <span className="font-bold capitalize text-xl dark:text-gray-300 hover:underline">
               {post.title}
-            </Button>
+            </span>
           </Link>
-          <p className="px-4 dark:text-gray-400">
+          <p className=" dark:text-gray-400">
             <WordLimit text={plaintext} limit={50} />
           </p>
         </div>

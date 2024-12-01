@@ -6,6 +6,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "lucide-react";
 
 interface succesResponse {
   data: Post;
@@ -36,13 +37,17 @@ export default async function Page(
       <Navigation />
       <div className="mx-auto p-3 pt-6 min-h-screen max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-4xl">
         <div className="flex gap-2 items-center">
-          <Avatar>
-            <AvatarImage
-              src={getProfilePicture(post.creator.image)}
-              alt={`@${post.creator.username}`}
-            />
-            <AvatarFallback>{post.creator.username[0]}</AvatarFallback>
-          </Avatar>
+          <a href={`/${post.creator.username}`}>
+            <Avatar>
+              <AvatarImage
+                src={getProfilePicture(post.creator.image)}
+                alt={`@${post.creator.username}`}
+              />
+              <AvatarFallback>
+                {post.creator.username[0]}
+              </AvatarFallback>
+            </Avatar>
+          </a>
           <div>
             <div className="text-gray-700 dark:text-gray-300">
               {post.creator.first_name} {post.creator.last_name}
