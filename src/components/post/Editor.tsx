@@ -33,7 +33,7 @@ const Tiptap = ({
         editorProps={{
           attributes: {
             class:
-              "w-full prose prose-sm sm:prose lg:prose-lg focus:outline-none pt-2",
+              "w-full prose prose-sm sm:prose lg:prose-lg !max-w-none focus:outline-none pt-2",
           },
         }}
         onUpdate={(props) => {

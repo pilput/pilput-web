@@ -91,7 +91,7 @@ export default function PostCreate() {
         <div className="mb-5 mx-auto max-w-3xl text-end">
           <Button onClick={pulishHandler}>Publish</Button>
         </div>
-        <div className="max-w-3xl mx-auto bg-white px-5 py-5">
+        <div className="max-w-3xl xl:max-w-6xl mx-auto bg-white px-5 py-5">
           <div className="w-full">
             <input type="file" onChange={uploadPhoto} />
             <div className="text-red-400">{errorimage}</div>

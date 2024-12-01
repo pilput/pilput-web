@@ -41,12 +41,12 @@ const MenuBar = () => {
     }
   }
   return (
-    <div className="px-2 flex space-x-1 bg-gray-100 py-3 rounded-2xl shadow-xl my-3 border">
+    <div className="px-2 flex space-x-1 bg-gray-100 dark:bg-gray-800 py-3 rounded-2xl shadow-xl my-3 border dark:border-gray-700">
       <button
         onClick={() => editor.commands.toggleBold()}
         className={`${
           editor?.isActive("bold") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <Bold />
       </button>
@@ -54,7 +54,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`${
           editor?.isActive("bulletList") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <List />
       </button>
@@ -62,7 +62,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`${
           editor?.isActive("orderedList") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <ListOrdered />
       </button>
@@ -70,7 +70,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`${
           editor?.isActive("blockquote") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <Quote />
       </button>
@@ -78,7 +78,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={`${
           editor?.isActive("codeBlock") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <Code />
       </button>
@@ -86,7 +86,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`${
           editor?.isActive("italic") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <Italic />
       </button>
@@ -94,7 +94,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`${
           editor?.isActive("strike") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <Strikethrough />
       </button>
@@ -102,18 +102,18 @@ const MenuBar = () => {
         onClick={() => editor.commands.toggleUnderline()}
         className={`${
           editor?.isActive("strike") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         <Underline />
       </button>
-      <button className="p-2 hover:bg-gray-200 rounded-lg" onClick={addImage}>
+      <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg" onClick={addImage}>
         <Image />
       </button>
       <button
         onClick={addYoutubeVideo}
         className={`${
           editor?.isActive("strike") ? "outline outline-1" : ""
-        } p-2 hover:bg-gray-200 rounded-lg`}
+        } p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg`}
       >
         {/* <Underline /> */}
         <svg
