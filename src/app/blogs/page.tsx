@@ -18,7 +18,7 @@ const Blog = () => {
       setIsLoading(true);
       try {
         const { data } = await axiosInstence.get("/v1/posts", {
-          params: { limit: 5, offset: page * 5 },
+          params: { limit: 6, offset: page * 6 },
         });
         console.log(data);
         
