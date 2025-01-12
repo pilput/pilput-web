@@ -81,7 +81,7 @@ export default function ManageUser() {
 
   return (
     <>
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-white rounded-lg shadow-lg dark:bg-gray-800">
         <header className="px-5 py-4 border-b border-gray-100 ">
           <span className="font-semibold text-gray-800">Users</span>
           {auth?.issuperadmin && (
@@ -111,20 +111,20 @@ export default function ManageUser() {
             <table className="table-auto w-full">
               <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                 <tr>
-                  <th className="p-2 whitespace-nowrap">
+                  <th className="p-2 whitespace-nowrap px-4 py-3">
                     <div className="font-semibold text-left">Username</div>
                   </th>
-                  <th className="p-2 whitespace-nowrap">
+                  <th className="p-2 whitespace-nowrap px-4 py-3">
                     <div className="font-semibold text-left">Name</div>
                   </th>
-                  <th className="p-2 whitespace-nowrap">
+                  <th className="p-2 whitespace-nowrap px-4 py-3">
                     <div className="font-semibold text-left">Email</div>
                   </th>
-                  <th className="p-2 whitespace-nowrap">
+                  <th className="p-2 whitespace-nowrap  px-4 py-3">
                     <div className="font-semibold text-left">Super admin</div>
                   </th>
 
-                  <th className="p-2 whitespace-nowrap">
+                  <th className="p-2 whitespace-nowrap px-4 py-3">
                     <div className="font-semibold text-center">Action</div>
                   </th>
                 </tr>
@@ -132,18 +132,18 @@ export default function ManageUser() {
               <tbody className="text-sm divide-y divide-gray-100">
                 {users.map((user) => {
                   return (
-                    <tr key={user.id}>
-                      <td className="p-2 whitespace-nowrap">
+                    <tr key={user.id} className="bg-white hover:bg-gray-50">
+                      <td className="whitespace-nowrap  p-4">
                         <div className="flex gap-2 items-center">
                           <Avatar>
                             <AvatarImage
                               src={getProfilePicture(user.image)}
-                              width={5}
-                              height={5}
+                              width={6}
+                              height={6}
                               alt="Avatar"
                             ></AvatarImage>
                             <AvatarFallback>
-                              {user.first_name[0]}
+                              {user.first_name}
                             </AvatarFallback>
                           </Avatar>
                           <div className="font-medium text-gray-800">
@@ -151,13 +151,13 @@ export default function ManageUser() {
                           </div>
                         </div>
                       </td>
-                      <td className="p-2 whitespace-nowrap">
+                      <td className="whitespace-nowrap  p-4">
                         <div className="text-left">{user.first_name}</div>
                       </td>
-                      <td className="p-2 whitespace-nowrap">
+                      <td className="whitespace-nowrap  p-4">
                         <div className="text-left">{user.email}</div>
                       </td>
-                      <td className="p-2 whitespace-nowrap ">
+                      <td className="whitespace-nowrap  p-4">
                         <div className="text-left font-semibold">
                           {user.issuperadmin ? (
                             <span className="text-purple-900">Yes</span>
@@ -167,7 +167,7 @@ export default function ManageUser() {
                         </div>
                       </td>
 
-                      <td className="p-2 whitespace-nowrap">
+                      <td className="p-4 whitespace-nowrap">
                         <div id={user.id} className="text-lg text-center">
                           <div className="tooltip" data-tip="Delete This User">
                             <button
