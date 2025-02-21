@@ -33,9 +33,9 @@ export default function Social() {
   return (
     <div className="w-full bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-bold tracking-tight">Let's Connect!</CardTitle>
+        <CardTitle className="text-3xl font-bold tracking-tight">Let&apos;s Connect!</CardTitle>
         <CardDescription className="text-lg text-muted-foreground">
-          Find me across the web and let's start a conversation
+          Find me across the web and let&apos;s start a conversation
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
