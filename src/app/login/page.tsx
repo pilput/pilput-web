@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ArrowLeft, Github, GithubIcon } from "lucide-react";
+import { ArrowLeft, Github, GithubIcon, Mail, Lock, Loader2 } from "lucide-react";
 
 type Inputs = {
   email: string;
@@ -66,115 +68,97 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="dark:bg-gray-800 relative overflow-hidden h-screen">
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Link
-        className="fixed top-5 left-5 flex gap-2 items-center bg-white dark:bg-slate-900 rounded-md p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+        className="fixed top-5 left-5 flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm"
         href="/"
       >
-        <ArrowLeft />
-        Back to home
+        <ArrowLeft className="h-4 w-4" />
+        <span className="text-sm font-medium">Back to home</span>
       </Link>
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="py-12 px-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl z-20 border">
-          <div>
-            <h1 className="text-3xl font-bold text-center text-gray-700 mb-4">
-              Sign in
-            </h1>
-            <p className="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide">
-              Why You so interested to read
-              <br />
-            </p>
-          </div>
-          {(errors.email || errors.password) && (
-            <div className="py-3">
-              <ol className="text-sm">
-                {errors.email?.type == "required" && (
-                  <li className="text-red-500">The Email field is required</li>
-                )}
-                {errors.password?.type == "required" && (
-                  <li className="text-red-500">
-                    The Password field is required
-                  </li>
-                )}
-              </ol>
-            </div>
-          )}
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <Input
-                placeholder="Username or Email"
-                {...register("email", { required: true })}
-                aria-invalid={errors.email ? "true" : "false"}
-                className={errors.email ? "border text-red-400 border-red-400" : ""}
-              />
 
-              <Input
-                {...register("password", { required: true, minLength: 8 })}
-                type="password"
-                placeholder="Password"
-                aria-invalid={errors.password ? "true" : "false"}
-                className={errors.password ? "border text-red-400 border-red-400" : ""}
-              />
-
-              <div className="flex justify-center mt-6">
-                {loginWait ? (
-                  <Button disabled type="submit" size={"lg"} className="w-full">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-loader mr-2 h-4 w-4 animate-spin"
-                    >
-                      <line x1="12" y1="2" x2="12" y2="6"></line>
-                      <line x1="12" y1="18" x2="12" y2="22"></line>
-                      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                      <line x1="2" y1="12" x2="6" y2="12"></line>
-                      <line x1="18" y1="12" x2="22" y2="12"></line>
-                      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-                      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-                    </svg>
-                    Please Wait
-                  </Button>
-                ) : (
-                  <Button type="submit" size={"lg"} className="w-full">
-                    Login
-                  </Button>
-                )}
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+          <CardDescription className="text-center">
+            Enter your credentials to access your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="pl-9"
+                  {...register("email", { required: true })}
+                />
               </div>
-            </form>
-            <center className="py-3">Or</center>
-            <div className="">
-              <Button
-                onClick={oauthGithub}
-                type="button"
-                className="w-full border border-red-500"
-                size={"lg"}
-                variant={"outline"}
-              >
-                <GithubIcon />
-                Continue with Github
-                <div></div>
-              </Button>
+              {errors.email?.type === "required" && (
+                <p className="text-sm text-red-500">Email is required</p>
+              )}
             </div>
-            <div className="text-center mt-4 text-sm">
-              <p>dont have an account?</p>
-              <Link
-                href="/register"
-                className="underline text-blue-500 hover:text-blue-600 hover:font-medium"
-              >
-                Sign up
-              </Link>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  className="pl-9"
+                  {...register("password", { required: true })}
+                />
+              </div>
+              {errors.password?.type === "required" && (
+                <p className="text-sm text-red-500">Password is required</p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loginWait}
+            >
+              {loginWait ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <div className="relative w-full">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white dark:bg-gray-800 px-2 text-muted-foreground">
+                Or continue with
+              </span>
             </div>
           </div>
-        </div>
-      </div>
+          
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={oauthGithub}
+          >
+            <GithubIcon className="mr-2 h-4 w-4" />
+            Github
+          </Button>
+        </CardFooter>
+      </Card>
     </main>
   );
 }

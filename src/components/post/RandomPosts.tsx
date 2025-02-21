@@ -4,6 +4,7 @@ import PostItemr from "./PostItemr";
 import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemrPulse from "./PostItemrpulse";
+import Link from "next/link";
 
 interface succesResponse {
   data: Post[];
@@ -13,11 +14,11 @@ interface succesResponse {
 
 const PostsRandomList = () => {
   const [posts, setposts] = useState<Post[]>([]);
-  const tempposts = [1, 2, 3, 4, 5, 6];
+  const tempposts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   const fetchRandomPosts = async () => {
     try {
-      const response = await axiosInstence.get("/v1/posts/random");
+      const response = await axiosInstence.get("/v1/posts/random?limit=9");
       const result = response.data as succesResponse;
       setposts(result.data);
     } catch {
@@ -50,7 +51,10 @@ const PostsRandomList = () => {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="text-2xl font-semibold">Posts</div>
+      <div className="flex justify-between">
+        <div className="text-2xl font-semibold">Posts</div>
+        <Link href={"/blog"}>See All</Link>
+      </div>
       {content}
     </div>
   );

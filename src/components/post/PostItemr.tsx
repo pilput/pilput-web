@@ -5,16 +5,26 @@ import Link from "next/link";
 const PostItemr = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
-    <div className="max-w-md border mx-auto bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden w-full m-3 h-64 hover:shadow-xl">
-      <div className="p-8">
-        <Link
-          href={`/${post.creator.username}/${post.slug}`}
-          className="block mt-1 text-lg leading-tight font-medium text-black dark:text-gray-200 text-pretty hover:underline"
-        >
-          {post.title}
-        </Link>
-        <div className="mt-2 text-gray-500 overflow-auto">
-          <WordLimit text={plaintext} limit={20} />
+    <div className="group relative overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:shadow-lg dark:bg-slate-800/90 w-full m-2 h-64">
+      <div className="flex h-full flex-col justify-between p-6">
+        <div className="space-y-4">
+          <Link
+            href={`/${post.creator.username}/${post.slug}`}
+            className="inline-block"
+          >
+            <h3 className="text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+              {post.title}
+            </h3>
+          </Link>
+          <div className="text-sm text-muted-foreground line-clamp-3">
+            <WordLimit text={plaintext} limit={20} />
+          </div>
+        </div>
+        
+        <div className="pt-4 flex items-center text-sm text-muted-foreground">
+          <div className="flex items-center">
+            <span className="text-xs">By {post.creator.username}</span>
+          </div>
         </div>
       </div>
     </div>

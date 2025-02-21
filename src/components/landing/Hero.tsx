@@ -1,67 +1,175 @@
+"use client";
+
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { useRef, useState } from "react";
 
 const Landing = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  
+  const [isHovered, setIsHovered] = useState(false);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
+
   return (
-    <div
-      className="font-mono flex justify-center items-center w-full"
-      style={{ height: "670px" }}
+    <motion.div 
+      ref={containerRef}
+      className="relative min-h-[670px] w-full flex items-center justify-center overflow-hidden"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
     >
-      <div className="relative z-20 h-full flex justify-center items-center">
-        <div className="flex flex-col items-center container mx-auto">
-          <p className="my-6 font-bold text-xl md:text-6xl text-center text-black dark:text-white">
-            Hi, I&#x27;m <span className="text-blue-600 ">CECEP JANUARDI</span>
-          </p>
-          <h2 className="max-w-3xl py-2 mx-auto text-lg font-bold text-center text-gray-800 md:text-4xl dark:text-white">
+      {/* Background gradient with parallax effect */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted"
+        style={{ y, opacity }}
+      />
+      
+      {/* Animated background shapes */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full mix-blend-multiply filter blur-xl"
+            animate={{
+              x: [0, 30, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              delay: i * 2,
+              ease: "linear",
+            }}
+            style={{
+              width: `${200 + i * 100}px`,
+              height: `${200 + i * 100}px`,
+              left: `${20 + i * 30}%`,
+              top: `${20 + i * 20}%`,
+              backgroundColor: `hsl(${i * 60}, 70%, 95%)`,
+              opacity: 0.3,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-20 container px-4 md:px-6">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <motion.div
+            variants={itemVariants}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Badge 
+              variant="secondary" 
+              className="mb-4 cursor-pointer"
+              onClick={() => setIsHovered(!isHovered)}
+            >
+              Available for Freelance Work
+              {isHovered && (
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="ml-2"
+                >
+                  👋
+                </motion.span>
+              )}
+            </Badge>
+          </motion.div>
+          
+          <motion.h1 
+            variants={itemVariants}
+            className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50"
+          >
+            Hi, I&#x27;m <span className="font-extrabold">CECEP JANUARDI</span>
+          </motion.h1>
+
+          <motion.h2 
+            variants={itemVariants}
+            className="text-xl md:text-2xl lg:text-3xl font-semibold text-muted-foreground"
+          >
             Full Stack Developer
-          </h2>
-          <p className="text-center text-gray-800 md:text-4xl dark:text-white">
-            This website contains my experiments in web programming.
-          </p>
-          <div className="flex items-center justify-center mt-4">
-            <Link
-              href="https://github.com/cecep31"
-              className="text-gray-700 ml-3 hover:text-gray-50 bg-gray-100 hover:bg-gray-800 p-2 rounded-xl"
+          </motion.h2>
+
+          <motion.p 
+            variants={itemVariants}
+            className="max-w-[700px] text-muted-foreground md:text-lg"
+          >
+            Passionate about crafting elegant solutions through code. Specializing in modern web development
+            with expertise in Next.js, React, and Node.js. Let&#x27;s turn your ideas into reality.
+          </motion.p>
+
+          <motion.div 
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4"
+          >
+            <Button 
+              asChild 
+              size="lg"
+              className="relative group overflow-hidden"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-github"
-              >
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-              </svg>
-            </Link>
-            <Link
-              className="text-gray-700 ml-3 hover:text-gray-50 bg-gray-100 hover:bg-gray-800 p-2 rounded-xl"
-              href="https://www.linkedin.com/in/cecep31/"
+              <Link href="/contact">
+                <span className="relative z-10">Get in Touch</span>
+                <motion.div
+                  className="absolute inset-0 bg-primary-foreground"
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ type: "tween" }}
+                />
+              </Link>
+            </Button>
+            <Button 
+              variant="outline" 
+              asChild 
+              size="lg"
+              className="group"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-linkedin"
-              >
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
-              </svg>
-            </Link>
-          </div>
+              <Link href="/projects">
+                <motion.span
+                  initial={{ opacity: 1 }}
+                  whileHover={{ opacity: 0.7 }}
+                >
+                  View My Work
+                </motion.span>
+              </Link>
+            </Button>
+          </motion.div>
+
+          
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

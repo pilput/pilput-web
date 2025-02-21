@@ -50,7 +50,7 @@ const Blog = () => {
   return (
     <>
       <Navigation />
-      <div className="mx-auto p-3 max-w-7xl min-h-screen">
+      <div className="mx-auto max-w-7xl min-h-screen mt-5">
         <h2 className="text-2xl font-semibold">Posts</h2>
         <div className="mb-10">
           {posts.map((post: Post) => (

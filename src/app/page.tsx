@@ -7,8 +7,10 @@ export default function Home() {
   return (
     <>
       <Navigation />
-      <Hero />
-      <RandomPosts />
+      {/* <Hero /> */}
+      <div className="mt-5">
+        <RandomPosts />
+      </div>
       <Footer />
     </>
   );
