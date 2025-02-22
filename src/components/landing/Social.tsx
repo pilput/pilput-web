@@ -1,6 +1,12 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Github, Twitter, Linkedin, Mail } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Github, Twitter, Linkedin, Mail } from "lucide-react";
 
 export default function Social() {
   const socialLinks = [
@@ -28,12 +34,14 @@ export default function Social() {
       icon: Mail,
       description: "Drop me a message",
     },
-  ]
+  ];
 
   return (
     <div className="w-full bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-bold tracking-tight">Let&apos;s Connect!</CardTitle>
+        <CardTitle className="text-3xl font-bold tracking-tight">
+          Let&apos;s Connect!
+        </CardTitle>
         <CardDescription className="text-lg text-muted-foreground">
           Find me across the web and let&apos;s start a conversation
         </CardDescription>
@@ -58,12 +66,14 @@ export default function Social() {
                   <social.icon className="h-5 w-5" />
                   <span className="font-semibold">{social.name}</span>
                 </div>
-                <p className="text-sm text-muted-foreground">{social.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {social.description}
+                </p>
               </a>
             </Button>
           ))}
         </div>
       </CardContent>
     </div>
-  )
+  );
 }

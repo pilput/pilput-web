@@ -23,7 +23,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className}`}>
         <Google />
-        <ThemeProvider attribute="class" >{children}</ThemeProvider>
+        <ThemeProvider attribute="class">{children}</ThemeProvider>
         <Toaster />
       </body>
     </html>
