@@ -1,6 +1,26 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Modal from "@/components/user/Modal";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PlusCircle, Trash2, UserPlus } from "lucide-react";
 import { getAuth, getToken, RemoveToken } from "@/utils/Auth";
 import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
@@ -16,17 +36,20 @@ export default function ManageUser() {
   const [repassword, setrepassword] = useState<string>();
   const [modaluser, setmodaluser] = useState(false);
   const [auth, setauth] = useState<User>();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function localGetAuth() {
     const auth = await getAuth();
     setauth(auth);
   }
+
   useEffect(() => {
     getUsers();
     localGetAuth();
   }, []);
 
   async function getUsers() {
+    setIsLoading(true);
     try {
       const { data } = await axiosInstence2.get("/v1/users", {
         headers: {
@@ -51,6 +74,8 @@ export default function ManageUser() {
         }
       }
       toast.error("Cannot connecting with server");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -80,209 +105,152 @@ export default function ManageUser() {
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-white rounded-lg shadow-lg dark:bg-gray-800">
-        <header className="px-5 py-4 border-b border-gray-100 ">
-          <span className="font-semibold text-gray-800">Users</span>
-          {auth?.issuperadmin && (
-            <button
-              className="ml-3 bg-green-600 text-white py-2 px-4 rounded-xl hover:bg-green-700"
-              onClick={showModaluser}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
-                />
-              </svg>
-            </button>
-          )}
-        </header>
-        <div className="p-3">
-          <div className="">
-            <table className="table-auto w-full">
-              <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                <tr>
-                  <th className="p-2 whitespace-nowrap px-4 py-3">
-                    <div className="font-semibold text-left">Username</div>
-                  </th>
-                  <th className="p-2 whitespace-nowrap px-4 py-3">
-                    <div className="font-semibold text-left">Name</div>
-                  </th>
-                  <th className="p-2 whitespace-nowrap px-4 py-3">
-                    <div className="font-semibold text-left">Email</div>
-                  </th>
-                  <th className="p-2 whitespace-nowrap  px-4 py-3">
-                    <div className="font-semibold text-left">Super admin</div>
-                  </th>
-
-                  <th className="p-2 whitespace-nowrap px-4 py-3">
-                    <div className="font-semibold text-center">Action</div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-sm divide-y divide-gray-100">
-                {users.map((user) => {
-                  return (
-                    <tr key={user.id} className="bg-white hover:bg-gray-50">
-                      <td className="whitespace-nowrap  p-4">
-                        <div className="flex gap-2 items-center">
-                          <Avatar>
-                            <AvatarImage
-                              src={getProfilePicture(user.image)}
-                              width={6}
-                              height={6}
-                              alt="Avatar"
-                            ></AvatarImage>
-                            <AvatarFallback>
-                              {user.first_name}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="font-medium text-gray-800">
-                            {user.first_name}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap  p-4">
-                        <div className="text-left">{user.first_name}</div>
-                      </td>
-                      <td className="whitespace-nowrap  p-4">
-                        <div className="text-left">{user.email}</div>
-                      </td>
-                      <td className="whitespace-nowrap  p-4">
-                        <div className="text-left font-semibold">
-                          {user.issuperadmin ? (
-                            <span className="text-purple-900">Yes</span>
-                          ) : (
-                            <span className="text-blue-700">No</span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td className="p-4 whitespace-nowrap">
-                        <div id={user.id} className="text-lg text-center">
-                          <div className="tooltip" data-tip="Delete This User">
-                            <button
-                              className="bg-transparent text-red-400 hover:text-red-600"
-                              onClick={() => {
-                                deleteUser(user.id);
-                              }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">User Management</h1>
+        {auth?.issuperadmin && (
+          <Dialog open={modaluser} onOpenChange={setmodaluser}>
+            <DialogTrigger asChild>
+              <Button className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow">
+                <UserPlus className="w-4 h-4" />
+                Add User
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New User</DialogTitle>
+                <DialogDescription>
+                  Create a new user account with the following details.
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={submitHandler} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    value={username}
+                    onChange={(e) => setusername(e.target.value)}
+                    placeholder="Enter username"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setemail(e.target.value)}
+                    placeholder="Enter email"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setpassword(e.target.value)}
+                    placeholder="Enter password"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="repassword">Confirm Password</Label>
+                  <Input
+                    id="repassword"
+                    type="password"
+                    value={repassword}
+                    onChange={(e) => setrepassword(e.target.value)}
+                    placeholder="Confirm password"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" type="button" onClick={closeModaluser}>
+                    Cancel
+                  </Button>
+                  <Button type="submit">Create User</Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
-      {modaluser && (
-        <Modal>
-          <form onSubmit={submitHandler}>
-            <div className="mb-5">
-              <label className="mb-3 block text-base font-medium text-[#07074D]">
-                User Name
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setusername(e.target.value);
-                }}
-                placeholder="User Name"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-            <div className="mb-5">
-              <label className="mb-3 block text-base font-medium text-[#07074D]">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setemail(e.target.value);
-                }}
-                required
-                placeholder="example@domain.com"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
 
-            <div className="mb-5">
-              <label className="mb-3 block text-base font-medium text-[#07074D]">
-                Password
-              </label>
-              <input
-                value={password}
-                type="password"
-                onChange={(e) => {
-                  setpassword(e.target.value);
-                }}
-                placeholder="Password"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-            <div className="mb-5">
-              <label className="mb-3 block text-base font-medium text-[#07074D]">
-                Retype Password
-              </label>
-              <input
-                required
-                value={repassword}
-                type="password"
-                onChange={(e) => {
-                  setrepassword(e.target.value);
-                }}
-                placeholder="Retype Password"
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-              />
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="btn hover:shadow-form rounded-md bg-[#6A64F1] py-2 px-8 text-base font-semibold text-white outline-none"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={closeModaluser}
-                className="btn hover:shadow-form ml-2 rounded-md bg-gray-500 py-2 px-8 text-base font-semibold text-white outline-none"
-              >
-                Close
-              </button>
-            </div>
-          </form>
-        </Modal>
-      )}
-    </>
+      <div className="rounded-lg border bg-card shadow-sm dark:shadow-gray-900/30">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50 hover:bg-muted/60">
+              <TableHead className="font-semibold">User</TableHead>
+              <TableHead className="font-semibold">Email</TableHead>
+              <TableHead className="font-semibold">Role</TableHead>
+              <TableHead className="w-[100px] font-semibold">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i} className="hover:bg-muted/50">
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <Skeleton className="h-4 w-[150px]" />
+                    </div>
+                  </TableCell>
+                  <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                  <TableCell><Skeleton className="h-8 w-[80px]" /></TableCell>
+                </TableRow>
+              ))
+            ) : (
+              users.map((user) => (
+                <TableRow key={user.id} className="hover:bg-muted/50">
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="ring-2 ring-background">
+                        <AvatarImage
+                          src={getProfilePicture(user.username)}
+                          alt={user.username}
+                          className="object-cover"
+                        />
+                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                          {user.username.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{user.username}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Joined {new Date(user.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-gray-700 dark:text-gray-300">{user.email}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium shadow-sm ${
+                      user.issuperadmin
+                        ? "bg-primary/10 text-primary ring-1 ring-primary/20"
+                        : "bg-muted text-muted-foreground ring-1 ring-muted-foreground/20"
+                    }`}>
+                      {user.issuperadmin ? "Admin" : "User"}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {auth?.issuperadmin && user.id !== auth.id && (
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteUser(user.id)}
+                        className="flex items-center gap-1 shadow-sm hover:shadow transition-shadow"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 }
