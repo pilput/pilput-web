@@ -54,7 +54,7 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem>
           <a
-            href={`/blogs/${post.slug}`}
+            href={`/blog/${post.slug}`}
             target="_blank"
             className="flex items-center"
           >
