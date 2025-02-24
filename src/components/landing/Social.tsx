@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardHeader,
   CardTitle,
@@ -18,7 +17,7 @@ export default function Social() {
     },
     {
       name: "Twitter",
-      url: "https://twitter.com/cecep31",
+      url: "https://x.com/cecep_januardi",
       icon: Twitter,
       description: "Follow me for tech updates",
     },
