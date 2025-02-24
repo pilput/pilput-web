@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { deleteData } from "../../utils/fetch";
+import { axiosInstence } from "../../utils/fetch";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { profileStore } from "@/stores/profilestorage";
@@ -35,7 +35,7 @@ const Profile = () => {
   }
 
   async function deletePicture() {
-    const response = await deleteData("/auth/profile/avatar");
+    const response = await axiosInstence.delete("/auth/profile/avatar");
     if (response.status >= 200 && response.status <= 299) {
       refresh();
     }

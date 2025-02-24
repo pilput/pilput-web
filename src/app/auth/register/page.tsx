@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { apibaseurl } from "@/utils/getCofig";
+import { Config } from "@/utils/getCofig";
 
 type Inputs = {
   email: string;
@@ -49,7 +49,7 @@ export default function Login() {
   const [loginwait, setloginwait] = useState(false);
 
   function oauthgoogle() {
-    window.location.href = apibaseurl + "/auth/oauth";
+    window.location.href = Config.apibaseurl + "/auth/oauth";
   }
 
   return (

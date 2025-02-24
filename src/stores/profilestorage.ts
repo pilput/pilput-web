@@ -1,4 +1,4 @@
-import { apibaseurl } from "@/utils/getCofig";
+import { Config } from "@/utils/getCofig";
 import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
@@ -35,7 +35,7 @@ export const profileStore = create<Store>()((set) => ({
   },
   refresh: () => {
     axios
-      .get(apibaseurl+"/auth/profile", {
+      .get(Config.apibaseurl+"/auth/profile", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

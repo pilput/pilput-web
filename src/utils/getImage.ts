@@ -1,4 +1,4 @@
-import { storagebaseurl } from "./getCofig";
+import { Config } from "./getCofig";
 
 function isFullUrl(url: string): boolean {
     return url.startsWith('http://') || url.startsWith('https://');
@@ -8,7 +8,7 @@ export function getProfilePicture(path: string): string {
     if (isFullUrl(path)) {
         return path;
     } else {
-        return storagebaseurl + path
+        return Config.storagebaseurl + path
     }
 }
 export function getUrlImage(path: string): string {
@@ -16,6 +16,6 @@ export function getUrlImage(path: string): string {
     if (isFullUrl(path)) {
         return path;
     } else {
-        return storagebaseurl + path
+        return Config.storagebaseurl + path
     }
 }

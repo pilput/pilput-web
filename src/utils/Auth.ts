@@ -1,5 +1,5 @@
 import { getCookie } from "cookies-next";
-import { getData } from "./fetch";
+import { axiosInstence2 } from "./fetch";
 
 export function getToken() {
   let token = getCookie("token");
@@ -7,7 +7,7 @@ export function getToken() {
 }
 
 export const getAuth = async () => {
-  const auth = await getData("/api/v1/profile");
+  const auth = await axiosInstence2.get("/api/v1/profile");
   return auth.data;
 };
 

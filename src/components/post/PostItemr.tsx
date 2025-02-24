@@ -1,5 +1,4 @@
 import WordLimit from "../word/WordLimit";
-import { mainbaseurl } from "@/utils/getCofig";
 import Link from "next/link";
 
 const PostItemr = ({ post }: { post: Post }) => {

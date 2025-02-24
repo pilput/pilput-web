@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ArrowLeft, Github, GithubIcon, Mail, Lock, Loader2 } from "lucide-react";
+import { Config } from "@/utils/getCofig";
 
 type Inputs = {
   email: string;
@@ -53,6 +54,7 @@ export default function LoginPage() {
 
       setCookie("token", result.data.access_token, {
         expires: expire,
+        domain: `.${Config.mainbaseurl}`,
         sameSite: "strict",
       });
       setLoginWait(false);

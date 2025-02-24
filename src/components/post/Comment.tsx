@@ -1,5 +1,5 @@
 "use client";
-import { wsbaseurl } from "@/utils/getCofig";
+import { Config } from "@/utils/getCofig";
 import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ const Comment = ({ postId }: { postId: string }) => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socketRef.current = io(wsbaseurl + "/posts", {
+    socketRef.current = io(Config.wsbaseurl + "/posts", {
       query: { post_id: postId, token: getToken() },
       extraHeaders: {
         Authorization: `Bearer ${getToken()}`,
