@@ -10,6 +10,9 @@ import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import MyEditor from "@/components/post/Editor";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ImagePlus, Loader2 } from "lucide-react";
 
 export default function PostCreate() {
   const { editor } = useCurrentEditor();
@@ -31,7 +34,6 @@ export default function PostCreate() {
         const formData = new FormData();
         formData.append("image", file);
 
-        // Adjust the URL for your file upload endpoint
         const response = await axiosInstence.post(
           "/api/v2/posts/image",
           formData,
@@ -40,12 +42,7 @@ export default function PostCreate() {
           }
         );
 
-        // Assuming your server responds with the uploaded file URL
         const photoUrl = response.data.photo_url;
-
-        // Update the post's photo URL
-        // You might need to modify your store method based on your implementation
-        // For example, if you have an updatePhoto method, use it accordingly
         updatePhoto_url(photoUrl);
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -85,42 +82,86 @@ export default function PostCreate() {
       }
     }
   }
-  return (
-    <div>
-      <div className="">
-        <div className="mb-5 mx-auto max-w-3xl text-end">
-          <Button onClick={pulishHandler}>Publish</Button>
-        </div>
-        <div className="max-w-3xl xl:max-w-6xl mx-auto bg-white px-5 py-5">
-          <div className="w-full">
-            <input type="file" onChange={uploadPhoto} />
-            <div className="text-red-400">{errorimage}</div>
-          </div>
 
-          <div className="flex justify-center">
-            <img
-              src={getUrlImage(post.photo_url)}
-              alt=""
-              className="max-h-96"
-            />
-          </div>
-          <div className="my-7 w-full">
+  return (
+    <div className="max-w-6xl mx-auto py-6 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Create New Post</h1>
+        <div className="flex gap-4">
+          <Button variant="outline" onClick={() => window.history.back()}>
+            Cancel
+          </Button>
+          <Button onClick={pulishHandler} className="min-w-[100px]">
+            Publish
+          </Button>
+        </div>
+      </div>
+
+      <Card className="bg-white shadow-lg">
+        <CardContent className="space-y-6 pt-6">
+          {/* Title Input */}
+          <div className="space-y-2">
+            <Label htmlFor="title" className="text-base font-semibold">
+              Title
+            </Label>
             <input
+              id="title"
               onChange={(e) => {
                 updatetitle(e.target.value);
                 updateSlug(convertToSlug(e.target.value));
               }}
-              className="w-full text-2xl py-3 font-bold text-black bg-transparent border-none focus:outline-none"
+              className="w-full text-xl py-3 font-medium text-black bg-transparent border-b border-gray-200 focus:border-primary focus:outline-none transition-colors"
               value={post.title}
-              placeholder="Input title..."
+              placeholder="Enter your post title..."
             />
-            <div className="text-red-400">{errortitle}</div>
+            {errortitle && (
+              <p className="text-sm text-red-500 mt-1">{errortitle}</p>
+            )}
           </div>
-          <div className="mt-5 w-full">
-            <MyEditor content={post.body} onchange={update} />
+
+          {/* Featured Image Upload */}
+          <div className="space-y-4">
+            <Label className="text-base font-semibold">Featured Image</Label>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                className="w-full max-w-xs"
+                onClick={() => document.getElementById("file-upload")?.click()}
+              >
+                <ImagePlus className="mr-2 h-4 w-4" />
+                Upload Image
+              </Button>
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                onChange={uploadPhoto}
+                accept="image/*"
+              />
+            </div>
+            {errorimage && (
+              <p className="text-sm text-red-500 mt-1">{errorimage}</p>
+            )}
+            {post.photo_url && (
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
+                <img
+                  src={getUrlImage(post.photo_url)}
+                  alt="Featured"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
           </div>
-        </div>
-      </div>
+
+          {/* Content Editor */}
+          <div className="space-y-2">
+            <Label className="text-base font-semibold">Content</Label>
+            <div className="min-h-[400px] border rounded-lg">
+              <MyEditor content={post.body} onchange={update} />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
