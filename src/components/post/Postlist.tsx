@@ -8,7 +8,7 @@ import { format } from "date-fns";
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   return (
-    <div className="group mt-4 p-6 bg-card hover:bg-accent/10 transition-colors duration-200 border rounded-xl dark:border-gray-800 shadow-sm hover:shadow-md">
+    <div className="group mt-4 p-6 bg-card hover:bg-accent/10 transition-colors duration-200 border rounded-xl dark:border-gray-800 dark:bg-slate-800/90 shadow-sm hover:shadow-md">
       <div className="flex items-center gap-3 mb-4">
         <div>
           {post.creator?.image && (
