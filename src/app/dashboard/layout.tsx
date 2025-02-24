@@ -14,7 +14,7 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
                   <img src="/pilput.png" alt="pilput" className="h-8 w-auto" />
                 </Link>
               </div>
-              
+
               <nav className="flex-1 overflow-y-auto p-4 space-y-2">
                 <div className="mb-4">
                   <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -92,6 +92,33 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
                     </Link>
                   </div>
                 </div>
+                <div className="mb-4">
+                  <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    Workspace
+                  </p>
+                  <div className="mt-3 space-y-1">
+                    <Link
+                      href="/dashboard/workspace"
+                      className="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-zinc-800 transition-colors"
+                    >
+                      <svg
+                        className="w-5 h-5 mr-3 text-gray-400 group-hover:text-white transition-colors"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                      My Workspace
+                    </Link>
+                  </div>
+                </div>
               </nav>
 
               <div className="p-4 border-t border-zinc-800">
@@ -115,8 +142,12 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-200">Admin User</p>
-                    <p className="text-xs text-gray-400 truncate">admin@pilput.dev</p>
+                    <p className="text-sm font-medium text-gray-200">
+                      Admin User
+                    </p>
+                    <p className="text-xs text-gray-400 truncate">
+                      admin@pilput.dev
+                    </p>
                   </div>
                 </div>
               </div>
