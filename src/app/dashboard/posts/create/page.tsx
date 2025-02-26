@@ -35,7 +35,7 @@ export default function PostCreate() {
         formData.append("image", file);
 
         const response = await axiosInstence.post(
-          "/api/v2/posts/image",
+          "/api/v1/posts/image",
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
