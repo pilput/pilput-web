@@ -61,6 +61,7 @@ export default function LoginPage() {
       router.push("/");
     } catch (error) {
       toast.error("Invalid username or password. Please try again.");
+      console.log(error);
       setLoginWait(false);
     }
   };
