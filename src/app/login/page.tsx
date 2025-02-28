@@ -54,7 +54,7 @@ export default function LoginPage() {
 
       setCookie("token", result.data.access_token, {
         expires: expire,
-        domain: `.${Config.mainbaseurl}`,
+        domain: `.${Config.maindoman}`,
         sameSite: "strict",
       });
       setLoginWait(false);

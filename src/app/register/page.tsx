@@ -12,6 +12,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
+import { Config } from "@/utils/getCofig";
 
 type Inputs = {
   email: string;
@@ -45,6 +46,7 @@ export default function Signup() {
 
       setCookie("token", response.data.access_token, {
         expires: expire,
+        domain: `.${Config.maindoman}`,
         sameSite: "strict",
       });
       setloginwait(false);
