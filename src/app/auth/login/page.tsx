@@ -33,14 +33,18 @@ export default function Login() {
 
       expire.setDate(expire.getDate() + 3);
 
-      setCookie("token", response.data.access_token, {
-        expires: expire,
-        sameSite: "strict",
-      });
+      if (response.data && response.data.access_token) {
+        setCookie("token", response.data.access_token, {
+          expires: expire,
+          domain: Config.mainbaseurl ? `.${Config.mainbaseurl}` : undefined,
+          sameSite: "strict",
+        });
+      } else {
+        throw new Error("Access token not found in response");
+      }
       setloginwait(false);
       router.push("/");
     } catch (error) {
-
       toast.error("Invalid username or password. Please try again.", { id });
       setloginwait(false);
     }
