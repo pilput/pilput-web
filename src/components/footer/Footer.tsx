@@ -115,7 +115,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-zinc-400">
-            {currentYear} Pilput.dev. All rights reserved.
+            {currentYear} pilput.me. All rights reserved.
           </p>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="icon" asChild>
@@ -153,7 +153,7 @@ const Footer = () => {
             </Button>
             <Button variant="ghost" size="icon" asChild>
               <a
-                href="mailto:contact@pilput.dev"
+                href="mailto:cecepjanuardi@proton.me"
                 className="hover:text-white transition-colors"
               >
                 <Mail className="h-5 w-5" />
