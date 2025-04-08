@@ -12,10 +12,10 @@ const Landing = () => {
     target: containerRef,
     offset: ["start start", "end start"],
   });
-  
+
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  
+
   const [isHovered, setIsHovered] = useState(false);
 
   const containerVariants = {
@@ -41,7 +41,7 @@ const Landing = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       ref={containerRef}
       className="relative min-h-[670px] w-full flex items-center justify-center overflow-hidden"
       initial="hidden"
@@ -49,11 +49,11 @@ const Landing = () => {
       variants={containerVariants}
     >
       {/* Background gradient with parallax effect */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted"
         style={{ y, opacity }}
       />
-      
+
       {/* Animated background shapes */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(3)].map((_, i) => (
@@ -90,8 +90,8 @@ const Landing = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="mb-4 cursor-pointer"
               onClick={() => setIsHovered(!isHovered)}
             >
@@ -107,35 +107,37 @@ const Landing = () => {
               )}
             </Badge>
           </motion.div>
-          
-          <motion.h1 
+
+          <motion.h1
             variants={itemVariants}
             className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50"
           >
             Hi, I&#x27;m <span className="font-extrabold">CECEP JANUARDI</span>
           </motion.h1>
 
-          <motion.h2 
+          <motion.h2
             variants={itemVariants}
             className="text-xl md:text-2xl lg:text-3xl font-semibold text-muted-foreground"
           >
             Full Stack Developer
           </motion.h2>
 
-          <motion.p 
+          <motion.p
             variants={itemVariants}
             className="max-w-[700px] text-muted-foreground md:text-lg"
           >
-            Passionate about crafting elegant solutions through code. Specializing in modern web development
-            with expertise in Next.js, React, and Node.js. Let&#x27;s turn your ideas into reality.
+            Dedicated to crafting elegant and efficient digital solutions. I
+            specialize in modern web development with deep expertise in Next.js,
+            React, and Node.js ecosystems. Let&#x27;s collaborate to transform
+            your innovative ideas into impactful realities.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4"
           >
-            <Button 
-              asChild 
+            <Button
+              asChild
               size="lg"
               className="relative group overflow-hidden"
             >
@@ -149,12 +151,7 @@ const Landing = () => {
                 />
               </Link>
             </Button>
-            <Button 
-              variant="outline" 
-              asChild 
-              size="lg"
-              className="group"
-            >
+            <Button variant="outline" asChild size="lg" className="group">
               <Link href="/projects">
                 <motion.span
                   initial={{ opacity: 1 }}
@@ -165,8 +162,6 @@ const Landing = () => {
               </Link>
             </Button>
           </motion.div>
-
-          
         </div>
       </div>
     </motion.div>
