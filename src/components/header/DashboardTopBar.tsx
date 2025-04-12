@@ -31,7 +31,7 @@ const DashboardTopBar = () => {
       <div className="relative z-20 flex flex-col justify-center h-full px-3 mx-auto flex-center">
         <div className="relative items-center pl-1 flex w-full sm:pr-2 sm:ml-0">
           <div className="container relative left-0 z-50 flex w-3/4 h-full">
-            <div className="flex items-center">{yourstore.data.first_name}</div>
+            <div className="flex items-center">Welcome {yourstore.data.first_name}</div>
           </div>
           <div className="relative p-1 flex items-center justify-end w-1/4 ml-5 mr-4 sm:mr-0 sm:right-auto">
             <DropdownMenu>
