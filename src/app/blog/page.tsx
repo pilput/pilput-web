@@ -5,59 +5,134 @@ import Postlistpulse from "@/components/post/postlistpulse";
 import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [endPage, setendPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPosts, setTotalPosts] = useState(0);
+  const postsPerPage = 6;
 
   useEffect(() => {
     async function fetchPosts() {
-      if (endPage) return;
       setIsLoading(true);
       try {
         const { data } = await axiosInstence.get("/v1/posts", {
-          params: { limit: 6, offset: page * 6 },
+          params: { limit: postsPerPage, offset: currentPage * postsPerPage },
         });
-        console.log(data);
-        
-        setposts(page === 0 ? data.data : [...posts, ...data.data]);
-        setendPage(data.total === posts.length);
+
+        setposts(data.data);
+        // Make sure we're accessing the total count from the correct path in the response
+        if (data.metadata && data.metadata.totalItems) {
+          setTotalPosts(data.metadata.totalItems);
+        } else if (data.total) {
+          // Fallback in case the API response structure is different
+          setTotalPosts(data.total);
+        }
       } catch (error) {
-        toast.error("Error checking connection");
+        toast.error("Error loading posts");
       }
       setIsLoading(false);
     }
     fetchPosts();
-  }, [page]);
+  }, [currentPage]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop !==
-          document.documentElement.offsetHeight ||
-        isLoading
-      ) {
-        return;
-      }
-      setPage((prevPage) => prevPage + 1);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isLoading]);
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <>
       <Navigation />
-      <div className="mx-auto max-w-7xl min-h-screen mt-5">
-        <h2 className="text-2xl font-semibold">Posts</h2>
+      <div className="mx-auto max-w-7xl min-h-screen mt-5 px-4">
+        <h2 className="text-2xl font-semibold mb-6">Posts</h2>
         <div className="mb-10">
-          {posts.map((post: Post) => (
-            <Postlist key={post.id} post={post} />
-          ))}
+          {posts.length > 0 ? (
+            posts.map((post: Post) => <Postlist key={post.id} post={post} />)
+          ) : !isLoading ? (
+            <div className="text-center py-10">No posts found</div>
+          ) : null}
           {isLoading && <Postlistpulse />}
         </div>
+
+          
+        {totalPages > 0 && (
+          <div className="my-8">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    className="cursor-pointer"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    aria-disabled={currentPage === 0}
+                  />
+                </PaginationItem>
+
+                {Array.from({ length: totalPages }).map((_, index) => {
+                  // Show limited page numbers with ellipsis for better UX
+                  if (
+                    index === 0 ||
+                    index === totalPages - 1 ||
+                    (index >= currentPage - 1 && index <= currentPage + 1)
+                  ) {
+                    return (
+                      <PaginationItem key={index}>
+                        <PaginationLink
+                          className="cursor-pointer"
+                          onClick={() => handlePageChange(index)}
+                          isActive={currentPage === index}
+                        >
+                          {index + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  } else if (
+                    index === currentPage - 2 ||
+                    index === currentPage + 2
+                  ) {
+                    return (
+                      <PaginationItem key={index}>
+                        <span className="flex h-9 w-9 items-center justify-center">
+                          ...
+                        </span>
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                })}
+
+                <PaginationItem>
+                  <PaginationNext
+                    className="cursor-pointer"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    aria-disabled={currentPage >= totalPages - 1}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+
+        {totalPosts > 0 && (
+          <div className="text-sm text-muted-foreground text-center mb-8">
+            Showing {currentPage * postsPerPage + 1} to{" "}
+            {Math.min((currentPage + 1) * postsPerPage, totalPosts)} of{" "}
+            {totalPosts} posts
+          </div>
+        )}
       </div>
     </>
   );
