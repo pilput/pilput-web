@@ -125,14 +125,6 @@ const Blog = () => {
             </Pagination>
           </div>
         )}
-
-        {totalPosts > 0 && (
-          <div className="text-sm text-muted-foreground text-center mb-8">
-            Showing {currentPage * postsPerPage + 1} to{" "}
-            {Math.min((currentPage + 1) * postsPerPage, totalPosts)} of{" "}
-            {totalPosts} posts
-          </div>
-        )}
       </div>
     </>
   );
