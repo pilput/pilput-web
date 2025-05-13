@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -42,7 +42,7 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<Inputs> = async (form) => {
     setLoginWait(true);
     try {
-      const { data } = await axiosInstence.post("/v1/auth/login", form);
+      const { data } = await axiosInstence2.post("/v1/auth/login", form);
       const result = data as succesResponse;
 
       if (!result.success) {
