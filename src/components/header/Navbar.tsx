@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Blog", href: "/blog" },
-  { name: "About", href: "/about" }
+  { name: "About", href: "/about" },
+  { name: "Chat", href: "/chat" }
 ];
 
 const Navbar = () => {

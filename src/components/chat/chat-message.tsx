@@ -1,0 +1,296 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from 'lucide-react';
+
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+// Simple markdown component with streaming support
+const Markdown = ({ 
+  content, 
+  className = '',
+  isStreaming = false
+}: { 
+  content: string; 
+  className?: string;
+  isStreaming?: boolean;
+}) => {
+  const [displayContent, setDisplayContent] = useState('');
+  const [streamingIndex, setStreamingIndex] = useState(0);
+
+  // Handle streaming effect
+  useEffect(() => {
+    if (!isStreaming) {
+      setDisplayContent(content);
+      return;
+    }
+
+    // Reset streaming when content changes
+    setStreamingIndex(0);
+    setDisplayContent('');
+  }, [content, isStreaming]);
+
+  // Simulate streaming effect
+  useEffect(() => {
+    if (!isStreaming || !content) return;
+
+    if (streamingIndex < content.length) {
+      const timeout = setTimeout(() => {
+        setDisplayContent(content.substring(0, streamingIndex + 1));
+        setStreamingIndex(streamingIndex + 1);
+      }, 10); // Adjust speed as needed
+
+      return () => clearTimeout(timeout);
+    }
+  }, [content, isStreaming, streamingIndex]);
+
+  // Simple markdown formatting
+  const formatContent = (text: string) => {
+    if (!text) return '';
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+      .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic
+      .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>') // Inline code
+      .replace(/\n/g, '<br />'); // Line breaks
+  };
+
+  return (
+    <div className={cn('prose dark:prose-invert max-w-none', className)}>
+      <div dangerouslySetInnerHTML={{ __html: formatContent(displayContent || content) }} />
+      {isStreaming && streamingIndex < content.length && (
+        <span className="inline-block h-2 w-2 rounded-full bg-purple-500 animate-pulse ml-1" />
+      )}
+    </div>
+  );
+};
+
+export interface Message {
+  id: string;
+  content: string;
+  role: 'user' | 'assistant';
+  timestamp: Date;
+  isStreaming: boolean;
+}
+
+interface ChatMessageProps {
+  message: Message;
+  className?: string;
+  onEdit?: (id: string, content: string) => void;
+  onFeedback?: (id: string, type: 'like' | 'dislike' | 'none') => void;
+}
+
+export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMessageProps) {
+  const [isHovering, setIsHovering] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(message.content);
+  const [hasLiked, setHasLiked] = useState<boolean | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isAssistant = message.role === 'assistant';
+
+  const handleEdit = () => {
+    if (editedContent.trim() === '') return;
+    onEdit?.(message.id, editedContent);
+    setIsEditing(false);
+  };
+
+  const handleSave = () => {
+    handleEdit();
+  };
+
+  const handleCancel = () => {
+    setEditedContent(message.content);
+    setIsEditing(false);
+  };
+
+  const handleLike = () => {
+    const newLikeState = hasLiked === true ? null : true;
+    setHasLiked(newLikeState);
+    onFeedback?.(message.id, newLikeState ? 'like' : 'none');
+  };
+
+  const handleDislike = () => {
+    const newDislikeState = hasLiked === false ? null : false;
+    setHasLiked(newDislikeState);
+    onFeedback?.(message.id, newDislikeState === false ? 'dislike' : 'none');
+  };
+
+  // Focus textarea when editing starts
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isEditing]);
+
+  // Auto-scroll to bottom when streaming
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    if (message.isStreaming && messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [message.content, message.isStreaming]);
+
+  return (
+    <div 
+      className={cn(
+        'group relative py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors w-full',
+        className
+      )}
+    >
+      <div className={cn('max-w-3xl mx-auto w-full px-4 py-2', isEditing ? 'pb-16' : '')}>
+        <div className="flex gap-4">
+          <div className="flex-shrink-0">
+            {message.role === 'assistant' ? (
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                <Bot className="h-4 w-4 text-white" />
+              </div>
+            ) : (
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                <User className="h-4 w-4 text-white" />
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-medium text-sm">
+                {message.role === 'assistant' ? 'AI Assistant' : 'You'}
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {message.timestamp.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
+            </div>
+
+            <div className="text-sm text-gray-800 dark:text-gray-200">
+              <AnimatePresence mode="wait">
+                {isEditing ? (
+                  <motion.div
+                    key="edit-mode"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-3"
+                  >
+                    <textarea
+                      ref={textareaRef}
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                      className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      rows={4}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSave();
+                        }
+                      }}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={handleSave}
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        Save changes
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div 
+                    key="view-mode"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="w-full"
+                  >
+                    <div className="relative">
+                      <Markdown 
+                        content={message.content} 
+                        isStreaming={message.isStreaming} 
+                        className={message.role === 'assistant' ? 'text-gray-800 dark:text-gray-200' : 'text-gray-900 dark:text-white'}
+                      />
+                      {message.isStreaming && (
+                        <div ref={messageEndRef} className="h-4" />
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div className="flex-shrink-0">
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                onClick={() => {
+                  navigator.clipboard.writeText(message.content);
+                  // You might want to add a toast notification here
+                }}
+              >
+                <Copy className="h-4 w-4" />
+                <span className="sr-only">Copy message</span>
+              </Button>
+              {message.role === 'user' && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  onClick={() => {
+                    setEditedContent(message.content);
+                    setIsEditing(true);
+                  }}
+                >
+                  <Edit className="h-4 w-4" />
+                  <span className="sr-only">Edit message</span>
+                </Button>
+              )}
+              <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1" />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={cn(
+                  'h-8 w-8',
+                  hasLiked === true 
+                    ? 'text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300' 
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                )}
+                onClick={handleLike}
+              >
+                <ThumbsUp className="h-4 w-4" />
+                <span className="sr-only">Like</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={cn(
+                  'h-8 w-8',
+                  hasLiked === false 
+                    ? 'text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300' 
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                )}
+                onClick={handleDislike}
+              >
+                <ThumbsDown className="h-4 w-4" />
+                <span className="sr-only">Dislike</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
