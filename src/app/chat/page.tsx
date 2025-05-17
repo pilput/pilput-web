@@ -18,15 +18,15 @@ export default function ChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [chats, setChats] = useState<Chat[]>(() => {
     // Load chats from localStorage if available
-    if (typeof window !== 'undefined') {
-      const savedChats = localStorage.getItem('chatHistory');
-      return savedChats ? JSON.parse(savedChats) : [
-        { id: '1', title: 'New conversation', updatedAt: new Date() }
-      ];
+    if (typeof window !== "undefined") {
+      const savedChats = localStorage.getItem("chatHistory");
+      return savedChats
+        ? JSON.parse(savedChats)
+        : [{ id: "1", title: "New conversation", updatedAt: new Date() }];
     }
     return [];
   });
-  const [currentChatId, setCurrentChatId] = useState<string>('1');
+  const [currentChatId, setCurrentChatId] = useState<string>("1");
 
   // Set dark theme by default for the chat interface
   useEffect(() => {
@@ -35,18 +35,18 @@ export default function ChatPage() {
 
   // Save chats to localStorage when they change
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('chatHistory', JSON.stringify(chats));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("chatHistory", JSON.stringify(chats));
     }
   }, [chats]);
 
   const handleNewChat = () => {
     const newChat = {
       id: Date.now().toString(),
-      title: 'New conversation',
+      title: "New conversation",
       updatedAt: new Date(),
     };
-    setChats(prev => [newChat, ...prev]);
+    setChats((prev) => [newChat, ...prev]);
     setCurrentChatId(newChat.id);
     setIsSidebarOpen(false);
   };
@@ -57,8 +57,8 @@ export default function ChatPage() {
   };
 
   const updateChatTitle = (id: string, title: string) => {
-    setChats(prev =>
-      prev.map(chat =>
+    setChats((prev) =>
+      prev.map((chat) =>
         chat.id === id ? { ...chat, title, updatedAt: new Date() } : chat
       )
     );
@@ -89,8 +89,8 @@ export default function ChatPage() {
       {/* Main content */}
       <div className="flex-1 flex flex-col h-full min-h-0">
         <div className="flex-1 flex flex-col min-h-0">
-          <ChatContainer 
-            key={currentChatId} 
+          <ChatContainer
+            key={currentChatId}
             chatId={currentChatId}
             onUpdateTitle={updateChatTitle}
           />
@@ -99,7 +99,8 @@ export default function ChatPage() {
         {/* Minimal Footer */}
         <div className="border-t border-gray-800 py-3 px-4 text-center">
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} AI Assistant. An AI-powered conversation.
+            © {new Date().getFullYear()} AI Assistant. An AI-powered
+            conversation.
           </p>
         </div>
       </div>

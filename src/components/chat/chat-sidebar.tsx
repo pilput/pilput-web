@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-import { Plus, MessageSquare, Menu, X } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { getToken } from "@/utils/Auth";
+import { axiosInstence2 } from "@/utils/fetch";
+import { Plus, MessageSquare, Menu, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -30,10 +32,21 @@ export function ChatSidebar({
   const pathname = usePathname();
   const [isHoveringClose, setIsHoveringClose] = useState(false);
 
-  // Mock recent chats - in a real app, this would come from your data store
-  const recentChats = chats || [
-    { id: '1', title: 'New conversation', updatedAt: new Date() },
-  ];
+  const [recentChats, setRecentChats] = useState<any[]>([]);
+
+  function getConvertions() {
+    axiosInstence2.get("/v1/chat/conversations", {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }).then((res: any) => {
+      setRecentChats(res.data);
+    });
+  }
+
+  useEffect(() => {
+    getConvertions();
+  }, []);
 
   return (
     <>
@@ -47,10 +60,10 @@ export function ChatSidebar({
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 border-r border-gray-800 transform transition-transform duration-200 ease-in-out',
-          isOpen ? 'translate-x-0' : '-translate-x-full',
-          'lg:translate-x-0 lg:static lg:inset-auto lg:z-auto',
-          'flex flex-col h-screen'
+          "fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 border-r border-gray-800 transform transition-transform duration-200 ease-in-out",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0 lg:static lg:inset-auto lg:z-auto",
+          "flex flex-col h-screen"
         )}
       >
         <div className="p-4 border-b border-gray-800 flex items-center justify-between">
@@ -90,8 +103,8 @@ export function ChatSidebar({
                 key={chat.id}
                 variant="ghost"
                 className={cn(
-                  'w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap',
-                  pathname.includes(chat.id) && 'bg-gray-800'
+                  "w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap",
+                  pathname.includes(chat.id) && "bg-gray-800"
                 )}
                 onClick={() => onSelectChat(chat.id)}
               >
