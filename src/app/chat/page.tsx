@@ -6,6 +6,8 @@ import { ChatSidebar } from "@/components/chat/chat-sidebar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useTheme } from "next-themes";
+import { axiosInstence2 } from "@/utils/fetch";
+import { getToken } from "@/utils/Auth";
 
 type Chat = {
   id: string;
@@ -16,40 +18,29 @@ type Chat = {
 export default function ChatPage() {
   const { setTheme } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [chats, setChats] = useState<Chat[]>(() => {
-    // Load chats from localStorage if available
-    if (typeof window !== "undefined") {
-      const savedChats = localStorage.getItem("chatHistory");
-      return savedChats
-        ? JSON.parse(savedChats)
-        : [{ id: "1", title: "New conversation", updatedAt: new Date() }];
-    }
-    return [];
-  });
-  const [currentConvertations, setCurrentConvertations] = useState<string>(
-    "ab39ee02-a8bf-4922-95ad-79c146ca90ce"
-  );
+  const [currentConvertations, setCurrentConvertations] = useState<string>("");
+
+  const [recentChats, setRecentChats] = useState<any[]>([]);
+
+  function getConvertions() {
+    axiosInstence2
+      .get("/v1/chat/conversations", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((res: any) => {
+        setRecentChats(res.data);
+      });
+  }
 
   // Set dark theme by default for the chat interface
   useEffect(() => {
     setTheme("dark");
   }, [setTheme]);
 
-  // Save chats to localStorage when they change
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("chatHistory", JSON.stringify(chats));
-    }
-  }, [chats]);
-
   const handleNewChat = () => {
-    const newChat = {
-      id: Date.now().toString(),
-      title: "New conversation",
-      updatedAt: new Date(),
-    };
-    setChats((prev) => [newChat, ...prev]);
-    setCurrentConvertations(newChat.id);
+    setCurrentConvertations("");
     setIsSidebarOpen(false);
   };
 
@@ -58,13 +49,17 @@ export default function ChatPage() {
     setIsSidebarOpen(false);
   };
 
-  const updateChatTitle = (id: string, title: string) => {
-    setChats((prev) =>
-      prev.map((chat) =>
-        chat.id === id ? { ...chat, title, updatedAt: new Date() } : chat
-      )
-    );
+  const handleUpdateCurrentConvertations = (id: string) => {
+    setCurrentConvertations(id);
   };
+
+  const updateChatTitle = (id: string, title: string) => {
+    setCurrentConvertations(id);
+  };
+
+  useEffect(() => {
+    getConvertions();
+  }, [currentConvertations]);
 
   return (
     <div className="h-screen w-full bg-gray-900 text-gray-100 flex overflow-hidden">
@@ -83,9 +78,10 @@ export default function ChatPage() {
       <ChatSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
-        chats={chats}
         onCreateNewChat={handleNewChat}
         onSelectChat={handleSelectChat}
+        recentChats={recentChats}
+        currentConvertations={currentConvertations}
       />
 
       {/* Main content */}
@@ -95,6 +91,7 @@ export default function ChatPage() {
             key={currentConvertations}
             currentConvertations={currentConvertations}
             onUpdateTitle={updateChatTitle}
+            onUpdateCurrentConvertations={handleUpdateCurrentConvertations}
           />
         </div>
 

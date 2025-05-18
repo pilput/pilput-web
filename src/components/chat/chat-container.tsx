@@ -8,6 +8,7 @@ import { getToken } from "@/utils/Auth";
 
 interface ChatContainerProps {
   currentConvertations: string;
+  onUpdateCurrentConvertations: (id: string) => void;
   onUpdateTitle: (id: string, title: string) => void;
 }
 
@@ -18,6 +19,7 @@ interface sendMessageResponse {
 
 export function ChatContainer({
   currentConvertations,
+  onUpdateCurrentConvertations,
   onUpdateTitle,
 }: ChatContainerProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,14 +44,6 @@ export function ChatContainer({
   useEffect(() => {
     scrollToBottom("auto");
   }, [scrollToBottom]);
-
-  const newmessage = {
-    id: Date.now().toString(),
-    content: "wkwk",
-    role: "user",
-    createdAt: new Date(),
-    isStreaming: false,
-  };
 
   // Handle new messages being added
   useEffect(() => {
@@ -84,8 +78,9 @@ export function ChatContainer({
   }
 
   useEffect(() => {
+    if (!currentConvertations) return;
     fetchMessages();
-  }, []);
+  }, [currentConvertations]);
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim() || isLoading) return;
@@ -106,23 +101,30 @@ export function ChatContainer({
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
 
     try {
-      const response = await axiosInstence2(
-        `/v1/chat/conversations/${currentConvertations}/messages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Add any authentication headers if needed
-            Authorization: `Bearer ${getToken()}`,
-          },
-          data: {
-            content: content,
-            // Add any additional parameters your API expects
-            stream: true, // Ensure streaming is enabled if your API supports it
-          },
-          signal: controller.signal,
-        }
-      );
+      let endpoint: string;
+      let data: any;
+      if (currentConvertations === "") {
+        endpoint = `/v1/chat/conversations`;
+        data = {
+          title: content.slice(0, 15) + (content.length > 15 ? "" : ""),
+          message: content,
+        };
+      } else {
+        endpoint = `/v1/chat/conversations/${currentConvertations}/messages`;
+        data = {
+          content: content,
+        };
+      }
+
+      const response = await axiosInstence2(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any authentication headers if needed
+          Authorization: `Bearer ${getToken()}`,
+        },
+        data,
+      });
 
       clearTimeout(timeoutId);
 
@@ -130,16 +132,14 @@ export function ChatContainer({
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Handle streaming response
-      // const reader = response.data?.getReader();
-      const reader = false;
-      const decoder = new TextDecoder();
-      let aiResponse = "";
+      if (currentConvertations === "") {
+        onUpdateTitle(response.data.id, content);
+        onUpdateCurrentConvertations(response.data.id);
+      }
 
       fetchMessages();
     } catch (error) {
       console.error("Error sending message:", error);
-
       // Remove the temporary message and add an error message
       setMessages((prev) => {
         const filtered = prev.filter((msg) => msg.id !== newmessage.id);

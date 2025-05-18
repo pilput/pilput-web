@@ -13,40 +13,22 @@ import { useEffect, useState } from "react";
 interface ChatSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  chats: Array<{
-    id: string;
-    title: string;
-    updatedAt: Date;
-  }>;
   onCreateNewChat: () => void;
   onSelectChat: (id: string) => void;
+  recentChats: any[];
+  currentConvertations: string;
 }
 
 export function ChatSidebar({
   isOpen,
   onClose,
-  chats,
   onCreateNewChat,
   onSelectChat,
+  recentChats,
+  currentConvertations,
 }: ChatSidebarProps) {
   const pathname = usePathname();
   const [isHoveringClose, setIsHoveringClose] = useState(false);
-
-  const [recentChats, setRecentChats] = useState<any[]>([]);
-
-  function getConvertions() {
-    axiosInstence2.get("/v1/chat/conversations", {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    }).then((res: any) => {
-      setRecentChats(res.data);
-    });
-  }
-
-  useEffect(() => {
-    getConvertions();
-  }, []);
 
   return (
     <>
@@ -104,11 +86,11 @@ export function ChatSidebar({
                 variant="ghost"
                 className={cn(
                   "w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap",
-                  pathname.includes(chat.id) && "bg-gray-800"
+                  chat.id == currentConvertations && "bg-purple-500"
                 )}
                 onClick={() => onSelectChat(chat.id)}
               >
-                <MessageSquare className="mr-2 h-4 w-4 flex-shrink-0" />
+                <MessageSquare className={`mr-2 h-4 w-4 flex-shrink-0 `} />
                 <span className="truncate">{chat.title}</span>
               </Button>
             ))}
@@ -117,7 +99,7 @@ export function ChatSidebar({
 
         <div className="p-4 border-t border-gray-800">
           <div className="text-xs text-gray-500">
-            <p>Your conversations are saved in your browser.</p>
+            <p>Your conversations are saved in your account.</p>
           </div>
         </div>
       </aside>
