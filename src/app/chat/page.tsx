@@ -26,7 +26,9 @@ export default function ChatPage() {
     }
     return [];
   });
-  const [currentChatId, setCurrentChatId] = useState<string>("1");
+  const [currentConvertations, setCurrentConvertations] = useState<string>(
+    "ab39ee02-a8bf-4922-95ad-79c146ca90ce"
+  );
 
   // Set dark theme by default for the chat interface
   useEffect(() => {
@@ -47,12 +49,12 @@ export default function ChatPage() {
       updatedAt: new Date(),
     };
     setChats((prev) => [newChat, ...prev]);
-    setCurrentChatId(newChat.id);
+    setCurrentConvertations(newChat.id);
     setIsSidebarOpen(false);
   };
 
   const handleSelectChat = (id: string) => {
-    setCurrentChatId(id);
+    setCurrentConvertations(id);
     setIsSidebarOpen(false);
   };
 
@@ -90,8 +92,8 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col h-full min-h-0">
         <div className="flex-1 flex flex-col min-h-0">
           <ChatContainer
-            key={currentChatId}
-            chatId={currentChatId}
+            key={currentConvertations}
+            currentConvertations={currentConvertations}
             onUpdateTitle={updateChatTitle}
           />
         </div>
@@ -99,8 +101,7 @@ export default function ChatPage() {
         {/* Minimal Footer */}
         <div className="border-t border-gray-800 py-3 px-4 text-center">
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} AI Assistant. An AI-powered
-            conversation.
+            © {new Date().getFullYear()} pilput. An AI-powered conversation.
           </p>
         </div>
       </div>

@@ -1,17 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, KeyboardEvent } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Send, Paperclip, Mic, Image as ImageIcon, Smile } from 'lucide-react';
+import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, Paperclip, Mic, Image as ImageIcon, Smile } from "lucide-react";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   isDisabled?: boolean;
 }
 
-export function ChatInput({ onSendMessage, isDisabled = false }: ChatInputProps) {
-  const [message, setMessage] = useState('');
+export function ChatInput({
+  onSendMessage,
+  isDisabled = false,
+}: ChatInputProps) {
+  const [message, setMessage] = useState("");
   const [rows, setRows] = useState(1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -19,13 +22,13 @@ export function ChatInput({ onSendMessage, isDisabled = false }: ChatInputProps)
     e.preventDefault();
     if (message.trim()) {
       onSendMessage(message);
-      setMessage('');
+      setMessage("");
       setRows(1);
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e as any);
     }
@@ -33,16 +36,16 @@ export function ChatInput({ onSendMessage, isDisabled = false }: ChatInputProps)
 
   const handleInput = () => {
     if (!textareaRef.current) return;
-    
+
     // Reset height to get the correct scrollHeight
-    textareaRef.current.style.height = 'auto';
-    
+    textareaRef.current.style.height = "auto";
+
     // Calculate the number of rows needed (max 6 rows)
     const newRows = Math.min(
       Math.max(1, Math.ceil((textareaRef.current.scrollHeight - 16) / 24)),
       6
     );
-    
+
     setRows(newRows);
   };
 
@@ -108,7 +111,8 @@ export function ChatInput({ onSendMessage, isDisabled = false }: ChatInputProps)
           </div>
         </form>
         <p className="mt-2 text-center text-xs text-muted-foreground">
-          AI Assistant can make mistakes. Consider checking important information.
+          AI Assistant can make mistakes. Consider checking important
+          information.
         </p>
       </div>
     </div>

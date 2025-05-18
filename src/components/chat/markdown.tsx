@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 interface MarkdownProps {
   content: string;
@@ -9,8 +9,12 @@ interface MarkdownProps {
   className?: string;
 }
 
-export function Markdown({ content, isStreaming = false, className }: MarkdownProps) {
-  const [displayContent, setDisplayContent] = useState('');
+export function Markdown({
+  content,
+  isStreaming = false,
+  className,
+}: MarkdownProps) {
+  const [displayContent, setDisplayContent] = useState("");
   const [streamingIndex, setStreamingIndex] = useState(0);
 
   // Handle streaming effect
@@ -22,7 +26,7 @@ export function Markdown({ content, isStreaming = false, className }: MarkdownPr
 
     // Reset streaming when content changes
     setStreamingIndex(0);
-    setDisplayContent('');
+    setDisplayContent("");
   }, [content, isStreaming]);
 
   // Simulate streaming effect
@@ -43,15 +47,15 @@ export function Markdown({ content, isStreaming = false, className }: MarkdownPr
   const formatContent = (text: string) => {
     // Basic markdown replacements
     return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
       .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>') // Inline code
-      .replace(/\n/g, '<br />'); // Line breaks
+      .replace(/\n/g, "<br />"); // Line breaks
   };
 
   return (
-    <div 
-      className={cn('prose dark:prose-invert max-w-none', className)}
+    <div
+      className={cn("prose dark:prose-invert max-w-none", className)}
       dangerouslySetInnerHTML={{ __html: formatContent(displayContent) }}
     />
   );

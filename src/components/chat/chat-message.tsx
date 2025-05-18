@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from 'lucide-react';
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from "lucide-react";
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // Simple markdown component with streaming support
-const Markdown = ({ 
-  content, 
-  className = '',
-  isStreaming = false
-}: { 
-  content: string; 
+const Markdown = ({
+  content,
+  className = "",
+  isStreaming = false,
+}: {
+  content: string;
   className?: string;
   isStreaming?: boolean;
 }) => {
-  const [displayContent, setDisplayContent] = useState('');
+  const [displayContent, setDisplayContent] = useState("");
   const [streamingIndex, setStreamingIndex] = useState(0);
 
   // Handle streaming effect
@@ -30,7 +30,7 @@ const Markdown = ({
 
     // Reset streaming when content changes
     setStreamingIndex(0);
-    setDisplayContent('');
+    setDisplayContent("");
   }, [content, isStreaming]);
 
   // Simulate streaming effect
@@ -49,17 +49,21 @@ const Markdown = ({
 
   // Simple markdown formatting
   const formatContent = (text: string) => {
-    if (!text) return '';
+    if (!text) return "";
     return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
       .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>') // Inline code
-      .replace(/\n/g, '<br />'); // Line breaks
+      .replace(/\n/g, "<br />"); // Line breaks
   };
 
   return (
-    <div className={cn('prose dark:prose-invert max-w-none', className)}>
-      <div dangerouslySetInnerHTML={{ __html: formatContent(displayContent || content) }} />
+    <div className={cn("prose dark:prose-invert max-w-none", className)}>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: formatContent(displayContent || content),
+        }}
+      />
       {isStreaming && streamingIndex < content.length && (
         <span className="inline-block h-2 w-2 rounded-full bg-purple-500 animate-pulse ml-1" />
       )}
@@ -70,8 +74,8 @@ const Markdown = ({
 export interface Message {
   id: string;
   content: string;
-  role: 'user' | 'assistant';
-  timestamp: Date;
+  role: "user" | "assistant";
+  createdAt: Date;
   isStreaming: boolean;
 }
 
@@ -79,19 +83,24 @@ interface ChatMessageProps {
   message: Message;
   className?: string;
   onEdit?: (id: string, content: string) => void;
-  onFeedback?: (id: string, type: 'like' | 'dislike' | 'none') => void;
+  onFeedback?: (id: string, type: "like" | "dislike" | "none") => void;
 }
 
-export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  className,
+  onEdit,
+  onFeedback,
+}: ChatMessageProps) {
   const [isHovering, setIsHovering] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [hasLiked, setHasLiked] = useState<boolean | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const isAssistant = message.role === 'assistant';
+  const isAssistant = message.role === "assistant";
 
   const handleEdit = () => {
-    if (editedContent.trim() === '') return;
+    if (editedContent.trim() === "") return;
     onEdit?.(message.id, editedContent);
     setIsEditing(false);
   };
@@ -108,13 +117,13 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
   const handleLike = () => {
     const newLikeState = hasLiked === true ? null : true;
     setHasLiked(newLikeState);
-    onFeedback?.(message.id, newLikeState ? 'like' : 'none');
+    onFeedback?.(message.id, newLikeState ? "like" : "none");
   };
 
   const handleDislike = () => {
     const newDislikeState = hasLiked === false ? null : false;
     setHasLiked(newDislikeState);
-    onFeedback?.(message.id, newDislikeState === false ? 'dislike' : 'none');
+    onFeedback?.(message.id, newDislikeState === false ? "dislike" : "none");
   };
 
   // Focus textarea when editing starts
@@ -126,24 +135,29 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
 
   // Auto-scroll to bottom when streaming
   const messageEndRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (message.isStreaming && messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [message.content, message.isStreaming]);
 
   return (
-    <div 
+    <div
       className={cn(
-        'group relative py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors w-full',
+        "group relative py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors w-full",
         className
       )}
     >
-      <div className={cn('max-w-3xl mx-auto w-full px-4 py-2', isEditing ? 'pb-16' : '')}>
+      <div
+        className={cn(
+          "max-w-3xl mx-auto w-full px-4 py-2",
+          isEditing ? "pb-16" : ""
+        )}
+      >
         <div className="flex gap-4">
           <div className="flex-shrink-0">
-            {message.role === 'assistant' ? (
+            {message.role === "assistant" ? (
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-white" />
               </div>
@@ -157,10 +171,10 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-medium text-sm">
-                {message.role === 'assistant' ? 'AI Assistant' : 'You'}
+                {message.role === "assistant" ? "AI Assistant" : "You"}
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400">
-                {message.timestamp.toLocaleTimeString([], {
+                {message.createdAt.toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
                 })}
@@ -184,7 +198,7 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
                       className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       rows={4}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
+                        if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
                           handleSave();
                         }
@@ -208,17 +222,21 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
                     </div>
                   </motion.div>
                 ) : (
-                  <motion.div 
+                  <motion.div
                     key="view-mode"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="w-full"
                   >
                     <div className="relative">
-                      <Markdown 
-                        content={message.content} 
-                        isStreaming={message.isStreaming} 
-                        className={message.role === 'assistant' ? 'text-gray-800 dark:text-gray-200' : 'text-gray-900 dark:text-white'}
+                      <Markdown
+                        content={message.content}
+                        isStreaming={message.isStreaming}
+                        className={
+                          message.role === "assistant"
+                            ? "text-gray-800 dark:text-gray-200"
+                            : "text-gray-900 dark:text-white"
+                        }
                       />
                       {message.isStreaming && (
                         <div ref={messageEndRef} className="h-4" />
@@ -244,7 +262,7 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
                 <Copy className="h-4 w-4" />
                 <span className="sr-only">Copy message</span>
               </Button>
-              {message.role === 'user' && (
+              {message.role === "user" && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -259,28 +277,28 @@ export function ChatMessage({ message, className, onEdit, onFeedback }: ChatMess
                 </Button>
               )}
               <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1" />
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 className={cn(
-                  'h-8 w-8',
-                  hasLiked === true 
-                    ? 'text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300' 
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  "h-8 w-8",
+                  hasLiked === true
+                    ? "text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 )}
                 onClick={handleLike}
               >
                 <ThumbsUp className="h-4 w-4" />
                 <span className="sr-only">Like</span>
               </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 className={cn(
-                  'h-8 w-8',
-                  hasLiked === false 
-                    ? 'text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300' 
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  "h-8 w-8",
+                  hasLiked === false
+                    ? "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 )}
                 onClick={handleDislike}
               >
