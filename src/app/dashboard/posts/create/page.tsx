@@ -110,7 +110,7 @@ export default function PostCreate() {
                 updatetitle(e.target.value);
                 updateSlug(convertToSlug(e.target.value));
               }}
-              className="w-full text-xl py-3 font-medium text-black bg-transparent border-b border-gray-200 focus:border-primary focus:outline-none transition-colors"
+              className="w-full text-xl py-3 font-medium text-black dark:text-gray-200 bg-transparent border-b border-gray-200 focus:border-primary focus:outline-none transition-colors"
               value={post.title}
               placeholder="Enter your post title..."
             />

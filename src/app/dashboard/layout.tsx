@@ -5,9 +5,9 @@ import React from "react";
 function dashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <main className="relative h-screen overflow-hidden dark:bg-gray-800">
+      <main className="relative h-screen overflow-hidden bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
         <div className="flex items-start justify-between">
-          <div className="relative hidden h-screen shadow-lg lg:block w-80">
+          <div className="relative hidden h-screen shadow-lg lg:block w-80 transition-all duration-200">
             <div className="flex h-full flex-col bg-zinc-900 text-gray-200">
               <div className="flex items-center justify-center h-16 border-b border-zinc-800">
                 <Link href="/" className="flex items-center space-x-2">
@@ -153,9 +153,15 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </div>
-          <div className="flex flex-col relative w-full h-screen p-3 bg-gray-200">
+          <div className="flex flex-col relative w-full h-screen p-3 bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
             <DashboardTopBar />
-            <div className="h-full mt-5 overflow-y-auto">{children}</div>
+            <div className="h-full mt-5 overflow-y-auto dark:bg-gray-900 transition-colors duration-200">
+              <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="rounded-lg shadow-sm mb-6 transition-colors duration-200">
+                  {children}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
