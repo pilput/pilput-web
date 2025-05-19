@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { axiosInstence2 } from "@/utils/fetch";
-import { getToken } from "@/utils/Auth";
+import { getToken, logOut } from "@/utils/Auth";
 
 type Chat = {
   id: string;
@@ -31,6 +31,10 @@ export default function ChatPage() {
       })
       .then((res: any) => {
         setRecentChats(res.data);
+      })
+      .catch((err: any) => {
+        logOut();
+        window.location.href = "/login";
       });
   }
 
