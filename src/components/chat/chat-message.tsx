@@ -85,7 +85,7 @@ export function ChatMessage({
     >
       <div
         className={cn(
-          "max-w-7xl mx-auto w-full px-4 py-2",
+          "max-w-3xl mx-auto w-full py-2",
           isEditing ? "pb-16" : ""
         )}
       >

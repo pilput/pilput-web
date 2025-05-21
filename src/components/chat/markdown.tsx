@@ -221,15 +221,14 @@ export function Markdown({
             }
 
             return (
-              <div className="relative my-4 rounded-md border bg-muted/50">
-                <div className="flex items-center justify-between rounded-t-md border-b bg-muted/50 px-4 py-2">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Terminal className="h-3.5 w-3.5" />
+              <div className="group relative my-4 rounded-md bg-[#161b22] border border-[#30363d] overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-2 bg-[#161b22] border-b border-[#30363d]">
+                  <span className="text-xs text-[#8b949e] font-mono uppercase tracking-wide">
                     {language || "code"}
-                  </div>
-                  <CopyButton code={code} />
+                  </span>
+                  <CopyButton code={code} className="!opacity-100 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <pre className="overflow-x-auto p-4">
+                <pre className="overflow-x-auto p-4 text-sm leading-relaxed font-mono bg-transparent text-[#c9d1d9]">
                   <code className={className} {...props}>
                     {children}
                   </code>
@@ -240,7 +239,7 @@ export function Markdown({
           // Customize blockquotes
           blockquote: ({ children, ...props }: BlockquoteProps) => {
             return (
-              <blockquote className="border-l-4 border-primary/50 bg-muted/30 pl-4 py-1 my-2 italic">
+              <blockquote className="border-l-4 border-primary/50 bg-muted/30 pl-4 py-2 my-3 italic rounded-md shadow-sm transition-shadow hover:shadow-md">
                 {children}
               </blockquote>
             );
@@ -248,21 +247,23 @@ export function Markdown({
           // Customize tables
           table: ({ children, ...props }: TableProps) => {
             return (
-              <div className="my-4 overflow-x-auto">
-                <table className="w-full border-collapse">{children}</table>
+              <div className="my-6 overflow-x-auto rounded-lg border border-muted-foreground/10 shadow-sm">
+                <table className="w-full border-collapse text-sm">
+                  {children}
+                </table>
               </div>
             );
           },
           // Customize table cells
           th: ({ children, ...props }: TableCellProps) => {
             return (
-              <th className="border px-4 py-2 text-left font-semibold bg-muted/50">
+              <th className="border px-4 py-2 text-left font-semibold bg-muted/60">
                 {children}
               </th>
             );
           },
           td: ({ children, ...props }: TableCellProps) => {
-            return <td className="border px-4 py-2">{children}</td>;
+            return <td className="border px-4 py-2 bg-background/80">{children}</td>;
           },
           // Customize links
           a: ({ children, ...props }: LinkProps) => {
@@ -281,16 +282,16 @@ export function Markdown({
           img: (props: ImageProps) => {
             const { alt, src, className = "", ...rest } = props;
             return (
-              <div className="my-4 overflow-hidden rounded-lg border">
+              <div className="my-6 overflow-hidden rounded-xl border border-muted-foreground/10 shadow-md bg-background/80">
                 <img
                   src={src}
                   alt={alt}
-                  className={`w-full h-auto object-contain max-h-[500px] ${className}`}
+                  className={`w-full h-auto object-contain max-h-[400px] transition-transform duration-300 hover:scale-105 ${className}`}
                   loading="lazy"
                   {...rest}
                 />
                 {alt && (
-                  <p className="text-center text-sm text-muted-foreground mt-2">
+                  <p className="text-center text-xs text-muted-foreground mt-2 italic">
                     {alt}
                   </p>
                 )}

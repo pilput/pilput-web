@@ -56,7 +56,7 @@ export function ChatInput({
   }, [message]);
 
   return (
-    <div className="sticky bottom-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+    <div className="sticky bottom-0 w-full bg-white/95 dark:bg-gray-900/95 border-t border-gray-200 dark:border-gray-700 shadow-[0_-2px_16px_0_rgba(0,0,0,0.04)] backdrop-blur-md">
       <div className="mx-auto max-w-3xl p-4">
         <form onSubmit={handleSubmit} className="relative">
           <div className="flex items-end gap-2">
@@ -68,16 +68,16 @@ export function ChatInput({
                 onKeyDown={handleKeyDown}
                 onInput={handleInput}
                 placeholder="Message AI Assistant..."
-                className="min-h-[60px] max-h-[200px] w-full resize-none pr-12 py-3"
+                className="min-h-[60px] max-h-[200px] w-full resize-none pr-14 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus-visible:ring-2 focus-visible:ring-primary/70 transition-all shadow-sm"
                 disabled={isDisabled}
                 rows={rows}
               />
-              <div className="absolute right-2 bottom-2 flex items-center gap-1">
+              <div className="absolute right-3 bottom-3 flex items-center gap-1">
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground"
+                  className="h-8 w-8 text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                   disabled={isDisabled}
                 >
                   <Smile className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function ChatInput({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground"
+                  className="h-8 w-8 text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                   disabled={isDisabled}
                 >
                   <Paperclip className="h-4 w-4" />
@@ -98,13 +98,13 @@ export function ChatInput({
             <Button
               type="submit"
               size="icon"
-              className="h-10 w-10 shrink-0"
+              className="h-12 w-12 shrink-0 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary/70 transition-all flex items-center justify-center disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-400"
               disabled={isDisabled || !message.trim()}
             >
               {isDisabled ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-primary" />
               ) : (
-                <Send className="h-4 w-4" />
+                <Send className="h-5 w-5" />
               )}
               <span className="sr-only">Send message</span>
             </Button>
