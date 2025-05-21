@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Plus, MessageSquare, Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 interface ChatSidebarProps {
@@ -24,7 +23,6 @@ export function ChatSidebar({
   recentChats,
   currentConvertations,
 }: ChatSidebarProps) {
-  const pathname = usePathname();
   const [isHoveringClose, setIsHoveringClose] = useState(false);
 
   return (

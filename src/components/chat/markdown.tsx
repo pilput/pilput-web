@@ -24,7 +24,8 @@ interface CodeBlockProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 // Type for blockquote props
-interface BlockquoteProps extends React.BlockquoteHTMLAttributes<HTMLQuoteElement> {
+interface BlockquoteProps
+  extends React.BlockquoteHTMLAttributes<HTMLQuoteElement> {
   children?: React.ReactNode;
 }
 
@@ -58,14 +59,20 @@ interface ImageProps {
 }
 
 // Copy button component for code blocks
-const CopyButton = ({ code, className }: { code: string; className?: string }) => {
+const CopyButton = ({
+  code,
+  className,
+}: {
+  code: string;
+  className?: string;
+}) => {
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);
-    
+
     if (timerRef.current !== null) {
       window.clearTimeout(timerRef.current);
     }
@@ -139,29 +146,71 @@ export function Markdown({
         rehypePlugins={[rehypeHighlight]}
         components={{
           // Customize headings
-          h1: ({ node, children, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
-            <h1 className="text-3xl font-bold my-4" {...props}>{children}</h1>
+          h1: ({
+            node,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+            <h1 className="text-3xl font-bold my-4" {...props}>
+              {children}
+            </h1>
           ),
-          h2: ({ node, children, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
-            <h2 className="text-2xl font-bold my-3" {...props}>{children}</h2>
+          h2: ({
+            node,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+            <h2 className="text-2xl font-bold my-3" {...props}>
+              {children}
+            </h2>
           ),
-          h3: ({ node, children, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
-            <h3 className="text-xl font-semibold my-2" {...props}>{children}</h3>
+          h3: ({
+            node,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+            <h3 className="text-xl font-semibold my-2" {...props}>
+              {children}
+            </h3>
           ),
-          h4: ({ node, children, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
-            <h4 className="text-lg font-semibold my-2" {...props}>{children}</h4>
+          h4: ({
+            node,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+            <h4 className="text-lg font-semibold my-2" {...props}>
+              {children}
+            </h4>
           ),
-          h5: ({ node, children, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
-            <h5 className="text-base font-medium my-1" {...props}>{children}</h5>
+          h5: ({
+            node,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+            <h5 className="text-base font-medium my-1" {...props}>
+              {children}
+            </h5>
           ),
-          h6: ({ node, children, ...props }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
-            <h6 className="text-sm font-medium my-1" {...props}>{children}</h6>
+          h6: ({
+            node,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+            <h6 className="text-sm font-medium my-1" {...props}>
+              {children}
+            </h6>
           ),
           // Customize code blocks
-          code: ({ node, inline, className, children, ...props }: CodeBlockProps) => {
-            const match = /language-(\w+)/.exec(className || '');
-            const language = match ? match[1] : '';
-            const code = String(children).replace(/\n$/, '');
+          code: ({
+            node,
+            inline,
+            className,
+            children,
+            ...props
+          }: CodeBlockProps) => {
+            const match = /language-(\w+)/.exec(className || "");
+            const language = match ? match[1] : "";
+            const code = String(children).replace(/\n$/, "");
 
             if (inline) {
               return (
@@ -171,13 +220,12 @@ export function Markdown({
               );
             }
 
-
             return (
               <div className="relative my-4 rounded-md border bg-muted/50">
                 <div className="flex items-center justify-between rounded-t-md border-b bg-muted/50 px-4 py-2">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Terminal className="h-3.5 w-3.5" />
-                    {language || 'code'}
+                    {language || "code"}
                   </div>
                   <CopyButton code={code} />
                 </div>
@@ -201,9 +249,7 @@ export function Markdown({
           table: ({ children, ...props }: TableProps) => {
             return (
               <div className="my-4 overflow-x-auto">
-                <table className="w-full border-collapse">
-                  {children}
-                </table>
+                <table className="w-full border-collapse">{children}</table>
               </div>
             );
           },
@@ -216,17 +262,13 @@ export function Markdown({
             );
           },
           td: ({ children, ...props }: TableCellProps) => {
-            return (
-              <td className="border px-4 py-2">
-                {children}
-              </td>
-            );
+            return <td className="border px-4 py-2">{children}</td>;
           },
           // Customize links
           a: ({ children, ...props }: LinkProps) => {
             return (
-              <a 
-                {...props} 
+              <a
+                {...props}
                 className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -237,15 +279,15 @@ export function Markdown({
           },
           // Customize images
           img: (props: ImageProps) => {
-            const { alt, src, className = '', ...rest } = props;
+            const { alt, src, className = "", ...rest } = props;
             return (
               <div className="my-4 overflow-hidden rounded-lg border">
-                <img 
-                  src={src} 
-                  alt={alt} 
+                <img
+                  src={src}
+                  alt={alt}
                   className={`w-full h-auto object-contain max-h-[500px] ${className}`}
                   loading="lazy"
-                  {...rest} 
+                  {...rest}
                 />
                 {alt && (
                   <p className="text-center text-sm text-muted-foreground mt-2">

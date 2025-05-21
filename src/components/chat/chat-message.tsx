@@ -90,12 +90,10 @@ export function ChatMessage({
   onEdit,
   onFeedback,
 }: ChatMessageProps) {
-  const [isHovering, setIsHovering] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [hasLiked, setHasLiked] = useState<boolean | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const isAssistant = message.role === "assistant";
 
   const handleEdit = () => {
     if (editedContent.trim() === "") return;
@@ -173,8 +171,8 @@ export function ChatMessage({
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 {message.createdAt.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}
               </span>
             </div>
