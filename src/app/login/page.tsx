@@ -67,7 +67,7 @@ export default function LoginPage() {
   };
 
   function oauthGithub() {
-    window.location.href = "https://hono.pilput.dev/auth/oauth/github";
+    window.location.href = "https://api.pilput.me/v1/auth/github";
   }
 
   return (
