@@ -5,69 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-// Simple markdown component with streaming support
-const Markdown = ({
-  content,
-  className = "",
-  isStreaming = false,
-}: {
-  content: string;
-  className?: string;
-  isStreaming?: boolean;
-}) => {
-  const [displayContent, setDisplayContent] = useState("");
-  const [streamingIndex, setStreamingIndex] = useState(0);
-
-  // Handle streaming effect
-  useEffect(() => {
-    if (!isStreaming) {
-      setDisplayContent(content);
-      return;
-    }
-
-    // Reset streaming when content changes
-    setStreamingIndex(0);
-    setDisplayContent("");
-  }, [content, isStreaming]);
-
-  // Simulate streaming effect
-  useEffect(() => {
-    if (!isStreaming || !content) return;
-
-    if (streamingIndex < content.length) {
-      const timeout = setTimeout(() => {
-        setDisplayContent(content.substring(0, streamingIndex + 1));
-        setStreamingIndex(streamingIndex + 1);
-      }, 10); // Adjust speed as needed
-
-      return () => clearTimeout(timeout);
-    }
-  }, [content, isStreaming, streamingIndex]);
-
-  // Simple markdown formatting
-  const formatContent = (text: string) => {
-    if (!text) return "";
-    return text
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
-      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
-      .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>') // Inline code
-      .replace(/\n/g, "<br />"); // Line breaks
-  };
-
-  return (
-    <div className={cn("prose dark:prose-invert max-w-none", className)}>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: formatContent(displayContent || content),
-        }}
-      />
-      {isStreaming && streamingIndex < content.length && (
-        <span className="inline-block h-2 w-2 rounded-full bg-purple-500 animate-pulse ml-1" />
-      )}
-    </div>
-  );
-};
+import { Markdown } from "./markdown";
 
 export interface Message {
   id: string;
