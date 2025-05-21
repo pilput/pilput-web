@@ -3,12 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { getToken } from "@/utils/Auth";
-import { axiosInstence2 } from "@/utils/fetch";
 import { Plus, MessageSquare, Menu, X } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ChatSidebarProps {
   isOpen: boolean;

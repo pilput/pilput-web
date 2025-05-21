@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Paperclip, Mic, Image as ImageIcon, Smile } from "lucide-react";
+import { Send, Paperclip, Smile } from "lucide-react";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
