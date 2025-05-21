@@ -214,7 +214,7 @@ export function Markdown({
 
             if (inline) {
               return (
-                <code className="bg-muted rounded px-1.5 py-0.5 text-sm font-mono">
+                <code className="bg-muted rounded px-1.5 text-sm font-mono">
                   {children}
                 </code>
               );

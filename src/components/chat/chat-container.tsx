@@ -165,7 +165,7 @@ export function ChatContainer({
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto overflow-x-hidden py-4 min-h-0"
       >
-        <div className="max-w-3xl mx-auto w-full px-4 h-full">
+        <div className="max-w-5xl mx-auto w-full px-4 h-full">
           {messages.map((message, index) => (
             <ChatMessage
               key={`${message.id}-${index}`}
@@ -190,10 +190,6 @@ export function ChatContainer({
       <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
         <div className="max-w-3xl mx-auto w-full p-4">
           <ChatInput onSendMessage={handleSendMessage} isDisabled={isLoading} />
-          <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
-            AI Assistant may produce inaccurate information about people,
-            places, or facts.
-          </p>
         </div>
       </div>
     </div>

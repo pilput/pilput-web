@@ -85,7 +85,7 @@ export function ChatMessage({
     >
       <div
         className={cn(
-          "max-w-3xl mx-auto w-full px-4 py-2",
+          "max-w-7xl mx-auto w-full px-4 py-2",
           isEditing ? "pb-16" : ""
         )}
       >
@@ -163,18 +163,77 @@ export function ChatMessage({
                     className="w-full"
                   >
                     <div className="relative">
-                      <Markdown
-                        content={message.content}
-                        isStreaming={message.isStreaming}
-                        className={
-                          message.role === "assistant"
-                            ? "text-gray-800 dark:text-gray-200"
-                            : "text-gray-900 dark:text-white"
-                        }
-                      />
-                      {message.isStreaming && (
-                        <div ref={messageEndRef} className="h-4" />
-                      )}
+                      <div className="space-y-2">
+                        <Markdown
+                          content={message.content}
+                          isStreaming={message.isStreaming}
+                          className={
+                            message.role === "assistant"
+                              ? "text-gray-800 dark:text-gray-200"
+                              : "text-gray-900 dark:text-white"
+                          }
+                        />
+                        {message.isStreaming && (
+                          <div ref={messageEndRef} className="h-4" />
+                        )}
+                        <div className="flex items-center gap-1 pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            onClick={() => {
+                              navigator.clipboard.writeText(message.content);
+                              // You might want to add a toast notification here
+                            }}
+                          >
+                            <Copy className="h-4 w-4" />
+                            <span className="sr-only">Copy message</span>
+                          </Button>
+                          {message.role === "user" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                              onClick={() => {
+                                setEditedContent(message.content);
+                                setIsEditing(true);
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Edit message</span>
+                            </Button>
+                          )}
+                          <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1" />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={cn(
+                              "h-8 w-8",
+                              hasLiked === true
+                                ? "text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
+                                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            )}
+                            onClick={handleLike}
+                          >
+                            <ThumbsUp className="h-4 w-4" />
+                            <span className="sr-only">Like</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={cn(
+                              "h-8 w-8",
+                              hasLiked === false
+                                ? "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            )}
+                            onClick={handleDislike}
+                          >
+                            <ThumbsDown className="h-4 w-4" />
+                            <span className="sr-only">Dislike</span>
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -182,65 +241,7 @@ export function ChatMessage({
             </div>
           </div>
 
-          <div className="flex-shrink-0">
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                onClick={() => {
-                  navigator.clipboard.writeText(message.content);
-                  // You might want to add a toast notification here
-                }}
-              >
-                <Copy className="h-4 w-4" />
-                <span className="sr-only">Copy message</span>
-              </Button>
-              {message.role === "user" && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                  onClick={() => {
-                    setEditedContent(message.content);
-                    setIsEditing(true);
-                  }}
-                >
-                  <Edit className="h-4 w-4" />
-                  <span className="sr-only">Edit message</span>
-                </Button>
-              )}
-              <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1" />
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-8 w-8",
-                  hasLiked === true
-                    ? "text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                )}
-                onClick={handleLike}
-              >
-                <ThumbsUp className="h-4 w-4" />
-                <span className="sr-only">Like</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-8 w-8",
-                  hasLiked === false
-                    ? "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                )}
-                onClick={handleDislike}
-              >
-                <ThumbsDown className="h-4 w-4" />
-                <span className="sr-only">Dislike</span>
-              </Button>
-            </div>
-          </div>
+          {/* Action buttons have been moved below the message content */}
         </div>
       </div>
     </div>
