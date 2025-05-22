@@ -1,17 +1,24 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ArrowLeft, Github, GithubIcon, Mail, Lock, Loader2 } from "lucide-react";
+import { ArrowLeft, GithubIcon, Mail, Lock, Loader2 } from "lucide-react";
 import { Config } from "@/utils/getCofig";
 
 type Inputs = {
@@ -82,7 +89,9 @@ export default function LoginPage() {
 
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Welcome back
+          </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to access your account
           </CardDescription>
@@ -123,11 +132,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loginWait}
-            >
+            <Button type="submit" className="w-full" disabled={loginWait}>
               {loginWait ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -150,7 +155,7 @@ export default function LoginPage() {
               </span>
             </div>
           </div>
-          
+
           <Button
             type="button"
             variant="outline"
