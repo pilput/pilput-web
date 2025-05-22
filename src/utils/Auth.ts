@@ -1,5 +1,6 @@
 import { getCookie } from "cookies-next";
 import { axiosInstence2 } from "./fetch";
+import { Config } from "./getCofig";
 
 export function getToken() {
   let token = getCookie("token");
@@ -12,9 +13,9 @@ export const getAuth = async () => {
 };
 
 export function logOut() {
-  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${Config.maindoman};`;
 }
 
 export function RemoveToken() {
-  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${Config.maindoman};`;
 }
