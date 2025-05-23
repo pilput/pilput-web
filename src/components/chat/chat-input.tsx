@@ -56,10 +56,10 @@ export function ChatInput({
   }, [message]);
 
   return (
-    <div className="sticky bottom-0 w-full bg-white/95 dark:bg-gray-900/95 border-t border-gray-200 dark:border-gray-700 shadow-[0_-2px_16px_0_rgba(0,0,0,0.04)] backdrop-blur-md">
-      <div className="mx-auto max-w-3xl p-4">
-        <form onSubmit={handleSubmit} className="relative">
-          <div className="flex items-end gap-2">
+    <div className="sticky bottom-0 w-full ">
+      <div className="mx-auto max-w-2xl px-2 py-4">
+        <form onSubmit={handleSubmit}>
+          <div className="flex items-end gap-2 p-0 bg-transparent">
             <div className="flex-1 relative">
               <Textarea
                 ref={textareaRef}
@@ -67,17 +67,17 @@ export function ChatInput({
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onInput={handleInput}
-                placeholder="Message AI Assistant..."
-                className="min-h-[60px] max-h-[200px] w-full resize-none pr-14 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus-visible:ring-2 focus-visible:ring-primary/70 transition-all shadow-sm"
+                placeholder="Type your message..."
+                className="min-h-[40px] max-h-[120px] w-full resize-none border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-3 py-2 text-sm rounded-lg shadow-none focus-visible:ring-1 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 transition-all"
                 disabled={isDisabled}
                 rows={rows}
               />
-              <div className="absolute right-3 bottom-3 flex items-center gap-1">
+              <div className="absolute right-2 bottom-2 flex items-center gap-1">
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="h-7 w-7 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md opacity-70 hover:opacity-100 transition-colors"
                   disabled={isDisabled}
                 >
                   <Smile className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function ChatInput({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="h-7 w-7 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md opacity-70 hover:opacity-100 transition-colors"
                   disabled={isDisabled}
                 >
                   <Paperclip className="h-4 w-4" />
@@ -98,21 +98,20 @@ export function ChatInput({
             <Button
               type="submit"
               size="icon"
-              className="h-12 w-12 shrink-0 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary/70 transition-all flex items-center justify-center disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:text-gray-400"
+              className="h-9 w-9 shrink-0 rounded-lg bg-gray-900 dark:bg-gray-800 text-white hover:bg-gray-800 dark:hover:bg-gray-700 focus-visible:ring-1 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 transition-all disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400"
               disabled={isDisabled || !message.trim()}
             >
               {isDisabled ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-primary" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
-                <Send className="h-5 w-5" />
+                <Send className="h-4 w-4" />
               )}
               <span className="sr-only">Send message</span>
             </Button>
           </div>
         </form>
-        <p className="mt-2 text-center text-xs text-muted-foreground">
-          AI Assistant can make mistakes. Consider checking important
-          information.
+        <p className="mt-2 text-center text-xs text-gray-400 dark:text-gray-500">
+          AI can make mistakes. Please verify important information.
         </p>
       </div>
     </div>

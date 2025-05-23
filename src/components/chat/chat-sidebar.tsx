@@ -1,29 +1,47 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Plus, MessageSquare, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { axiosInstence2 } from "@/utils/fetch";
+import { getToken, logOut } from "@/utils/Auth";
 
 interface ChatSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateNewChat: () => void;
-  onSelectChat: (id: string) => void;
-  recentChats: any[];
   currentConvertations: string;
 }
 
 export function ChatSidebar({
   isOpen,
   onClose,
-  onCreateNewChat,
-  onSelectChat,
-  recentChats,
   currentConvertations,
 }: ChatSidebarProps) {
   const [isHoveringClose, setIsHoveringClose] = useState(false);
+  const [recentChats, setRecentChats] = useState<any[]>([]);
+
+  function getConvertions() {
+    axiosInstence2
+      .get("/v1/chat/conversations", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      .then((res: any) => {
+        setRecentChats(res.data);
+      })
+      .catch((err: any) => {
+        logOut();
+        window.location.href = "/login";
+      });
+  }
+
+  useEffect(() => {
+    getConvertions();
+  }, []);
 
   return (
     <>
@@ -65,14 +83,13 @@ export function ChatSidebar({
 
         {/* New Chat Button */}
         <div className="px-4 py-3">
-          <Button
-            variant="ghost"
-            className="w-full justify-center gap-2 text-sm font-normal text-neutral-300 border border-neutral-800 hover:bg-neutral-900"
-            onClick={onCreateNewChat}
+          <Link
+            href="/chat"
+            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-normal text-center text-neutral-300 border border-neutral-800 rounded-md hover:bg-neutral-900"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="w-4 h-4" />
             New Chat
-          </Button>
+          </Link>
         </div>
 
         {/* Chat List */}
@@ -84,22 +101,23 @@ export function ChatSidebar({
               </div>
             ) : (
               recentChats.map((chat) => (
-                <Button
+                <Link
                   key={chat.id}
-                  variant="ghost"
+                  href={`/chat/${chat.id}`}
                   className={cn(
-                    "w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-2 transition-colors",
+                    "flex items-center w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-2 transition-colors",
                     chat.id === currentConvertations
                       ? "bg-neutral-800 text-neutral-100"
                       : "hover:bg-neutral-900 text-neutral-300"
                   )}
-                  onClick={() => onSelectChat(chat.id)}
                   tabIndex={0}
-                  aria-current={chat.id === currentConvertations ? "true" : undefined}
+                  aria-current={
+                    chat.id === currentConvertations ? "true" : undefined
+                  }
                 >
                   <MessageSquare className="mr-2 h-4 w-4 flex-shrink-0 opacity-70" />
                   <span className="truncate">{chat.title}</span>
-                </Button>
+                </Link>
               ))
             )}
           </div>
