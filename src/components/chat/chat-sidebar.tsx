@@ -6,8 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Plus, MessageSquare, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { axiosInstence2 } from "@/utils/fetch";
-import { getToken, logOut } from "@/utils/Auth";
+import { useChatStore } from "@/stores/chat-store";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -21,27 +20,11 @@ export function ChatSidebar({
   currentConvertations,
 }: ChatSidebarProps) {
   const [isHoveringClose, setIsHoveringClose] = useState(false);
-  const [recentChats, setRecentChats] = useState<any[]>([]);
-
-  function getConvertions() {
-    axiosInstence2
-      .get("/v1/chat/conversations", {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      })
-      .then((res: any) => {
-        setRecentChats(res.data);
-      })
-      .catch((err: any) => {
-        logOut();
-        window.location.href = "/login";
-      });
-  }
+  const { recentChats, fetchRecentChats } = useChatStore();
 
   useEffect(() => {
-    getConvertions();
-  }, []);
+    fetchRecentChats();
+  }, [fetchRecentChats]);
 
   return (
     <>
@@ -58,7 +41,7 @@ export function ChatSidebar({
           "fixed inset-y-0 left-0 z-30 w-64 bg-neutral-950 border-r border-neutral-800 transform transition-transform duration-200 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
           "lg:translate-x-0 lg:static lg:inset-auto lg:z-auto",
-          "flex flex-col h-screen"
+          "flex flex-col h-screen min-h-0"
         )}
       >
         {/* Header */}
@@ -93,14 +76,14 @@ export function ChatSidebar({
         </div>
 
         {/* Chat List */}
-        <ScrollArea className="flex-1 px-2">
+        <ScrollArea className="flex-1 px-2 h-0 min-h-0 max-h-[calc(100vh-176px)] overflow-y-auto">
           <div className="space-y-1">
             {recentChats.length === 0 ? (
               <div className="text-center text-neutral-500 py-8 text-xs">
                 No conversations yet.
               </div>
             ) : (
-              recentChats.map((chat) => (
+              recentChats.map((chat: any, idx: number) => (
                 <Link
                   key={chat.id}
                   href={`/chat/${chat.id}`}

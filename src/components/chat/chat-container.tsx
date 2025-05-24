@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
+import { useChatStore } from '@/stores/chat-store';
 import { ChatInput } from "./chat-input";
-import { ChatMessage, type Message } from "./chat-message";
-import { axiosInstence2 } from "@/utils/fetch";
-import { getToken } from "@/utils/Auth";
+import { ChatMessage } from "./chat-message";
 import { useRouter } from "next/navigation";
 
 interface ChatContainerProps {
@@ -13,18 +12,9 @@ interface ChatContainerProps {
 
 export function ChatContainer({ currentConvertations }: ChatContainerProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: Date.now().toString(),
-      content: "message",
-      role: "user",
-      createdAt: new Date(),
-      isStreaming: false,
-    },
-  ]);
+  const { messages, isLoading, fetchMessages, sendMessage, editMessage } = useChatStore();
 
   // Auto-scroll to bottom when messages change
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
@@ -42,110 +32,15 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
       scrollToBottom();
     }
   }, [messages, scrollToBottom]);
-  function fetchMessages() {
-    axiosInstence2(`/v1/chat/conversations/${currentConvertations}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any authentication headers if needed
-        Authorization: `Bearer ${getToken()}`,
-      },
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = response.data;
-        setMessages(
-          data.messages.map((message: any) => ({
-            ...message,
-            createdAt: new Date(message.createdAt),
-          }))
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching messages:", error);
-      });
-  }
+  // fetchMessages is now handled via Zustand store
 
   useEffect(() => {
     if (!currentConvertations) return;
-    fetchMessages();
-  }, [currentConvertations]);
+    fetchMessages(currentConvertations);
+  }, [currentConvertations, fetchMessages]);
 
-  const handleSendMessage = async (content: string) => {
-    if (!content.trim() || isLoading) return;
-
-    const newmessage = {
-      id: Date.now().toString(),
-      content: content,
-      role: "user" as const,
-      createdAt: new Date(),
-      isStreaming: false,
-    };
-
-    setMessages((prev) => [...prev, newmessage]);
-
-    setIsLoading(true);
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
-
-    try {
-      let endpoint: string;
-      let data: any;
-      if (currentConvertations === "") {
-        endpoint = `/v1/chat/conversations`;
-        data = {
-          title: content.slice(0, 15) + (content.length > 15 ? "" : ""),
-          message: content,
-        };
-      } else {
-        endpoint = `/v1/chat/conversations/${currentConvertations}/messages`;
-        data = {
-          content: content,
-        };
-      }
-
-      const response = await axiosInstence2(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Add any authentication headers if needed
-          Authorization: `Bearer ${getToken()}`,
-        },
-        data,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (response.status !== 201) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      if (currentConvertations === "") {
-        router.replace("/chat/" + response.data.id);
-      } else {
-        fetchMessages();
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      // Remove the temporary message and add an error message
-      setMessages((prev) => {
-        const filtered = prev.filter((msg) => msg.id !== newmessage.id);
-        const errorMessage: Message = {
-          id: `error-${Date.now()}`,
-          content: "Sorry, I encountered an error. Please try again.",
-          role: "assistant",
-          createdAt: new Date(),
-          isStreaming: false,
-        };
-        return [...filtered, errorMessage];
-      });
-    } finally {
-      clearTimeout(timeoutId);
-      setIsLoading(false);
-    }
+  const handleSendMessage = (content: string) => {
+    sendMessage(content, currentConvertations, router);
   };
 
   if (currentConvertations === "") {
@@ -206,13 +101,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
                 key={`${message.id}-${index}`}
                 message={message}
                 className={index === messages.length - 1 ? "pb-20" : ""}
-                onEdit={(id, content) => {
-                  setMessages((prev) =>
-                    prev.map((msg) =>
-                      msg.id === id ? { ...msg, content } : msg
-                    )
-                  );
-                }}
+                onEdit={editMessage}
                 onFeedback={(id, type) => {
                   // Handle feedback (e.g., send to analytics)
                   console.log(`Feedback for message ${id}: ${type}`);
