@@ -11,14 +11,9 @@ import {
 import { axiosInstence2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
-import {
-  CalendarDays,
-  Users,
-  Edit2,
-  MoreHorizontal,
-} from "lucide-react";
+import { CalendarDays, Users, Edit2, MoreHorizontal } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import PostsUser from "@/components/writer/posts"
+import PostsUser from "@/components/writer/posts";
 
 interface succesResponse {
   data: Writer;
@@ -60,7 +55,9 @@ export default async function page(props: {
 
                 <div>
                   <h1 className="text-2xl font-bold">{writer.username}</h1>
-                  <p className="text-muted-foreground mt-1">{writer.profile.bio}</p>
+                  <p className="text-muted-foreground mt-1">
+                    {writer.profile.bio}
+                  </p>
                   <div className="flex items-center mt-2 text-sm text-muted-foreground">
                     <CalendarDays className="w-4 h-4 mr-1" />
                     <span>Joined {writer.created_at}</span>

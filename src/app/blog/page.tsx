@@ -14,12 +14,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+const postsPerPage = 6;
+
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPosts, setTotalPosts] = useState(0);
-  const postsPerPage = 6;
 
   useEffect(() => {
     async function fetchPosts() {
@@ -68,7 +69,6 @@ const Blog = () => {
           {isLoading && <Postlistpulse />}
         </div>
 
-          
         {totalPages > 0 && (
           <div className="my-8">
             <Pagination>
