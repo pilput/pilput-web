@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import {
@@ -26,7 +26,7 @@ const Blog = () => {
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstence.get("/v1/posts", {
+        const { data } = await axiosInstence2.get("/v1/posts", {
           params: { limit: postsPerPage, offset: currentPage * postsPerPage },
         });
 
