@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import PostItemr from "./PostItemr";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemrPulse from "./PostItemrpulse";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const PostsRandomList = () => {
 
   const fetchRandomPosts = async () => {
     try {
-      const response = await axiosInstence2.get("/v1/posts/random?limit=9");
+      const response = await axiosInstence.get("/v1/posts/random?limit=9");
       const result = response.data as succesResponse;
       setposts(result.data);
     } catch {

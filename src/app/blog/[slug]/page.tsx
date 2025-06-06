@@ -1,7 +1,7 @@
 import Footer from "@/components/footer/Footer";
 import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstence } from "@/utils/fetch";
 import Image from "next/image";
 import { notFound } from "next/navigation"; // Added import statement
 import { getUrlImage } from "@/utils/getImage";
@@ -9,14 +9,16 @@ import Link from "next/link";
 
 const getPost = async (postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosInstence2(`/v1/posts/slug/${postSlug}`);
+    const { data } = await axiosInstence(`/v1/posts/slug/${postSlug}`);
     return data;
   } catch {
     throw notFound();
   }
 };
 
-export default async function Page(props: { params: Promise<{ slug: string }> }) {
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+}) {
   const params = await props.params;
   const post = await getPost(params.slug);
   return (
@@ -77,10 +79,7 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
         {post.tags != null && (
           <div className="flex gap-2 flex-wrap mb-6">
             {post.tags.map((tag) => (
-              <div
-                key={tag.id}
-                className="py-2 px-4 rounded-2xl bg-slate-200"
-              >
+              <div key={tag.id} className="py-2 px-4 rounded-2xl bg-slate-200">
                 {tag.name}
               </div>
             ))}
