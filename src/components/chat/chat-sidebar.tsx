@@ -38,15 +38,15 @@ export function ChatSidebar({
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 w-64 bg-neutral-950 border-r border-neutral-800 transform transition-transform duration-200 ease-in-out",
+          "fixed inset-y-0 left-0 z-30 w-64 bg-background border-r border-border transform transition-transform duration-200 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
           "lg:translate-x-0 lg:static lg:inset-auto lg:z-auto",
           "flex flex-col h-screen min-h-0"
         )}
       >
         {/* Header */}
-        <div className="px-4 py-3 border-b border-neutral-800 flex items-center justify-between bg-neutral-950">
-          <h2 className="text-base font-semibold text-neutral-200">AI Chat</h2>
+        <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-background">
+          <h2 className="text-base font-semibold text-foreground">AI Chat</h2>
           <Button
             variant="ghost"
             size="icon"
@@ -56,9 +56,9 @@ export function ChatSidebar({
             onMouseLeave={() => setIsHoveringClose(false)}
           >
             {isHoveringClose ? (
-              <X className="h-4 w-4 text-neutral-400" />
+              <X className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <Menu className="h-4 w-4 text-neutral-400" />
+              <Menu className="h-4 w-4 text-muted-foreground" />
             )}
             <span className="sr-only">Close sidebar</span>
           </Button>
@@ -68,7 +68,7 @@ export function ChatSidebar({
         <div className="px-4 py-3">
           <Link
             href="/chat"
-            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-normal text-center text-neutral-300 border border-neutral-800 rounded-md hover:bg-neutral-900"
+            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-normal text-center text-muted-foreground border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             <Plus className="w-4 h-4" />
             New Chat
@@ -79,7 +79,7 @@ export function ChatSidebar({
         <ScrollArea className="flex-1 px-2 h-0 min-h-0 max-h-[calc(100vh-176px)] overflow-y-auto">
           <div className="space-y-1">
             {recentChats.length === 0 ? (
-              <div className="text-center text-neutral-500 py-8 text-xs">
+              <div className="text-center text-muted-foreground py-8 text-xs dark:text-muted-foreground-dark">
                 No conversations yet.
               </div>
             ) : (
@@ -90,8 +90,8 @@ export function ChatSidebar({
                   className={cn(
                     "flex items-center w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-2 transition-colors",
                     chat.id === currentConvertations
-                      ? "bg-neutral-800 text-neutral-100"
-                      : "hover:bg-neutral-900 text-neutral-300"
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent/50 text-muted-foreground"
                   )}
                   tabIndex={0}
                   aria-current={
@@ -107,16 +107,16 @@ export function ChatSidebar({
         </ScrollArea>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-neutral-800 bg-neutral-950 flex flex-col gap-1">
-          <div className="text-[10px] text-neutral-500 text-center">
+        <div className="px-4 py-3 border-t border-border bg-background flex flex-col gap-1">
+          <div className="text-[10px] text-muted-foreground text-center">
             <p>Your conversations are saved.</p>
           </div>
           {/* Minimal User/Profile Placeholder */}
           <div className="flex items-center justify-center gap-2 mt-1">
-            <div className="h-6 w-6 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 text-xs font-semibold">
+            <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-muted-foreground text-xs font-semibold">
               U
             </div>
-            <span className="text-xs text-neutral-400 font-normal">User</span>
+            <span className="text-xs text-muted-foreground font-normal">User</span>
           </div>
         </div>
       </aside>
