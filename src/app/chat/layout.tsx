@@ -11,7 +11,7 @@ interface ChatLayoutProps {
 export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="h-screen w-full bg-gray-900 text-gray-100 flex overflow-hidden">
+      <div className="h-screen w-full bg-background text-foreground flex overflow-hidden">
         {/* Sidebar */}
         <AppSidebar />
 
@@ -25,8 +25,8 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
           <div className="flex-1 flex flex-col min-h-0">{children}</div>
 
           {/* Minimal Footer */}
-          <div className="border-t border-gray-800 py-3 px-4 text-center">
-            <p className="text-xs text-gray-500">
+          <div className="border-t border-border py-3 px-4 text-center">
+            <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} pilput. An AI-powered conversation.
             </p>
           </div>
