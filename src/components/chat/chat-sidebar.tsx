@@ -68,7 +68,7 @@ export function ChatSidebar({
         <div className="px-4 py-3">
           <Link
             href="/chat"
-            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-normal text-center text-muted-foreground border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm text-center text-gray-600 dark:text-gray-200 border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             <Plus className="w-4 h-4" />
             New Chat
@@ -79,7 +79,7 @@ export function ChatSidebar({
         <ScrollArea className="flex-1 px-2 h-0 min-h-0 max-h-[calc(100vh-176px)] overflow-y-auto">
           <div className="space-y-1">
             {recentChats.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8 text-xs dark:text-muted-foreground-dark">
+              <div className="text-center py-8 text-xs text-[oklch(0.556_0_0)] dark:text-[oklch(0.708_0_0)]">
                 No conversations yet.
               </div>
             ) : (
@@ -116,7 +116,9 @@ export function ChatSidebar({
             <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-muted-foreground text-xs font-semibold">
               U
             </div>
-            <span className="text-xs text-muted-foreground font-normal">User</span>
+            <span className="text-xs text-muted-foreground font-normal">
+              User
+            </span>
           </div>
         </div>
       </aside>
