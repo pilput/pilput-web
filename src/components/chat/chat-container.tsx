@@ -86,6 +86,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
           </div>
           <div className="w-full">
             <ChatInput
+              showModelPicker={false}
               onSendMessage={handleSendMessage}
               isDisabled={isLoading}
             />

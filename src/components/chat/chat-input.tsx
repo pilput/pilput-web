@@ -4,15 +4,18 @@ import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Paperclip, Smile } from "lucide-react";
+import { ModelPicker } from "./model-picker";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   isDisabled?: boolean;
+  showModelPicker?: boolean;
 }
 
 export function ChatInput({
   onSendMessage,
   isDisabled = false,
+  showModelPicker = true,
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState(1);
@@ -56,10 +59,13 @@ export function ChatInput({
   }, [message]);
 
   return (
-    <div className="sticky bottom-0 w-full ">
+    <div className="sticky bottom-0 w-full">
       <div className="mx-auto max-w-2xl px-2 py-4">
         <form onSubmit={handleSubmit}>
           <div className="flex items-end gap-2 p-0 bg-transparent">
+            <div className="flex items-center">
+              {showModelPicker && <ModelPicker />}
+            </div>
             <div className="flex-1 relative">
               <Textarea
                 ref={textareaRef}

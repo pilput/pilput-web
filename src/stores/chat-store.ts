@@ -8,6 +8,8 @@ interface ChatState {
   messages: Message[];
   isLoading: boolean;
   recentChats: any[];
+  selectedModel: string;
+  availableModels: { id: string; name: string }[];
   fetchRecentChats: () => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   createConversation: (title: string, message: string, router: any) => Promise<string | null>;
@@ -15,6 +17,7 @@ interface ChatState {
   setMessages: (messages: Message[]) => void;
   editMessage: (id: string, content: string) => void;
   setIsLoading: (isLoading: boolean) => void;
+  setSelectedModel: (model: string) => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -29,8 +32,19 @@ export const useChatStore = create<ChatState>((set, get) => ({
   ],
   isLoading: false,
   recentChats: [],
+  // Default to Llama 4 Maverick free model
+  selectedModel: 'meta-llama/llama-4-maverick:free',
+  // List of free models available on OpenRouter
+  availableModels: [
+    { id: 'meta-llama/llama-4-maverick:free', name: 'Llama 4 Maverick' },
+    { id: 'meta-llama/llama-4-scout:free', name: 'Llama 4 Scout' },
+    { id: 'openrouter/optimus-alpha:free', name: 'Optimus Alpha' },
+    { id: 'openrouter/quasar-alpha:free', name: 'Quasar Alpha' },
+    { id: 'deepseek/deepseek-v3-base:free', name: 'DeepSeek V3 Base' },
+  ],
   setMessages: (messages) => set({ messages }),
   setIsLoading: (isLoading) => set({ isLoading }),
+  setSelectedModel: (model) => set({ selectedModel: model }),
   editMessage: (id, content) => {
     set((state) => ({
       messages: state.messages.map((msg) =>
@@ -75,7 +89,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   createConversation: async (title, message, router) => {
-    const { isLoading, setIsLoading } = get();
+    const { isLoading, setIsLoading, selectedModel } = get();
     if (!message.trim() || isLoading) return null;
     
     setIsLoading(true);
@@ -110,7 +124,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   sendMessage: async (content, conversationId) => {
-    const { isLoading, messages } = get();
+    const { isLoading, messages, selectedModel } = get();
     if (!content.trim() || isLoading || !conversationId) return;
     
     const userMessage = {
@@ -146,7 +160,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ 
+          content,
+          model: selectedModel // Include the selected model in the request
+        }),
         signal: controller.signal,
       });
       
