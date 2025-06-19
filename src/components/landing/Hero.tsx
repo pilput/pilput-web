@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useRef, useState } from "react";
 
 const Landing = () => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -34,7 +34,7 @@ const Landing = () => {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
       },
     },
@@ -147,7 +147,7 @@ const Landing = () => {
                   className="absolute inset-0 bg-primary-foreground"
                   initial={{ x: "100%" }}
                   whileHover={{ x: 0 }}
-                  transition={{ type: "tween" }}
+                  transition={{ type: "tween" as const }}
                 />
               </Link>
             </Button>

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { ChatMessage, type Message } from '@/components/chat/chat-message';
 import { axiosInstence2 } from '@/utils/fetch';
 import { getToken } from '@/utils/Auth';
+import { Config } from '@/utils/getCofig';
 
 interface ChatState {
   messages: Message[];
@@ -9,7 +10,8 @@ interface ChatState {
   recentChats: any[];
   fetchRecentChats: () => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
-  sendMessage: (content: string, conversationId: string, router: any) => Promise<void>;
+  createConversation: (title: string, message: string, router: any) => Promise<string | null>;
+  sendMessage: (content: string, conversationId: string) => Promise<void>;
   setMessages: (messages: Message[]) => void;
   editMessage: (id: string, content: string) => void;
   setIsLoading: (isLoading: boolean) => void;
@@ -72,51 +74,148 @@ export const useChatStore = create<ChatState>((set, get) => ({
       console.error('Error fetching messages:', error);
     }
   },
-  sendMessage: async (content, conversationId, router) => {
-    const { isLoading, messages, setMessages, setIsLoading, fetchMessages } = get();
-    if (!content.trim() || isLoading) return;
-    const newmessage = {
+  createConversation: async (title, message, router) => {
+    const { isLoading, setIsLoading } = get();
+    if (!message.trim() || isLoading) return null;
+    
+    setIsLoading(true);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
+    try {
+      const response = await axiosInstence2('/v1/chat/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
+        data: {
+          title: title || message.slice(0, 15) + (message.length > 15 ? '...' : ''),
+          message,
+        },
+      });
+      
+      clearTimeout(timeoutId);
+      if (response.status !== 201) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const conversationId = response.data.id;
+      router.replace('/chat/' + conversationId);
+      return conversationId;
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      return null;
+    } finally {
+      clearTimeout(timeoutId);
+      setIsLoading(false);
+    }
+  },
+  sendMessage: async (content, conversationId) => {
+    const { isLoading, messages } = get();
+    if (!content.trim() || isLoading || !conversationId) return;
+    
+    const userMessage = {
       id: Date.now().toString(),
       content: content,
       role: 'user' as const,
       createdAt: new Date(),
       isStreaming: false,
     };
-    set({ messages: [...messages, newmessage], isLoading: true });
+    
+    // Add user message and create placeholder for assistant response
+    const assistantMessage = {
+      id: `assistant-${Date.now()}`,
+      content: '',
+      role: 'assistant' as const,
+      createdAt: new Date(),
+      isStreaming: true,
+    };
+    
+    set({ 
+      messages: [...messages, userMessage, assistantMessage], 
+      isLoading: true 
+    });
+    
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased timeout for streaming
+    
     try {
-      let endpoint: string;
-      let data: any;
-      if (conversationId === '') {
-        endpoint = `/v1/chat/conversations`;
-        data = {
-          title: content.slice(0, 15) + (content.length > 15 ? '' : ''),
-          message: content,
-        };
-      } else {
-        endpoint = `/v1/chat/conversations/${conversationId}/messages`;
-        data = { content };
-      }
-      const response = await axiosInstence2(endpoint, {
+      const response = await fetch(`${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getToken()}`,
         },
-        data,
+        body: JSON.stringify({ content }),
+        signal: controller.signal,
       });
-      clearTimeout(timeoutId);
-      if (response.status !== 201) throw new Error(`HTTP error! status: ${response.status}`);
-      if (conversationId === '') {
-        router.replace('/chat/' + response.data.id);
-      } else {
-        await fetchMessages(conversationId);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      
+      if (!reader) {
+        throw new Error('No response body reader available');
+      }
+      
+      let accumulatedContent = '';
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            
+            if (data === '[DONE]') {
+              // Stream completed
+              set((state) => ({
+                messages: state.messages.map((msg) =>
+                  msg.id === assistantMessage.id
+                    ? { ...msg, isStreaming: false }
+                    : msg
+                ),
+              }));
+              break;
+            }
+            
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                accumulatedContent += parsed.content;
+                
+                // Update the assistant message with accumulated content
+                set((state) => ({
+                  messages: state.messages.map((msg) =>
+                    msg.id === assistantMessage.id
+                      ? { ...msg, content: accumulatedContent }
+                      : msg
+                  ),
+                }));
+              }
+            } catch (parseError) {
+              // Skip invalid JSON chunks
+              console.warn('Failed to parse streaming data:', parseError);
+            }
+          }
+        }
+      }
+      
+      clearTimeout(timeoutId);
+      
     } catch (error) {
       console.error('Error sending message:', error);
       set((state) => {
-        const filtered = state.messages.filter((msg) => msg.id !== newmessage.id);
+        const filtered = state.messages.filter((msg) => 
+          msg.id !== userMessage.id && msg.id !== assistantMessage.id
+        );
         const errorMessage: Message = {
           id: `error-${Date.now()}`,
           content: 'Sorry, I encountered an error. Please try again.',
@@ -124,7 +223,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           createdAt: new Date(),
           isStreaming: false,
         };
-        return { messages: [...filtered, errorMessage] };
+        return { messages: [...filtered, userMessage, errorMessage] };
       });
     } finally {
       clearTimeout(timeoutId);

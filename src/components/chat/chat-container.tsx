@@ -14,7 +14,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const { messages, isLoading, fetchMessages, sendMessage, editMessage } = useChatStore();
+  const { messages, isLoading, fetchMessages, sendMessage, createConversation, editMessage } = useChatStore();
 
   // Auto-scroll to bottom when messages change
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
@@ -39,8 +39,14 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
     fetchMessages(currentConvertations);
   }, [currentConvertations, fetchMessages]);
 
-  const handleSendMessage = (content: string) => {
-    sendMessage(content, currentConvertations, router);
+  const handleSendMessage = async (content: string) => {
+    if (currentConvertations === "") {
+      // Create new conversation
+      await createConversation("", content, router);
+    } else {
+      // Send message to existing conversation
+      await sendMessage(content, currentConvertations);
+    }
   };
 
   if (currentConvertations === "") {
