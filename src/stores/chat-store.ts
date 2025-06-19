@@ -137,6 +137,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased timeout for streaming
+    let updateTimeout: number | null = null; // Move to broader scope
     
     try {
       const response = await fetch(`${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`, {
@@ -162,6 +163,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
       
       let accumulatedContent = '';
       
+      // Batch updates to reduce re-renders
+      const batchedUpdate = () => {
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg.id === assistantMessage.id
+              ? { ...msg, content: accumulatedContent }
+              : msg
+          ),
+        }));
+      };
+      
       while (true) {
         const { done, value } = await reader.read();
         
@@ -172,9 +184,15 @@ export const useChatStore = create<ChatState>((set, get) => ({
         
         for (const line of lines) {
           if (line.startsWith('data: ')) {
-            const data = line.slice(6);
+            const data = line.slice(6).trim();
             
             if (data === '[DONE]') {
+              // Clear any pending updates and finalize
+              if (updateTimeout) {
+                clearTimeout(updateTimeout);
+                updateTimeout = null;
+              }
+              batchedUpdate();
               // Stream completed
               set((state) => ({
                 messages: state.messages.map((msg) =>
@@ -191,14 +209,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
               if (parsed.content) {
                 accumulatedContent += parsed.content;
                 
-                // Update the assistant message with accumulated content
-                set((state) => ({
-                  messages: state.messages.map((msg) =>
-                    msg.id === assistantMessage.id
-                      ? { ...msg, content: accumulatedContent }
-                      : msg
-                  ),
-                }));
+                // Batch updates to avoid too frequent re-renders
+                if (updateTimeout) {
+                  clearTimeout(updateTimeout);
+                }
+                updateTimeout = window.setTimeout(batchedUpdate, 16); // ~60fps
               }
             } catch (parseError) {
               // Skip invalid JSON chunks
@@ -208,6 +223,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         }
       }
       
+      // Clear any pending update timeout
+      if (updateTimeout) {
+        clearTimeout(updateTimeout);
+      }
       clearTimeout(timeoutId);
       
     } catch (error) {
@@ -226,6 +245,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         return { messages: [...filtered, userMessage, errorMessage] };
       });
     } finally {
+      // Clear any pending update timeout
+      if (updateTimeout) {
+        clearTimeout(updateTimeout);
+      }
       clearTimeout(timeoutId);
       set({ isLoading: false });
     }

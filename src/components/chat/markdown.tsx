@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import { Check, Copy, Terminal } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import "highlight.js/styles/github-dark.css";
+import { useState } from "react";
 
 interface MarkdownProps {
   content: string;
@@ -112,32 +113,8 @@ export function Markdown({
   isStreaming = false,
   className,
 }: MarkdownProps) {
-  const [displayContent, setDisplayContent] = useState("");
-  const [streamingIndex, setStreamingIndex] = useState(0);
-
-  // Handle streaming effect
-  useEffect(() => {
-    if (!isStreaming) {
-      setDisplayContent(content);
-      return;
-    }
-    setStreamingIndex(0);
-    setDisplayContent("");
-  }, [content, isStreaming]);
-
-  // Simulate streaming effect
-  useEffect(() => {
-    if (!isStreaming || !content) return;
-
-    if (streamingIndex < content.length) {
-      const timeout = setTimeout(() => {
-        setDisplayContent((prev) => content.substring(0, streamingIndex + 1));
-        setStreamingIndex((prev) => prev + 1);
-      }, 5); // Slightly faster typing effect
-
-      return () => clearTimeout(timeout);
-    }
-  }, [content, isStreaming, streamingIndex]);
+  // Remove artificial streaming simulation - let the real streaming from server handle it
+  const displayContent = content;
 
   return (
     <div className={cn("prose dark:prose-invert max-w-none", className)}>
