@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Sparkles, Users, MessageSquare, BookOpen, Zap } from "lucide-react";
+import { useRef } from "react";
 
-const Landing = () => {
+const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -16,156 +17,215 @@ const Landing = () => {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const [isHovered, setIsHovered] = useState(false);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.2,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         type: "spring" as const,
         stiffness: 100,
+        damping: 15,
       },
     },
   };
 
+  const floatingIcons = [
+    { icon: Users, delay: 0, x: "10%", y: "20%" },
+    { icon: MessageSquare, delay: 1, x: "85%", y: "15%" },
+    { icon: BookOpen, delay: 2, x: "15%", y: "70%" },
+    { icon: Zap, delay: 1.5, x: "80%", y: "75%" },
+  ];
+
   return (
-    <motion.div
+    <motion.section
       ref={containerRef}
-      className="relative min-h-[670px] w-full flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-muted/30"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      {/* Background gradient with parallax effect */}
+      {/* Animated background gradient */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted"
+        className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
         style={{ y, opacity }}
       />
 
-      {/* Animated background shapes */}
+      {/* Floating background shapes */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full mix-blend-multiply filter blur-xl"
             animate={{
-              x: [0, 30, 0],
-              y: [0, 50, 0],
-              scale: [1, 1.2, 1],
+              x: [0, 50, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.1, 1],
             }}
             transition={{
-              duration: 10,
+              duration: 15 + i * 2,
               repeat: Infinity,
-              delay: i * 2,
+              delay: i * 3,
               ease: "linear",
             }}
             style={{
-              width: `${200 + i * 100}px`,
-              height: `${200 + i * 100}px`,
-              left: `${20 + i * 30}%`,
-              top: `${20 + i * 20}%`,
-              backgroundColor: `hsl(${i * 60}, 70%, 95%)`,
-              opacity: 0.3,
+              width: `${200 + i * 80}px`,
+              height: `${200 + i * 80}px`,
+              left: `${10 + i * 25}%`,
+              top: `${15 + i * 20}%`,
+              backgroundColor: `hsl(${220 + i * 30}, 60%, 95%)`,
+              opacity: 0.4,
             }}
           />
         ))}
       </div>
 
-      <div className="relative z-20 container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center">
+      {/* Floating icons */}
+      {floatingIcons.map((item, index) => {
+        const IconComponent = item.icon;
+        return (
           <motion.div
-            variants={itemVariants}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            key={index}
+            className="absolute hidden lg:block"
+            style={{ left: item.x, top: item.y }}
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 5, 0],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              delay: item.delay,
+              ease: "easeInOut",
+            }}
           >
+            <div className="p-4 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg">
+              <IconComponent className="h-6 w-6 text-primary" />
+            </div>
+          </motion.div>
+        );
+      })}
+
+      <div className="relative z-20 container px-4 md:px-6">
+        <div className="flex flex-col items-center space-y-8 text-center max-w-5xl mx-auto">
+          {/* Badge */}
+          <motion.div variants={itemVariants}>
             <Badge
               variant="secondary"
-              className="mb-4 cursor-pointer"
-              onClick={() => setIsHovered(!isHovered)}
+              className="px-4 py-2 text-sm font-medium bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer"
             >
-              Available for Freelance Work
-              {isHovered && (
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="ml-2"
-                >
-                  👋
-                </motion.span>
-              )}
+              <Sparkles className="h-4 w-4 mr-2" />
+              Welcome to the Future of Content Creation
             </Badge>
           </motion.div>
 
+          {/* Main heading */}
           <motion.h1
             variants={itemVariants}
-            className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
           >
-            Hi, I&#x27;m <span className="font-extrabold">CECEP JANUARDI</span>
+            Create, Share &
+            <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+              Connect
+            </span>
+            <span className="block text-3xl md:text-5xl lg:text-6xl mt-2 text-muted-foreground">
+              Like Never Before
+            </span>
           </motion.h1>
 
-          <motion.h2
-            variants={itemVariants}
-            className="text-xl md:text-2xl lg:text-3xl font-semibold text-muted-foreground"
-          >
-            Full Stack Developer
-          </motion.h2>
-
+          {/* Subtitle */}
           <motion.p
             variants={itemVariants}
-            className="max-w-[700px] text-muted-foreground md:text-lg"
+            className="text-xl md:text-2xl text-muted-foreground max-w-3xl leading-relaxed"
           >
-            Dedicated to crafting elegant and efficient digital solutions. I
-            specialize in modern web development with deep expertise in Next.js,
-            React, and Node.js ecosystems. Let&#x27;s collaborate to transform
-            your innovative ideas into impactful realities.
+            Join thousands of creators on PILPUT - the modern platform where ideas come to life,
+            communities thrive, and connections spark innovation.
           </motion.p>
 
+          {/* CTA Buttons */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4"
+            className="flex flex-col sm:flex-row gap-4 pt-4"
           >
-            <Button
-              asChild
-              size="lg"
-              className="relative group overflow-hidden"
-            >
-              <Link href="/contact">
-                <span className="relative z-10">Get in Touch</span>
-                <motion.div
-                  className="absolute inset-0 bg-primary-foreground"
-                  initial={{ x: "100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ type: "tween" as const }}
-                />
-              </Link>
-            </Button>
-            <Button variant="outline" asChild size="lg" className="group">
-              <Link href="/projects">
-                <motion.span
-                  initial={{ opacity: 1 }}
-                  whileHover={{ opacity: 0.7 }}
-                >
-                  View My Work
-                </motion.span>
-              </Link>
-            </Button>
+            <Link href="/register">
+              <Button
+                size="lg"
+                className="group px-8 py-6 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+              >
+                Start Creating Today
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link href="/blog">
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-6 text-lg font-semibold border-2 bg-background/50 backdrop-blur-sm hover:bg-muted/50 transition-all duration-300"
+              >
+                Explore Content
+              </Button>
+            </Link>
+          </motion.div>
+
+          {/* Stats preview */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap justify-center gap-8 pt-8 text-center"
+          >
+            <div className="flex flex-col items-center">
+              <div className="text-2xl md:text-3xl font-bold text-foreground">12K+</div>
+              <div className="text-sm text-muted-foreground font-medium">Active Creators</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-2xl md:text-3xl font-bold text-foreground">48K+</div>
+              <div className="text-sm text-muted-foreground font-medium">Posts Published</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-2xl md:text-3xl font-bold text-foreground">250K+</div>
+              <div className="text-sm text-muted-foreground font-medium">Connections Made</div>
+            </div>
+          </motion.div>
+
+          {/* Trust indicators */}
+          <motion.div
+            variants={itemVariants}
+            className="pt-4"
+          >
+            <p className="text-sm text-muted-foreground">
+              ✨ Free to start • 🚀 No setup required • 🔒 Your data is secure
+            </p>
           </motion.div>
         </div>
       </div>
-    </motion.div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        animate={{
+          y: [0, 10, 0],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+        <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-muted-foreground/50 rounded-full mt-2" />
+        </div>
+      </motion.div>
+    </motion.section>
   );
 };
 
-export default Landing;
+export default Hero;

@@ -1,19 +1,15 @@
-import React from 'react'
-import Hero from '@/components/landing/Hero'
-import Navigation from '@/components/header/Navbar';
-import Footer from '@/components/footer/Footer';
-import Social from '@/components/landing/Social';
+import Navigation from "@/components/header/Navbar";
+import About from "@/components/landing/About";
+import Social from "@/components/landing/Social";
+import Footer from "@/components/footer/Footer";
 
-function page() {
+export default function AboutPage() {
   return (
-<div>
-    <Navigation />
-    <Hero />
-    <Social />
-    <Footer />
-</div>
-    
-  )
+    <>
+      <Navigation />
+      <About />
+      <Social />
+      <Footer />
+    </>
+  );
 }
-
-export default page
