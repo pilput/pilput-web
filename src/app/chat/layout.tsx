@@ -21,7 +21,7 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
           <div className="lg:hidden p-4">
             <SidebarTrigger />
           </div>
-          
+
           <div className="flex-1 flex flex-col min-h-0">{children}</div>
 
           {/* Minimal Footer */}
