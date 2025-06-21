@@ -3,7 +3,6 @@ import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";
 import Stats from "@/components/landing/Stats";
 import CallToAction from "@/components/landing/CallToAction";
-import Social from "@/components/landing/Social";
 import RandomPosts from "@/components/post/RandomPosts";
 import Footer from "@/components/footer/Footer";
 
@@ -31,7 +30,6 @@ export default function Home() {
         </div>
       </section>
       <CallToAction />
-      <Social />
       <Footer />
     </>
   );
