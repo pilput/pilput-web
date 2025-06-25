@@ -9,16 +9,32 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Home, Tag, Bookmark, Heart, MessageCircle, Users, Trophy, Calendar, TrendingUp } from "lucide-react";
+import {
+  Search,
+  Home,
+  Bookmark,
+  Heart,
+  Users,
+  Trophy,
+  TrendingUp,
+  Filter,
+  Grid,
+  List,
+  Zap,
+  Star,
+  Clock,
+  Eye,
+} from "lucide-react";
 
 const postsPerPage = 10;
 
 const Blog = () => {
   const [posts, setposts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("relevant");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPosts, setTotalPosts] = useState(0);
+  const [viewMode, setViewMode] = useState("grid");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   useEffect(() => {
     async function fetchPosts() {
@@ -42,184 +58,246 @@ const Blog = () => {
     fetchPosts();
   }, [currentPage]);
 
-  const sidebarItems = [
-    { icon: Home, label: "Home", href: "/" },
-    { icon: Tag, label: "Tags", href: "/tags" },
-    { icon: Trophy, label: "DEV Challenges", href: "/challenges", badge: "$10,000 in Prizes!" },
-    { icon: Users, label: "DEV Showcase", href: "/showcase" },
-    { icon: Calendar, label: "About", href: "/about" },
-    { icon: MessageCircle, label: "Contact", href: "/contact" },
+  const categories = [
+    {
+      icon: Zap,
+      label: "Trending",
+      value: "trending",
+      color: "text-orange-500",
+    },
+    {
+      icon: Star,
+      label: "Featured",
+      value: "featured",
+      color: "text-yellow-500",
+    },
+    { icon: Clock, label: "Recent", value: "recent", color: "text-blue-500" },
+    { icon: Eye, label: "Popular", value: "popular", color: "text-purple-500" },
+    { icon: Heart, label: "Loved", value: "loved", color: "text-red-500" },
   ];
 
-  const myTags = ["#go", "#javascript", "#webdev", "#react"];
+  const quickLinks = [
+    { icon: Home, label: "Dashboard", href: "/dashboard" },
+    { icon: Users, label: "Community", href: "/community" },
+    { icon: Trophy, label: "Challenges", href: "/challenges" },
+    { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
+  ];
+
+  const trendingTags = [
+    "#ai",
+    "#nextjs",
+    "#typescript",
+    "#webdev",
+    "#react",
+    "#javascript",
+  ];
 
   return (
     <>
       <Navigation />
-      <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
-        <div className="max-w-7xl mx-auto flex gap-4 px-4 py-6">
-          {/* Left Sidebar */}
-          <div className="w-64 flex-shrink-0">
-            <div className="sticky top-6">
-              {/* Navigation Menu */}
-              <Card className="mb-4">
-                <CardContent className="p-4">
-                  <nav className="space-y-2">
-                    {sidebarItems.map((item, index) => (
-                      <Link key={index} href={item.href} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group">
-                        <item.icon className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600">{item.label}</span>
-                        {item.badge && (
-                          <Badge variant="secondary" className="ml-auto text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                            {item.badge}
-                          </Badge>
-                        )}
-                      </Link>
-                    ))}
-                  </nav>
-                </CardContent>
-              </Card>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 dark:from-blue-400/5 dark:to-purple-400/5" />
+          <div className="relative max-w-7xl mx-auto px-4 py-12">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                Discover Amazing Stories
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                Explore cutting-edge articles, tutorials, and insights from our
+                vibrant community of developers and creators.
+              </p>
+            </div>
 
-              {/* Other Section */}
-              <Card className="mb-4">
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Other</h3>
-                  <nav className="space-y-2">
-                    <Link href="/code-of-conduct" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Code of Conduct</span>
-                    </Link>
-                    <Link href="/privacy" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Privacy Policy</span>
-                    </Link>
-                    <Link href="/terms" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Terms of use</span>
-                    </Link>
-                  </nav>
-                </CardContent>
-              </Card>
-
-              {/* My Tags */}
-              <Card>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3">My Tags</h3>
-                  <div className="space-y-2">
-                    {myTags.map((tag, index) => (
-                      <Link key={index} href={`/tags/${tag.slice(1)}`} className="block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{tag}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Category Pills */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {categories.map((category) => (
+                <button
+                  key={category.value}
+                  onClick={() => setSelectedCategory(category.value)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+                    selectedCategory === category.value
+                      ? "bg-white dark:bg-gray-800 shadow-lg scale-105 border-2 border-blue-200 dark:border-blue-700"
+                      : "bg-white/70 dark:bg-gray-800/70 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md backdrop-blur-sm"
+                  }`}
+                >
+                  <category.icon className={`w-4 h-4 ${category.color}`} />
+                  <span className="font-medium text-gray-700 dark:text-gray-300">
+                    {category.label}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
+        </div>
 
-          {/* Main Content */}
-          <div className="flex-1 max-w-3xl">
-            {/* Tab Navigation */}
-            <div className="mb-6">
-              <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700">
-                {["relevant", "latest", "top"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`pb-3 px-1 text-sm font-medium capitalize transition-colors ${
-                      activeTab === tab
-                        ? "text-blue-600 border-b-2 border-blue-600"
-                        : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+        {/* Main Content Area */}
+        <div className="max-w-7xl mx-auto px-4 pb-12 mt-5">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar */}
+            <div className="lg:w-80">
+              <div className="sticky top-20 space-y-6">
+                {/* Quick Links */}
+                <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <Zap className="w-5 h-5 text-blue-500" />
+                      Quick Access
+                    </h3>
+                    <nav className="space-y-2">
+                      {quickLinks.map((item, index) => (
+                        <Link
+                          key={index}
+                          href={item.href}
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition-all duration-300 group"
+                        >
+                          <item.icon className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                          <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                            {item.label}
+                          </span>
+                        </Link>
+                      ))}
+                    </nav>
+                  </CardContent>
+                </Card>
+
+                {/* Trending Tags */}
+                <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-orange-500" />
+                      Trending Topics
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {trendingTags.map((tag, index) => (
+                        <Link
+                          key={index}
+                          href={`/tags/${tag.slice(1)}`}
+                          className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:from-blue-200 hover:to-purple-200 dark:hover:from-blue-800/40 dark:hover:to-purple-800/40 transition-all duration-300 hover:scale-105"
+                        >
+                          {tag}
+                        </Link>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Community Highlights */}
+                <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <Star className="w-5 h-5 text-yellow-500" />
+                      Community Highlights
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="p-3 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
+                        <Link
+                          href="#"
+                          className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          🚀 Building the Future with AI
+                        </Link>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          Featured discussion • 42 replies
+                        </p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+                        <Link
+                          href="#"
+                          className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          💡 Weekly Code Challenge
+                        </Link>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          Join the challenge • 128 participants
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
-            {/* Posts */}
-            <div className="space-y-4">
-              {posts.length > 0 ? (
-                posts.map((post: Post) => <Postlist key={post.id} post={post} />)
-              ) : !isLoading ? (
-                <div className="text-center py-10 text-gray-500">No posts found</div>
-              ) : null}
-              {isLoading && <Postlistpulse />}
-            </div>
-          </div>
+            {/* Main Content */}
+            <div className="flex-1">
+              {/* Controls */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {selectedCategory === "all"
+                      ? "All Posts"
+                      : categories.find((c) => c.value === selectedCategory)
+                          ?.label + " Posts"}
+                  </h2>
+                  <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                    {totalPosts} posts
+                  </Badge>
+                </div>
 
-          {/* Right Sidebar */}
-          <div className="w-80 flex-shrink-0">
-            <div className="sticky top-6 space-y-4">
-              {/* Active discussions */}
-              <Card>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Active discussions</h3>
-                  <div className="space-y-3">
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        10 best open source ChatGPT alternative that runs 100% locally
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">11 comments</p>
-                    </div>
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        zAgile: multimodal shell scripting with FO/S superpowers
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">2 comments</p>
-                    </div>
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        Vibe Coding is More Fun Than Actual Coding And That&apos;s Okay, Bro
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">21 comments</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* What's happening this week */}
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp className="w-4 h-4 text-yellow-500" />
-                    <h3 className="font-semibold text-gray-900 dark:text-white">What&apos;s happening this week</h3>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Trophy className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">Featured Launch 🚀</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Just Announced 🎉</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 shadow-md">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`p-2 rounded-md transition-all duration-200 ${
+                        viewMode === "grid"
+                          ? "bg-blue-500 text-white shadow-md"
+                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500"
+                      }`}
+                    >
+                      <Grid className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`p-2 rounded-md transition-all duration-200 ${
+                        viewMode === "list"
+                          ? "bg-blue-500 text-white shadow-md"
+                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500"
+                      }`}
+                    >
+                      <List className="w-4 h-4" />
+                    </button>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        Next-Gen PWAs at and ML Drive Personalized & Predictive Web Experiences
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">1 comment</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <Filter className="w-4 h-4" />
+                    Filter
+                  </Button>
+                </div>
+              </div>
+
+              {/* Posts Grid/List */}
+              <div
+                className={
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                    : "space-y-6"
+                }
+              >
+                {posts.length > 0 ? (
+                  posts.map((post: Post) => (
+                    <Postlist key={post.id} post={post} />
+                  ))
+                ) : !isLoading ? (
+                  <div className="col-span-full text-center py-16">
+                    <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center">
+                      <Search className="w-12 h-12 text-gray-400" />
                     </div>
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        AI Powered Content Buddy - Supercharge Your Writing with Storybook & GPT
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">4 comments</p>
-                    </div>
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        Five Programming Jokes You Didn&apos;t Know You Needed Today 😂🔥
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">1 comment</p>
-                    </div>
-                    <div className="text-sm">
-                      <Link href="#" className="text-gray-900 dark:text-white hover:text-blue-600 font-medium">
-                        I Built a Simple Budgeting App Called Budget Buddy
-                      </Link>
-                      <p className="text-gray-500 text-xs mt-1">4 comments</p>
-                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      No posts found
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Try adjusting your filters or check back later for new
+                      content.
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
+                ) : null}
+                {isLoading && <Postlistpulse />}
+              </div>
             </div>
           </div>
         </div>
