@@ -38,9 +38,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   availableModels: [
     { id: 'meta-llama/llama-4-maverick:free', name: 'Llama 4 Maverick' },
     { id: 'meta-llama/llama-4-scout:free', name: 'Llama 4 Scout' },
-    { id: 'openrouter/optimus-alpha:free', name: 'Optimus Alpha' },
-    { id: 'openrouter/quasar-alpha:free', name: 'Quasar Alpha' },
-    { id: 'deepseek/deepseek-v3-base:free', name: 'DeepSeek V3 Base' },
+    { id: 'deepseek/deepseek-v3-base:free', name: 'DeepSeek V3' },
   ],
   setMessages: (messages) => set({ messages }),
   setIsLoading: (isLoading) => set({ isLoading }),
