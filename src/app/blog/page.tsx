@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
@@ -25,14 +24,15 @@ import {
   Clock,
   Eye,
 } from "lucide-react";
+import { Paginate } from "@/components/common/Paginate";
+import { postsStore } from "@/stores/postsStorage";
 
 const postsPerPage = 10;
 
 const Blog = () => {
-  const [posts, setposts] = useState<Post[]>([]);
+  const postStore = postsStore();
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPosts, setTotalPosts] = useState(0);
   const [viewMode, setViewMode] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
@@ -40,23 +40,14 @@ const Blog = () => {
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstence.get("/v1/posts", {
-          params: { limit: postsPerPage, offset: currentPage * postsPerPage },
-        });
-
-        setposts(data.data);
-        if (data.metadata && data.metadata.totalItems) {
-          setTotalPosts(data.metadata.totalItems);
-        } else if (data.total) {
-          setTotalPosts(data.total);
-        }
+        await postStore.fetchPublic(postsPerPage, currentPage * postsPerPage);
       } catch (error) {
         toast.error("Error loading posts");
       }
       setIsLoading(false);
     }
     fetchPosts();
-  }, [currentPage]);
+  }, [currentPage, postStore]);
 
   const categories = [
     {
@@ -231,7 +222,7 @@ const Blog = () => {
                           ?.label + " Posts"}
                   </h2>
                   <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                    {totalPosts} posts
+                    {postStore.total} posts
                   </Badge>
                 </div>
 
@@ -278,8 +269,8 @@ const Blog = () => {
                     : "space-y-6"
                 }
               >
-                {posts.length > 0 ? (
-                  posts.map((post: Post) => (
+                {postStore.posts.length > 0 ? (
+                  postStore.posts.map((post) => (
                     <Postlist key={post.id} post={post} />
                   ))
                 ) : !isLoading ? (
@@ -298,6 +289,29 @@ const Blog = () => {
                 ) : null}
                 {isLoading && <Postlistpulse />}
               </div>
+
+              {/* Pagination */}
+              {postStore.posts.length > 0 && postStore.total > postsPerPage && (
+                <div className="mt-8 flex justify-center">
+                  <Paginate
+                    prev={() => setCurrentPage(Math.max(0, currentPage - 1))}
+                    next={() =>
+                      setCurrentPage(
+                        Math.min(
+                          Math.ceil(postStore.total / postsPerPage) - 1,
+                          currentPage + 1
+                        )
+                      )
+                    }
+                    goToPage={(page) => setCurrentPage(page)}
+                    limit={postsPerPage}
+                    Offset={currentPage * postsPerPage}
+                    total={postStore.total}
+                    length={postStore.posts.length}
+                    currentPage={currentPage}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
