@@ -33,7 +33,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   isLoading: false,
   recentChats: [],
   // Default to Llama 4 Maverick free model
-  selectedModel: 'meta-llama/llama-4-maverick:free',
+  selectedModel: 'deepseek/deepseek-v3-base:free',
   // List of free models available on OpenRouter
   availableModels: [
     { id: 'meta-llama/llama-4-maverick:free', name: 'Llama 4 Maverick' },
