@@ -1,19 +1,25 @@
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
-import { Heart, MessageCircle, Bookmark, MoreHorizontal, Clock, Eye } from "lucide-react";
+import {
+  Heart,
+  MessageCircle,
+  Bookmark,
+  MoreHorizontal,
+  Clock,
+  Eye,
+} from "lucide-react";
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
-  const tags = ["#javascript", "#webdev", "#beginners", "#programming"]; // Mock tags
+  const tags = post.tags || []; // Use real tags from post data
   const readTime = Math.ceil(plaintext.length / 1000) || 1; // Estimate read time
-  
+
   return (
     <article className="group relative bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60 rounded-2xl overflow-hidden hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:-translate-y-1">
       <div className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden">
-        
         {/* Cover Image with Overlay */}
         {post.photo_url && (
           <div className="relative aspect-[16/9] w-full overflow-hidden">
@@ -26,7 +32,7 @@ const Postlist = ({ post }: { post: Post }) => {
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             {/* Floating Action Button */}
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <button className="p-2 bg-white/95 dark:bg-gray-800/95 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
@@ -35,7 +41,7 @@ const Postlist = ({ post }: { post: Post }) => {
             </div>
           </div>
         )}
-        
+
         <div className="p-6">
           {/* Author Info with Enhanced Design */}
           <div className="flex items-center justify-between mb-4">
@@ -54,7 +60,10 @@ const Postlist = ({ post }: { post: Post }) => {
                 </Link>
               )}
               <div className="flex flex-col">
-                <Link href={`/${post.creator.username}`} className="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <Link
+                  href={`/${post.creator.username}`}
+                  className="font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                >
                   {post.creator?.first_name} {post.creator?.last_name}
                 </Link>
                 <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
@@ -65,12 +74,13 @@ const Postlist = ({ post }: { post: Post }) => {
                 </div>
               </div>
             </div>
-            
-
           </div>
 
           {/* Title with Enhanced Typography */}
-          <Link href={`/${post.creator.username}/${post.slug}`} className="group/title">
+          <Link
+            href={`/${post.creator.username}/${post.slug}`}
+            className="group/title"
+          >
             <h2 className="font-bold text-xl md:text-2xl text-gray-900 dark:text-white group-hover/title:text-transparent group-hover/title:bg-gradient-to-r group-hover/title:from-blue-600 group-hover/title:to-purple-600 group-hover/title:bg-clip-text transition-all duration-300 mb-3 leading-tight line-clamp-2">
               {post.title}
             </h2>
@@ -83,12 +93,12 @@ const Postlist = ({ post }: { post: Post }) => {
 
           {/* Enhanced Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
-            {tags.slice(0, 3).map((tag, index) => (
-              <Badge 
-                key={index} 
+            {tags.slice(0, 3).map((tag) => (
+              <Badge
+                key={tag.id}
                 className="px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-800/30 dark:hover:to-indigo-800/30 transition-all duration-300 hover:scale-105 cursor-pointer"
               >
-                {tag}
+                #{tag.name}
               </Badge>
             ))}
             {tags.length > 3 && (
@@ -108,18 +118,18 @@ const Postlist = ({ post }: { post: Post }) => {
                 </div>
                 <span className="text-sm font-medium">24</span>
               </button>
-              
+
               <button className="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-all duration-300 group/comment hover:scale-110">
                 <MessageCircle className="w-5 h-5" />
                 <span className="text-sm font-medium">5</span>
               </button>
-              
+
               <button className="flex items-center gap-2 text-gray-500 hover:text-green-500 transition-all duration-300 group/view hover:scale-110">
                 <Eye className="w-5 h-5" />
                 <span className="text-sm font-medium">1.2k</span>
               </button>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <button className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full transition-all duration-300 hover:scale-110">
                 <MoreHorizontal className="w-4 h-4" />
