@@ -41,7 +41,7 @@ const Footer = () => {
               Contact
             </Link>
             <Link
-              href="/legal/privacy"
+              href="/privacy"
               className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             >
               Privacy
@@ -51,7 +51,7 @@ const Footer = () => {
           {/* Social links */}
           <div className="flex items-center gap-3">
             <a
-              href="https://github.com/cecep31"
+              href="https://github.com/pilput"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
@@ -69,7 +69,7 @@ const Footer = () => {
               <Twitter className="h-5 w-5" />
             </a>
             <a
-              href="https://linkedin.com/in/pilput"
+              href="https://linkedin.com/in/cecep31"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
