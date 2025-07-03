@@ -8,10 +8,8 @@ import {
   MessageSquare, 
   Users, 
   Zap, 
-  Shield, 
   Sparkles,
-  Code,
-  Globe
+  Code
 } from "lucide-react";
 
 const Features = () => {
@@ -23,8 +21,8 @@ const Features = () => {
       icon: BookOpen,
       title: "Rich Content Creation",
       description: "Create and share engaging blog posts with our powerful editor featuring markdown support and real-time preview.",
-      color: "from-blue-500 via-blue-600 to-cyan-500",
-      shadowColor: "shadow-blue-500/25",
+      color: "from-blue-100 via-blue-200 to-cyan-100",
+      shadowColor: "shadow-blue-200/20",
       badge: "Popular",
       delay: 0
     },
@@ -32,8 +30,8 @@ const Features = () => {
       icon: MessageSquare,
       title: "Interactive Chat",
       description: "Connect with the community through our real-time chat system. Share ideas and collaborate instantly.",
-      color: "from-purple-500 via-purple-600 to-pink-500",
-      shadowColor: "shadow-purple-500/25",
+      color: "from-purple-100 via-purple-200 to-pink-100",
+      shadowColor: "shadow-purple-200/20",
       badge: "New",
       delay: 0.1
     },
@@ -41,8 +39,8 @@ const Features = () => {
       icon: Users,
       title: "Community Driven",
       description: "Join a vibrant community of writers, developers, and creators. Build meaningful connections.",
-      color: "from-green-500 via-green-600 to-emerald-500",
-      shadowColor: "shadow-green-500/25",
+      color: "from-green-100 via-green-200 to-emerald-100",
+      shadowColor: "shadow-green-200/20",
       badge: "Growing",
       delay: 0.2
     },
@@ -50,28 +48,20 @@ const Features = () => {
       icon: Zap,
       title: "Lightning Fast",
       description: "Built with Next.js and optimized for performance. Experience blazing fast load times and smooth interactions.",
-      color: "from-yellow-500 via-yellow-600 to-orange-500",
-      shadowColor: "shadow-yellow-500/25",
+      color: "from-yellow-100 via-yellow-200 to-orange-100",
+      shadowColor: "shadow-yellow-200/20",
       badge: "Fast",
       delay: 0.3
     },
-    {
-      icon: Shield,
-      title: "Secure & Private",
-      description: "Your data is protected with enterprise-grade security. We prioritize your privacy and data protection.",
-      color: "from-red-500 via-red-600 to-rose-500",
-      shadowColor: "shadow-red-500/25",
-      badge: "Secure",
-      delay: 0.4
-    },
+
     {
       icon: Code,
       title: "Developer Friendly",
       description: "Built by developers, for developers. Syntax highlighting, code blocks, and technical writing support.",
-      color: "from-indigo-500 via-indigo-600 to-blue-500",
-      shadowColor: "shadow-indigo-500/25",
+      color: "from-indigo-100 via-indigo-200 to-blue-100",
+      shadowColor: "shadow-indigo-200/20",
       badge: "Dev",
-      delay: 0.5
+      delay: 0.4
     }
   ];
 
@@ -259,7 +249,8 @@ const Features = () => {
           </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Optimized grid layout for 5 features */}
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
@@ -338,12 +329,12 @@ const Features = () => {
                              whileHover="hover"
                              className={`relative p-4 rounded-2xl bg-gradient-to-r ${feature.color} transition-all duration-300 group-hover:scale-105`}
                            >
-                             <IconComponent className="h-7 w-7 text-white" />
+                             <IconComponent className="h-7 w-7 text-gray-700" />
                              <div className="absolute inset-0 bg-white/10 rounded-2xl" />
                            </motion.div>
                          <Badge 
                              variant="outline" 
-                             className={`text-xs px-4 py-2 rounded-full bg-gradient-to-r ${feature.color} text-white border-0 font-semibold shadow-md`}
+                             className={`text-xs px-4 py-2 rounded-full bg-gradient-to-r ${feature.color} text-gray-700 border-0 font-semibold shadow-md`}
                            >
                              {feature.badge}
                            </Badge>

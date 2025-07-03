@@ -17,7 +17,7 @@ const Stats = () => {
       value: 12500,
       suffix: "+",
       description: "Growing community",
-      color: "from-blue-500 to-cyan-500"
+      color: "from-blue-100 to-cyan-100"
     },
     {
       icon: FileText,
@@ -25,7 +25,7 @@ const Stats = () => {
       value: 48000,
       suffix: "+",
       description: "Knowledge shared",
-      color: "from-green-500 to-emerald-500"
+      color: "from-green-100 to-emerald-100"
     },
     {
       icon: MessageCircle,
@@ -33,7 +33,7 @@ const Stats = () => {
       value: 250000,
       suffix: "+",
       description: "Conversations started",
-      color: "from-purple-500 to-pink-500"
+      color: "from-purple-100 to-pink-100"
     },
     {
       icon: Globe,
@@ -41,7 +41,7 @@ const Stats = () => {
       value: 85,
       suffix: "+",
       description: "Global reach",
-      color: "from-orange-500 to-red-500"
+      color: "from-orange-100 to-red-100"
     },
     {
       icon: Award,
@@ -49,7 +49,7 @@ const Stats = () => {
       value: 98,
       suffix: "%",
       description: "User satisfaction",
-      color: "from-yellow-500 to-orange-500"
+      color: "from-yellow-100 to-orange-100"
     },
     {
       icon: TrendingUp,
@@ -57,7 +57,7 @@ const Stats = () => {
       value: 150,
       suffix: "%",
       description: "Year over year",
-      color: "from-indigo-500 to-purple-500"
+      color: "from-indigo-100 to-purple-100"
     }
   ];
 
@@ -174,7 +174,7 @@ const Stats = () => {
                   
                   <CardContent className="p-8 text-center relative z-10">
                     <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r ${stat.color} mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      <IconComponent className="h-8 w-8 text-white" />
+                      <IconComponent className="h-8 w-8 text-gray-700" />
                     </div>
                     
                     <div className="mb-4">

@@ -28,6 +28,7 @@
     "@tiptap/pm": "^2.24.0",
     "@tiptap/react": "^2.24.0",
     "@tiptap/starter-kit": "^2.24.0",
+    "animejs": "^4.0.2",
     "axios": "^1.10.0",
     "buffer": "^6.0.3",
     "bufferutil": "^4.0.9",
@@ -56,7 +57,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.3.4",
     "utf-8-validate": "^6.0.5",
-    "zod": "^3.25.70",
+    "zod": "^3.25.71",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
