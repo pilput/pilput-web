@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
-import { Heart, MessageCircle, Bookmark, MoreHorizontal, Clock, TrendingUp, Eye } from "lucide-react";
+import { Heart, MessageCircle, Bookmark, MoreHorizontal, Clock, Eye } from "lucide-react";
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
@@ -66,11 +66,7 @@ const Postlist = ({ post }: { post: Post }) => {
               </div>
             </div>
             
-            {/* Trending Indicator */}
-            <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/30 dark:to-red-900/30 rounded-full">
-              <TrendingUp className="w-3 h-3 text-orange-500" />
-              <span className="text-xs font-medium text-orange-600 dark:text-orange-400">Trending</span>
-            </div>
+
           </div>
 
           {/* Title with Enhanced Typography */}
