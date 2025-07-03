@@ -11,10 +11,8 @@ const Postlist = ({ post }: { post: Post }) => {
   const readTime = Math.ceil(plaintext.length / 1000) || 1; // Estimate read time
   
   return (
-    <article className="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-0 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-1">
-      {/* Gradient Border Effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="relative bg-white dark:bg-gray-800 m-0.5 rounded-2xl overflow-hidden">
+    <article className="group relative bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60 rounded-2xl overflow-hidden hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:-translate-y-1">
+      <div className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden">
         
         {/* Cover Image with Overlay */}
         {post.photo_url && (
@@ -31,7 +29,7 @@ const Postlist = ({ post }: { post: Post }) => {
             
             {/* Floating Action Button */}
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-              <button className="p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-colors">
+              <button className="p-2 bg-white/95 dark:bg-gray-800/95 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
                 <Bookmark className="w-4 h-4 text-gray-600 dark:text-gray-400" />
               </button>
             </div>

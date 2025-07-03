@@ -1,166 +1,97 @@
 import Link from "next/link";
 import React from "react";
 import { Github, Twitter, Linkedin, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 py-6 mt-10 border-t border-slate-100 dark:border-slate-800">
-      <div className="max-w-5xl mx-auto px-2">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="space-y-1">
-            <h3 className="font-semibold text-base text-slate-700 dark:text-slate-200">About</h3>
-            <ul className="space-y-1">
-              <li>
-                <Link href="/about" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  About Me
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
+    <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        {/* Main content */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+          {/* Brand and description */}
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              pilput.me
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">
+              Building digital experiences with modern web technologies.
+            </p>
           </div>
 
-          <div className="space-y-1">
-            <h3 className="font-semibold text-base text-slate-700 dark:text-slate-200">Get Involved</h3>
-            <ul className="space-y-1">
-              <li>
-                <a
-                  href="https://github.com/cecep31"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                >
-                  Contribute
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/cecep31/pilput.dev/issues"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                >
-                  Submit Bugs
-                </a>
-              </li>
-              <li>
-                <Link href="/support" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Support Us
-                </Link>
-              </li>
-            </ul>
+          {/* Quick links */}
+          <div className="flex flex-wrap gap-6 text-sm">
+            <Link
+              href="/about"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              About
+            </Link>
+            <Link
+              href="/blog"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              Blog
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              Contact
+            </Link>
+            <Link
+              href="/legal/privacy"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              Privacy
+            </Link>
           </div>
 
-          <div className="space-y-1">
-            <h3 className="font-semibold text-base text-slate-700 dark:text-slate-200">Documentation</h3>
-            <ul className="space-y-1">
-              <li>
-                <Link href="/docs/guidelines" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Guidelines
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://wiki.pilput.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                >
-                  Wiki
-                </a>
-              </li>
-              <li>
-                <Link href="/docs/api" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  API Reference
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-1">
-            <h3 className="font-semibold text-base text-slate-700 dark:text-slate-200">Legal</h3>
-            <ul className="space-y-1">
-              <li>
-                <Link href="/legal/license" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Licensing
-                </Link>
-              </li>
-              <li>
-                <Link href="/legal/privacy" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/legal/terms" className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
+          {/* Social links */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/cecep31"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              aria-label="GitHub"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+            <a
+              href="https://twitter.com/pilput_dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              aria-label="Twitter"
+            >
+              <Twitter className="h-5 w-5" />
+            </a>
+            <a
+              href="https://linkedin.com/in/pilput"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+            <a
+              href="mailto:cecepjanuardi@proton.me"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              aria-label="Email"
+            >
+              <Mail className="h-5 w-5" />
+            </a>
           </div>
         </div>
 
-        <Separator className="my-4 bg-slate-100 dark:bg-slate-800" />
-
-        <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-          <p className="text-xs text-slate-400 dark:text-slate-500">
+        {/* Bottom section */}
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
             © {currentYear} pilput.me. All rights reserved.
           </p>
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" asChild className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-              <a
-                href="https://github.com/cecep31"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-              >
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-              <a
-                href="https://twitter.com/pilput_dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-              >
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-              <a
-                href="https://linkedin.com/in/pilput"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-              >
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild className="rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-              <a
-                href="mailto:cecepjanuardi@proton.me"
-                className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-              >
-                <Mail className="h-5 w-5" />
-                <span className="sr-only">Email</span>
-              </a>
-            </Button>
-          </div>
         </div>
       </div>
     </footer>

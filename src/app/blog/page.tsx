@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { postsStore } from "@/stores/postsStorage";
+import { axiosInstence } from "@/utils/fetch";
 
 const postsPerPage = 10;
 
@@ -35,6 +36,7 @@ const Blog = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [viewMode, setViewMode] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [trendingTags, setTrendingTags] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchPosts() {
@@ -47,7 +49,28 @@ const Blog = () => {
       setIsLoading(false);
     }
     fetchPosts();
-  }, [currentPage, postStore]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    async function fetchTags() {
+      try {
+        const response = await axiosInstence.get("/v1/tags");
+        setTrendingTags(response.data.data.map((tag: any) => tag.name));
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+        // Fallback to default tags if API fails
+        setTrendingTags([
+          "ai",
+          "nextjs",
+          "typescript",
+          "webdev",
+          "react",
+          "javascript",
+        ]);
+      }
+    }
+    fetchTags();
+  }, []);
 
   const categories = [
     {
@@ -72,15 +95,6 @@ const Blog = () => {
     { icon: Users, label: "Community", href: "/community" },
     { icon: Trophy, label: "Challenges", href: "/challenges" },
     { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
-  ];
-
-  const trendingTags = [
-    "#ai",
-    "#nextjs",
-    "#typescript",
-    "#webdev",
-    "#react",
-    "#javascript",
   ];
 
   return (
@@ -109,8 +123,8 @@ const Blog = () => {
                   onClick={() => setSelectedCategory(category.value)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
                     selectedCategory === category.value
-                      ? "bg-white dark:bg-gray-800 shadow-lg scale-105 border-2 border-blue-200 dark:border-blue-700"
-                      : "bg-white/70 dark:bg-gray-800/70 hover:bg-white dark:hover:bg-gray-800 hover:shadow-md backdrop-blur-sm"
+                      ? "bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 scale-105"
+                      : "bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 border border-gray-200/50 dark:border-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600"
                   }`}
                 >
                   <category.icon className={`w-4 h-4 ${category.color}`} />
@@ -130,7 +144,7 @@ const Blog = () => {
             <div className="lg:w-80">
               <div className="sticky top-20 space-y-6">
                 {/* Quick Links */}
-                <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+                <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <Zap className="w-5 h-5 text-blue-500" />
@@ -154,28 +168,35 @@ const Blog = () => {
                 </Card>
 
                 {/* Trending Tags */}
-                <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+                <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-orange-500" />
                       Trending Topics
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {trendingTags.map((tag, index) => (
-                        <Link
-                          key={index}
-                          href={`/tags/${tag.slice(1)}`}
-                          className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:from-blue-200 hover:to-purple-200 dark:hover:from-blue-800/40 dark:hover:to-purple-800/40 transition-all duration-300 hover:scale-105"
-                        >
-                          {tag}
-                        </Link>
-                      ))}
+                      {Array.isArray(trendingTags) &&
+                      trendingTags.length > 0 ? (
+                        trendingTags.map((tag, index) => (
+                          <Link
+                            key={index}
+                            href={`/tags/${tag.slice(1)}`}
+                            className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:from-blue-200 hover:to-purple-200 dark:hover:from-blue-800/40 dark:hover:to-purple-800/40 transition-all duration-300 hover:scale-105"
+                          >
+                            #{tag}
+                          </Link>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          No trending tags available
+                        </p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Community Highlights */}
-                <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+                <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <Star className="w-5 h-5 text-yellow-500" />
@@ -227,13 +248,13 @@ const Blog = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 shadow-md">
+                  <div className="flex items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                     <button
                       onClick={() => setViewMode("grid")}
                       className={`p-2 rounded-md transition-all duration-200 ${
                         viewMode === "grid"
-                          ? "bg-blue-500 text-white shadow-md"
-                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500"
+                          ? "bg-blue-500 text-white"
+                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500 hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <Grid className="w-4 h-4" />
@@ -242,8 +263,8 @@ const Blog = () => {
                       onClick={() => setViewMode("list")}
                       className={`p-2 rounded-md transition-all duration-200 ${
                         viewMode === "list"
-                          ? "bg-blue-500 text-white shadow-md"
-                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500"
+                          ? "bg-blue-500 text-white"
+                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500 hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <List className="w-4 h-4" />
