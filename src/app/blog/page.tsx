@@ -86,7 +86,7 @@ const Blog = () => {
       color: "text-yellow-500",
     },
     { icon: Clock, label: "Recent", value: "recent", color: "text-blue-500" },
-    { icon: Eye, label: "Popular", value: "popular", color: "text-purple-500" },
+    { icon: Eye, label: "Popular", value: "popular", color: "text-zinc-600" },
     { icon: Heart, label: "Loved", value: "loved", color: "text-red-500" },
   ];
 
@@ -100,13 +100,13 @@ const Blog = () => {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
         {/* Hero Section */}
         <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 dark:from-blue-400/5 dark:to-purple-400/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-600/10 to-gray-600/10 dark:from-zinc-400/5 dark:to-gray-400/5" />
           <div className="relative max-w-7xl mx-auto px-4 py-12">
             <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+              <h1 className="text-4xl md:text-5xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">
                 Discover Amazing Stories
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -123,7 +123,7 @@ const Blog = () => {
                   onClick={() => setSelectedCategory(category.value)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
                     selectedCategory === category.value
-                      ? "bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 scale-105"
+                      ? "bg-white dark:bg-gray-800 border border-zinc-300 dark:border-zinc-600 scale-105"
                       : "bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 border border-gray-200/50 dark:border-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600"
                   }`}
                 >
@@ -155,10 +155,10 @@ const Blog = () => {
                         <Link
                           key={index}
                           href={item.href}
-                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition-all duration-300 group"
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all duration-300 group"
                         >
-                          <item.icon className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
-                          <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                          <item.icon className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-zinc-700 dark:group-hover:text-zinc-300" />
+                          <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-zinc-700 dark:group-hover:text-zinc-300">
                             {item.label}
                           </span>
                         </Link>
@@ -181,7 +181,7 @@ const Blog = () => {
                           <Link
                             key={index}
                             href={`/tags/${tag.slice(1)}`}
-                            className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:from-blue-200 hover:to-purple-200 dark:hover:from-blue-800/40 dark:hover:to-purple-800/40 transition-all duration-300 hover:scale-105"
+                            className="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800/50 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/60 transition-all duration-300 hover:scale-105"
                           >
                             #{tag}
                           </Link>
@@ -203,10 +203,10 @@ const Blog = () => {
                       Community Highlights
                     </h3>
                     <div className="space-y-4">
-                      <div className="p-3 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
+                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30">
                         <Link
                           href="#"
-                          className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                          className="font-medium text-gray-900 dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                         >
                           🚀 Building the Future with AI
                         </Link>
@@ -214,10 +214,10 @@ const Blog = () => {
                           Featured discussion • 42 replies
                         </p>
                       </div>
-                      <div className="p-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30">
                         <Link
                           href="#"
-                          className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                          className="font-medium text-gray-900 dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                         >
                           💡 Weekly Code Challenge
                         </Link>
@@ -242,7 +242,7 @@ const Blog = () => {
                       : categories.find((c) => c.value === selectedCategory)
                           ?.label + " Posts"}
                   </h2>
-                  <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                  <Badge className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
                     {postStore.total} posts
                   </Badge>
                 </div>
@@ -253,8 +253,8 @@ const Blog = () => {
                       onClick={() => setViewMode("grid")}
                       className={`p-2 rounded-md transition-all duration-200 ${
                         viewMode === "grid"
-                          ? "bg-blue-500 text-white"
-                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                          ? "bg-zinc-600 text-white"
+                          : "text-gray-600 dark:text-gray-400 hover:text-zinc-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <Grid className="w-4 h-4" />
@@ -263,8 +263,8 @@ const Blog = () => {
                       onClick={() => setViewMode("list")}
                       className={`p-2 rounded-md transition-all duration-200 ${
                         viewMode === "list"
-                          ? "bg-blue-500 text-white"
-                          : "text-gray-600 dark:text-gray-400 hover:text-blue-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                          ? "bg-zinc-600 text-white"
+                          : "text-gray-600 dark:text-gray-400 hover:text-zinc-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                       }`}
                     >
                       <List className="w-4 h-4" />
@@ -296,7 +296,7 @@ const Blog = () => {
                   ))
                 ) : !isLoading ? (
                   <div className="col-span-full text-center py-16">
-                    <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center">
+                    <div className="w-24 h-24 mx-auto mb-4 bg-zinc-100 dark:bg-zinc-800/30 rounded-full flex items-center justify-center">
                       <Search className="w-12 h-12 text-gray-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">

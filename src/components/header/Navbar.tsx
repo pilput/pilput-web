@@ -27,14 +27,14 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <Link
             href="/"
-            className="text-xl font-bold bg-gradient-to-r from-purple-500/80 to-blue-400/80 bg-clip-text text-transparent hover:from-purple-400 hover:to-blue-300 transition-colors"
+            className="text-xl font-bold text-zinc-800 dark:text-zinc-100 hover:text-zinc-900 dark:hover:text-white transition-colors"
           >
             PILPUT
           </Link>
 
           <button
             onClick={toggleMenu}
-            className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-300 transition-colors"
+            className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-300 dark:focus:ring-zinc-600 transition-colors"
           >
             <span className="sr-only">Open main menu</span>
             {showmenu ? (
@@ -86,9 +86,9 @@ const Navbar = () => {
                 href={item.href}
                 className={cn(
                   "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
-                  "hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 hover:text-purple-500 dark:hover:text-purple-300",
+                  "hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 hover:text-zinc-700 dark:hover:text-zinc-200",
                   pathname === item.href
-                    ? "text-purple-500 dark:text-purple-300 bg-purple-50/80 dark:bg-purple-900/40 border border-purple-200/50 dark:border-purple-700/50"
+                    ? "text-zinc-700 dark:text-zinc-200 bg-zinc-100/80 dark:bg-zinc-800/60 border border-zinc-300/50 dark:border-zinc-600/50"
                     : "text-zinc-600 dark:text-zinc-300"
                 )}
               >
