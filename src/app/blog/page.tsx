@@ -10,28 +10,23 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Search,
-  Home,
-  Bookmark,
   Heart,
-  Users,
-  Trophy,
   TrendingUp,
   Filter,
   Grid,
   List,
   Zap,
-  Star,
   Clock,
   Eye,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
-import { postsStore } from "@/stores/postsStorage";
 import { axiosInstence } from "@/utils/fetch";
 
 const postsPerPage = 10;
 
 const Blog = () => {
-  const postStore = postsStore();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [viewMode, setViewMode] = useState("grid");
@@ -42,7 +37,20 @@ const Blog = () => {
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        await postStore.fetchPublic(postsPerPage, currentPage * postsPerPage);
+        const { data } = await axiosInstence.get("/v1/posts", {
+          params: { limit: postsPerPage, offset: currentPage * postsPerPage },
+        });
+        const response = data;
+        if (response.data) {
+          setPosts(response.data);
+          if (response.metadata && response.metadata.totalItems) {
+            setTotal(response.metadata.totalItems);
+          } else if (response.total) {
+            setTotal(response.total);
+          }
+        } else {
+          toast.error("Error loading posts");
+        }
       } catch (error) {
         toast.error("Error loading posts");
       }
@@ -79,22 +87,9 @@ const Blog = () => {
       value: "trending",
       color: "text-orange-500",
     },
-    {
-      icon: Star,
-      label: "Featured",
-      value: "featured",
-      color: "text-yellow-500",
-    },
     { icon: Clock, label: "Recent", value: "recent", color: "text-blue-500" },
     { icon: Eye, label: "Popular", value: "popular", color: "text-zinc-600" },
     { icon: Heart, label: "Loved", value: "loved", color: "text-red-500" },
-  ];
-
-  const quickLinks = [
-    { icon: Home, label: "Dashboard", href: "/dashboard" },
-    { icon: Users, label: "Community", href: "/community" },
-    { icon: Trophy, label: "Challenges", href: "/challenges" },
-    { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
   ];
 
   return (
@@ -143,27 +138,39 @@ const Blog = () => {
             {/* Sidebar */}
             <div className="lg:w-80">
               <div className="sticky top-20 space-y-6">
-                {/* Quick Links */}
+                {/* Popular Posts */}
                 <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-blue-500" />
-                      Quick Access
+                      <TrendingUp className="w-5 h-5 text-orange-500" />
+                      Popular This Week
                     </h3>
-                    <nav className="space-y-2">
-                      {quickLinks.map((item, index) => (
-                        <Link
-                          key={index}
-                          href={item.href}
-                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all duration-300 group"
-                        >
-                          <item.icon className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-zinc-700 dark:group-hover:text-zinc-300" />
-                          <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-zinc-700 dark:group-hover:text-zinc-300">
-                            {item.label}
-                          </span>
-                        </Link>
-                      ))}
-                    </nav>
+                    <div className="space-y-4">
+                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">
+                          Getting Started with Next.js 15
+                        </h4>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          2.5k views • 3 days ago
+                        </p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">
+                          TypeScript Best Practices
+                        </h4>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          1.8k views • 5 days ago
+                        </p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">
+                          Building Modern UIs
+                        </h4>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          1.2k views • 1 week ago
+                        </p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -171,7 +178,7 @@ const Blog = () => {
                 <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-orange-500" />
+                      <Zap className="w-5 h-5 text-blue-500" />
                       Trending Topics
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -194,40 +201,6 @@ const Blog = () => {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Community Highlights */}
-                <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <Star className="w-5 h-5 text-yellow-500" />
-                      Community Highlights
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30">
-                        <Link
-                          href="#"
-                          className="font-medium text-gray-900 dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-                        >
-                          🚀 Building the Future with AI
-                        </Link>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          Featured discussion • 42 replies
-                        </p>
-                      </div>
-                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30">
-                        <Link
-                          href="#"
-                          className="font-medium text-gray-900 dark:text-white hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-                        >
-                          💡 Weekly Code Challenge
-                        </Link>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          Join the challenge • 128 participants
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
             </div>
 
@@ -243,7 +216,7 @@ const Blog = () => {
                           ?.label + " Posts"}
                   </h2>
                   <Badge className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                    {postStore.total} posts
+                    {total} posts
                   </Badge>
                 </div>
 
@@ -290,10 +263,8 @@ const Blog = () => {
                     : "space-y-6"
                 }
               >
-                {postStore.posts.length > 0 ? (
-                  postStore.posts.map((post) => (
-                    <Postlist key={post.id} post={post} />
-                  ))
+                {posts.length > 0 ? (
+                  posts.map((post) => <Postlist key={post.id} post={post} />)
                 ) : !isLoading ? (
                   <div className="col-span-full text-center py-16">
                     <div className="w-24 h-24 mx-auto mb-4 bg-zinc-100 dark:bg-zinc-800/30 rounded-full flex items-center justify-center">
@@ -312,14 +283,14 @@ const Blog = () => {
               </div>
 
               {/* Pagination */}
-              {postStore.posts.length > 0 && postStore.total > postsPerPage && (
+              {posts.length > 0 && total > postsPerPage && (
                 <div className="mt-8 flex justify-center">
                   <Paginate
                     prev={() => setCurrentPage(Math.max(0, currentPage - 1))}
                     next={() =>
                       setCurrentPage(
                         Math.min(
-                          Math.ceil(postStore.total / postsPerPage) - 1,
+                          Math.ceil(total / postsPerPage) - 1,
                           currentPage + 1
                         )
                       )
@@ -327,8 +298,8 @@ const Blog = () => {
                     goToPage={(page) => setCurrentPage(page)}
                     limit={postsPerPage}
                     Offset={currentPage * postsPerPage}
-                    total={postStore.total}
-                    length={postStore.posts.length}
+                    total={total}
+                    length={posts.length}
                     currentPage={currentPage}
                   />
                 </div>
