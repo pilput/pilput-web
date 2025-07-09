@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -59,15 +59,21 @@ export default function Signup() {
 
   function checkUsername(username: string) {
     if (username.length >= 5) {
-      axiosInstence2.get("/v1/auth/username/" + username).then((res) => {
-        if (res.data.exist) {
-          toast.error("Username already exists. Please try again.", {
-            id: "username",
-          });
-        } else {
-          toast.success("username available", { id: "username" });
-        }
-      });
+      axiosInstence
+        .post("/v1/auth/check-username", {
+          username: username,
+        })
+        .then((res) => {
+          if (res.data.success && res.data.data.available) {
+            toast.success(res.data.message || "username available", {
+              id: "username",
+            });
+          } else {
+            toast.error("Username already exists. Please try again.", {
+              id: "username",
+            });
+          }
+        });
     }
   }
 
