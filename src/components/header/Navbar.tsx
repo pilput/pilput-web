@@ -85,11 +85,11 @@ const Navbar = () => {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+                  "px-4 py-2 text-sm font-medium transition-colors",
                   "hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 hover:text-zinc-700 dark:hover:text-zinc-200",
                   pathname === item.href
-                    ? "text-zinc-700 dark:text-zinc-200 bg-zinc-100/80 dark:bg-zinc-800/60 border border-zinc-300/50 dark:border-zinc-600/50"
-                    : "text-zinc-600 dark:text-zinc-300"
+                    ? "text-blue-600 dark:text-blue-400 font-medium"
+                    : "text-zinc-500 dark:text-zinc-400"
                 )}
               >
                 {item.name}
