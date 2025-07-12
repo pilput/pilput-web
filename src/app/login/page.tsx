@@ -80,11 +80,11 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Link
-        className="fixed top-5 left-5 flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm"
+        className="fixed top-5 left-5 flex gap-2 items-center bg-white dark:bg-slate-900 rounded-md p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
         href="/"
       >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="text-sm font-medium">Back to home</span>
+        <ArrowLeft />
+        Back to home
       </Link>
 
       <Card className="w-full max-w-md">
@@ -165,6 +165,16 @@ export default function LoginPage() {
             <GithubIcon className="mr-2 h-4 w-4" />
             Github
           </Button>
+          
+          <div className="text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-primary hover:underline"
+            >
+              Sign up
+            </Link>
+          </div>
         </CardFooter>
       </Card>
     </main>

@@ -8,10 +8,19 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mail, Lock, User, Loader2 } from "lucide-react";
 import { Config } from "@/utils/getCofig";
 
 type Inputs = {
@@ -82,7 +91,7 @@ export default function Signup() {
   console.log(errors);
 
   return (
-    <main className="dark:bg-gray-800 relative overflow-hidden h-screen ">
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Link
         className="fixed top-5 left-5 flex gap-2 items-center bg-white dark:bg-slate-900 rounded-md p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
         href="/"
@@ -90,119 +99,102 @@ export default function Signup() {
         <ArrowLeft />
         Back to home
       </Link>
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="py-12 px-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl z-20">
-          <div>
-            <h1 className="text-3xl font-bold text-center text-gray-700 mb-4 cursor-pointer">
-              Sign up
-            </h1>
-            <p className="w-80 text-center text-sm mb-8 font-semibold text-gray-700 tracking-wide cursor-pointer">
-              Why You so interested to read
-              <br />
-            </p>
-          </div>
-          <div>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-5"
-            >
-              <div className="flex flex-col gap-2">
-                <label htmlFor="username">Username</label>
+
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">
+            Create an account
+          </CardTitle>
+          <CardDescription className="text-center">
+            Enter your information to create your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="username"
-                  placeholder="Username"
+                  placeholder="Enter your username"
+                  className="pl-9"
                   {...register("username")}
                   aria-invalid={errors.username ? "true" : "false"}
-                  className={
-                    errors.username ? "border text-red-400 border-red-400" : ""
-                  }
                   onBlur={(e) => checkUsername(e.target.value)}
                 />
-                {errors.username && (
-                  <div className="text-red-500 text-xs">
-                    {errors.username.message}
-                  </div>
-                )}
               </div>
+              {errors.username && (
+                <p className="text-sm text-red-500">
+                  {errors.username.message}
+                </p>
+              )}
+            </div>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="email">Email</label>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="email"
-                  placeholder="Email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="pl-9"
                   {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
-                  className={
-                    errors.email ? "border text-red-400 border-red-400" : ""
-                  }
                 />
-                {errors.email && (
-                  <div className="text-red-500 text-xs">
-                    {errors.email.message}
-                  </div>
-                )}
               </div>
+              {errors.email && (
+                <p className="text-sm text-red-500">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="password">Password</label>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
-                  {...register("password")}
                   type="password"
-                  placeholder="Password"
+                  placeholder="Enter your password"
+                  className="pl-9"
+                  {...register("password")}
                   aria-invalid={errors.password ? "true" : "false"}
-                  className={
-                    errors.password ? "border text-red-400 border-red-400" : ""
-                  }
                 />
-                {errors.password && (
-                  <div className="text-red-500 text-xs">
-                    {errors.password.message}
-                  </div>
-                )}
               </div>
-
-              <div className="flex justify-center mt-6">
-                {loginwait ? (
-                  <Button disabled type="submit" size={"lg"} className="w-full">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-loader mr-2 h-4 w-4 animate-spin"
-                    >
-                      <line x1="12" y1="2" x2="12" y2="6"></line>
-                      <line x1="12" y1="18" x2="12" y2="22"></line>
-                      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                      <line x1="2" y1="12" x2="6" y2="12"></line>
-                      <line x1="18" y1="12" x2="22" y2="12"></line>
-                      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-                      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-                    </svg>
-                    Please Wait
-                  </Button>
-                ) : (
-                  <Button type="submit" size={"lg"} className="w-full">
-                    Create an account
-                  </Button>
-                )}
-              </div>
-            </form>
-            <div className="text-center">
-              <Link href="/">
-                <Button variant={"link"}>Back to home</Button>
-              </Link>
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
+
+            <Button type="submit" className="w-full" disabled={loginwait}>
+              {loginwait ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                "Create an account"
+              )}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <div className="text-center text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-medium text-primary hover:underline"
+            >
+              Sign in
+            </Link>
           </div>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </main>
   );
 }
