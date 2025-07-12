@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { getToken } from "@/utils/Auth";
 import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
-import { MessageCircle, User } from "lucide-react";
+import { MessageCircle, User, Edit3 } from "lucide-react";
 
 interface CommentData {
   id: string;
@@ -45,81 +45,106 @@ const Comment = ({ postId }: { postId: string }) => {
     }
   }
   return (
-    <div className="mt-12">
-      {/* Header with Stats */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            💬 Comments
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {comments.length} {comments.length === 1 ? 'comment' : 'comments'}
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          Live
+    <div>
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-6">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2
+              className="text-xl font-bold text-gray-900 dark:text-white"
+              style={{ fontFamily: "inherit" }}
+            >
+              Discussion
+            </h2>
+            <p
+              className="text-gray-600 dark:text-gray-400 text-sm"
+              style={{ fontFamily: "inherit" }}
+            >
+              Share your thoughts and join the conversation
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Comments Feed */}
-      <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
+      {/* Comments List */}
+      <div className="space-y-4 mb-6">
         {comments.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-3">
-              <MessageCircle className="w-8 h-8 text-gray-400" />
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700">
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageCircle className="w-8 h-8 text-gray-400 dark:text-gray-500" />
             </div>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
-              No comments yet. Start the conversation! 🚀
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              No comments yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Be the first to share your thoughts about this article.
             </p>
           </div>
         ) : (
           comments.map((data) => (
-            <div key={data.id} className="flex gap-3 group animate-in slide-in-from-bottom-2 duration-300">
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                {data.creator?.first_name ? (
-                  <img
-                    className="w-8 h-8 rounded-full object-cover"
-                    src={getProfilePicture(data.creator?.image)}
-                    width={32}
-                    height={32}
-                    alt={`${data.creator?.first_name} ${data.creator?.last_name}`}
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </div>
-              
-              {/* Message Bubble */}
-              <div className="flex-1 min-w-0">
-                <div className="bg-gray-50 dark:bg-zinc-800 rounded-2xl rounded-tl-sm px-4 py-3 group-hover:bg-gray-100 dark:group-hover:bg-zinc-700 transition-colors">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {data.creator?.first_name ? 
-                        `${data.creator.first_name} ${data.creator.last_name}` : 
-                        'Anonymous'
-                      }
+            <div
+              key={data.id}
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+            >
+              <div className="flex gap-4">
+                {/* Avatar */}
+                <div className="flex-shrink-0">
+                  {data.creator?.first_name ? (
+                    <img
+                      className="w-10 h-10 rounded-full object-cover"
+                      src={getProfilePicture(data.creator?.image)}
+                      width={40}
+                      height={40}
+                      alt={`${data.creator?.first_name} ${data.creator?.last_name}`}
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                      <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Comment Content */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className="font-semibold text-gray-900 dark:text-white"
+                      style={{ fontFamily: "inherit" }}
+                    >
+                      {data.creator?.first_name
+                        ? `${data.creator.first_name} ${data.creator.last_name}`
+                        : "Anonymous User"}
                     </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {formatDistanceToNow(new Date(data.created_at), { addSuffix: true })}
+                    <span
+                      className="text-sm text-gray-500 dark:text-gray-400"
+                      style={{ fontFamily: "inherit" }}
+                    >
+                      {formatDistanceToNow(new Date(data.created_at), {
+                        addSuffix: true,
+                      })}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p
+                    className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3"
+                    style={{ fontFamily: "inherit" }}
+                  >
                     {data.text}
                   </p>
-                </div>
-                
-                {/* Quick Actions */}
-                <div className="flex items-center gap-3 mt-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    👍 Like
-                  </button>
-                  <button className="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    💬 Reply
-                  </button>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-3">
+                    <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
+                      <span>👏</span>
+                      <span>12</span>
+                    </button>
+                    <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Reply</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,33 +152,51 @@ const Comment = ({ postId }: { postId: string }) => {
         )}
       </div>
 
-      {/* Comment Input */}
-      <div className="border-t border-gray-200 dark:border-zinc-700 pt-4">
-        <form onSubmit={sendComment} className="flex gap-3">
-          <div className="flex-shrink-0">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
-            </div>
+      {/* Comment Input Form */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
+            <Edit3 className="w-4 h-4 text-white" />
           </div>
-          <div className="flex-1">
-            <div className="relative">
-              <input
-                type="text"
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Add Comment
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Share your thoughts
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={sendComment} className="space-y-3">
+          <div className="flex gap-3">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              </div>
+            </div>
+            <div className="flex-1">
+              <textarea
                 value={comment}
                 required
                 onChange={(e) => setcomment(e.target.value)}
-                placeholder="Add a comment..."
-                className="w-full px-4 py-2 pr-12 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-full text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all"
+                placeholder="Write your comment..."
+                className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors resize-none"
+                style={{ fontFamily: "inherit" }}
+                rows={3}
               />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!comment.trim()}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </button>
+              <div className="flex justify-between items-center mt-3">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Be respectful and constructive
+                </span>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!comment.trim()}
+                >
+                  Post Comment
+                </button>
+              </div>
             </div>
           </div>
         </form>
