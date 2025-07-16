@@ -7,6 +7,7 @@ import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
 import { MessageCircle, User, Edit3, LogIn } from "lucide-react";
 import Link from "next/link";
+import { axiosInstence } from "@/utils/fetch";
 
 interface CommentData {
   id: string;
@@ -25,7 +26,23 @@ const Comment = ({ postId }: { postId: string }) => {
   useEffect(() => {
     const token = getToken();
     setIsLoggedIn(!!token);
-    
+
+    // Fetch comments from API on component mount
+    const fetchComments = async () => {
+      try {
+        const response = await axiosInstence.get(
+          `/v1/posts/${postId}/comments`
+        );
+        if (response.data.success) {
+          setcomments(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+
     socketRef.current = io(Config.wsbaseurl + "/posts", {
       query: { post_id: postId, token: token },
       extraHeaders: {
@@ -37,7 +54,7 @@ const Comment = ({ postId }: { postId: string }) => {
         setcomments(message);
       });
     }
-  }, []);
+  }, [postId]);
 
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -221,7 +238,8 @@ const Comment = ({ postId }: { postId: string }) => {
               Join the Discussion
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
-              Please log in to share your thoughts and engage with the community.
+              Please log in to share your thoughts and engage with the
+              community.
             </p>
             <div className="flex gap-3 justify-center">
               <Link
