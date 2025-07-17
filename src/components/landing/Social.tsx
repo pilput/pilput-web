@@ -29,7 +29,7 @@ export default function Social() {
     },
     {
       name: "Email",
-      url: "mailto:cecepjanuardi@outlook.com",
+      url: "mailto:cecepjanuardi@proton.me",
       icon: Mail,
       description: "Drop me a message",
     },
