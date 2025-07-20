@@ -43,8 +43,8 @@ const Blog = () => {
         const response = data;
         if (response.data) {
           setPosts(response.data);
-          if (response.metadata && response.metadata.totalItems) {
-            setTotal(response.metadata.totalItems);
+          if (response.meta && response.meta.total_items) {
+            setTotal(response.meta.total_items);
           } else if (response.total) {
             setTotal(response.total);
           }
