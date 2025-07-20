@@ -157,7 +157,7 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
             <DashboardTopBar />
             <div className="h-full mt-5 overflow-y-auto dark:bg-gray-900 transition-colors duration-200">
               <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div className="rounded-lg shadow-sm mb-6 transition-colors duration-200">
+                <div className="rounded-lg bg-white shadow-sm mb-6 transition-colors duration-200 dark:bg-gray-800 px-4">
                   {children}
                 </div>
               </div>
