@@ -18,10 +18,10 @@ export const postsStore = create<PostsState>()((set) => ({
                 params: { limit: limit, offset: offset },
                 headers: { "Authorization": `Bearer ${getToken()}` }
             })
-            const response = data as { data: Post[], success: boolean, metadata: { totalItems: number } }
+            const response = data as { data: Post[], success: boolean, meta: { total_items: number } }
             if (response.success) {
                 set({ posts: response.data })
-                set({ total: response.metadata.totalItems })
+                set({ total: response.meta.total_items })
             } else {
                 set({ error: true })
             }
@@ -37,8 +37,8 @@ export const postsStore = create<PostsState>()((set) => ({
             const response = data
             if (response.data) {
                 set({ posts: response.data })
-                if (response.metadata && response.metadata.totalItems) {
-                    set({ total: response.metadata.totalItems })
+                if (response.meta && response.meta.total_items) {
+                    set({ total: response.meta.total_items })
                 } else if (response.total) {
                     set({ total: response.total })
                 }
