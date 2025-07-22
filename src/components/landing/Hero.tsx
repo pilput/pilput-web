@@ -310,7 +310,7 @@ const Hero = () => {
           {/* CTA Buttons */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4 w-full max-w-md sm:max-w-none"
+            className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4 justify-center items-center"
           >
             <Link href="/register">
               <motion.div
