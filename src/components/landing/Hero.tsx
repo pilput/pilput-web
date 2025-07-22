@@ -273,46 +273,44 @@ const Hero = () => {
           transform: `translate(${springX.get() * 0.02}px, ${springY.get() * 0.02}px)`,
         }}
       >
-        <div className="flex flex-col items-center space-y-8 text-center max-w-5xl mx-auto">
+        <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center max-w-5xl mx-auto">
           {/* Badge */}
           <motion.div variants={itemVariants}>
             <Badge
               variant="secondary"
-              className="px-4 py-2 text-sm font-medium bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors cursor-pointer"
+              className="px-4 py-2 md:px-6 md:py-3 text-xs md:text-sm font-medium bg-gradient-to-r from-primary/10 to-primary/5 text-primary border border-primary/20 hover:bg-primary/15 transition-all duration-300 rounded-full shadow-sm"
             >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Welcome to the Future of Content Creation
+              <Sparkles className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2 animate-pulse" />
+              ✍️ Free Publishing Platform - No Limits
             </Badge>
           </motion.div>
 
           {/* Main heading */}
           <motion.h1
             variants={itemVariants}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight px-2"
           >
-            Create, Share &
+            Write, Publish &
             <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              Connect
+              Share Your Ideas
             </span>
-            <span className="block text-3xl md:text-5xl lg:text-6xl mt-2 text-muted-foreground">
-              Like Never Before
+            <span className="block text-2xl sm:text-3xl md:text-5xl lg:text-6xl mt-1 md:mt-2 text-muted-foreground font-medium">
+              Completely Free
             </span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
             variants={itemVariants}
-            className="text-xl md:text-2xl text-muted-foreground max-w-3xl leading-relaxed"
+            className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl md:max-w-4xl leading-relaxed font-medium px-4 md:px-0"
           >
-            Join thousands of creators on PILPUT - the modern platform where
-            ideas come to life, communities thrive, and connections spark
-            innovation.
+            PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.
           </motion.p>
 
           {/* CTA Buttons */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 pt-4"
+            className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4 w-full max-w-md sm:max-w-none"
           >
             <Link href="/register">
               <motion.div
@@ -331,10 +329,10 @@ const Hero = () => {
               >
                 <Button
                   size="lg"
-                  className="group px-8 py-6 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  className="group px-6 py-4 md:px-10 md:py-7 text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 rounded-xl border-0 w-full sm:w-auto"
                 >
-                  Start Creating Today
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  Start Writing Now
+                  <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
             </Link>
@@ -342,9 +340,9 @@ const Hero = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="px-8 py-6 text-lg font-semibold border-2 bg-background/50 backdrop-blur-sm hover:bg-muted/50 transition-all duration-300"
+                className="px-6 py-4 md:px-10 md:py-7 text-base md:text-lg font-semibold border-2 border-primary/30 bg-background/80 backdrop-blur-md hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 rounded-xl w-full sm:w-auto"
               >
-                Explore Content
+                Browse Articles
               </Button>
             </Link>
           </motion.div>
@@ -352,46 +350,57 @@ const Hero = () => {
           {/* Stats preview */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-wrap justify-center gap-8 pt-8 text-center"
+            className="flex flex-wrap justify-center gap-4 md:gap-8 lg:gap-12 pt-8 md:pt-12 text-center"
           >
-            <div className="flex flex-col items-center">
-              <div className="text-2xl md:text-3xl font-bold text-foreground">
-                12K+
+            <div className="flex flex-col items-center p-3 md:p-4 rounded-2xl bg-gradient-to-b from-background/50 to-muted/20 backdrop-blur-sm border border-border/50 min-w-[100px] md:min-w-[120px]">
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
+                1.8K+
               </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Active Creators
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl md:text-3xl font-bold text-foreground">
-                48K+
-              </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Posts Published
+              <div className="text-xs md:text-sm text-muted-foreground font-medium mt-1">
+                Writers
               </div>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl md:text-3xl font-bold text-foreground">
-                250K+
+            <div className="flex flex-col items-center p-3 md:p-4 rounded-2xl bg-gradient-to-b from-background/50 to-muted/20 backdrop-blur-sm border border-border/50 min-w-[100px] md:min-w-[120px]">
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
+                12.4K+
               </div>
-              <div className="text-sm text-muted-foreground font-medium">
-                Connections Made
+              <div className="text-xs md:text-sm text-muted-foreground font-medium mt-1">
+                Articles Published
+              </div>
+            </div>
+            <div className="flex flex-col items-center p-3 md:p-4 rounded-2xl bg-gradient-to-b from-background/50 to-muted/20 backdrop-blur-sm border border-border/50 min-w-[100px] md:min-w-[120px]">
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
+                67K+
+              </div>
+              <div className="text-xs md:text-sm text-muted-foreground font-medium mt-1">
+                Monthly Readers
               </div>
             </div>
           </motion.div>
 
           {/* Trust indicators */}
-          <motion.div variants={itemVariants} className="pt-4">
-            <p className="text-sm text-muted-foreground">
-              ✨ Free to start • 🚀 No setup required • 🔒 Your data is secure
-            </p>
+          <motion.div variants={itemVariants} className="pt-6 md:pt-8">
+            <div className="flex flex-wrap justify-center items-center gap-3 md:gap-6 text-xs md:text-sm text-muted-foreground px-4">
+              <div className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full bg-green-500/10 border border-green-500/20">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="whitespace-nowrap">100% Free Forever</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="whitespace-nowrap">No Registration Required</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span className="whitespace-nowrap">Unlimited Articles</span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2"
         animate={{
           y: [0, 10, 0],
         }}
@@ -401,8 +410,8 @@ const Hero = () => {
           ease: "easeInOut",
         }}
       >
-        <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-muted-foreground/50 rounded-full mt-2" />
+        <div className="w-5 h-8 md:w-6 md:h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center">
+          <div className="w-1 h-2 md:h-3 bg-muted-foreground/50 rounded-full mt-1 md:mt-2" />
         </div>
       </motion.div>
     </motion.section>

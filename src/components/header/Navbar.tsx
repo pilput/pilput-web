@@ -22,7 +22,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="sticky top-0 z-50 w-full backdrop-blur-md bg-white/70 dark:bg-zinc-900/70 border-b border-zinc-200/80 dark:border-zinc-700/80 supports-[backdrop-filter]:bg-white/50">
+    <div className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-white/10 dark:bg-zinc-900/10 border-b border-white/10 dark:border-zinc-700/20 supports-[backdrop-filter]:bg-white/5 dark:supports-[backdrop-filter]:bg-zinc-900/5 shadow-lg shadow-black/5">
       <nav className="relative select-none lg:flex lg:items-stretch w-full max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link
@@ -34,7 +34,7 @@ const Navbar = () => {
 
           <button
             onClick={toggleMenu}
-            className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-300 dark:focus:ring-zinc-600 transition-colors"
+            className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-white/20 dark:hover:bg-zinc-800/20 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white/20 dark:focus:ring-zinc-600/20 transition-all duration-200 backdrop-blur-sm"
           >
             <span className="sr-only">Open main menu</span>
             {showmenu ? (
@@ -75,7 +75,7 @@ const Navbar = () => {
           className={cn(
             "lg:flex lg:items-center lg:flex-1 lg:justify-end",
             showmenu
-              ? "absolute top-16 left-0 right-0 bg-white/95 dark:bg-zinc-900/95 border-b border-zinc-200/80 dark:border-zinc-700/80 rounded-b-xl lg:border-none"
+              ? "absolute top-16 left-0 right-0 bg-white/15 dark:bg-zinc-900/15 backdrop-blur-2xl border-b border-white/10 dark:border-zinc-700/20 rounded-b-xl lg:border-none shadow-lg shadow-black/10"
               : "hidden lg:flex"
           )}
         >
@@ -86,7 +86,7 @@ const Navbar = () => {
                 href={item.href}
                 className={cn(
                   "px-4 py-2 text-sm font-medium transition-colors",
-                  "hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 hover:text-zinc-700 dark:hover:text-zinc-200",
+                  "hover:bg-white/15 dark:hover:bg-zinc-800/15 hover:text-zinc-700 dark:hover:text-zinc-200 backdrop-blur-sm rounded-lg transition-all duration-200",
                   pathname === item.href
                     ? "text-blue-600 dark:text-blue-400 font-medium"
                     : "text-zinc-500 dark:text-zinc-400"
