@@ -80,11 +80,11 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Link
-        className="fixed top-5 left-5 flex gap-2 items-center bg-white dark:bg-slate-900 rounded-md p-2 hover:bg-slate-200 dark:hover:bg-slate-800"
+        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-200 hover:scale-105 group"
         href="/"
       >
-        <ArrowLeft />
-        Back to home
+        <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
+        <span className="text-sm font-medium">Back to home</span>
       </Link>
 
       <Card className="w-full max-w-md">
