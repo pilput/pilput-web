@@ -17,8 +17,8 @@ interface succesResponse {
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const { data } = await axiosInstence(`/v1/posts/u/${username}/${postSlug}`);
-    const result = data as succesResponse;
+    const response = await axiosInstence(`/v1/posts/u/${username}/${postSlug}`);
+    const result = response.data as succesResponse;
     return result.data;
   } catch (error) {
     throw notFound();
@@ -183,7 +183,7 @@ export default async function Page(props: {
 
           {/* Comments Section */}
           <div className="bg-gray-50 dark:bg-gray-800 mx-4 mt-4">
-              <Comment postId={post.id} />
+            <Comment postId={post.id} />
           </div>
         </div>
       </div>
