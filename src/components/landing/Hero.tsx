@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
 import {
   ArrowRight,
   Sparkles,
@@ -17,8 +23,10 @@ import { useRef, useEffect, useState } from "react";
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; delay: number }>>([]);
-  
+  const [particles, setParticles] = useState<
+    Array<{ id: number; x: number; y: number; size: number; delay: number }>
+  >([]);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -26,7 +34,7 @@ const Hero = () => {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 100, damping: 30 });
@@ -65,8 +73,8 @@ const Hero = () => {
 
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('mousemove', handleMouseMove);
-      return () => container.removeEventListener('mousemove', handleMouseMove);
+      container.addEventListener("mousemove", handleMouseMove);
+      return () => container.removeEventListener("mousemove", handleMouseMove);
     }
   }, [mouseX, mouseY]);
 
@@ -118,7 +126,11 @@ const Hero = () => {
       <motion.div
         className="absolute inset-0 opacity-30"
         style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(var(--primary), 0.1), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${
+            mousePosition.x * 100
+          }% ${
+            mousePosition.y * 100
+          }%, rgba(var(--primary), 0.1), transparent 40%)`,
         }}
       />
 
@@ -131,7 +143,7 @@ const Hero = () => {
               linear-gradient(rgba(var(--primary), 0.1) 1px, transparent 1px),
               linear-gradient(90deg, rgba(var(--primary), 0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '50px 50px',
+            backgroundSize: "50px 50px",
             x: springX,
             y: springY,
           }}
@@ -205,7 +217,7 @@ const Hero = () => {
               top: `${10 + i * 12}%`,
               width: `${60 + i * 20}px`,
               height: `${60 + i * 20}px`,
-              borderRadius: i % 2 === 0 ? '50%' : '0%',
+              borderRadius: i % 2 === 0 ? "50%" : "0%",
             }}
             animate={{
               rotate: [0, 360],
@@ -227,10 +239,10 @@ const Hero = () => {
         const IconComponent = item.icon;
         const distanceFromMouse = Math.sqrt(
           Math.pow((parseFloat(item.x) / 100 - mousePosition.x) * 100, 2) +
-          Math.pow((parseFloat(item.y) / 100 - mousePosition.y) * 100, 2)
+            Math.pow((parseFloat(item.y) / 100 - mousePosition.y) * 100, 2)
         );
         const isNearMouse = distanceFromMouse < 20;
-        
+
         return (
           <motion.div
             key={index}
@@ -253,10 +265,10 @@ const Hero = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <motion.div 
+            <motion.div
               className="p-4 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300"
               animate={{
-                boxShadow: isNearMouse 
+                boxShadow: isNearMouse
                   ? "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
                   : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
               }}
@@ -267,10 +279,12 @@ const Hero = () => {
         );
       })}
 
-      <motion.div 
+      <motion.div
         className="relative z-20 container px-4 md:px-6"
         style={{
-          transform: `translate(${springX.get() * 0.02}px, ${springY.get() * 0.02}px)`,
+          transform: `translate(${springX.get() * 0.02}px, ${
+            springY.get() * 0.02
+          }px)`,
         }}
       >
         <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center max-w-5xl mx-auto">
@@ -304,7 +318,10 @@ const Hero = () => {
             variants={itemVariants}
             className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl md:max-w-4xl leading-relaxed font-medium px-4 md:px-0"
           >
-            PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.
+            PILPUT is a free publishing platform where anyone can write and
+            share articles without restrictions. No paywalls, no subscription
+            fees, no hidden costs - just pure freedom to express your thoughts
+            and reach readers worldwide.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -374,24 +391,6 @@ const Hero = () => {
               </div>
               <div className="text-xs md:text-sm text-muted-foreground font-medium mt-1">
                 Monthly Readers
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Trust indicators */}
-          <motion.div variants={itemVariants} className="pt-6 md:pt-8">
-            <div className="flex flex-wrap justify-center items-center gap-3 md:gap-6 text-xs md:text-sm text-muted-foreground px-4">
-              <div className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full bg-green-500/10 border border-green-500/20">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="whitespace-nowrap">100% Free Forever</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <span className="whitespace-nowrap">No Registration Required</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
-                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <span className="whitespace-nowrap">Unlimited Articles</span>
               </div>
             </div>
           </motion.div>
