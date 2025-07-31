@@ -52,7 +52,7 @@ const Tiptap = ({
               "prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4 " +
               "prose-strong:text-gray-900 dark:prose-strong:text-gray-100 prose-strong:font-semibold " +
               "prose-em:text-gray-700 dark:prose-em:text-gray-300 prose-em:italic " +
-              "prose-code:bg-gray-700 dark:prose-code:bg-gray-700 prose-code:px-1 prose-code:py-0.5 " +
+              "prose-code:px-1 prose-code:py-0.5 " +
               "prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:text-green-500 " +
               "prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline hover:prose-a:text-blue-800 dark:hover:prose-a:text-blue-300 " +
               "prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600 " +
