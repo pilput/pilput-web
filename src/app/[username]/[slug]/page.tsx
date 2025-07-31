@@ -86,7 +86,7 @@ export default async function Page(props: {
                     <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
                       <span className="flex items-center gap-1">
                         <Eye className="w-4 h-4" />
-                        {0} views
+                        {post.view_count} views
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />5 min read

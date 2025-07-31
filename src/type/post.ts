@@ -8,6 +8,7 @@ interface Post {
   created_at: string;
   updated_at: string;
   published: boolean;
+  view_count: number;
   tags: Tags[];
 }
 
