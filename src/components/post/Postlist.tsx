@@ -126,7 +126,7 @@ const Postlist = ({ post }: { post: Post }) => {
 
               <button className="flex items-center gap-2 text-gray-500 hover:text-green-500 transition-all duration-300 group/view hover:scale-110">
                 <Eye className="w-5 h-5" />
-                <span className="text-sm font-medium">1.2k</span>
+                <span className="text-sm font-medium">{post.view_count}</span>
               </button>
             </div>
 
