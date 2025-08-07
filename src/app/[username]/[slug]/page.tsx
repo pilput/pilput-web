@@ -217,7 +217,7 @@ export default async function Page(props: {
           </article>
 
           {/* Comments Section */}
-          <div className="bg-gray-50 dark:bg-gray-800 mx-4 mt-4">
+          <div className="mt-4">
             <Comment postId={post.id} />
           </div>
         </div>
