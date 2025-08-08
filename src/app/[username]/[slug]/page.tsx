@@ -8,7 +8,7 @@ import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Clock, Eye, Share2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { getToken } from "@/utils/Auth";
+import ViewRecorder from "@/components/post/ViewRecorder";
 
 interface succesResponse {
   data: Post;
@@ -26,34 +26,15 @@ const getPost = async (username: string, postSlug: string): Promise<Post> => {
   }
 };
 
-const recordView = async (postId: string, token?: string) => {
-  try {
-    await axiosInstence.post(`/v1/posts/${postId}/view`, null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (error) {
-    // Silently fail view recording to avoid disrupting user experience
-    console.error("Failed to record view:", error);
-  }
-};
-
 export default async function Page(props: {
   params: Promise<{ slug: string; username: string }>;
 }) {
   const params = await props.params;
   const post = await getPost(params.username, params.slug);
 
-  // Check if user is authenticated before recording view
-  const hasToken = await getToken();
-
-  if (hasToken) {
-    await recordView(post.id, hasToken);
-  }
-
   return (
     <>
+      <ViewRecorder postId={post.id} />
       <Navigation />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 py-8">
