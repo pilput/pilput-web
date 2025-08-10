@@ -3,6 +3,7 @@
 import { axiosInstence } from "@/utils/fetch";
 import { useEffect, useState } from "react";
 import Postlist from "../post/Postlist";
+import type { Post } from "@/types/post";
 
 function Posts(props: { usename: string }) {
   const [posts, setposts] = useState<Post[]>([]);
@@ -25,7 +26,7 @@ function Posts(props: { usename: string }) {
     <div>
       <div>Posts</div>
       {posts.map((post) => (
-        <Postlist key={post.id} post={post} />
+        <Postlist key={post.id} post={post} viewMode="writer" />
       ))}
     </div>
   );

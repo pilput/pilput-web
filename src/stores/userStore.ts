@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstence } from "@/utils/fetch";
 import { getToken, RemoveToken } from "@/utils/Auth";
-import { Auth } from "@/type/you";
+import { Auth } from "@/types/you";
 import { AxiosError } from "axios";
 
 interface authDataState {

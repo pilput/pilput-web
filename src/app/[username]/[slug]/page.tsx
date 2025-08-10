@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Clock, Eye, Share2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import ViewRecorder from "@/components/post/ViewRecorder";
+import type { Post } from "@/types/post";
 
 interface succesResponse {
   data: Post;

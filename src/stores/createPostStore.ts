@@ -1,3 +1,4 @@
+import { PostCreate } from '@/types/post'
 import { create } from 'zustand'
 
 interface PostsState {

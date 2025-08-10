@@ -5,6 +5,7 @@ import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemrPulse from "./PostItemrpulse";
 import Link from "next/link";
+import type { Post } from "@/types/post";
 
 interface succesResponse {
   data: Post[];

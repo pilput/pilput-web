@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { axiosInstence2 } from "@/utils/fetch";
 import toast from "react-hot-toast";
 import { getToken } from "@/utils/Auth";
+import type { Post } from "@/types/post";
 
 const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () => void }) => {
   const onPublish = async () => {

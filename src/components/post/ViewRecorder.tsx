@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { axiosInstence } from '@/utils/fetch';
-import { getToken } from '@/utils/Auth';
+import { useEffect } from "react";
+import { axiosInstence } from "@/utils/fetch";
+import { getToken } from "@/utils/Auth";
 
 interface ViewRecorderProps {
   postId: string;
@@ -14,7 +14,7 @@ const ViewRecorder = ({ postId }: ViewRecorderProps) => {
       try {
         // Check if user is authenticated before recording view
         const token = await getToken();
-        
+
         if (token) {
           await axiosInstence.post(`/v1/posts/${postId}/view`, null, {
             headers: {
@@ -24,7 +24,7 @@ const ViewRecorder = ({ postId }: ViewRecorderProps) => {
         }
       } catch (error) {
         // Silently fail view recording to avoid disrupting user experience
-        console.error('Failed to record view:', error);
+        console.error("Failed to record view:", error);
       }
     };
 

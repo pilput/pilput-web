@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { axiosInstence, axiosInstence2 } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
+import type { Post } from '@/types/post'
 
 interface PostsState {
     posts: Post[]

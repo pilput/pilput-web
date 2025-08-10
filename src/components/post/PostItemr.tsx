@@ -1,5 +1,6 @@
 import WordLimit from "../word/WordLimit";
 import Link from "next/link";
+import type { Post } from "@/types/post";
 
 const PostItemr = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");

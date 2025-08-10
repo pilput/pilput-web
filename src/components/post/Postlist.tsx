@@ -11,8 +11,9 @@ import {
   Clock,
   Eye,
 } from "lucide-react";
+import type { Post } from "@/types/post";
 
-const Postlist = ({ post }: { post: Post }) => {
+const Postlist = ({ post, viewMode }: { post: Post; viewMode: string }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   const tags = post.tags || []; // Use real tags from post data
   const readTime = Math.ceil(plaintext.length / 1000) || 1; // Estimate read time

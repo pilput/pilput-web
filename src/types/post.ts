@@ -1,4 +1,4 @@
-interface Post {
+export interface Post {
   id: string;
   title: string;
   body: string;
@@ -12,7 +12,7 @@ interface Post {
   tags: Tags[];
 }
 
-interface PostCreate {
+export interface PostCreate {
   title: string;
   body: string;
   slug: string;
@@ -20,7 +20,7 @@ interface PostCreate {
   tags: Tags[];
 }
 
-interface ErrorCreatePost {
+export interface ErrorCreatePost {
   error: {
     name: string;
     issues: {
@@ -30,7 +30,7 @@ interface ErrorCreatePost {
   };
 }
 
-interface Creator {
+export interface Creator {
   id: string;
   username: string;
   email: string;

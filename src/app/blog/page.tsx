@@ -5,14 +5,12 @@ import Postlistpulse from "@/components/post/postlistpulse";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Search,
   Heart,
   TrendingUp,
-  Filter,
   Grid,
   List,
   Zap,
@@ -21,6 +19,7 @@ import {
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
+import type { Post } from "@/types/post";
 
 const postsPerPage = 10;
 
@@ -82,14 +81,25 @@ const Blog = () => {
 
   const categories = [
     {
+      icon: Clock,
+      label: "Latest",
+      value: "latest",
+      color: "text-blue-500",
+    },
+    {
       icon: Zap,
       label: "Trending",
       value: "trending",
       color: "text-orange-500",
     },
-    { icon: Clock, label: "Recent", value: "recent", color: "text-blue-500" },
     { icon: Eye, label: "Popular", value: "popular", color: "text-zinc-600" },
     { icon: Heart, label: "Loved", value: "loved", color: "text-red-500" },
+    {
+      icon: TrendingUp,
+      label: "Future",
+      value: "future",
+      color: "text-purple-500",
+    },
   ];
 
   return (
@@ -97,37 +107,28 @@ const Blog = () => {
       <Navigation />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
         {/* Hero Section */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-600/10 to-gray-600/10 dark:from-zinc-400/5 dark:to-gray-400/5" />
-          <div className="relative max-w-7xl mx-auto px-4 py-12">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">
-                Discover Amazing Stories
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Explore cutting-edge articles, tutorials, and insights from our
-                vibrant community of developers and creators.
+        <div className="relative overflow-hidden border-b border-gray-200/50 dark:border-gray-700/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-indigo-50/30 to-purple-50/50 dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-purple-950/20" />
+          <div className="relative max-w-7xl mx-auto px-4 py-8">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                  </svg>
+                </div>
+                <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                  Blog
+                </h1>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+                Discover the latest articles, tutorials, and insights from our
+                community
               </p>
-            </div>
-
-            {/* Category Pills */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              {categories.map((category) => (
-                <button
-                  key={category.value}
-                  onClick={() => setSelectedCategory(category.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
-                    selectedCategory === category.value
-                      ? "bg-white dark:bg-gray-800 border border-zinc-300 dark:border-zinc-600 scale-105"
-                      : "bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-800 border border-gray-200/50 dark:border-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600"
-                  }`}
-                >
-                  <category.icon className={`w-4 h-4 ${category.color}`} />
-                  <span className="font-medium text-gray-700 dark:text-gray-300">
-                    {category.label}
-                  </span>
-                </button>
-              ))}
             </div>
           </div>
         </div>
@@ -187,7 +188,7 @@ const Blog = () => {
                         trendingTags.map((tag, index) => (
                           <Link
                             key={index}
-                            href={`/tags/${tag.slice(1)}`}
+                            href={`/tags/${tag}`}
                             className="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800/50 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/60 transition-all duration-300 hover:scale-105"
                           >
                             #{tag}
@@ -243,15 +244,6 @@ const Blog = () => {
                       <List className="w-4 h-4" />
                     </button>
                   </div>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <Filter className="w-4 h-4" />
-                    Filter
-                  </Button>
                 </div>
               </div>
 
@@ -264,7 +256,9 @@ const Blog = () => {
                 }
               >
                 {posts.length > 0 ? (
-                  posts.map((post) => <Postlist key={post.id} post={post} />)
+                  posts.map((post) => (
+                    <Postlist key={post.id} post={post} viewMode={viewMode} />
+                  ))
                 ) : !isLoading ? (
                   <div className="col-span-full text-center py-16">
                     <div className="w-24 h-24 mx-auto mb-4 bg-zinc-100 dark:bg-zinc-800/30 rounded-full flex items-center justify-center">

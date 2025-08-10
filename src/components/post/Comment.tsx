@@ -19,7 +19,7 @@ interface CommentData {
 
 const Comment = ({ postId }: { postId: string }) => {
   const [comment, setcomment] = useState<string>("");
-  const [comments, setcomments] = useState<Comment[]>([]);
+  const [comments, setcomments] = useState<CommentData[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const socketRef = useRef<Socket | null>(null);
 
@@ -50,7 +50,7 @@ const Comment = ({ postId }: { postId: string }) => {
       },
     });
     if (socketRef.current) {
-      socketRef.current.on("newComment", (message: Comment[]) => {
+      socketRef.current.on("newComment", (message: CommentData[]) => {
         setcomments(message);
       });
     }
