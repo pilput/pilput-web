@@ -107,29 +107,25 @@ const Blog = () => {
       <Navigation />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
         {/* Hero Section */}
-        <div className="relative overflow-hidden border-b border-gray-200/50 dark:border-gray-700/50">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-indigo-50/30 to-purple-50/50 dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-purple-950/20" />
-          <div className="relative max-w-7xl mx-auto px-4 py-8">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                  </svg>
-                </div>
-                <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-                  Blog
-                </h1>
+        <div className="border-b border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 bg-gray-900 dark:bg-gray-100 rounded flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-white dark:text-gray-900"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                </svg>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                Discover the latest articles, tutorials, and insights from our
-                community
-              </p>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
+                Blog
+              </h1>
             </div>
+            <p className="text-gray-600 dark:text-gray-400">
+              Discover the latest articles, tutorials, and insights from our community
+            </p>
           </div>
         </div>
 
