@@ -43,29 +43,74 @@ const Comment = ({ postId }: { postId: string }) => {
 
     fetchComments();
 
-    socketRef.current = io(Config.wsbaseurl + "/posts", {
-      query: { post_id: postId, token: token },
-      extraHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (socketRef.current) {
-      socketRef.current.on("newComment", (message: CommentData[]) => {
-        setcomments(message);
+    // Only connect if user is logged in and has a valid token
+    if (token) {
+      socketRef.current = io(Config.wsbaseurl + "/posts", {
+        query: { post_id: postId, token: token },
+        extraHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+        transports: ['websocket', 'polling'], // Fallback transports
+        timeout: 20000, // Connection timeout
+        forceNew: true, // Force new connection
       });
-    }
-  }, [postId]);
+
+      if (socketRef.current) {
+        // Connection event handlers
+        socketRef.current.on("connect", () => {
+          console.log("Socket connected successfully");
+        });
+
+        socketRef.current.on("connect_error", (error) => {
+          console.error("Socket connection error:", error);
+        });
+
+        socketRef.current.on("disconnect", (reason) => {
+          console.log("Socket disconnected:", reason);
+        });
+
+        socketRef.current.on("error", (error) => {
+          console.error("Socket error:", error);
+        });
+
+        // Listen for new comments
+        socketRef.current.on("newComment", (message: CommentData[]) => {
+          setcomments(message);
+        });
+      }
+    } else {
+       console.warn("No authentication token found, skipping socket connection");
+     }
+
+     // Cleanup function
+     return () => {
+       if (socketRef.current) {
+         socketRef.current.disconnect();
+         socketRef.current = null;
+       }
+     };
+   }, [postId]); // Consider adding token to dependencies if it can change
 
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!isLoggedIn) {
+      console.warn("User not logged in, cannot send comment");
       return;
     }
 
-    if (socketRef.current) {
+    if (!comment.trim()) {
+      console.warn("Comment is empty");
+      return;
+    }
+
+    if (socketRef.current && socketRef.current.connected) {
       socketRef.current.emit("sendComment", { text: comment });
       setcomment("");
+    } else {
+      console.error("Socket not connected. Cannot send comment.");
+      // Optionally, you could try to reconnect here
+      // or show an error message to the user
     }
   }
   return (
