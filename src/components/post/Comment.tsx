@@ -65,9 +65,9 @@ const Comment = ({ postId }: { postId: string }) => {
           extraHeaders: {
             Authorization: `Bearer ${token}`,
           },
-          transports: ["websocket", "polling"], // Fallback transports
-          timeout: 20000, // Connection timeout
-          forceNew: true, // Force new connection
+          transports: ["websocket", "polling"],
+          timeout: 20000,
+          forceNew: true,
         });
 
         if (socketRef.current) {
@@ -82,7 +82,6 @@ const Comment = ({ postId }: { postId: string }) => {
             console.error("Socket connection error:", error);
             setIsSocketConnected(false);
             setIsReconnecting(true);
-            // Attempt to reconnect after a delay
             setTimeout(() => {
               if (socketRef.current && !socketRef.current.connected) {
                 console.log("Attempting to reconnect...");
@@ -94,7 +93,6 @@ const Comment = ({ postId }: { postId: string }) => {
           socketRef.current.on("disconnect", (reason) => {
             console.log("Socket disconnected:", reason);
             setIsSocketConnected(false);
-            // Auto-reconnect for certain disconnect reasons
             if (
               reason === "io server disconnect" ||
               reason === "transport close"
@@ -138,7 +136,7 @@ const Comment = ({ postId }: { postId: string }) => {
         socketRef.current = null;
       }
     };
-  }, [postId]); // Consider adding token to dependencies if it can change
+  }, [postId]);
 
   const reconnectSocket = () => {
     const token = getToken();
@@ -148,6 +146,7 @@ const Comment = ({ postId }: { postId: string }) => {
       // Disconnect existing socket if any
       if (socketRef.current) {
         socketRef.current.disconnect();
+        socketRef.current = null;
       }
 
       // Create new connection
@@ -164,13 +163,11 @@ const Comment = ({ postId }: { postId: string }) => {
       // Set up event handlers
       if (socketRef.current) {
         socketRef.current.on("connect", () => {
-          console.log("Socket reconnected successfully");
           setIsSocketConnected(true);
           setIsReconnecting(false);
         });
 
         socketRef.current.on("connect_error", (error) => {
-          console.error("Reconnection failed:", error);
           setIsSocketConnected(false);
           setIsReconnecting(false);
         });
@@ -356,7 +353,7 @@ const Comment = ({ postId }: { postId: string }) => {
                                   <div className="flex items-center gap-3">
                                     <button className="flex items-center gap-1 px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-xs">
                                       <span>👏</span>
-                                      <span>12</span>
+                                      <span>0</span>
                                     </button>
                                   </div>
                                 )}
@@ -373,7 +370,7 @@ const Comment = ({ postId }: { postId: string }) => {
                     <div className="flex items-center gap-3">
                       <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
                         <span>👏</span>
-                        <span>12</span>
+                        <span>0</span>
                       </button>
                       <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
                         <MessageCircle className="w-4 h-4" />
