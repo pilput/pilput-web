@@ -19,11 +19,11 @@ export default function PostCreate() {
   const [errortitle, seterrortitle] = useState("");
   const [errorimage, seterrorimage] = useState("");
   const token = getToken();
-  const { post, updatetitle, updatebody, updatePhoto_url, updateSlug } =
+  const { post, updateTitle, updateBody, updatePhotoUrl, updateSlug } =
     postsStore();
 
   const update = (data: string) => {
-    updatebody(data);
+    updateBody(data);
   };
 
   const uploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +43,7 @@ export default function PostCreate() {
         );
 
         const photoUrl = response.data.photo_url;
-        updatePhoto_url(photoUrl);
+        updatePhotoUrl(photoUrl);
       } catch (error) {
         console.error("Error uploading file:", error);
       }
@@ -107,7 +107,7 @@ export default function PostCreate() {
             <input
               id="title"
               onChange={(e) => {
-                updatetitle(e.target.value);
+                updateTitle(e.target.value);
                 updateSlug(convertToSlug(e.target.value));
               }}
               className="w-full text-xl py-3 font-medium text-black dark:text-gray-200 bg-transparent border-b border-gray-200 focus:border-primary focus:outline-none transition-colors"
