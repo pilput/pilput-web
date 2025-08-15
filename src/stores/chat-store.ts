@@ -58,7 +58,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      set({ recentChats: response.data });
+      set({ recentChats: response.data.data });
     } catch (err) {
       // Optionally handle logout here, or expose error to UI
       if (typeof window !== 'undefined') {
