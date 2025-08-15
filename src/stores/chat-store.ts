@@ -76,7 +76,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         },
       });
       if (response.status !== 200) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = response.data;
+      const data = response.data.data;
       set({
         messages: data.messages.map((message: any) => ({
           ...message,
