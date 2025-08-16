@@ -64,7 +64,10 @@ export default async function Page(props: {
                   </Avatar>
                 </a>
                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 text-sm">
-                  <a href={`/${post.creator.username}`} className="hover:text-gray-900 dark:hover:text-white font-medium">
+                  <a
+                    href={`/${post.creator.username}`}
+                    className="hover:text-gray-900 dark:hover:text-white font-medium"
+                  >
                     {post.creator.first_name} {post.creator.last_name}
                   </a>
                   <span>•</span>
@@ -93,15 +96,19 @@ export default async function Page(props: {
             <div className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-blue-500">
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 <div className="mb-2">
-                  <span className="font-medium">Published:</span> {new Date(post.created_at).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
+                  <span className="font-medium">Published:</span>{" "}
+                  {new Date(post.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })}
                 </div>
                 <div className="mb-2">
-                  <span className="font-medium">Author:</span> 
-                  <a href={`/${post.creator.username}`} className="ml-1 hover:text-blue-600 dark:hover:text-blue-400">
+                  <span className="font-medium">Author:</span>
+                  <a
+                    href={`/${post.creator.username}`}
+                    className="ml-1 hover:text-blue-600 dark:hover:text-blue-400"
+                  >
                     {post.creator.first_name} {post.creator.last_name}
                   </a>
                 </div>
@@ -113,7 +120,8 @@ export default async function Page(props: {
 
             {/* Article Content */}
             <div className="mb-12">
-              <div className="prose prose-lg max-w-none leading-relaxed
+              <div
+                className="prose prose-lg max-w-none leading-relaxed
                            text-gray-900 dark:text-gray-100
                            prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-headings:font-semibold
                            prose-h1:text-2xl prose-h1:mb-4 prose-h1:mt-6
@@ -128,7 +136,8 @@ export default async function Page(props: {
                            prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300
                            prose-ul:text-gray-900 dark:prose-ul:text-gray-100
                            prose-ol:text-gray-900 dark:prose-ol:text-gray-100
-                           prose-li:text-gray-900 dark:prose-li:text-gray-100">
+                           prose-li:text-gray-900 dark:prose-li:text-gray-100"
+              >
                 <div dangerouslySetInnerHTML={{ __html: post.body }}></div>
               </div>
             </div>
@@ -151,7 +160,6 @@ export default async function Page(props: {
                 </div>
               </div>
             )}
-
           </article>
 
           {/* Comments Section */}
