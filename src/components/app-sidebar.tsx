@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Plus, MessageSquare, User, PanelLeftClose, PanelLeft } from "lucide-react";
+import {
+  Plus,
+  MessageSquare,
+  PanelLeftClose,
+  PanelLeft,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/stores/chat-store";
 import {
@@ -20,19 +25,26 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { authStore } from "@/stores/userStore";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export function AppSidebar() {
   const params = useParams();
   const currentConversationId = params?.id as string;
   const { recentChats, fetchRecentChats } = useChatStore();
   const { toggleSidebar, state } = useSidebar();
+  const user = authStore();
 
   useEffect(() => {
     fetchRecentChats();
-  }, [fetchRecentChats]);
+    user.fetch();
+  }, [fetchRecentChats, user]);
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar bg-sidebar text-sidebar-foreground">
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-sidebar bg-sidebar text-sidebar-foreground"
+    >
       {/* Header */}
       <SidebarHeader className="px-4 py-3 border-b border-sidebar flex flex-row items-center justify-between">
         <h2 className="text-base font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
@@ -65,7 +77,9 @@ export function AppSidebar() {
               )}
             >
               <Plus className="w-4 h-4 flex-shrink-0" />
-              <span className="group-data-[collapsible=icon]:hidden">New Chat</span>
+              <span className="group-data-[collapsible=icon]:hidden">
+                New Chat
+              </span>
             </Link>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -97,7 +111,9 @@ export function AppSidebar() {
                     >
                       <Link href={`/chat/${chat.id}`}>
                         <MessageSquare className="mr-2 h-4 w-4 flex-shrink-0 opacity-70" />
-                        <span className="truncate group-data-[collapsible=icon]:hidden">{chat.title}</span>
+                        <span className="truncate group-data-[collapsible=icon]:hidden">
+                          {chat.title}
+                        </span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -116,10 +132,13 @@ export function AppSidebar() {
           </div>
           {/* User Profile */}
           <div className="flex items-center justify-center gap-2 mt-1 group-data-[collapsible=icon]:mt-0">
-            <div className="h-6 w-6 rounded-full bg-sidebar-border flex items-center justify-center text-muted-foreground text-xs font-semibold">
-              <User className="h-3 w-3" />
-            </div>
-            <span className="text-xs text-muted-foreground font-normal group-data-[collapsible=icon]:hidden">User</span>
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={user.data.image} alt={user.data.username} />
+              <AvatarFallback>{user.data.username ? user.data.username[0] : "U"}</AvatarFallback>
+            </Avatar>
+            <span className="text-xs text-muted-foreground font-normal group-data-[collapsible=icon]:hidden">
+              {user.data.username}
+            </span>
           </div>
         </div>
       </SidebarFooter>
