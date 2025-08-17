@@ -2,20 +2,11 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
-const Landing = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
+const AboutContent = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   const containerVariants = {
@@ -41,58 +32,21 @@ const Landing = () => {
   };
 
   return (
-    <motion.div
-      ref={containerRef}
-      className="relative min-h-[670px] w-full flex items-center justify-center overflow-hidden"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      {/* Background gradient with parallax effect */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted"
-        style={{ y, opacity }}
-      />
-
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full mix-blend-multiply filter blur-xl"
-            animate={{
-              x: [0, 30, 0],
-              y: [0, 50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "linear",
-            }}
-            style={{
-              width: `${200 + i * 100}px`,
-              height: `${200 + i * 100}px`,
-              left: `${20 + i * 30}%`,
-              top: `${20 + i * 20}%`,
-              backgroundColor: `hsl(${i * 60}, 70%, 95%)`,
-              opacity: 0.3,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="relative z-20 container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center">
+    <section className="py-16 md:py-24 bg-background">
+      <div className="container px-4 md:px-6">
+        <motion.div
+          className="max-w-4xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
           <motion.div
             variants={itemVariants}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="text-center mb-12"
           >
             <Badge
               variant="secondary"
-              className="mb-4 cursor-pointer"
+              className="mb-4 cursor-pointer mx-auto"
               onClick={() => setIsHovered(!isHovered)}
             >
               Available for Freelance Work
@@ -106,66 +60,66 @@ const Landing = () => {
                 </motion.span>
               )}
             </Badge>
+            
+            <motion.h1
+              variants={itemVariants}
+              className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50 mb-4"
+            >
+              About <span className="font-extrabold">CECEP JANUARDI</span>
+            </motion.h1>
+            
+            <motion.h2
+              variants={itemVariants}
+              className="text-xl md:text-2xl font-semibold text-muted-foreground"
+            >
+              Full Stack Developer & Creator
+            </motion.h2>
           </motion.div>
-
-          <motion.h1
-            variants={itemVariants}
-            className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50"
-          >
-            Hi, I&#x27;m <span className="font-extrabold">CECEP JANUARDI</span>
-          </motion.h1>
-
-          <motion.h2
-            variants={itemVariants}
-            className="text-xl md:text-2xl lg:text-3xl font-semibold text-muted-foreground"
-          >
-            Full Stack Developer
-          </motion.h2>
-
-          <motion.p
-            variants={itemVariants}
-            className="max-w-[700px] text-muted-foreground md:text-lg"
-          >
-            Dedicated to crafting elegant and efficient digital solutions. I
-            specialize in modern web development with deep expertise in Next.js,
-            React, and Node.js ecosystems. Let&#x27;s collaborate to transform
-            your innovative ideas into impactful realities.
-          </motion.p>
 
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4"
+            className="prose prose-lg max-w-none text-foreground mb-12"
+          >
+            <p className="mb-4">
+              Hello! I&apos;m Cecep Januardi, a passionate full-stack developer with a deep love for creating digital experiences that are both beautiful and functional. With years of experience in the ever-evolving tech landscape, I&apos;ve honed my skills in crafting modern web applications that stand out.
+            </p>
+            
+            <p className="mb-4">
+              My journey in tech began with curiosity and a desire to build things that matter. Over time, this curiosity has transformed into expertise in key technologies like Next.js, React, and Node.js. I believe in writing clean, efficient code and creating intuitive user interfaces that provide seamless experiences.
+            </p>
+            
+            <p className="mb-4">
+              When I&apos;m not coding, you&apos;ll find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community. I&apos;m constantly learning and adapting to stay at the forefront of web development trends.
+            </p>
+            
+            <p>
+              I&apos;m currently focused on building PILPUT, a free publishing platform that empowers writers to share their ideas without restrictions. This project combines my technical skills with my belief in accessible knowledge sharing.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Button
               asChild
               size="lg"
               className="relative group overflow-hidden"
             >
-              <Link href="/contact">
-                <span className="relative z-10">Get in Touch</span>
-                <motion.div
-                  className="absolute inset-0 bg-primary-foreground"
-                  initial={{ x: "100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ type: "tween" as const }}
-                />
+              <Link href="/blog">
+                <span className="relative z-10">Read My Blog</span>
               </Link>
             </Button>
             <Button variant="outline" asChild size="lg" className="group">
               <Link href="/projects">
-                <motion.span
-                  initial={{ opacity: 1 }}
-                  whileHover={{ opacity: 0.7 }}
-                >
-                  View My Work
-                </motion.span>
+                <span>View Projects</span>
               </Link>
             </Button>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
-    </motion.div>
+    </section>
   );
 };
 
-export default Landing;
+export default AboutContent;
