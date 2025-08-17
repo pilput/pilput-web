@@ -98,11 +98,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   createConversation: async (title, message, router) => {
     const { isLoading, setIsLoading, selectedModel } = get();
     if (!message.trim() || isLoading) return null;
-    
+
     setIsLoading(true);
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
-    
+
     try {
       const response = await axiosInstence2('/v1/chat/conversations', {
         method: 'POST',
@@ -115,10 +115,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
           message,
         },
       });
-      
+
       clearTimeout(timeoutId);
       if (response.status !== 201) throw new Error(`HTTP error! status: ${response.status}`);
-      
+
       const conversationId = response.data.data.id;
 
       router.replace('/chat/' + conversationId);
@@ -134,7 +134,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   sendMessage: async (content, conversationId) => {
     const { isLoading, messages, selectedModel } = get();
     if (!content.trim() || isLoading || !conversationId) return;
-    
+
     const userMessage = {
       id: Date.now().toString(),
       content: content,
@@ -142,7 +142,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       createdAt: new Date(),
       isStreaming: false,
     };
-    
+
     // Add user message and create placeholder for assistant response
     const assistantMessage = {
       id: `assistant-${Date.now()}`,
@@ -151,16 +151,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
       createdAt: new Date(),
       isStreaming: true,
     };
-    
-    set({ 
-      messages: [...messages, userMessage, assistantMessage], 
-      isLoading: true 
+
+    set({
+      messages: [...messages, userMessage, assistantMessage],
+      isLoading: true
     });
-    
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased timeout for streaming
     let updateTimeout: number | null = null; // Move to broader scope
-    
+
     try {
       const response = await fetch(`${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`, {
         method: 'POST',
@@ -168,26 +168,26 @@ export const useChatStore = create<ChatState>((set, get) => ({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           content,
           model: selectedModel // Include the selected model in the request
         }),
         signal: controller.signal,
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
-      
+
       if (!reader) {
         throw new Error('No response body reader available');
       }
-      
+
       let accumulatedContent = '';
-      
+
       // Batch updates to reduce re-renders
       const batchedUpdate = () => {
         set((state) => ({
@@ -198,19 +198,19 @@ export const useChatStore = create<ChatState>((set, get) => ({
           ),
         }));
       };
-      
+
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split('\n');
-        
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6).trim();
-            
+
             if (data === '[DONE]') {
               // Clear any pending updates and finalize
               if (updateTimeout) {
@@ -228,12 +228,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
               }));
               break;
             }
-            
+
             try {
               const parsed = JSON.parse(data);
               if (parsed.content) {
                 accumulatedContent += parsed.content;
-                
+
                 // Batch updates to avoid too frequent re-renders
                 if (updateTimeout) {
                   clearTimeout(updateTimeout);
@@ -247,17 +247,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
           }
         }
       }
-      
+
       // Clear any pending update timeout
       if (updateTimeout) {
         clearTimeout(updateTimeout);
       }
       clearTimeout(timeoutId);
-      
+
     } catch (error) {
       console.error('Error sending message:', error);
       set((state) => {
-        const filtered = state.messages.filter((msg) => 
+        const filtered = state.messages.filter((msg) =>
           msg.id !== userMessage.id && msg.id !== assistantMessage.id
         );
         const errorMessage: Message = {
