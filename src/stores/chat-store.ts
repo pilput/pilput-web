@@ -96,7 +96,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   createConversation: async (title, message, router) => {
-    const { isLoading, setIsLoading, selectedModel } = get();
+    const { isLoading, setIsLoading, selectedModel, sendMessage } = get();
     if (!message.trim() || isLoading) return null;
 
     setIsLoading(true);
@@ -122,6 +122,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const conversationId = response.data.data.id;
 
       router.replace('/chat/' + conversationId);
+      
+      // Automatically send the initial message as a streaming chat
+      setTimeout(() => {
+        sendMessage(message, conversationId);
+      }, 100); // Small delay to ensure page navigation completes
+      
       return conversationId;
     } catch (error) {
       console.error('Error creating conversation:', error);
