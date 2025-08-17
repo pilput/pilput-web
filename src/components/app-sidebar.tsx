@@ -33,12 +33,16 @@ export function AppSidebar() {
   const currentConversationId = params?.id as string;
   const { recentChats, fetchRecentChats } = useChatStore();
   const { toggleSidebar, state } = useSidebar();
-  const user = authStore();
+  const {fetch: fetchUser, data: userData} = authStore();
 
   useEffect(() => {
     fetchRecentChats();
-    user.fetch();
+    fetchUser();
   }, []);
+
+  // console.log(userData);
+
+  
 
   return (
     <Sidebar
@@ -133,11 +137,11 @@ export function AppSidebar() {
           {/* User Profile */}
           <div className="flex items-center justify-center gap-2 mt-1 group-data-[collapsible=icon]:mt-0">
             <Avatar className="h-6 w-6">
-              <AvatarImage src={user.data.image} alt={user.data.username} />
-              <AvatarFallback>{user.data.username ? user.data.username[0] : "U"}</AvatarFallback>
+              <AvatarImage src={userData.image} alt={userData.username} />
+              <AvatarFallback>{userData.username ? userData.username[0] : "U"}</AvatarFallback>
             </Avatar>
             <span className="text-xs text-muted-foreground font-normal group-data-[collapsible=icon]:hidden">
-              {user.data.username}
+              {userData.username}
             </span>
           </div>
         </div>

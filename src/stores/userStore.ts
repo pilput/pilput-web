@@ -29,10 +29,9 @@ export const authStore = create<authDataState>()((set) => ({
       const { data } = await axiosInstence2.get("/v1/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      const response = data.data as responseSuccess;
-
+      const response = data as responseSuccess;
+      
       set({ data: response.data });
-
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
