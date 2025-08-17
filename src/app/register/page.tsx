@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
@@ -39,13 +39,12 @@ export default function Signup() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Inputs>({
     resolver: zodResolver(UserSchema),
   });
   const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
     const id = toast.loading("Loading...");
-    setloginwait(true);
     try {
       const response = await axiosInstence2.post("/v1/auth/register", data);
       toast.success("Success Create Account", { id });
@@ -56,39 +55,67 @@ export default function Signup() {
       setCookie("token", response.data.access_token, {
         expires: expire,
         domain: `.${Config.maindoman}`,
-        sameSite: "strict",
+        sameSite: "none",
+        secure: true,
       });
-      setloginwait(false);
       router.push("/");
     } catch (error) {
       toast.error("Invalid username or password. Please try again.", { id });
-      setloginwait(false);
     }
   };
 
-  function checkUsername(username: string) {
-    if (username.length >= 5) {
-      axiosInstence
-        .post("/v1/auth/check-username", {
-          username: username,
-        })
-        .then((res) => {
-          if (res.data.success && res.data.data.available) {
-            toast.success(res.data.message || "username available", {
-              id: "username",
-            });
-          } else {
-            toast.error("Username already exists. Please try again.", {
-              id: "username",
-            });
-          }
-        });
+  // Username availability (debounced inline feedback)
+  const username = watch("username");
+  const [usernameStatus, setUsernameStatus] = useState<
+    "idle" | "checking" | "available" | "taken" | "error"
+  >("idle");
+  const [usernameMessage, setUsernameMessage] = useState<string>("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestIdRef = useRef(0);
+  useEffect(() => {
+    // Clear pending timers
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    // Reset if empty or too short
+    if (!username || username.trim().length < 5) {
+      setUsernameStatus("idle");
+      setUsernameMessage("");
+      return;
     }
-  }
+
+    // Debounce request
+    setUsernameStatus("checking");
+    setUsernameMessage("Checking availability...");
+    const currentRequestId = ++requestIdRef.current;
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await axiosInstence.post("/v1/auth/check-username", {
+          username: username.trim(),
+        });
+        if (currentRequestId !== requestIdRef.current) return; // stale
+        const available = Boolean(res?.data?.data?.available);
+        if (res?.data?.success && available) {
+          setUsernameStatus("available");
+          setUsernameMessage(res?.data?.message || "Username is available");
+        } else {
+          setUsernameStatus("taken");
+          setUsernameMessage(
+            res?.data?.message || "Username already exists. Please try again."
+          );
+        }
+      } catch (e) {
+        if (currentRequestId !== requestIdRef.current) return; // stale
+        setUsernameStatus("error");
+        setUsernameMessage("Could not check username. Please try again.");
+      }
+    }, 500);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [username]);
 
   const router = useRouter();
-  const [loginwait, setloginwait] = useState(false);
-  console.log(errors);
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
@@ -114,14 +141,15 @@ export default function Signup() {
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
                 <Input
                   id="username"
                   placeholder="Enter your username"
                   className="pl-9"
                   {...register("username")}
                   aria-invalid={errors.username ? "true" : "false"}
-                  onBlur={(e) => checkUsername(e.target.value)}
+                  autoComplete="username"
+                  disabled={isSubmitting}
                 />
               </div>
               {errors.username && (
@@ -129,12 +157,27 @@ export default function Signup() {
                   {errors.username.message}
                 </p>
               )}
+              {!errors.username && usernameStatus !== "idle" && (
+                <p
+                  className={`text-sm ${
+                    usernameStatus === "available"
+                      ? "text-green-600"
+                      : usernameStatus === "checking"
+                      ? "text-muted-foreground"
+                      : "text-red-500"
+                  }`}
+                  aria-live="polite"
+                  role="status"
+                >
+                  {usernameMessage}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
                 <Input
                   id="email"
                   type="email"
@@ -142,6 +185,8 @@ export default function Signup() {
                   className="pl-9"
                   {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
+                  autoComplete="email"
+                  disabled={isSubmitting}
                 />
               </div>
               {errors.email && (
@@ -154,7 +199,7 @@ export default function Signup() {
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
                 <Input
                   id="password"
                   type="password"
@@ -162,6 +207,8 @@ export default function Signup() {
                   className="pl-9"
                   {...register("password")}
                   aria-invalid={errors.password ? "true" : "false"}
+                  autoComplete="new-password"
+                  disabled={isSubmitting}
                 />
               </div>
               {errors.password && (
@@ -171,8 +218,8 @@ export default function Signup() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={loginwait}>
-              {loginwait ? (
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating account...
