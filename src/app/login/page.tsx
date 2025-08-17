@@ -62,7 +62,10 @@ export default function LoginPage() {
       setCookie("token", result.data.access_token, {
         expires: expire,
         domain: `.${Config.maindoman}`,
-        sameSite: "strict",
+        sameSite: "none",
+        secure: true,
+
+
       });
       setLoginWait(false);
       router.push("/");
