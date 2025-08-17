@@ -24,7 +24,7 @@ export function ChatSidebar({
 
   useEffect(() => {
     fetchRecentChats();
-  }, [fetchRecentChats]);
+  }, []);
 
   return (
     <>

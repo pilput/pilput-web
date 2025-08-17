@@ -38,7 +38,7 @@ export function AppSidebar() {
   useEffect(() => {
     fetchRecentChats();
     user.fetch();
-  }, [fetchRecentChats, user]);
+  }, []);
 
   return (
     <Sidebar
