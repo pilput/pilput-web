@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import { getToken, RemoveToken } from "@/utils/Auth";
 import { Auth } from "@/types/you";
 import { AxiosError } from "axios";
@@ -26,7 +26,7 @@ export const authStore = create<authDataState>()((set) => ({
   },
   fetch: async () => {
     try {
-      const { data } = await axiosInstence.get("/v1/users/me", {
+      const { data } = await axiosInstence2.get("/v1/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const response = data.data as responseSuccess;
