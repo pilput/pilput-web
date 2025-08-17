@@ -33,13 +33,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
   isLoading: false,
   recentChats: [],
   // Default to Llama 4 Maverick free model
-  selectedModel: 'qwen/qwen3-coder:free',
+  selectedModel: 'openai/gpt-oss-20b:free',
   // List of free models available on OpenRouter
   availableModels: [
     { id: 'qwen/qwen3-coder:free', name: 'Qwen 3 Coder' },
     { id: 'meta-llama/llama-4-maverick:free', name: 'Llama 4 Maverick' },
     { id: 'meta-llama/llama-4-scout:free', name: 'Llama 4 Scout' },
     { id: 'deepseek/deepseek-chat-v3-0324:free', name: 'DeepSeek V3' },
+    { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
+    { id: 'microsoft/phi-3-mini-4k-instruct:free', name: 'Phi 3 Mini' },
+    { id: 'google/gemma-7b-it:free', name: 'Gemma 7B' },
+    { id: 'openai/gpt-oss-20b:free', name: 'GPT-OSS 20B' },
   ],
   setMessages: (messages) => set({ messages }),
   setIsLoading: (isLoading) => set({ isLoading }),
