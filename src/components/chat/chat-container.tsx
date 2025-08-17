@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { useChatStore } from '@/stores/chat-store';
+import { useChatStore } from "@/stores/chat-store";
 import { ChatInput } from "./chat-input";
 import { ChatMessage } from "./chat-message";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,14 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const { messages, isLoading, fetchMessages, sendMessage, createConversation, editMessage } = useChatStore();
+  const {
+    messages,
+    isLoading,
+    fetchMessages,
+    sendMessage,
+    createConversation,
+    editMessage,
+  } = useChatStore();
 
   // Auto-scroll to bottom when messages change
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {

@@ -22,13 +22,6 @@ interface ChatState {
 
 export const useChatStore = create<ChatState>((set, get) => ({
   messages: [
-    {
-      id: Date.now().toString(),
-      content: 'message',
-      role: 'user',
-      createdAt: new Date(),
-      isStreaming: false,
-    },
   ],
   isLoading: false,
   recentChats: [],
@@ -122,12 +115,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const conversationId = response.data.data.id;
 
       router.replace('/chat/' + conversationId);
-      
+
       // Automatically send the initial message as a streaming chat
       setTimeout(() => {
         sendMessage(message, conversationId);
       }, 100); // Small delay to ensure page navigation completes
-      
+
       return conversationId;
     } catch (error) {
       console.error('Error creating conversation:', error);
