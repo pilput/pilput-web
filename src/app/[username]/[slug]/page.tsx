@@ -8,7 +8,7 @@ import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import type { Post } from "@/types/post";
-import { getToken } from "@/utils/Auth";
+import { cookies } from 'next/headers'
 
 interface succesResponse {
   data: Post;
@@ -33,22 +33,25 @@ export default async function Page(props: {
   const post = await getPost(params.username, params.slug);
 
   // Record view server-side only if token exists
-  const token = getToken();
+  const cookieStore = await cookies()
+  const token = cookieStore.get('token')?.value
 
-  try {
-    await axiosInstence.post(`/v1/posts/${post.id}/view`, null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (error) {
-    // Silently fail view recording
-    console.error("Failed to record view:", error);
+  if (token) {   
+    try {
+      console.log("token", token);
+      await axiosInstence.post(`/v1/posts/${post.id}/view`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      // Silently fail view recording
+      console.error("Failed to record view:", error);
+    }
   }
 
   return (
     <>
-      {/* Removed <ViewRecorder postId={post.id} /> */}
       <Navigation />
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-3xl mx-auto px-6 py-12">
