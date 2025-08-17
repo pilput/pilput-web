@@ -34,17 +34,16 @@ export default async function Page(props: {
 
   // Record view server-side only if token exists
   const token = getToken();
-  if (token) {
-    try {
-      await axiosInstence.post(`/v1/posts/${post.id}/view`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      // Silently fail view recording
-      console.error("Failed to record view:", error);
-    }
+
+  try {
+    await axiosInstence.post(`/v1/posts/${post.id}/view`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    // Silently fail view recording
+    console.error("Failed to record view:", error);
   }
 
   return (
