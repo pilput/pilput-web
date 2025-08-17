@@ -119,7 +119,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       clearTimeout(timeoutId);
       if (response.status !== 201) throw new Error(`HTTP error! status: ${response.status}`);
       
-      const conversationId = response.data.id;
+      const conversationId = response.data.data.id;
+
       router.replace('/chat/' + conversationId);
       return conversationId;
     } catch (error) {
