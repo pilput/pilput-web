@@ -102,7 +102,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
           ref={chatContainerRef}
           className="flex-1 overflow-y-auto overflow-x-hidden py-4 min-h-0"
         >
-          <div className="max-w-5xl mx-auto w-full px-4 h-full">
+          <div className="max-w-6xl mx-auto w-full px-4 h-full">
             {messages.map((message, index) => (
               <ChatMessage
                 key={`${message.id}-${index}`}
