@@ -20,7 +20,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
     fetchMessages,
     sendMessage,
     createConversation,
-    editMessage,
+    isNewConversation,
   } = useChatStore();
 
   // Auto-scroll to bottom when messages change
@@ -43,6 +43,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
 
   useEffect(() => {
     if (!currentConvertations) return;
+    if (isNewConversation) return;
     fetchMessages(currentConvertations);
   }, [currentConvertations, fetchMessages]);
 
@@ -115,7 +116,6 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
                 key={`${message.id}-${index}`}
                 message={message}
                 className={index === messages.length - 1 ? "pb-20" : ""}
-                onEdit={editMessage}
                 onFeedback={(id, type) => {
                   // Handle feedback (e.g., send to analytics)
                   console.log(`Feedback for message ${id}: ${type}`);

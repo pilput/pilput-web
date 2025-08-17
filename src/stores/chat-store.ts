@@ -18,6 +18,8 @@ interface ChatState {
   editMessage: (id: string, content: string) => void;
   setIsLoading: (isLoading: boolean) => void;
   setSelectedModel: (model: string) => void;
+  isNewConversation: boolean;
+
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -42,6 +44,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     { id: 'z-ai/glm-4.5-air:free', name: 'GLM 4.5 Air' },
     { id: 'moonshotai/kimi-k2:free', name: 'Kimi K2' },
   ],
+  isNewConversation: false,
   setMessages: (messages) => set({ messages }),
   setIsLoading: (isLoading) => set({ isLoading }),
   setSelectedModel: (model) => set({ selectedModel: model }),
@@ -113,6 +116,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
       if (response.status !== 201) throw new Error(`HTTP error! status: ${response.status}`);
 
       const conversationId = response.data.data.id;
+
+      set({
+        isNewConversation: true,
+        messages: [],
+      })
 
       router.replace('/chat/' + conversationId);
 
@@ -252,6 +260,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         clearTimeout(updateTimeout);
       }
       clearTimeout(timeoutId);
+      set({ isNewConversation: false });
 
     } catch (error) {
       console.error('Error sending message:', error);
