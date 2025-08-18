@@ -57,15 +57,13 @@ export default function LoginPage() {
       }
 
       const expire = new Date();
-      expire.setDate(expire.getDate() + 3);
+      expire.setTime(expire.getTime() + 6 * 60 * 60 * 1000); // 6 hours from now
 
       setCookie("token", result.data.access_token, {
         expires: expire,
         domain: `.${Config.maindoman}`,
         sameSite: "none",
         secure: true,
-
-
       });
       setLoginWait(false);
       router.push("/");
