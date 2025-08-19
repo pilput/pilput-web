@@ -97,7 +97,7 @@ export default function LoginPage() {
   };
 
   function oauthGithub() {
-    window.location.href = `https://${Config.apibaseurl2}/v1/auth/github`;
+    window.location.href = `${Config.apibaseurl2}/v1/auth/github`;
   }
 
   return (
