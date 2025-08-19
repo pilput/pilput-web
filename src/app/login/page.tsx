@@ -65,11 +65,33 @@ export default function LoginPage() {
         sameSite: "none",
         secure: true,
       });
+      
+      toast.success("Login successful! Redirecting...");
       setLoginWait(false);
       router.push("/");
-    } catch (error) {
-      toast.error("Invalid username or password. Please try again.");
-      console.log(error);
+    } catch (error: any) {
+      let errorMessage = "An error occurred during login";
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status === 401) {
+          errorMessage = "Invalid email or password. Please try again.";
+        } else if (error.response.status === 429) {
+          errorMessage = "Too many login attempts. Please try again later.";
+        } else if (error.response.data?.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = "No response from server. Please check your connection.";
+      } else if (error.message) {
+        // Something happened in setting up the request that triggered an Error
+        errorMessage = error.message;
+      }
+      
+      toast.error(errorMessage, { duration: 5000 });
+      console.error("Login error:", error);
       setLoginWait(false);
     }
   };
@@ -166,7 +188,7 @@ export default function LoginPage() {
             <GithubIcon className="mr-2 h-4 w-4" />
             Github
           </Button>
-          
+
           <div className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link
