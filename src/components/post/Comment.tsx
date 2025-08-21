@@ -1,7 +1,5 @@
 "use client";
-import { Config } from "@/utils/getCofig";
-import React, { useEffect, useRef, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import React, { useEffect, useState } from "react";
 import { getToken } from "@/utils/Auth";
 import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
@@ -16,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { axiosInstence } from "@/utils/fetch";
+import { useSocket } from "@/utils/socketio";
 
 interface CommentData {
   id: string;
@@ -33,16 +32,27 @@ const Comment = ({ postId }: { postId: string }) => {
   const [comment, setcomment] = useState<string>("");
   const [comments, setcomments] = useState<CommentData[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isSocketConnected, setIsSocketConnected] = useState<boolean>(false);
-  const [isReconnecting, setIsReconnecting] = useState<boolean>(false);
-  const socketRef = useRef<Socket | null>(null);
+  const [token, setToken] = useState<string>("");
+
+  const { socket, isConnected, isReconnecting, reconnect } = useSocket({
+    token: token || undefined,
+    postId,
+  });
 
   useEffect(() => {
-    const token = getToken();
-    setIsLoggedIn(!!token);
+    const fetchTokenAndComments = async () => {
+      try {
+        const authToken = await getToken();
+        const tokenString = Array.isArray(authToken) ? authToken[0] : authToken;
+        setToken(tokenString || "");
+        setIsLoggedIn(!!tokenString);
+      } catch (error) {
+        console.error("Error getting token:", error);
+        setToken("");
+        setIsLoggedIn(false);
+      }
 
-    // Fetch comments from API on component mount
-    const fetchComments = async () => {
+      // Fetch comments from API on component mount
       try {
         const response = await axiosInstence.get(
           `/v1/posts/${postId}/comments`
@@ -55,129 +65,42 @@ const Comment = ({ postId }: { postId: string }) => {
       }
     };
 
-    fetchComments();
+    fetchTokenAndComments();
+  }, [postId]);
 
-    // Only connect if user is logged in and has a valid token
-    if (token) {
-      const connectSocket = () => {
-        socketRef.current = io(Config.wsbaseurl + "/posts", {
-          query: { post_id: postId, token: token },
-          extraHeaders: {
-            Authorization: `Bearer ${token}`,
-          },
-          transports: ["websocket", "polling"],
-          timeout: 20000,
-          forceNew: true,
-        });
+  // Set up socket event listeners when socket is available
+  useEffect(() => {
+    if (!socket) return;
 
-        if (socketRef.current) {
-          // Connection event handlers
-          socketRef.current.on("connect", () => {
-            console.log("Socket connected successfully");
-            setIsSocketConnected(true);
-            setIsReconnecting(false);
-          });
+    // Listen for new comments
+    const handleNewComment = (message: CommentData[]) => {
+      console.log("Received new comment:", message);
+      setcomments(message);
+    };
 
-          socketRef.current.on("connect_error", (error) => {
-            console.error("Socket connection error:", error);
-            setIsSocketConnected(false);
-            setIsReconnecting(true);
-            setTimeout(() => {
-              if (socketRef.current && !socketRef.current.connected) {
-                console.log("Attempting to reconnect...");
-                socketRef.current.connect();
-              }
-            }, 5000);
-          });
+    // Listen for new replies
+    const handleNewReply = (message: CommentData[]) => {
+      console.log("Received new reply:", message);
+      setcomments(message);
+    };
 
-          socketRef.current.on("disconnect", (reason) => {
-            console.log("Socket disconnected:", reason);
-            setIsSocketConnected(false);
-            if (
-              reason === "io server disconnect" ||
-              reason === "transport close"
-            ) {
-              setIsReconnecting(true);
-              setTimeout(() => {
-                if (socketRef.current && !socketRef.current.connected) {
-                  console.log("Attempting to reconnect after disconnect...");
-                  socketRef.current.connect();
-                }
-              }, 3000);
-            }
-          });
+    // Listen for comment updates
+    const handleCommentUpdated = (message: CommentData[]) => {
+      console.log("Comments updated:", message);
+      setcomments(message);
+    };
 
-          socketRef.current.on("error", (error) => {
-            console.error("Socket error:", error);
-            setIsSocketConnected(false);
-          });
-
-          // Listen for new comments
-          socketRef.current.on("newComment", (message: CommentData[]) => {
-            setcomments(message);
-          });
-
-          // Listen for new replies
-          socketRef.current.on("newReply", (message: CommentData[]) => {
-            setcomments(message);
-          });
-        }
-      };
-
-      connectSocket();
-    } else {
-      console.warn("No authentication token found, skipping socket connection");
-    }
+    socket.on("newComment", handleNewComment);
+    socket.on("newReply", handleNewReply);
+    socket.on("commentUpdated", handleCommentUpdated);
 
     // Cleanup function
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      socket.off("newComment", handleNewComment);
+      socket.off("newReply", handleNewReply);
+      socket.off("commentUpdated", handleCommentUpdated);
     };
-  }, [postId]);
-
-  const reconnectSocket = () => {
-    const token = getToken();
-    if (token && postId) {
-      setIsReconnecting(true);
-
-      // Disconnect existing socket if any
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-
-      // Create new connection
-      socketRef.current = io(Config.wsbaseurl + "/posts", {
-        query: { post_id: postId, token: token },
-        extraHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-        transports: ["websocket", "polling"],
-        timeout: 20000,
-        forceNew: true,
-      });
-
-      // Set up event handlers
-      if (socketRef.current) {
-        socketRef.current.on("connect", () => {
-          setIsSocketConnected(true);
-          setIsReconnecting(false);
-        });
-
-        socketRef.current.on("connect_error", (error) => {
-          setIsSocketConnected(false);
-          setIsReconnecting(false);
-        });
-
-        socketRef.current.on("newComment", (message: CommentData[]) => {
-          setcomments(message);
-        });
-      }
-    }
-  };
+  }, [socket]);
 
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -193,27 +116,45 @@ const Comment = ({ postId }: { postId: string }) => {
     }
 
     // Check if socket is connected
-    if (socketRef.current && socketRef.current.connected) {
-      socketRef.current.emit("sendComment", { text: comment });
-      setcomment("");
+    if (socket && socket.connected) {
+      try {
+        socket.emit("sendComment", {
+          text: comment.trim(),
+          post_id: postId
+        });
+        console.log("Comment sent successfully");
+        setcomment("");
+      } catch (error) {
+        console.error("Error sending comment:", error);
+        // If sending fails, try to reconnect
+        reconnect();
+      }
     } else {
-      console.error("Socket not connected. Attempting to reconnect...");
+      console.warn("Socket not connected. Attempting to reconnect...");
 
       // Try to reconnect
-      reconnectSocket();
+      reconnect();
 
-      // Wait a moment and try again
+      // Wait for reconnection and try again
       setTimeout(() => {
-        if (socketRef.current && socketRef.current.connected) {
-          socketRef.current.emit("sendComment", { text: comment });
-          setcomment("");
+        if (socket && socket.connected) {
+          try {
+            socket.emit("sendComment", {
+              text: comment.trim(),
+              post_id: postId
+            });
+            console.log("Comment sent after reconnection");
+            setcomment("");
+          } catch (error) {
+            console.error("Failed to send comment after reconnection:", error);
+            // You could show a toast notification here
+            alert("Failed to send comment. Please try again.");
+          }
         } else {
-          console.error(
-            "Failed to reconnect. Please refresh the page and try again."
-          );
-          // You could show a toast notification here
+          console.error("Failed to reconnect. Please refresh the page and try again.");
+          alert("Connection lost. Please refresh the page and try again.");
         }
-      }, 2000);
+      }, 3000);
     }
   }
   return (
@@ -408,7 +349,7 @@ const Comment = ({ postId }: { postId: string }) => {
                   <RotateCcw className="w-4 h-4 animate-spin" />
                   <span className="text-xs font-medium">Reconnecting...</span>
                 </div>
-              ) : isSocketConnected ? (
+              ) : isConnected ? (
                 <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                   <Wifi className="w-4 h-4" />
                   <span className="text-xs font-medium">Connected</span>
@@ -446,10 +387,10 @@ const Comment = ({ postId }: { postId: string }) => {
                     type="submit"
                     className="px-4 py-2 bg-gray-800 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={
-                      !comment.trim() || !isSocketConnected || isReconnecting
+                      !comment.trim() || !isConnected || isReconnecting
                     }
                     title={
-                      !isSocketConnected
+                      !isConnected
                         ? "Cannot post comment while disconnected"
                         : isReconnecting
                         ? "Reconnecting..."
