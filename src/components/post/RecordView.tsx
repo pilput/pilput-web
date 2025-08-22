@@ -14,10 +14,7 @@ const ViewRecorder = ({ postId }: ViewRecorderProps) => {
       try {
         // Check if user is authenticated before recording view
         const token = await getToken();
-        console.log("token dari client ", token);
-
         
-
         if (token) {
           await axiosInstence.post(`/v1/posts/${postId}/view`, null, {
             headers: {
