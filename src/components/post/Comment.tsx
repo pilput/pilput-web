@@ -86,22 +86,16 @@ const Comment = ({ postId }: { postId: string }) => {
       setcomments(message);
     };
 
-    // Listen for comment updates
-    const handleCommentUpdated = (message: CommentData[]) => {
-      console.log("Comments updated event:", message);
-      setcomments(message);
-    };
-
     // Remove any existing listeners first to prevent duplicates
     socket.off("newComment");
     socket.off("newReply");
     socket.off("commentUpdated");
 
     // Add new listeners
-    socket.on("newComment", handleNewComment);
+    socket.on("newComment", () => {
+      console.log("Received new comment event");
+    });
     socket.on("newReply", handleNewReply);
-    socket.on("commentUpdated", handleCommentUpdated);
-
     console.log("Socket event listeners attached successfully");
 
     // Cleanup function
@@ -109,7 +103,6 @@ const Comment = ({ postId }: { postId: string }) => {
       console.log("Cleaning up socket event listeners");
       socket.off("newComment", handleNewComment);
       socket.off("newReply", handleNewReply);
-      socket.off("commentUpdated", handleCommentUpdated);
     };
   }, [socket, isConnected, postId]);
 
@@ -131,7 +124,7 @@ const Comment = ({ postId }: { postId: string }) => {
       try {
         socket.emit("sendComment", {
           text: comment.trim(),
-          post_id: postId
+          post_id: postId,
         });
         console.log("Comment sent successfully");
         setcomment("");
@@ -152,7 +145,7 @@ const Comment = ({ postId }: { postId: string }) => {
           try {
             socket.emit("sendComment", {
               text: comment.trim(),
-              post_id: postId
+              post_id: postId,
             });
             console.log("Comment sent after reconnection");
             setcomment("");
@@ -162,7 +155,9 @@ const Comment = ({ postId }: { postId: string }) => {
             alert("Failed to send comment. Please try again.");
           }
         } else {
-          console.error("Failed to reconnect. Please refresh the page and try again.");
+          console.error(
+            "Failed to reconnect. Please refresh the page and try again."
+          );
           alert("Connection lost. Please refresh the page and try again.");
         }
       }, 3000);
@@ -397,9 +392,7 @@ const Comment = ({ postId }: { postId: string }) => {
                   <button
                     type="submit"
                     className="px-4 py-2 bg-gray-800 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={
-                      !comment.trim() || !isConnected || isReconnecting
-                    }
+                    disabled={!comment.trim() || !isConnected || isReconnecting}
                     title={
                       !isConnected
                         ? "Cannot post comment while disconnected"
