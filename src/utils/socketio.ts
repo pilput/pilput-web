@@ -52,7 +52,13 @@ export const useSocket = (options: SocketOptions = {}): UseSocketReturn => {
 
         // Join post room if postId is provided
         if (postId) {
+          console.log("Joining post room:", postId);
           socketRef.current?.emit("joinPost", { post_id: postId });
+          
+          // Confirm room join
+          socketRef.current?.on("joinedPost", (data) => {
+            console.log("Successfully joined post room:", data);
+          });
         }
       });
 

@@ -68,39 +68,50 @@ const Comment = ({ postId }: { postId: string }) => {
     fetchTokenAndComments();
   }, [postId]);
 
-  // Set up socket event listeners when socket is available
+  // Set up socket event listeners when socket is available and connected
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !isConnected) return;
+
+    console.log("Setting up socket event listeners for postId:", postId);
 
     // Listen for new comments
     const handleNewComment = (message: CommentData[]) => {
-      console.log("Received new comment:", message);
+      console.log("Received new comment event:", message);
       setcomments(message);
     };
 
     // Listen for new replies
     const handleNewReply = (message: CommentData[]) => {
-      console.log("Received new reply:", message);
+      console.log("Received new reply event:", message);
       setcomments(message);
     };
 
     // Listen for comment updates
     const handleCommentUpdated = (message: CommentData[]) => {
-      console.log("Comments updated:", message);
+      console.log("Comments updated event:", message);
       setcomments(message);
     };
 
+    // Remove any existing listeners first to prevent duplicates
+    socket.off("newComment");
+    socket.off("newReply");
+    socket.off("commentUpdated");
+
+    // Add new listeners
     socket.on("newComment", handleNewComment);
     socket.on("newReply", handleNewReply);
     socket.on("commentUpdated", handleCommentUpdated);
 
+    console.log("Socket event listeners attached successfully");
+
     // Cleanup function
     return () => {
+      console.log("Cleaning up socket event listeners");
       socket.off("newComment", handleNewComment);
       socket.off("newReply", handleNewReply);
       socket.off("commentUpdated", handleCommentUpdated);
     };
-  }, [socket]);
+  }, [socket, isConnected, postId]);
 
   function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
