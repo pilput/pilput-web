@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { axiosInstence } from "@/utils/fetch";
 import { useSocket } from "@/utils/socketio";
+import { Config } from "@/utils/getCofig";
 
 interface CommentData {
   id: string;
@@ -75,27 +76,58 @@ const Comment = ({ postId }: { postId: string }) => {
     console.log("Setting up socket event listeners for postId:", postId);
 
     // Listen for new comments
-    const handleNewComment = (message: CommentData[]) => {
-      console.log("Received new comment event:", message);
-      setcomments(message);
+    const handleNewComment = (data: any) => {
+      console.log("Received new comment event:", data);
+      // Refresh comments from API instead of relying on socket data
+      fetchComments();
     };
 
     // Listen for new replies
-    const handleNewReply = (message: CommentData[]) => {
-      console.log("Received new reply event:", message);
-      setcomments(message);
+    const handleNewReply = (data: any) => {
+      console.log("Received new reply event:", data);
+      // Refresh comments from API
+      fetchComments();
+    };
+
+    // Listen for comment errors
+    const handleCommentError = (error: any) => {
+      console.error("Comment error:", error);
+    };
+
+    // Listen for successful comment send confirmation
+    const handleCommentSent = (data: any) => {
+      console.log("Comment sent successfully:", data);
+      // Clear the comment input
+      setcomment("");
+      // Refresh comments to show the new comment
+      fetchComments();
+    };
+
+    // Helper function to fetch comments
+    const fetchComments = async () => {
+      try {
+        const response = await axiosInstence.get(`/v1/posts/${postId}/comments`);
+        if (response.data.success) {
+          setcomments(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
     };
 
     // Remove any existing listeners first to prevent duplicates
     socket.off("newComment");
     socket.off("newReply");
     socket.off("commentUpdated");
+    socket.off("commentError");
+    socket.off("commentSent");
 
     // Add new listeners
-    socket.on("newComment", () => {
-      console.log("Received new comment event");
-    });
+    socket.on("newComment", handleNewComment);
     socket.on("newReply", handleNewReply);
+    socket.on("commentError", handleCommentError);
+    socket.on("commentSent", handleCommentSent);
+
     console.log("Socket event listeners attached successfully");
 
     // Cleanup function
@@ -103,6 +135,8 @@ const Comment = ({ postId }: { postId: string }) => {
       console.log("Cleaning up socket event listeners");
       socket.off("newComment", handleNewComment);
       socket.off("newReply", handleNewReply);
+      socket.off("commentError", handleCommentError);
+      socket.off("commentSent", handleCommentSent);
     };
   }, [socket, isConnected, postId]);
 
@@ -122,19 +156,29 @@ const Comment = ({ postId }: { postId: string }) => {
     // Check if socket is connected
     if (socket && socket.connected) {
       try {
+        console.log("Sending comment:", {
+          text: comment.trim(),
+          post_id: postId,
+        });
+
         socket.emit("sendComment", {
           text: comment.trim(),
           post_id: postId,
         });
-        console.log("Comment sent successfully");
-        setcomment("");
+
+        console.log("Comment emit sent to server");
+        // Don't clear comment here - let the socket event handler do it
       } catch (error) {
         console.error("Error sending comment:", error);
-        // If sending fails, try to reconnect
-        reconnect();
+        alert("Failed to send comment. Please try again.");
       }
     } else {
-      console.warn("Socket not connected. Attempting to reconnect...");
+      console.warn("Socket not connected. Current status:", {
+        socket: !!socket,
+        connected: socket?.connected,
+        isConnected,
+        isReconnecting
+      });
 
       // Try to reconnect
       reconnect();
@@ -143,21 +187,24 @@ const Comment = ({ postId }: { postId: string }) => {
       setTimeout(() => {
         if (socket && socket.connected) {
           try {
+            console.log("Retrying to send comment after reconnection");
             socket.emit("sendComment", {
               text: comment.trim(),
               post_id: postId,
             });
             console.log("Comment sent after reconnection");
-            setcomment("");
+            // Don't clear comment here - let the socket event handler do it
           } catch (error) {
             console.error("Failed to send comment after reconnection:", error);
-            // You could show a toast notification here
             alert("Failed to send comment. Please try again.");
           }
         } else {
-          console.error(
-            "Failed to reconnect. Please refresh the page and try again."
-          );
+          console.error("Failed to reconnect. Socket status:", {
+            socket: !!socket,
+            connected: socket?.connected,
+            isConnected,
+            isReconnecting
+          });
           alert("Connection lost. Please refresh the page and try again.");
         }
       }, 3000);
@@ -331,6 +378,36 @@ const Comment = ({ postId }: { postId: string }) => {
           ))
         )}
       </div>
+
+      {/* Socket Debug Info - Remove this in production */}
+      {process.env.NODE_ENV === "development" && (
+        <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4 text-sm">
+          <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">🔍 Socket Debug Info</h4>
+          <div className="space-y-1 text-gray-700 dark:text-gray-300">
+            <div>Status: <span className={isConnected ? "text-green-600" : "text-red-600"}>{isConnected ? "Connected" : "Disconnected"}</span></div>
+            <div>Reconnecting: <span className={isReconnecting ? "text-yellow-600" : "text-gray-500"}>{isReconnecting ? "Yes" : "No"}</span></div>
+            <div>Token: <span className={token ? "text-green-600" : "text-red-600"}>{token ? "Present" : "Missing"}</span></div>
+            <div>Post ID: {postId}</div>
+            <div>WS URL: {Config.wsbaseurl}</div>
+            <div>Socket ID: {socket?.id || "None"}</div>
+          </div>
+          <button
+            onClick={() => {
+              console.log("🔍 Manual socket debug:");
+              console.log("Socket object:", socket);
+              console.log("Socket connected:", socket?.connected);
+              console.log("Socket ID:", socket?.id);
+              if (socket?.connected) {
+                socket.emit("ping", { timestamp: Date.now() });
+                console.log("Sent ping to server");
+              }
+            }}
+            className="mt-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded"
+          >
+            Debug Socket
+          </button>
+        </div>
+      )}
 
       {/* Comment Input Form or Login Prompt */}
       {isLoggedIn ? (
