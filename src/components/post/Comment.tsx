@@ -35,7 +35,7 @@ const Comment = ({ postId }: { postId: string }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
 
-  const { socket, isConnected, isReconnecting, reconnect } = useSocket({
+  const { socket, isConnected, isReconnecting } = useSocket({
     token: token || undefined,
     postId,
   });
@@ -58,6 +58,8 @@ const Comment = ({ postId }: { postId: string }) => {
         const response = await axiosInstence.get(
           `/v1/posts/${postId}/comments`
         );
+        console.log("Response data:", response.data);
+        
         if (response.data.success) {
           setcomments(response.data.data);
         }
@@ -79,7 +81,10 @@ const Comment = ({ postId }: { postId: string }) => {
     const handleNewComment = (data: any) => {
       console.log("Received new comment event:", data);
       // Refresh comments from API instead of relying on socket data
-      fetchComments();
+      // fetchComments();
+      // console.log("new comment triggered" + data);
+      setcomments(data);
+      
     };
 
     // Listen for new replies
@@ -167,6 +172,8 @@ const Comment = ({ postId }: { postId: string }) => {
         });
 
         console.log("Comment emit sent to server");
+
+        setcomment("");
         // Don't clear comment here - let the socket event handler do it
       } catch (error) {
         console.error("Error sending comment:", error);
@@ -179,35 +186,7 @@ const Comment = ({ postId }: { postId: string }) => {
         isConnected,
         isReconnecting
       });
-
-      // Try to reconnect
-      reconnect();
-
-      // Wait for reconnection and try again
-      setTimeout(() => {
-        if (socket && socket.connected) {
-          try {
-            console.log("Retrying to send comment after reconnection");
-            socket.emit("sendComment", {
-              text: comment.trim(),
-              post_id: postId,
-            });
-            console.log("Comment sent after reconnection");
-            // Don't clear comment here - let the socket event handler do it
-          } catch (error) {
-            console.error("Failed to send comment after reconnection:", error);
-            alert("Failed to send comment. Please try again.");
-          }
-        } else {
-          console.error("Failed to reconnect. Socket status:", {
-            socket: !!socket,
-            connected: socket?.connected,
-            isConnected,
-            isReconnecting
-          });
-          alert("Connection lost. Please refresh the page and try again.");
-        }
-      }, 3000);
+      alert("Connection lost. Please refresh the page and try again.");
     }
   }
   return (
