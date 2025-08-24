@@ -26,14 +26,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 export function ChatSidebar() {
   const params = useParams();
   const currentConversationId = params?.id as string;
-  const { recentChats, fetchRecentChats } = useChatStore();
+  const { recentChats, fetchRecentChats, isNewConversation } = useChatStore();
   const { toggleSidebar, state } = useSidebar();
   const { fetch: fetchUser, data: userData } = authStore();
 
   useEffect(() => {
     fetchRecentChats();
     fetchUser();
-  }, []);
+  }, [isNewConversation]);
 
   // console.log(userData);
 
