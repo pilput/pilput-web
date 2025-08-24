@@ -26,7 +26,7 @@ function Posts(props: { usename: string }) {
     <div>
       <div>Posts</div>
       {posts.map((post) => (
-        <Postlist key={post.id} post={post} viewMode="writer" />
+        <Postlist key={post.id} post={post} />
       ))}
     </div>
   );
