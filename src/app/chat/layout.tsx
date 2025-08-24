@@ -1,6 +1,6 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar";
+import {ChatSidebar} from "@/components/chat/chat-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import React from "react";
 
@@ -13,7 +13,7 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
     <SidebarProvider>
       <div className="h-screen w-full bg-background text-foreground flex overflow-hidden">
         {/* Sidebar */}
-        <AppSidebar />
+        <ChatSidebar />
 
         {/* Main content */}
         <div className="flex-1 flex flex-col h-full min-h-0">

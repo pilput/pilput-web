@@ -1,127 +1,146 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Plus, MessageSquare, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useChatStore } from "@/stores/chat-store";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { authStore } from "@/stores/userStore";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
-interface ChatSidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-  currentConvertations: string;
-}
-
-export function ChatSidebar({
-  isOpen,
-  onClose,
-  currentConvertations,
-}: ChatSidebarProps) {
-  const [isHoveringClose, setIsHoveringClose] = useState(false);
+export function ChatSidebar() {
+  const params = useParams();
+  const currentConversationId = params?.id as string;
   const { recentChats, fetchRecentChats } = useChatStore();
+  const { toggleSidebar, state } = useSidebar();
+  const { fetch: fetchUser, data: userData } = authStore();
 
   useEffect(() => {
     fetchRecentChats();
+    fetchUser();
   }, []);
 
+  // console.log(userData);
+
   return (
-    <>
-      {/* Mobile overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
-          onClick={onClose}
-        />
-      )}
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-sidebar bg-sidebar text-sidebar-foreground"
+    >
+      {/* Header */}
+      <SidebarHeader className="px-4 py-3 border-b border-sidebar flex flex-row items-center justify-between">
+        <h2 className="text-base font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
+          AI Chat
+        </h2>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleSidebar}
+          className="h-6 w-6 text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-border"
+        >
+          {state === "expanded" ? (
+            <PanelLeftClose className="h-4 w-4" />
+          ) : (
+            <PanelLeft className="h-4 w-4" />
+          )}
+          <span className="sr-only">Toggle sidebar</span>
+        </Button>
+      </SidebarHeader>
 
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-30 w-64 bg-background border-r border-border transform transition-transform duration-200 ease-in-out",
-          isOpen ? "translate-x-0" : "-translate-x-full",
-          "lg:translate-x-0 lg:static lg:inset-auto lg:z-auto",
-          "flex flex-col h-screen min-h-0"
-        )}
-      >
-        {/* Header */}
-        <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-background">
-          <h2 className="text-base font-semibold text-foreground">AI Chat</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden h-7 w-7 p-0"
-            onClick={onClose}
-            onMouseEnter={() => setIsHoveringClose(true)}
-            onMouseLeave={() => setIsHoveringClose(false)}
-          >
-            {isHoveringClose ? (
-              <X className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <Menu className="h-4 w-4 text-muted-foreground" />
-            )}
-            <span className="sr-only">Close sidebar</span>
-          </Button>
-        </div>
-
+      <SidebarContent>
         {/* New Chat Button */}
-        <div className="px-4 py-3">
-          <Link
-            href="/chat"
-            className="flex items-center justify-center w-full gap-2 px-4 py-2 text-sm text-center text-gray-600 dark:text-gray-200 border border-border rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            New Chat
-          </Link>
-        </div>
+        <SidebarGroup>
+          <SidebarGroupContent className="px-4 py-3 group-data-[collapsible=icon]:px-2">
+            <Link
+              href="/chat"
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 text-sm font-normal text-center text-muted-foreground border border-sidebar-border rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors",
+                "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2"
+              )}
+            >
+              <Plus className="w-4 h-4 flex-shrink-0" />
+              <span className="group-data-[collapsible=icon]:hidden">
+                New Chat
+              </span>
+            </Link>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         {/* Chat List */}
-        <ScrollArea className="flex-1 px-2 h-0 min-h-0 max-h-[calc(100vh-176px)] overflow-y-auto">
-          <div className="space-y-1">
-            {recentChats.length === 0 ? (
-              <div className="text-center py-8 text-xs text-[oklch(0.556_0_0)] dark:text-[oklch(0.708_0_0)]">
-                No conversations yet.
-              </div>
-            ) : (
-              recentChats.map((chat: any, idx: number) => (
-                <Link
-                  key={chat.id}
-                  href={`/chat/${chat.id}`}
-                  className={cn(
-                    "flex items-center w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2 py-2 transition-colors",
-                    chat.id === currentConvertations
-                      ? "bg-accent text-accent-foreground"
-                      : "hover:bg-accent/50 text-muted-foreground"
-                  )}
-                  tabIndex={0}
-                  aria-current={
-                    chat.id === currentConvertations ? "true" : undefined
-                  }
-                >
-                  <MessageSquare className="mr-2 h-4 w-4 flex-shrink-0 opacity-70" />
-                  <span className="truncate">{chat.title}</span>
-                </Link>
-              ))
-            )}
-          </div>
-        </ScrollArea>
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-4 text-xs text-neutral-500 uppercase tracking-wider group-data-[collapsible=icon]:hidden">
+            Recent Conversations
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {recentChats.length === 0 ? (
+                <div className="text-center text-neutral-500 py-8 text-xs px-4 group-data-[collapsible=icon]:hidden">
+                  No conversations yet.
+                </div>
+              ) : (
+                recentChats.map((chat: any) => (
+                  <SidebarMenuItem key={chat.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={chat.id === currentConversationId}
+                      className={cn(
+                        "w-full justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap",
+                        chat.id === currentConversationId
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : "hover:bg-sidebar-accent text-muted-foreground hover:text-sidebar-accent-foreground"
+                      )}
+                      tooltip={chat.title}
+                    >
+                      <Link href={`/chat/${chat.id}`}>
+                        <MessageSquare className="mr-2 h-4 w-4 flex-shrink-0 opacity-70" />
+                        <span className="truncate group-data-[collapsible=icon]:hidden">
+                          {chat.title}
+                        </span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-        {/* Footer */}
-        <div className="px-4 py-3 border-t border-border bg-background flex flex-col gap-1">
-          <div className="text-[10px] text-muted-foreground text-center">
+      {/* Footer */}
+      <SidebarFooter className="px-4 py-3 border-t border-sidebar-border group-data-[collapsible=icon]:px-2">
+        <div className="flex flex-col gap-1 group-data-[collapsible=icon]:items-center">
+          <div className="text-[10px] text-neutral-500 text-center group-data-[collapsible=icon]:hidden">
             <p>Your conversations are saved.</p>
           </div>
-          {/* Minimal User/Profile Placeholder */}
-          <div className="flex items-center justify-center gap-2 mt-1">
-            <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-muted-foreground text-xs font-semibold">
-              U
-            </div>
-            <span className="text-xs text-muted-foreground font-normal">
-              User
+          {/* User Profile */}
+          <div className="flex items-center justify-center gap-2 mt-1 group-data-[collapsible=icon]:mt-0">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={userData.image} alt={userData.username} />
+              <AvatarFallback>
+                {userData.username ? userData.username[0] : "U"}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-xs text-muted-foreground font-normal group-data-[collapsible=icon]:hidden">
+              {userData.username}
             </span>
           </div>
         </div>
-      </aside>
-    </>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
