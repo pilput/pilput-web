@@ -214,7 +214,7 @@ const TagPage = () => {
                 ) : posts.length > 0 ? (
                   <div className="space-y-6">
                     {posts.map((post) => (
-                      <Postlist key={post.id} post={post} viewMode={viewMode} />
+                      <Postlist key={post.id} post={post} />
                     ))}
                   </div>
                 ) : (
