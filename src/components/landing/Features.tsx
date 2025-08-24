@@ -1,16 +1,79 @@
 "use client";
 import { motion, useInView } from "framer-motion";
-
-import { Badge } from "@/components/ui/badge";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { 
   BookOpen, 
-  MessageSquare, 
+  Bot, 
   Users, 
   Zap, 
   Sparkles,
-  Code
+  Code,
+  Palette
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+
+const BentoGrid = ({ children, className }: { children: React.ReactNode; className?: string; }) => {
+  return (
+    <div className={cn("grid w-full auto-rows-[18rem] grid-cols-3 gap-6", className)}>
+      {children}
+    </div>
+  );
+};
+
+const BentoCard = ({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode;
+  className?: string;
+  [key: string]: any;
+}) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ref.current.style.setProperty("--mouse-x", `${x}px`);
+    ref.current.style.setProperty("--mouse-y", `${y}px`);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      className={cn(
+        "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
+        // light styles
+        "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
+        // dark styles
+        "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+        className
+      )}
+      {...props}
+    >
+      <div
+        className={cn(
+          "pointer-events-none absolute -inset-px opacity-0 transition duration-300",
+          isHovered && "opacity-100"
+        )}
+        style={{
+          background:
+            "radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%)",
+        }}
+      />
+      {children}
+    </div>
+  );
+};
 
 const Features = () => {
   const ref = useRef(null);
@@ -21,108 +84,51 @@ const Features = () => {
       icon: BookOpen,
       title: "Rich Content Creation",
       description: "Create and share engaging blog posts with our powerful editor featuring markdown support and real-time preview.",
-      color: "from-blue-500/20 via-blue-400/30 to-cyan-400/20",
-      darkColor: "from-blue-400/30 via-blue-300/40 to-cyan-300/30",
-      iconColor: "text-blue-600 dark:text-blue-400",
-      shadowColor: "shadow-blue-200/20 dark:shadow-blue-400/10",
-      badge: "Popular",
-      delay: 0
+      className: "col-span-3 lg:col-span-1",
+      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/10 via-transparent to-transparent" />,
     },
     {
-      icon: MessageSquare,
-      title: "Interactive Chat",
-      description: "Connect with the community through our real-time chat system. Share ideas and collaborate instantly.",
-      color: "from-purple-500/20 via-purple-400/30 to-pink-400/20",
-      darkColor: "from-purple-400/30 via-purple-300/40 to-pink-300/30",
-      iconColor: "text-purple-600 dark:text-purple-400",
-      shadowColor: "shadow-purple-200/20 dark:shadow-purple-400/10",
-      badge: "New",
-      delay: 0.1
+      icon: Bot,
+      title: "AI Chat",
+      description: "Engage with our intelligent AI assistant. Ask questions, get help, and explore ideas.",
+      className: "col-span-3 lg:col-span-2",
+      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/10 via-transparent to-transparent" />,
     },
     {
       icon: Users,
       title: "Community Driven",
       description: "Join a vibrant community of writers, developers, and creators. Build meaningful connections.",
-      color: "from-green-500/20 via-green-400/30 to-emerald-400/20",
-      darkColor: "from-green-400/30 via-green-300/40 to-emerald-300/30",
-      iconColor: "text-green-600 dark:text-green-400",
-      shadowColor: "shadow-green-200/20 dark:shadow-green-400/10",
-      badge: "Growing",
-      delay: 0.2
+      className: "col-span-3 lg:col-span-2",
+      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-500/10 via-transparent to-transparent" />,
     },
     {
       icon: Zap,
       title: "Lightning Fast",
-      description: "Built with Next.js and optimized for performance. Experience blazing fast load times and smooth interactions.",
-      color: "from-yellow-500/20 via-yellow-400/30 to-orange-400/20",
-      darkColor: "from-yellow-400/30 via-yellow-300/40 to-orange-300/30",
-      iconColor: "text-yellow-600 dark:text-yellow-400",
-      shadowColor: "shadow-yellow-200/20 dark:shadow-yellow-400/10",
-      badge: "Fast",
-      delay: 0.3
+      description: "Built with Next.js and optimized for performance. Experience blazing fast load times.",
+      className: "col-span-3 lg:col-span-1",
+      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent" />,
     },
     {
       icon: Code,
       title: "Developer Friendly",
-      description: "Built by developers, for developers. Syntax highlighting, code blocks, and technical writing support.",
-      color: "from-indigo-500/20 via-indigo-400/30 to-blue-400/20",
-      darkColor: "from-indigo-400/30 via-indigo-300/40 to-blue-300/30",
-      iconColor: "text-indigo-600 dark:text-indigo-400",
-      shadowColor: "shadow-indigo-200/20 dark:shadow-indigo-400/10",
-      badge: "Dev",
-      delay: 0.4
-    }
+      description: "Syntax highlighting, code blocks, and technical writing support.",
+      className: "col-span-3 lg:col-span-1",
+      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent" />,
+    },
+    {
+      icon: Palette,
+      title: "Customizable UI",
+      description: "Tailor the look and feel of your space with customizable themes and layouts.",
+      className: "col-span-3 lg:col-span-2",
+      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-500/10 via-transparent to-transparent" />,
+    },
   ];
 
-  // Variants defined directly in the component
-
-
-
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-br from-background via-background to-muted/20 dark:from-background dark:via-background/95 dark:to-muted/10">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-muted/30 dark:from-background dark:via-background/98 dark:to-muted/20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 dark:bg-primary/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/5 dark:bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+    <section className="relative py-24 md:py-32 overflow-hidden bg-background dark:bg-black">
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div>
       </div>
-      
-      {/* Floating Elements */}
-      <motion.div 
-        animate={{
-          y: [-10, 10, -10],
-          transition: {
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }
-        }}
-        className="absolute top-20 left-10 w-4 h-4 bg-primary/20 rounded-full blur-sm"
-      />
-      <motion.div 
-        animate={{
-          y: [-10, 10, -10],
-          transition: {
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }
-        }}
-        className="absolute top-40 right-20 w-6 h-6 bg-secondary/20 rounded-full blur-sm"
-      />
-      <motion.div 
-        animate={{
-          y: [-10, 10, -10],
-          transition: {
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3
-          }
-        }}
-        className="absolute bottom-40 left-20 w-3 h-3 bg-accent/20 rounded-full blur-sm"
-      />
       
       <div className="container mx-auto px-4 relative z-10" ref={ref}>
         <motion.div
@@ -130,245 +136,54 @@ const Features = () => {
           animate={isInView ? "visible" : "hidden"}
           variants={{
             hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.2
-              }
-            }
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
           }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <motion.div 
-            variants={{
-              hidden: { 
-                opacity: 0, 
-                y: 60,
-                scale: 0.8,
-                rotateX: -15
-              },
-              visible: {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                rotateX: 0,
-                transition: {
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                  mass: 1
-                }
-              }
-            }} 
-            className="inline-flex items-center gap-3 mb-6">
-            <motion.div
-                variants={{
-                  hidden: { scale: 0, rotate: -180 },
-                  visible: {
-                    scale: 1,
-                    rotate: 0,
-                    transition: {
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 15,
-                      delay: 0.3
-                    }
-                  },
-                  hover: {
-                    scale: 1.1,
-                    rotate: 360,
-                    transition: {
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 20
-                    }
-                  }
-                }}
-                className="p-2 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 backdrop-blur-sm"
-              >
-              <Sparkles className="h-5 w-5 text-primary" />
-            </motion.div>
-            <Badge variant="secondary" className="text-sm px-4 py-1 bg-background/50 backdrop-blur-sm border border-primary/20">
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+            className="inline-flex items-center gap-2 mb-4"
+          >
+            <Sparkles className="h-5 w-5 text-primary" />
+            <Badge variant="outline" className="text-sm">
               Why Choose PILPUT
             </Badge>
           </motion.div>
           <motion.h2 
-            variants={{
-              hidden: { 
-                opacity: 0, 
-                y: 60,
-                scale: 0.8,
-                rotateX: -15
-              },
-              visible: {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                rotateX: 0,
-                transition: {
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                  mass: 1
-                }
-              }
-            }}
-            className="text-5xl md:text-7xl font-bold mb-8 leading-tight"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.1 } } }}
+            className="text-4xl md:text-6xl font-bold mb-4"
           >
-            <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 dark:from-foreground dark:via-foreground/95 dark:to-foreground/85 bg-clip-text text-transparent">
-              Powerful Features for
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-primary via-primary/80 to-secondary dark:from-primary dark:via-primary/90 dark:to-secondary/90 bg-clip-text text-transparent relative">
-              Modern Creators
-              <motion.div 
-                className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary/50 to-secondary/50 dark:from-primary/70 dark:to-secondary/70 rounded-full"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: isInView ? 1 : 0 }}
-                transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
-              />
-            </span>
+            Powerful Features for Modern Creators
           </motion.h2>
           <motion.p 
-            variants={{
-              hidden: { 
-                opacity: 0, 
-                y: 60,
-                scale: 0.8,
-                rotateX: -15
-              },
-              visible: {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                rotateX: 0,
-                transition: {
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                  mass: 1
-                }
-              }
-            }}
-            className="text-xl md:text-2xl text-muted-foreground dark:text-muted-foreground/95 max-w-4xl mx-auto leading-relaxed font-light"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } } }}
+            className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto"
           >
             Everything you need to create, share, and connect. Built with the latest technologies 
             and designed for the modern web experience.
           </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Optimized grid layout for 5 features */}
-          {features.map((feature, index) => {
-            const IconComponent = feature.icon;
-            return (
-              <motion.div 
-                key={index} 
-                custom={feature.delay}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                whileHover="hover"
-                variants={{
-                  hidden: { 
-                    opacity: 0, 
-                    y: 50,
-                    scale: 0.9
-                  },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    transition: {
-                      type: "spring",
-                      stiffness: 120,
-                      damping: 20,
-                      delay: feature.delay,
-                      duration: 0.6
-                    }
-                  },
-                  hover: {
-                    y: -8,
-                    scale: 1.02,
-                    rotateY: 5,
-                    transition: {
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 25
-                    }
-                  }
-                }}
-                className="group perspective-1000"
-              >
-                <div className="h-full relative bg-white dark:bg-card rounded-2xl overflow-hidden transition-all duration-500 shadow-sm hover:shadow-md border-l-4 border-l-transparent group-hover:border-l-primary dark:shadow-lg dark:shadow-primary/5">
-                    {/* Geometric background pattern */}
-                    <div className="absolute top-0 right-0 w-32 h-32 opacity-5 dark:opacity-10">
-                      <div className={`w-full h-full bg-gradient-to-br ${feature.color} dark:bg-gradient-to-br dark:${feature.darkColor} rounded-full transform rotate-45 scale-150`} />
-                    </div>
-                    <div className="absolute bottom-0 left-0 w-20 h-20 opacity-10 dark:opacity-15">
-                      <div className={`w-full h-full bg-gradient-to-tr ${feature.color} dark:bg-gradient-to-tr dark:${feature.darkColor} rounded-full transform -rotate-12`} />
-                    </div>
-                    
-                    <div className="relative z-10 p-6">
-                    <div className="pb-4">
-                       <div className="flex items-center justify-between mb-6">
-                         <motion.div 
-                             variants={{
-                               hidden: { scale: 0, rotate: -180 },
-                               visible: {
-                                 scale: 1,
-                                 rotate: 0,
-                                 transition: {
-                                   type: "spring",
-                                   stiffness: 200,
-                                   damping: 15,
-                                   delay: 0.3
-                                 }
-                               },
-                               hover: {
-                                 scale: 1.1,
-                                 rotate: 360,
-                                 transition: {
-                                   type: "spring",
-                                   stiffness: 300,
-                                   damping: 20
-                                 }
-                               }
-                             }}
-                             whileHover="hover"
-                             className={`relative p-4 rounded-2xl bg-gradient-to-r ${feature.color} dark:bg-gradient-to-r dark:${feature.darkColor} transition-all duration-300 group-hover:scale-105 backdrop-blur-sm`}
-                           >
-                             <IconComponent className={`h-7 w-7 ${feature.iconColor}`} />
-                             <div className="absolute inset-0 bg-white/10 dark:bg-black/5 rounded-2xl" />
-                           </motion.div>
-                         <Badge 
-                             variant="outline" 
-                             className={`text-xs px-4 py-2 rounded-full bg-gradient-to-r ${feature.color} dark:bg-gradient-to-r dark:${feature.darkColor} ${feature.iconColor} border-0 font-semibold shadow-md dark:shadow-lg dark:shadow-primary/10`}
-                           >
-                             {feature.badge}
-                           </Badge>
-                       </div>
-                       <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-3">
-                          {feature.title}
-                        </h3>
-                        <div className={`w-12 h-1 bg-gradient-to-r ${feature.color} dark:bg-gradient-to-r dark:${feature.darkColor} rounded-full mb-4`} />
-                      </div>
-                      <div>
-                        <p className="text-base leading-relaxed text-muted-foreground/80 dark:text-muted-foreground/90 mb-6">
-                          {feature.description}
-                        </p>
-                       
-
-                     </div>
-                  </div>
-                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
+        <BentoGrid className="max-w-6xl mx-auto">
+          {features.map((feature, index) => (
+            <BentoCard key={index} className={feature.className}>
+              {feature.background}
+              <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-2">
+                <feature.icon className="h-8 w-8 text-primary" />
+                <h3 className="text-2xl font-semibold text-neutral-700 dark:text-neutral-300">
+                  {feature.title}
+                </h3>
+                <p className="max-w-lg text-neutral-500 dark:text-neutral-400">
+                  {feature.description}
+                </p>
+              </div>
+            </BentoCard>
+          ))}
+        </BentoGrid>
       </div>
     </section>
   );
 };
 
 export default Features;
+
