@@ -28,7 +28,7 @@ const Blog = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [trendingTags, setTrendingTags] = useState<string[]>([]);
 
@@ -253,7 +253,7 @@ const Blog = () => {
               >
                 {posts.length > 0 ? (
                   posts.map((post) => (
-                    <Postlist key={post.id} post={post} viewMode={viewMode} />
+                    <Postlist key={post.id} post={post} />
                   ))
                 ) : !isLoading ? (
                   <div className="col-span-full text-center py-16">
@@ -269,7 +269,11 @@ const Blog = () => {
                     </p>
                   </div>
                 ) : null}
-                {isLoading && <Postlistpulse />}
+                {isLoading && (
+                  Array(6).fill(0).map((_, i) => (
+                    <Postlistpulse key={i} />
+                  ))
+                )}
               </div>
 
               {/* Pagination */}

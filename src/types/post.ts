@@ -9,6 +9,8 @@ export interface Post {
   updated_at: string;
   published: boolean;
   view_count: number;
+  likes_count?: number;
+  comments_count?: number;
   tags: Tags[];
 }
 
