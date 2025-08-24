@@ -80,9 +80,7 @@ const Comment = ({ postId }: { postId: string }) => {
     // Listen for new comments
     const handleNewComment = (data: any) => {
       console.log("Received new comment event:", data);
-      // Refresh comments from API instead of relying on socket data
-      // fetchComments();
-      // console.log("new comment triggered" + data);
+      // Add the new comment to the comments state
       setcomments(data);
       
     };
@@ -90,8 +88,7 @@ const Comment = ({ postId }: { postId: string }) => {
     // Listen for new replies
     const handleNewReply = (data: any) => {
       console.log("Received new reply event:", data);
-      // Refresh comments from API
-      fetchComments();
+      // not handle yet
     };
 
     // Listen for comment errors
