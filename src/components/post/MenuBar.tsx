@@ -1,5 +1,5 @@
 "use client";
-import { useCurrentEditor } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
 import {
   Bold,
   Code,
@@ -12,9 +12,7 @@ import {
   Image,
 } from "lucide-react";
 
-const MenuBar = () => {
-  const { editor } = useCurrentEditor();
-
+const MenuBar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
     return null;
   }
@@ -106,7 +104,10 @@ const MenuBar = () => {
       >
         <Underline />
       </button>
-      <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg" onClick={addImage}>
+      <button
+        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+        onClick={addImage}
+      >
         <Image />
       </button>
       <button

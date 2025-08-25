@@ -5,17 +5,15 @@ import { getToken } from "@/utils/Auth";
 import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
-import { useCurrentEditor } from "@tiptap/react";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import MyEditor from "@/components/post/Editor";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ImagePlus, Loader2 } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 
 export default function PostCreate() {
-  const { editor } = useCurrentEditor();
   const [errortitle, seterrortitle] = useState("");
   const [errorimage, seterrorimage] = useState("");
   const token = getToken();
