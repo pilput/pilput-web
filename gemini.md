@@ -1,0 +1,1 @@
+This is a Next.js project with a focus on front-end development, featuring a comprehensive structure for a modern web application. It includes user authentication, a blog, a chat system, and a dashboard for analytics. The project is set up with TypeScript, Tailwind CSS, and various components for UI elements like charts, forms, and modals. using bun as a package manager
