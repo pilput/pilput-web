@@ -32,13 +32,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
   availableModels: [
     { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
     { id: 'qwen/qwen3-coder:free', name: 'Qwen 3 Coder' },
-    { id: 'meta-llama/llama-4-maverick:free', name: 'Llama 4 Maverick' },
-    { id: 'meta-llama/llama-4-scout:free', name: 'Llama 4 Scout' },
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
-    { id: 'google/gemma-7b-it:free', name: 'Gemma 7B' },
     { id: 'openai/gpt-oss-20b:free', name: 'GPT-OSS 20B' },
     { id: 'mistralai/mistral-7b-instruct:free', name: 'Mistral 7B Instruct' },
-    { id: 'google/gemini-flash-1.5:free', name: 'Gemini Flash 1.5' },
     { id: 'anthropic/claude-3-haiku:free', name: 'Claude 3 Haiku' },
     { id: 'z-ai/glm-4.5-air:free', name: 'GLM 4.5 Air' },
     { id: 'moonshotai/kimi-k2:free', name: 'Kimi K2' },
