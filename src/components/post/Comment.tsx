@@ -59,7 +59,7 @@ const Comment = ({ postId }: { postId: string }) => {
           `/v1/posts/${postId}/comments`
         );
         console.log("Response data:", response.data);
-        
+
         if (response.data.success) {
           setcomments(response.data.data);
         }
@@ -82,7 +82,6 @@ const Comment = ({ postId }: { postId: string }) => {
       console.log("Received new comment event:", data);
       // Add the new comment to the comments state
       setcomments(data);
-      
     };
 
     // Listen for new replies
@@ -108,7 +107,9 @@ const Comment = ({ postId }: { postId: string }) => {
     // Helper function to fetch comments
     const fetchComments = async () => {
       try {
-        const response = await axiosInstence.get(`/v1/posts/${postId}/comments`);
+        const response = await axiosInstence.get(
+          `/v1/posts/${postId}/comments`
+        );
         if (response.data.success) {
           setcomments(response.data.data);
         }
@@ -181,7 +182,7 @@ const Comment = ({ postId }: { postId: string }) => {
         socket: !!socket,
         connected: socket?.connected,
         isConnected,
-        isReconnecting
+        isReconnecting,
       });
       alert("Connection lost. Please refresh the page and try again.");
     }
@@ -339,10 +340,6 @@ const Comment = ({ postId }: { postId: string }) => {
                   {isLoggedIn && (
                     <div className="flex items-center gap-3">
                       <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
-                        <span>👏</span>
-                        <span>0</span>
-                      </button>
-                      <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
                         <MessageCircle className="w-4 h-4" />
                         <span>Reply</span>
                       </button>
@@ -358,11 +355,30 @@ const Comment = ({ postId }: { postId: string }) => {
       {/* Socket Debug Info - Remove this in production */}
       {process.env.NODE_ENV === "development" && (
         <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4 text-sm">
-          <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">🔍 Socket Debug Info</h4>
+          <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">
+            🔍 Socket Debug Info
+          </h4>
           <div className="space-y-1 text-gray-700 dark:text-gray-300">
-            <div>Status: <span className={isConnected ? "text-green-600" : "text-red-600"}>{isConnected ? "Connected" : "Disconnected"}</span></div>
-            <div>Reconnecting: <span className={isReconnecting ? "text-yellow-600" : "text-gray-500"}>{isReconnecting ? "Yes" : "No"}</span></div>
-            <div>Token: <span className={token ? "text-green-600" : "text-red-600"}>{token ? "Present" : "Missing"}</span></div>
+            <div>
+              Status:{" "}
+              <span className={isConnected ? "text-green-600" : "text-red-600"}>
+                {isConnected ? "Connected" : "Disconnected"}
+              </span>
+            </div>
+            <div>
+              Reconnecting:{" "}
+              <span
+                className={isReconnecting ? "text-yellow-600" : "text-gray-500"}
+              >
+                {isReconnecting ? "Yes" : "No"}
+              </span>
+            </div>
+            <div>
+              Token:{" "}
+              <span className={token ? "text-green-600" : "text-red-600"}>
+                {token ? "Present" : "Missing"}
+              </span>
+            </div>
             <div>Post ID: {postId}</div>
             <div>WS URL: {Config.wsbaseurl}</div>
             <div>Socket ID: {socket?.id || "None"}</div>
