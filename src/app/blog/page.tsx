@@ -124,7 +124,8 @@ const Blog = () => {
               </h1>
             </div>
             <p className="text-gray-600 dark:text-gray-400">
-              Discover the latest articles, tutorials, and insights from our community
+              Discover the latest articles, tutorials, and insights from our
+              community
             </p>
           </div>
         </div>
@@ -212,9 +213,6 @@ const Blog = () => {
                       : categories.find((c) => c.value === selectedCategory)
                           ?.label + " Posts"}
                   </h2>
-                  <Badge className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                    {total} posts
-                  </Badge>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -252,9 +250,7 @@ const Blog = () => {
                 }
               >
                 {posts.length > 0 ? (
-                  posts.map((post) => (
-                    <Postlist key={post.id} post={post} />
-                  ))
+                  posts.map((post) => <Postlist key={post.id} post={post} />)
                 ) : !isLoading ? (
                   <div className="col-span-full text-center py-16">
                     <div className="w-24 h-24 mx-auto mb-4 bg-zinc-100 dark:bg-zinc-800/30 rounded-full flex items-center justify-center">
@@ -269,11 +265,10 @@ const Blog = () => {
                     </p>
                   </div>
                 ) : null}
-                {isLoading && (
-                  Array(6).fill(0).map((_, i) => (
-                    <Postlistpulse key={i} />
-                  ))
-                )}
+                {isLoading &&
+                  Array(6)
+                    .fill(0)
+                    .map((_, i) => <Postlistpulse key={i} />)}
               </div>
 
               {/* Pagination */}
