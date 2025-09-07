@@ -5,7 +5,6 @@ import Postlistpulse from "@/components/post/postlistpulse";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Search,
