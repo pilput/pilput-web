@@ -55,7 +55,7 @@ function Posts(props: { username: string }) {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-foreground">Posts</h2>
         <div className="text-sm text-muted-foreground">
-          {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+          {posts.length} {posts.length === 1 ? "post" : "posts"}
         </div>
       </div>
 
@@ -67,7 +67,7 @@ function Posts(props: { username: string }) {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-foreground mb-2">No posts yet</h3>
-          <p className="text-muted-foreground">This writer hasn't published any posts yet.</p>
+          <p className="text-muted-foreground">This writer hasn&apos;t published any posts yet.</p>
         </div>
       ) : (
         <div className="grid gap-6">

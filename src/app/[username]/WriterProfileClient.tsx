@@ -72,7 +72,7 @@ export default function WriterProfileClient({ writer, username }: WriterProfileC
                       Latest Posts
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Explore {writer.first_name}'s writing
+                      Explore {writer.first_name}&apos;s writing
                     </p>
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export default function WriterProfileClient({ writer, username }: WriterProfileC
                       <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg border border-dashed border-border/50">
                         <User className="w-5 h-5 text-muted-foreground" />
                         <p className="text-muted-foreground italic">
-                          No bio available yet. {writer.first_name} hasn't added a bio to their profile.
+                          No bio available yet. {writer.first_name} hasn&apos;t added a bio to their profile.
                         </p>
                       </div>
                     )}
