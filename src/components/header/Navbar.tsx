@@ -35,13 +35,13 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex items-center space-x-2">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 hover:bg-muted",
+                  "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-muted",
                   pathname === item.href
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground"
