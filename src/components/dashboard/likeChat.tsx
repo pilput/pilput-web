@@ -29,11 +29,11 @@ const chartData = [
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    color: "#14b8a6",
   },
   mobile: {
     label: "Mobile",
-    color: "hsl(var(--chart-2))",
+    color: "#f97316",
   },
 } satisfies ChartConfig
 
@@ -59,8 +59,8 @@ export default function Component() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="desktop" fill="#14b8a6" radius={4} />
+            <Bar dataKey="mobile" fill="#f97316" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
