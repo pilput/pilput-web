@@ -137,39 +137,60 @@ const Hero = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-muted/30"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      {/* Animated background gradient */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10"
-        style={{ y, opacity }}
-      />
+      {/* Modern gradient background with mesh effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
 
-      {/* Interactive mouse-following gradient */}
+      {/* Animated mesh gradient overlay */}
       <motion.div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-60"
         style={{
-          background: `radial-gradient(600px circle at ${
-            mousePosition.x * 100
-          }% ${
-            mousePosition.y * 100
-          }%, rgba(var(--primary), 0.1), transparent 40%)`,
+          background: `
+            radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 50%)
+          `,
+          y,
+          opacity,
         }}
       />
 
-      {/* Animated grid background */}
-      <div className="absolute inset-0 opacity-20">
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
+
+      {/* Interactive mouse-following gradient */}
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        style={{
+          background: `radial-gradient(800px circle at ${
+            mousePosition.x * 100
+          }% ${
+            mousePosition.y * 100
+          }%, rgba(59, 130, 246, 0.08), transparent 50%)`,
+        }}
+      />
+
+      {/* Animated geometric grid */}
+      <div className="absolute inset-0 opacity-10">
         <motion.div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(var(--primary), 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(var(--primary), 0.1) 1px, transparent 1px)
+              linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
             `,
-            backgroundSize: "50px 50px",
+            backgroundSize: "60px 60px",
             x: springX,
             y: springY,
           }}
@@ -267,57 +288,60 @@ const Hero = () => {
       )}
 
       {/* Floating icons - Only render if motion is not reduced */}
-      {!prefersReducedMotion && floatingIcons.map((item, index) => {
-        const IconComponent = item.icon;
-        const distanceFromMouse = Math.sqrt(
-          Math.pow((parseFloat(item.x) / 100 - mousePosition.x) * 100, 2) +
-            Math.pow((parseFloat(item.y) / 100 - mousePosition.y) * 100, 2)
-        );
-        const isNearMouse = distanceFromMouse < 20;
+      {!prefersReducedMotion &&
+        floatingIcons.map((item, index) => {
+          const IconComponent = item.icon;
+          const distanceFromMouse = Math.sqrt(
+            Math.pow((parseFloat(item.x) / 100 - mousePosition.x) * 100, 2) +
+              Math.pow((parseFloat(item.y) / 100 - mousePosition.y) * 100, 2)
+          );
+          const isNearMouse = distanceFromMouse < 20;
 
-        return (
-          <motion.div
-            key={index}
-            className="absolute hidden lg:block cursor-pointer"
-            style={{ left: item.x, top: item.y }}
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 5, 0],
-              scale: isNearMouse ? 1.2 : 1,
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              delay: item.delay,
-              ease: "easeInOut",
-            }}
-            whileHover={{
-              scale: 1.3,
-              rotate: 15,
-              transition: { duration: 0.2 },
-            }}
-          >
+          return (
             <motion.div
-              className="p-4 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300"
+              key={index}
+              className="absolute hidden lg:block cursor-pointer"
+              style={{ left: item.x, top: item.y }}
               animate={{
-                boxShadow: isNearMouse
-                  ? "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                  : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                y: [0, -20, 0],
+                rotate: [0, 5, 0],
+                scale: isNearMouse ? 1.2 : 1,
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                delay: item.delay,
+                ease: "easeInOut",
+              }}
+              whileHover={{
+                scale: 1.3,
+                rotate: 15,
+                transition: { duration: 0.2 },
               }}
             >
-              <IconComponent className="h-6 w-6 text-primary" />
+              <motion.div
+                className="p-4 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300"
+                animate={{
+                  boxShadow: isNearMouse
+                    ? "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                    : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                }}
+              >
+                <IconComponent className="h-6 w-6 text-primary" />
+              </motion.div>
             </motion.div>
-          </motion.div>
-        );
-      })}
+          );
+        })}
 
       <motion.div
         className="relative z-20 container px-4 sm:px-6 lg:px-8"
         style={{
-          transform: prefersReducedMotion ? 'none' : `translate(${springX.get() * 0.02}px, ${springY.get() * 0.02}px)`,
+          transform: prefersReducedMotion
+            ? "none"
+            : `translate(${springX.get() * 0.02}px, ${springY.get() * 0.02}px)`,
         }}
       >
-        <header className="flex flex-col items-center space-y-6 sm:space-y-8 text-center max-w-6xl mx-auto">
+        <header className="relative flex flex-col items-center space-y-6 sm:space-y-8 text-center max-w-6xl mx-auto p-6 sm:p-8 lg:p-12">
           {/* Loading state */}
           <AnimatePresence>
             {!isLoaded && (
@@ -340,7 +364,10 @@ const Hero = () => {
               role="status"
               aria-label="Platform feature highlight"
             >
-              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 animate-pulse" aria-hidden="true" />
+              <Sparkles
+                className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 animate-pulse"
+                aria-hidden="true"
+              />
               ✍️ Free Publishing Platform - No Limits
             </Badge>
           </motion.div>
@@ -379,13 +406,17 @@ const Hero = () => {
           >
             <Link href="/register" className="w-full sm:w-auto">
               <motion.div
-                animate={prefersReducedMotion ? {} : {
-                  boxShadow: [
-                    "0 0 0 0 rgba(var(--primary), 0.4)",
-                    "0 0 0 10px rgba(var(--primary), 0)",
-                    "0 0 0 0 rgba(var(--primary), 0)",
-                  ],
-                }}
+                animate={
+                  prefersReducedMotion
+                    ? {}
+                    : {
+                        boxShadow: [
+                          "0 0 0 0 rgba(var(--primary), 0.4)",
+                          "0 0 0 10px rgba(var(--primary), 0)",
+                          "0 0 0 0 rgba(var(--primary), 0)",
+                        ],
+                      }
+                }
                 transition={{
                   duration: 2,
                   repeat: Infinity,
@@ -398,7 +429,10 @@ const Hero = () => {
                   aria-label="Start writing your first article"
                 >
                   Start Writing Now
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                  <ArrowRight
+                    className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform"
+                    aria-hidden="true"
+                  />
                 </Button>
               </motion.div>
             </Link>
@@ -420,27 +454,27 @@ const Hero = () => {
             className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 pt-6 sm:pt-8 md:pt-12 text-center w-full"
             aria-label="Platform statistics"
           >
-            <div className="flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-background/50 to-muted/20 backdrop-blur-sm border border-border/50 min-w-[90px] sm:min-w-[100px] md:min-w-[120px] flex-1 sm:flex-none">
-              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
+            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-3xl bg-white/5 dark:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300">
                 1.8K+
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-2 group-hover:text-foreground transition-colors duration-300">
                 Writers
               </div>
             </div>
-            <div className="flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-background/50 to-muted/20 backdrop-blur-sm border border-border/50 min-w-[90px] sm:min-w-[100px] md:min-w-[120px] flex-1 sm:flex-none">
-              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
+            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-3xl bg-white/5 dark:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-pink-500 transition-all duration-300">
                 12.4K+
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-2 group-hover:text-foreground transition-colors duration-300">
                 Articles Published
               </div>
             </div>
-            <div className="flex flex-col items-center p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-background/50 to-muted/20 backdrop-blur-sm border border-border/50 min-w-[90px] sm:min-w-[100px] md:min-w-[120px] flex-1 sm:flex-none">
-              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
+            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-3xl bg-white/5 dark:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent group-hover:from-emerald-500 group-hover:to-teal-500 transition-all duration-300">
                 67K+
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+              <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-2 group-hover:text-foreground transition-colors duration-300">
                 Monthly Readers
               </div>
             </div>
@@ -459,9 +493,13 @@ const Hero = () => {
       {/* Scroll indicator */}
       <motion.div
         className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={prefersReducedMotion ? {} : {
-          y: [0, 10, 0],
-        }}
+        animate={
+          prefersReducedMotion
+            ? {}
+            : {
+                y: [0, 10, 0],
+              }
+        }
         transition={{
           duration: 2,
           repeat: Infinity,
