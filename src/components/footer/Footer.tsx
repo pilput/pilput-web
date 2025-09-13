@@ -6,16 +6,16 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+    <footer className="border-t border-border bg-card">
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Main content */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           {/* Brand and description */}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               pilput.me
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">
+            <p className="text-sm text-muted-foreground max-w-md">
               Building digital experiences with modern web technologies.
             </p>
           </div>
@@ -24,25 +24,25 @@ const Footer = () => {
           <div className="flex flex-wrap gap-6 text-sm">
             <Link
               href="/about"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               About
             </Link>
             <Link
               href="/blog"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Blog
             </Link>
             <Link
               href="/contact"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Contact
             </Link>
             <Link
               href="/privacy"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Privacy
             </Link>
@@ -54,7 +54,7 @@ const Footer = () => {
               href="https://github.com/pilput"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
               aria-label="GitHub"
             >
               <Github className="h-5 w-5" />
@@ -63,7 +63,7 @@ const Footer = () => {
               href="https://twitter.com/pilput_dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
               aria-label="Twitter"
             >
               <Twitter className="h-5 w-5" />
@@ -72,14 +72,14 @@ const Footer = () => {
               href="https://linkedin.com/in/cecep31"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
               aria-label="LinkedIn"
             >
               <Linkedin className="h-5 w-5" />
             </a>
             <a
               href="mailto:cecepjanuardi@proton.me"
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
               aria-label="Email"
             >
               <Mail className="h-5 w-5" />
@@ -88,8 +88,8 @@ const Footer = () => {
         </div>
 
         {/* Bottom section */}
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
-          <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
+        <div className="mt-8 pt-6 border-t border-border">
+          <p className="text-xs text-muted-foreground text-center">
             © {currentYear} pilput.me. All rights reserved.
           </p>
         </div>
