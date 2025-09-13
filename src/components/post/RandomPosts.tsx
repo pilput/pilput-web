@@ -5,6 +5,7 @@ import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemrPulse from "./PostItemrpulse";
 import Link from "next/link";
+import { BookOpen } from "lucide-react";
 import type { Post } from "@/types/post";
 
 interface succesResponse {
@@ -34,7 +35,7 @@ const PostsRandomList = () => {
   let content;
   if (posts.length) {
     content = (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 justify-around">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
           <PostItemr key={post.id} post={post} />
         ))}
@@ -42,7 +43,7 @@ const PostsRandomList = () => {
     );
   } else {
     content = (
-      <div className="grid grid-cols-3 gap-3 justify-around ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tempposts.map((post) => (
           <PostItemrPulse key={post} />
         ))}
@@ -51,10 +52,21 @@ const PostsRandomList = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex justify-between">
-        <div className="text-2xl font-semibold">Posts</div>
-        <Link href={"/blog"}>See All</Link>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-3">
+          <BookOpen className="h-8 w-8 text-primary" />
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Featured Posts</h2>
+            <p className="text-muted-foreground">Discover interesting articles from our community</p>
+          </div>
+        </div>
+        <Link
+          href="/blog"
+          className="text-primary hover:text-primary/80 font-medium transition-colors"
+        >
+          View All →
+        </Link>
       </div>
       {content}
     </div>
