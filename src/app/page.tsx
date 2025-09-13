@@ -1,7 +1,6 @@
 import Navigation from "@/components/header/Navbar";
 import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";
-import Stats from "@/components/landing/Stats";
 import CallToAction from "@/components/landing/CallToAction";
 import RandomPosts from "@/components/post/RandomPosts";
 import Footer from "@/components/footer/Footer";
@@ -12,7 +11,6 @@ export default function Home() {
       <Navigation />
       <Hero />
       <Features />
-      <Stats />
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">

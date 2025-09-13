@@ -1,21 +1,20 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import React, { useRef } from "react";
-import { 
-  BookOpen, 
-  Bot, 
-  Users, 
-  Zap, 
+import {
+  BookOpen,
+  Bot,
+  Users,
+  Zap,
   Sparkles,
-  Code,
-  Palette
+  Code
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const BentoGrid = ({ children, className }: { children: React.ReactNode; className?: string; }) => {
   return (
-    <div className={cn("grid w-full auto-rows-[18rem] grid-cols-3 gap-6", className)}>
+    <div className={cn("grid w-full auto-rows-[18rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6", className)}>
       {children}
     </div>
   );
@@ -51,25 +50,39 @@ const BentoCard = ({
       onMouseLeave={() => setIsHovered(false)}
       onMouseMove={handleMouseMove}
       className={cn(
-        "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
+        "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl cursor-pointer",
         // light styles
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         // dark styles
         "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+        // hover effects
+        "transition-all duration-500 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10",
         className
       )}
       {...props}
     >
+      {/* Animated border gradient */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 via-transparent to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Mouse tracking glow effect */}
       <div
         className={cn(
-          "pointer-events-none absolute -inset-px opacity-0 transition duration-300",
+          "pointer-events-none absolute -inset-px opacity-0 transition duration-300 rounded-xl",
           isHovered && "opacity-100"
         )}
         style={{
           background:
-            "radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%)",
+            "radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.08), transparent 40%)",
         }}
       />
+
+      {/* Floating particles effect */}
+      <div className="absolute inset-0 overflow-hidden rounded-xl">
+        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-300" />
+        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-500 delay-100" />
+        <div className="absolute bottom-1/4 left-1/2 w-1 h-1 bg-primary/30 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-700 delay-200" />
+      </div>
+
       {children}
     </div>
   );
@@ -84,43 +97,51 @@ const Features = () => {
       icon: BookOpen,
       title: "Rich Content Creation",
       description: "Create and share engaging blog posts with our powerful editor featuring markdown support and real-time preview.",
-      className: "col-span-3 lg:col-span-1",
+      className: "col-span-1 md:col-span-1 lg:col-span-1",
       background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/10 via-transparent to-transparent" />,
+      stats: "10K+ Posts Created",
+      cta: "Start Writing",
+      delay: 0.1,
     },
     {
       icon: Bot,
       title: "AI Chat",
       description: "Engage with our intelligent AI assistant. Ask questions, get help, and explore ideas.",
-      className: "col-span-3 lg:col-span-2",
+      className: "col-span-1 md:col-span-2 lg:col-span-2",
       background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/10 via-transparent to-transparent" />,
+      stats: "1M+ Conversations",
+      cta: "Try AI Chat",
+      delay: 0.2,
     },
     {
       icon: Users,
       title: "Community Driven",
       description: "Join a vibrant community of writers, developers, and creators. Build meaningful connections.",
-      className: "col-span-3 lg:col-span-2",
+      className: "col-span-1 md:col-span-2 lg:col-span-2",
       background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-500/10 via-transparent to-transparent" />,
+      stats: "50K+ Active Users",
+      cta: "Join Community",
+      delay: 0.3,
     },
     {
       icon: Zap,
       title: "Lightning Fast",
       description: "Built with Next.js and optimized for performance. Experience blazing fast load times.",
-      className: "col-span-3 lg:col-span-1",
+      className: "col-span-1 md:col-span-1 lg:col-span-1",
       background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent" />,
+      stats: "< 100ms Load Time",
+      cta: "Experience Speed",
+      delay: 0.4,
     },
     {
       icon: Code,
       title: "Developer Friendly",
       description: "Syntax highlighting, code blocks, and technical writing support.",
-      className: "col-span-3 lg:col-span-1",
+      className: "col-span-1 md:col-span-1 lg:col-span-1",
       background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent" />,
-    },
-    {
-      icon: Palette,
-      title: "Customizable UI",
-      description: "Tailor the look and feel of your space with customizable themes and layouts.",
-      className: "col-span-3 lg:col-span-2",
-      background: <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-500/10 via-transparent to-transparent" />,
+      stats: "15+ Languages",
+      cta: "Code Now",
+      delay: 0.5,
     },
   ];
 
@@ -166,18 +187,48 @@ const Features = () => {
 
         <BentoGrid className="max-w-6xl mx-auto">
           {features.map((feature, index) => (
-            <BentoCard key={index} className={feature.className}>
-              {feature.background}
-              <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-2">
-                <feature.icon className="h-8 w-8 text-primary" />
-                <h3 className="text-2xl font-semibold text-neutral-700 dark:text-neutral-300">
-                  {feature.title}
-                </h3>
-                <p className="max-w-lg text-neutral-500 dark:text-neutral-400">
-                  {feature.description}
-                </p>
-              </div>
-            </BentoCard>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+              transition={{ duration: 0.6, delay: feature.delay }}
+            >
+              <BentoCard className={feature.className}>
+                {feature.background}
+                <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-3 p-6 transition-all duration-300 group-hover:-translate-y-2 h-full">
+                  <div className="flex items-center justify-between">
+                    <feature.icon className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
+                    <Badge variant="secondary" className="text-xs font-medium">
+                      {feature.stats}
+                    </Badge>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                  <div className="pointer-events-auto">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium text-sm transition-all duration-200 hover:shadow-lg hover:shadow-primary/25"
+                    >
+                      {feature.cta}
+                      <motion.div
+                        initial={{ x: 0 }}
+                        whileHover={{ x: 4 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        →
+                      </motion.div>
+                    </motion.button>
+                  </div>
+                </div>
+              </BentoCard>
+            </motion.div>
           ))}
         </BentoGrid>
       </div>
@@ -186,4 +237,3 @@ const Features = () => {
 };
 
 export default Features;
-
