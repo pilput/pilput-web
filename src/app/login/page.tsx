@@ -65,13 +65,13 @@ export default function LoginPage() {
         sameSite: "none",
         secure: true,
       });
-      
+
       toast.success("Login successful! Redirecting...");
       setLoginWait(false);
       router.push("/");
     } catch (error: any) {
       let errorMessage = "An error occurred during login";
-      
+
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -89,7 +89,7 @@ export default function LoginPage() {
         // Something happened in setting up the request that triggered an Error
         errorMessage = error.message;
       }
-      
+
       toast.error(errorMessage, { duration: 5000 });
       console.error("Login error:", error);
       setLoginWait(false);
