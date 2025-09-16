@@ -17,7 +17,7 @@ import {
   Eye,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstence2 } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 
 const postsPerPage = 10;
@@ -35,7 +35,7 @@ const Blog = () => {
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstence.get("/v1/posts", {
+        const { data } = await axiosInstence2.get("/v1/posts", {
           params: { limit: postsPerPage, offset: currentPage * postsPerPage },
         });
         const response = data;

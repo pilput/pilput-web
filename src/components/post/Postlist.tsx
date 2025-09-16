@@ -5,9 +5,7 @@ import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import {
   Heart,
-  MessageCircle,
   Bookmark,
-  MoreHorizontal,
   Clock,
   Eye,
 } from "lucide-react";
