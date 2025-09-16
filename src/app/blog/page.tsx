@@ -60,7 +60,7 @@ const Blog = () => {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await axiosInstence.get("/v1/tags");
+        const response = await axiosInstence2.get("/v1/tags");
         setTrendingTags(response.data.data.map((tag: any) => tag.name));
       } catch (error) {
         console.error("Error fetching tags:", error);
