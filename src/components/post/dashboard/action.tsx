@@ -1,5 +1,6 @@
 import React from "react";
-import { MoreHorizontal, Eye, Trash, Send } from "lucide-react";
+import Link from "next/link";
+import { MoreHorizontal, Eye, Trash, Send, Edit } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,6 +63,12 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
             <Eye className="mr-2 h-4 w-4" />
             <span>View</span>
           </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/dashboard/posts/edit/${post.id}`} className="flex items-center">
+            <Edit className="mr-2 h-4 w-4" />
+            <span>Edit</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" onClick={onPublish}>
           <Send className="mr-2 h-4 w-4" />
