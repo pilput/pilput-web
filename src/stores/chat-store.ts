@@ -30,6 +30,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   selectedModel: 'openai/gpt-oss-20b:free',
   // List of free models available on OpenRouter
   availableModels: [
+    { id: 'x-ai/grok-4-fast:free', name: 'Grok 4 Fast' },
     { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
     { id: 'qwen/qwen3-coder:free', name: 'Qwen 3 Coder' },
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
