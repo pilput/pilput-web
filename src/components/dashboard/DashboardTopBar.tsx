@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -22,7 +21,7 @@ import { logOut } from "@/utils/Auth";
 import { authStore } from "@/stores/userStore";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Bell, Settings, User, LogOut, Home, Moon, Sun } from "lucide-react";
+import { Settings, User, LogOut, Home, Moon, Sun } from "lucide-react";
 
 const DashboardTopBar = () => {
   const yourstore = authStore();
@@ -60,24 +59,6 @@ const DashboardTopBar = () => {
 
         {/* Right Section - Actions */}
         <div className="flex items-center gap-2">
-          {/* Notifications */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-4 w-4" />
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                >
-                  3
-                </Badge>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Notifications</p>
-            </TooltipContent>
-          </Tooltip>
-
           {/* Theme Toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
