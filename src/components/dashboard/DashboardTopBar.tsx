@@ -39,7 +39,7 @@ const DashboardTopBar = () => {
 
   useEffect(() => {
     yourstore.fetch();
-  }, [yourstore]);
+  }, []);
 
   return (
     <TooltipProvider>
