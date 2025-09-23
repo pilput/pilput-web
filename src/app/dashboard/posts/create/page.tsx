@@ -95,7 +95,7 @@ export default function PostCreate() {
         </div>
       </div>
 
-      <Card className="bg-white shadow-lg">
+      <Card className="shadow-lg">
         <CardContent className="space-y-6 pt-6">
           {/* Title Input */}
           <div className="space-y-2">
@@ -108,7 +108,7 @@ export default function PostCreate() {
                 updateTitle(e.target.value);
                 updateSlug(convertToSlug(e.target.value));
               }}
-              className="w-full text-xl py-3 font-medium text-black dark:text-gray-200 bg-transparent border-b border-gray-200 focus:border-primary focus:outline-none transition-colors"
+              className="w-full text-xl py-3 font-medium text-foreground bg-transparent border-b border-border focus:border-primary focus:outline-none transition-colors"
               value={post.title}
               placeholder="Enter your post title..."
             />
@@ -141,7 +141,7 @@ export default function PostCreate() {
               <p className="text-sm text-red-500 mt-1">{errorimage}</p>
             )}
             {post.photo_url && (
-              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-muted">
                 <img
                   src={getUrlImage(post.photo_url)}
                   alt="Featured"
