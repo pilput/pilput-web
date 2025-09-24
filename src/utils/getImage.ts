@@ -20,6 +20,6 @@ export function getUrlImage(path: string): string {
         if (path.startsWith('/')) {
             path = path.substring(1);
         }
-        return Config.storagebaseurl + path
+        return Config.storagebaseurl +"/"+ path
     }
 }
