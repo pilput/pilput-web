@@ -6,16 +6,7 @@ import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Search,
-  Heart,
-  TrendingUp,
-  Grid,
-  List,
-  Zap,
-  Clock,
-  Eye,
-} from "lucide-react";
+import { Search, Heart, TrendingUp, Zap, Clock, Eye } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
 import type { Post } from "@/types/post";
@@ -27,7 +18,6 @@ const Blog = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [trendingTags, setTrendingTags] = useState<string[]>([]);
 
@@ -213,41 +203,10 @@ const Blog = () => {
                           ?.label + " Posts"}
                   </h2>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
-                    <button
-                      onClick={() => setViewMode("grid")}
-                      className={`p-2 rounded-md transition-all duration-200 ${
-                        viewMode === "grid"
-                          ? "bg-zinc-600 text-white"
-                          : "text-gray-600 dark:text-gray-400 hover:text-zinc-600 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
-                    >
-                      <Grid className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode("list")}
-                      className={`p-2 rounded-md transition-all duration-200 ${
-                        viewMode === "list"
-                          ? "bg-zinc-600 text-white"
-                          : "text-gray-600 dark:text-gray-400 hover:text-zinc-600 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
-                    >
-                      <List className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
               </div>
 
-              {/* Posts Grid/List */}
-              <div
-                className={
-                  viewMode === "grid"
-                    ? "grid grid-cols-1 md:grid-cols-2 gap-6"
-                    : "space-y-6"
-                }
-              >
+              {/* Posts List */}
+              <div className="space-y-6">
                 {posts.length > 0 ? (
                   posts.map((post) => <Postlist key={post.id} post={post} />)
                 ) : !isLoading ? (
