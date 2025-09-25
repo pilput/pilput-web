@@ -37,9 +37,7 @@ const DashboardTopBar = () => {
   };
 
   useEffect(() => {
-    if (!yourstore.data) {
-      yourstore.fetch();
-    }
+    yourstore.fetch();
   }, []);
 
   return (
