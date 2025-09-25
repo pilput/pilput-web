@@ -6,7 +6,14 @@ import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Heart, TrendingUp, Zap, Clock, Eye } from "lucide-react";
+import {
+  Search,
+  Heart,
+  TrendingUp,
+  Zap,
+  Clock,
+  Eye,
+} from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
 import type { Post } from "@/types/post";
@@ -18,7 +25,6 @@ const Blog = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [trendingTags, setTrendingTags] = useState<string[]>([]);
 
   useEffect(() => {
@@ -96,35 +102,52 @@ const Blog = () => {
       <Navigation />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
         {/* Hero Section */}
-        <div className="border-b border-gray-200 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-gray-900 dark:bg-gray-100 rounded flex items-center justify-center">
-                <svg
-                  className="w-4 h-4 text-white dark:text-gray-900"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                </svg>
+        <div className="relative overflow-hidden border-b border-gray-200 dark:border-gray-800 bg-gradient-to-r from-blue-50/50 via-indigo-50/30 to-purple-50/50 dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-purple-950/20">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+          <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
+            <div className="text-center max-w-3xl mx-auto">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                  </svg>
+                </div>
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent">
+                  Blog
+                </h1>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
-                Blog
-              </h1>
+              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto mb-4">
+                Discover the latest articles, tutorials, and insights from our
+                vibrant community of developers and creators
+              </p>
+              <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  <span>Trending topics</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  <span>Latest updates</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-red-500" />
+                  <span>Community favorites</span>
+                </div>
+              </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
-              Discover the latest articles, tutorials, and insights from our
-              community
-            </p>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="max-w-7xl mx-auto px-4 pb-12 mt-5">
-          <div className="flex flex-col lg:flex-row gap-8">
+        <div className="max-w-7xl mx-auto px-4 pb-16 pt-8">
+          <div className="flex flex-col xl:flex-row gap-8">
             {/* Sidebar */}
-            <div className="lg:w-80">
-              <div className="sticky top-20 space-y-6">
+            <div className="xl:w-80 order-2 xl:order-1">
+              <div className="space-y-6">
                 {/* Popular Posts */}
                 <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
                   <CardContent className="p-6">
@@ -193,18 +216,6 @@ const Blog = () => {
 
             {/* Main Content */}
             <div className="flex-1">
-              {/* Controls */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                <div className="flex items-center gap-4">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {selectedCategory === "all"
-                      ? "All Posts"
-                      : categories.find((c) => c.value === selectedCategory)
-                          ?.label + " Posts"}
-                  </h2>
-                </div>
-              </div>
-
               {/* Posts List */}
               <div className="space-y-6">
                 {posts.length > 0 ? (
