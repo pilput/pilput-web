@@ -520,7 +520,7 @@ Retrieve random posts for discovery.
 
 ### Get My Posts
 
-**GET** `/v1/posts/mine`
+**GET** `/v1/posts/me`
 
 🔒 **Authentication Required**
 

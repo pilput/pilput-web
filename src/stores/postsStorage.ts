@@ -15,7 +15,7 @@ export const postsStore = create<PostsState>()((set) => ({
     posts: [],
     fetch: async (limit = 10, offset = 0) => {
         try {
-            const { data } = await axiosInstence2.get("/v1/posts/mine", {
+            const { data } = await axiosInstence2.get("/v1/posts/me", {
                 params: { limit: limit, offset: offset },
                 headers: { "Authorization": `Bearer ${getToken()}` }
             })
