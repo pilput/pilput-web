@@ -22,8 +22,11 @@ interface WriterProfileClientProps {
   username: string;
 }
 
-export default function WriterProfileClient({ writer, username }: WriterProfileClientProps) {
-  const [activeTab, setActiveTab] = useState<'posts' | 'about'>('posts');
+export default function WriterProfileClient({
+  writer,
+  username,
+}: WriterProfileClientProps) {
+  const [activeTab, setActiveTab] = useState<"posts" | "about">("posts");
 
   return (
     <div className="space-y-6">
@@ -32,22 +35,22 @@ export default function WriterProfileClient({ writer, username }: WriterProfileC
         <div className="bg-muted/50 backdrop-blur-sm rounded-full p-1 border border-border/50">
           <div className="flex space-x-1">
             <button
-              onClick={() => setActiveTab('posts')}
+              onClick={() => setActiveTab("posts")}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === 'posts'
-                  ? 'bg-background text-foreground shadow-sm border border-border/50'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                activeTab === "posts"
+                  ? "bg-background text-foreground shadow-sm border border-border/50"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
               }`}
             >
               <FileText className="w-4 h-4" />
               Posts
             </button>
             <button
-              onClick={() => setActiveTab('about')}
+              onClick={() => setActiveTab("about")}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === 'about'
-                  ? 'bg-background text-foreground shadow-sm border border-border/50'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                activeTab === "about"
+                  ? "bg-background text-foreground shadow-sm border border-border/50"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
               }`}
             >
               <User className="w-4 h-4" />
@@ -60,7 +63,7 @@ export default function WriterProfileClient({ writer, username }: WriterProfileC
       {/* Content Card */}
       <Card className="shadow-lg border-0 bg-gradient-to-br from-card to-card/95">
         <CardContent className="p-8">
-          {activeTab === 'posts' ? (
+          {activeTab === "posts" ? (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -107,7 +110,8 @@ export default function WriterProfileClient({ writer, username }: WriterProfileC
                       <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg border border-dashed border-border/50">
                         <User className="w-5 h-5 text-muted-foreground" />
                         <p className="text-muted-foreground italic">
-                          No bio available yet. {writer.first_name} hasn&apos;t added a bio to their profile.
+                          No bio available yet. {writer.first_name} hasn&apos;t
+                          added a bio to their profile.
                         </p>
                       </div>
                     )}
@@ -125,20 +129,31 @@ export default function WriterProfileClient({ writer, username }: WriterProfileC
                       </h4>
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">Full Name</span>
-                          <span className="font-medium text-right">{writer.first_name} {writer.last_name}</span>
+                          <span className="text-muted-foreground">
+                            Full Name
+                          </span>
+                          <span className="font-medium text-right">
+                            {writer.first_name} {writer.last_name}
+                          </span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">Username</span>
-                          <span className="font-medium text-right">@{writer.username}</span>
+                          <span className="text-muted-foreground">
+                            Username
+                          </span>
+                          <span className="font-medium text-right">
+                            @{writer.username}
+                          </span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-muted-foreground">Joined</span>
                           <span className="font-medium text-right">
-                            {new Date(writer.created_at).toLocaleDateString("en-US", {
-                              month: "short",
-                              year: "numeric"
-                            })}
+                            {new Date(writer.created_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )}
                           </span>
                         </div>
                       </div>
