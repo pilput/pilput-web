@@ -8,11 +8,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Search,
-  Heart,
   TrendingUp,
-  Zap,
-  Clock,
-  Eye,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
@@ -74,154 +70,39 @@ const Blog = () => {
     fetchTags();
   }, []);
 
-  const categories = [
-    {
-      icon: Clock,
-      label: "Latest",
-      value: "latest",
-      color: "text-blue-500",
-    },
-    {
-      icon: Zap,
-      label: "Trending",
-      value: "trending",
-      color: "text-orange-500",
-    },
-    { icon: Eye, label: "Popular", value: "popular", color: "text-zinc-600" },
-    { icon: Heart, label: "Loved", value: "loved", color: "text-red-500" },
-    {
-      icon: TrendingUp,
-      label: "Future",
-      value: "future",
-      color: "text-purple-500",
-    },
-  ];
+
 
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
-        {/* Hero Section */}
-        <div className="relative overflow-hidden border-b border-gray-200 dark:border-gray-800 bg-gradient-to-r from-blue-50/50 via-indigo-50/30 to-purple-50/50 dark:from-blue-950/20 dark:via-indigo-950/10 dark:to-purple-950/20">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-          <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
-            <div className="text-center max-w-3xl mx-auto">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg
-                    className="w-5 h-5 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                  </svg>
-                </div>
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-gray-200 dark:to-gray-100 bg-clip-text text-transparent">
-                  Blog
-                </h1>
-              </div>
-              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto mb-4">
-                Discover the latest articles, tutorials, and insights from our
-                vibrant community of developers and creators
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Minimal Header */}
+        <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+          <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3">
+                Latest Stories
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Discover stories, thinking, and expertise from writers on any topic
               </p>
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-green-500" />
-                  <span>Trending topics</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-blue-500" />
-                  <span>Latest updates</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-red-500" />
-                  <span>Community favorites</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="max-w-7xl mx-auto px-4 pb-16 pt-8">
-          <div className="flex flex-col xl:flex-row gap-8">
-            {/* Sidebar */}
-            <div className="xl:w-80 order-2 xl:order-1">
-              <div className="space-y-6">
-                {/* Popular Posts */}
-                <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-orange-500" />
-                      Popular This Week
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer">
-                        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">
-                          Getting Started with Next.js 15
-                        </h4>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          2.5k views • 3 days ago
-                        </p>
-                      </div>
-                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer">
-                        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">
-                          TypeScript Best Practices
-                        </h4>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          1.8k views • 5 days ago
-                        </p>
-                      </div>
-                      <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors cursor-pointer">
-                        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">
-                          Building Modern UIs
-                        </h4>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          1.2k views • 1 week ago
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Trending Tags */}
-                <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-blue-500" />
-                      Trending Topics
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(trendingTags) &&
-                      trendingTags.length > 0 ? (
-                        trendingTags.map((tag, index) => (
-                          <Link
-                            key={index}
-                            href={`/tags/${tag}`}
-                            className="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800/50 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/60 transition-all duration-300 hover:scale-105"
-                          >
-                            #{tag}
-                          </Link>
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          No trending tags available
-                        </p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Main Content */}
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          {/* Main Content Area */}
+          <div className="flex flex-col xl:flex-row gap-12">
+            {/* Main Posts Feed */}
             <div className="flex-1">
-              {/* Posts List */}
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {posts.length > 0 ? (
-                  posts.map((post) => <Postlist key={post.id} post={post} />)
+                  posts.map((post) => (
+                    <Postlist key={post.id} post={post} />
+                  ))
                 ) : !isLoading ? (
-                  <div className="col-span-full text-center py-16">
+                  <div className="text-center py-16">
                     <div className="w-24 h-24 mx-auto mb-4 bg-zinc-100 dark:bg-zinc-800/30 rounded-full flex items-center justify-center">
                       <Search className="w-12 h-12 text-gray-400" />
                     </div>
@@ -242,7 +123,7 @@ const Blog = () => {
 
               {/* Pagination */}
               {posts.length > 0 && total > postsPerPage && (
-                <div className="mt-8 flex justify-center">
+                <div className="mt-12 flex justify-center">
                   <Paginate
                     prev={() => setCurrentPage(Math.max(0, currentPage - 1))}
                     next={() =>
@@ -262,6 +143,54 @@ const Blog = () => {
                   />
                 </div>
               )}
+            </div>
+
+            {/* Sidebar */}
+            <div className="xl:w-80">
+              <div className="space-y-8">
+                {/* Trending Topics */}
+                <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-indigo-500" />
+                      Trending now
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {Array.isArray(trendingTags) &&
+                      trendingTags.length > 0 ? (
+                        trendingTags.slice(0, 10).map((tag, index) => (
+                          <Link
+                            key={index}
+                            href={`/tags/${tag}`}
+                            className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                          >
+                            #{tag}
+                          </Link>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          No trending topics yet
+                        </p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Reading List */}
+                <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4">
+                      See more of what you like
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      Your reading list helps you save articles for later
+                    </p>
+                    <button className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+                      Create reading list
+                    </button>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
