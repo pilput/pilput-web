@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import PostItemr from "./PostItemr";
+import PostItem from "./PostItem";
 import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
-import PostItemrPulse from "./PostItemrpulse";
+import PostItemPulse from "./PostItemPulse";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import type { Post } from "@/types/post";
@@ -37,7 +37,7 @@ const PostsRandomList = () => {
     content = (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
-          <PostItemr key={post.id} post={post} />
+          <PostItem key={post.id} post={post} />
         ))}
       </div>
     );
@@ -45,7 +45,7 @@ const PostsRandomList = () => {
     content = (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tempposts.map((post) => (
-          <PostItemrPulse key={post} />
+          <PostItemPulse key={post} />
         ))}
       </div>
     );

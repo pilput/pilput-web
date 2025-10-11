@@ -49,7 +49,7 @@ interface Tags {
 interface Comment {
   id: string;
   text: string;
-  repies: Comment;
+  repies: Comment[];
   created_at: string;
   creator: any;
 }

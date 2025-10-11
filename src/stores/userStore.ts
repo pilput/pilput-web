@@ -31,12 +31,12 @@ export const authStore = create<authDataState>()((set) => ({
       });
       const response = data as responseSuccess;
       
-      set({ data: response.data });
+      set({ data: response.data, error: false });
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           RemoveToken();
-          window.location.href = "/login";
+          // Error will be handled in the component layer
         }
       }
       console.log(error);

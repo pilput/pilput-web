@@ -1,6 +1,6 @@
 import { Skeleton } from "../ui/skeleton";
 
-const PostItemrPulse = () => {
+const PostItemPulse = () => {
   return (
     <article className="group relative bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm">
       <div className="p-5">
@@ -28,4 +28,4 @@ const PostItemrPulse = () => {
   );
 };
 
-export default PostItemrPulse;
+export default PostItemPulse;

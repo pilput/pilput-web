@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Eye, Heart, MessageCircle, Calendar } from "lucide-react";
 import type { Post } from "@/types/post";
 
-const PostItemr = ({ post }: { post: Post }) => {
+const PostItem = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   const formattedDate = new Date(post.created_at).toLocaleDateString();
 
@@ -60,4 +60,4 @@ const PostItemr = ({ post }: { post: Post }) => {
   );
 };
 
-export default PostItemr;
+export default PostItem;

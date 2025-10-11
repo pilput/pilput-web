@@ -1,7 +1,7 @@
 "use client";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Undelineextention from "@tiptap/extension-underline";
+import Underline from "@tiptap/extension-underline";
 import Youtube from "@tiptap/extension-youtube";
 import MenuBar from "./MenuBar";
 import Image from "@tiptap/extension-image";
@@ -22,7 +22,7 @@ const extensions = [
       },
     },
   }),
-  Undelineextention,
+  Underline,
   Youtube,
   Placeholder.configure({
     placeholder: "Write something …",
