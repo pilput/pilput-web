@@ -21,7 +21,7 @@ export function ModelPicker({ showModelPicker = true }: { showModelPicker?: bool
         value={selectedModel}
         onValueChange={setSelectedModel}
       >
-        <SelectTrigger className="h-9 gap-1 text-xs w-[160px] border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-700 rounded-lg transition-colors">
+        <SelectTrigger className="h-9 gap-1 text-xs w-[160px] border border-border bg-background hover:bg-muted focus:ring-1 focus:ring-ring rounded-lg transition-colors">
           <Sparkles className="h-3.5 w-3.5 mr-1 text-primary" />
           <SelectValue placeholder="Select model" />
         </SelectTrigger>

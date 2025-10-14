@@ -59,7 +59,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
 
   if (currentConvertations === "") {
     return (
-      <div className="flex flex-col h-full items-center justify-center bg-gray-50 dark:bg-gray-900 p-6">
+      <div className="flex flex-col h-full items-center justify-center bg-background p-6">
         <div className="flex flex-col items-center gap-6 max-w-2xl w-full">
           <div className="flex flex-col items-center gap-2">
             {/* Illustration */}
@@ -84,10 +84,10 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-2xl font-bold text-foreground">
               Start a New Chat
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-center">
+            <p className="text-muted-foreground text-center">
               Say hello to your AI Assistant! Type your first message below to
               begin a new conversation.
             </p>
@@ -104,7 +104,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
     );
   } else {
     return (
-      <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col h-full bg-background">
         {/* Messages area */}
         <div
           ref={chatContainerRef}
@@ -127,7 +127,7 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
         </div>
 
         {/* Input area - fixed at bottom */}
-        <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+        <div className="bg-background border-t border-border">
           <div className="max-w-3xl mx-auto w-full p-4">
             <ChatInput
               onSendMessage={handleSendMessage}

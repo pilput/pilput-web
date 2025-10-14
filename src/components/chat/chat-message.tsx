@@ -79,7 +79,7 @@ export function ChatMessage({
   return (
     <div
       className={cn(
-        "group relative py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors w-full",
+        "group relative py-4 px-4 hover:bg-muted transition-colors w-full",
         className
       )}
     >
@@ -92,11 +92,11 @@ export function ChatMessage({
         <div className="flex gap-4">
           <div className="flex-shrink-0">
             {message.role === "assistant" ? (
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
                 <Bot className="h-4 w-4 text-white" />
               </div>
             ) : (
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
                 <User className="h-4 w-4 text-white" />
               </div>
             )}
@@ -107,7 +107,7 @@ export function ChatMessage({
               <span className="font-medium text-sm">
                 {message.role === "assistant" ? "AI Assistant" : "You"}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 {message.createdAt.toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
@@ -115,7 +115,7 @@ export function ChatMessage({
               </span>
             </div>
 
-            <div className="text-sm text-gray-800 dark:text-gray-200">
+            <div className="text-sm text-foreground">
               <AnimatePresence mode="wait">
                 {isEditing ? (
                   <motion.div
@@ -129,7 +129,7 @@ export function ChatMessage({
                       ref={textareaRef}
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
-                      className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      className="w-full p-3 border rounded-lg bg-muted dark:border-border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       rows={4}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
@@ -169,8 +169,8 @@ export function ChatMessage({
                           isStreaming={message.isStreaming}
                           className={
                             message.role === "assistant"
-                              ? "text-gray-800 dark:text-gray-200"
-                              : "text-gray-900 dark:text-white"
+                              ? "text-foreground"
+                              : "text-foreground"
                           }
                         />
                         {message.isStreaming && (
@@ -180,7 +180,7 @@ export function ChatMessage({
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
                             onClick={() => {
                               navigator.clipboard.writeText(message.content);
                               // You might want to add a toast notification here
@@ -193,7 +193,7 @@ export function ChatMessage({
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                              className="h-8 w-8 text-muted-foreground hover:text-foreground"
                               onClick={() => {
                                 setEditedContent(message.content);
                                 setIsEditing(true);
@@ -203,7 +203,7 @@ export function ChatMessage({
                               <span className="sr-only">Edit message</span>
                             </Button>
                           )}
-                          <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1" />
+                          <div className="h-6 w-px bg-border mx-1" />
                           <Button
                             variant="ghost"
                             size="icon"
@@ -211,7 +211,7 @@ export function ChatMessage({
                               "h-8 w-8",
                               hasLiked === true
                                 ? "text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
-                                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                : "text-muted-foreground hover:text-foreground"
                             )}
                             onClick={handleLike}
                           >
@@ -225,7 +225,7 @@ export function ChatMessage({
                               "h-8 w-8",
                               hasLiked === false
                                 ? "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
-                                : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                : "text-muted-foreground hover:text-foreground"
                             )}
                             onClick={handleDislike}
                           >
