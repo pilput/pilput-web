@@ -25,21 +25,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-const chartData = [
-  { date: "2025-07-01", desktop: 120, mobile: 85 },
-  { date: "2025-07-08", desktop: 135, mobile: 92 },
-  { date: "2025-07-15", desktop: 118, mobile: 78 },
-  { date: "2025-07-22", desktop: 142, mobile: 98 },
-  { date: "2025-07-29", desktop: 128, mobile: 87 },
-  { date: "2025-08-05", desktop: 145, mobile: 102 },
-  { date: "2025-08-12", desktop: 158, mobile: 115 },
-  { date: "2025-08-19", desktop: 152, mobile: 108 },
-  { date: "2025-08-26", desktop: 165, mobile: 118 },
-  { date: "2025-09-02", desktop: 172, mobile: 125 },
-  { date: "2025-09-09", desktop: 178, mobile: 132 },
-  { date: "2025-09-16", desktop: 185, mobile: 138 },
-  { date: "2025-09-23", desktop: 192, mobile: 145 },
-]
+import { Skeleton } from "@/components/ui/skeleton"
+
+// Generate more realistic data with trends
+const generateChartData = () => {
+  const data = []
+  const now = new Date()
+  let desktopCount = 800
+  let mobileCount = 600
+  
+  // Generate data for the last 90 days
+  for (let i = 90; i >= 0; i--) {
+    const date = new Date()
+    date.setDate(now.getDate() - i)
+    
+    // Add some randomness with trends
+    desktopCount += Math.floor(Math.random() * 100) - 30
+    mobileCount += Math.floor(Math.random() * 80) - 20
+    
+    // Ensure counts don't go below 0
+    desktopCount = Math.max(0, desktopCount)
+    mobileCount = Math.max(0, mobileCount)
+    
+    data.push({
+      date: date.toISOString().split('T')[0],
+      desktop: desktopCount,
+      mobile: mobileCount,
+    })
+  }
+  
+  return data
+}
+
+const chartData = generateChartData()
 
 const chartConfig = {
   visitors: {
@@ -47,16 +65,17 @@ const chartConfig = {
   },
   desktop: {
     label: "Desktop",
-    color: "#8b5cf6",
+    color: "hsl(var(--chart-1))",
   },
   mobile: {
     label: "Mobile",
-    color: "#f59e0b",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
 export default function Component() {
   const [timeRange, setTimeRange] = React.useState("90d")
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)
@@ -71,23 +90,30 @@ export default function Component() {
     return date >= now
   })
 
+  // Calculate totals for the selected time range
+  const totals = filteredData.reduce((acc, item) => {
+    acc.desktop += item.desktop
+    acc.mobile += item.mobile
+    return acc
+  }, { desktop: 0, mobile: 0 })
+
   return (
-    <Card>
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+    <Card className="shadow-lg border-0 rounded-2xl bg-gradient-to-br from-card to-muted/30">
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b border-border/50 py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Area Chart - Interactive</CardTitle>
-          <CardDescription>
-            Showing total visitors for the last 3 months
+          <CardTitle className="text-xl font-bold">User Analytics</CardTitle>
+          <CardDescription className="text-sm">
+            Showing total visitors for the selected period
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
-            className="w-[160px] rounded-lg sm:ml-auto"
-            aria-label="Select a value"
+            className="w-[140px] rounded-lg bg-background border border-input"
+            aria-label="Select time range"
           >
-            <SelectValue placeholder="Last 3 months" />
+            <SelectValue placeholder="Select range" />
           </SelectTrigger>
-          <SelectContent className="rounded-xl">
+          <SelectContent className="rounded-xl bg-background border border-input">
             <SelectItem value="90d" className="rounded-lg">
               Last 3 months
             </SelectItem>
@@ -101,83 +127,115 @@ export default function Component() {
         </Select>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#8b5cf6"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#8b5cf6"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#f59e0b"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#f59e0b"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
+        {isLoading ? (
+          <div className="h-[250px] flex items-center justify-center">
+            <Skeleton className="h-[200px] w-[90%] rounded-xl" />
+          </div>
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[250px] w-full"
+          >
+            <AreaChart
+              data={filteredData}
+              margin={{
+                left: 12,
+                right: 12,
+                top: 12,
+                bottom: 12,
               }}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })
-                  }}
-                  indicator="dot"
-                />
-              }
-            />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              stroke="#f59e0b"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="#8b5cf6"
-              stackId="a"
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
-        </ChartContainer>
+            >
+              <defs>
+                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+                <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-mobile)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-mobile)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" className="opacity-30" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value)
+                  return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }}
+                    indicator="dot"
+                  />
+                }
+              />
+              <Area
+                dataKey="mobile"
+                type="natural"
+                fill="url(#fillMobile)"
+                stroke="var(--color-mobile)"
+                stackId="a"
+                name="Mobile"
+              />
+              <Area
+                dataKey="desktop"
+                type="natural"
+                fill="url(#fillDesktop)"
+                stroke="var(--color-desktop)"
+                stackId="a"
+                name="Desktop"
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+            </AreaChart>
+          </ChartContainer>
+        )}
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          <div className="flex items-center gap-2 rounded-lg bg-primary/5 p-3">
+            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-1))]" />
+            <div className="flex-1">
+              <p className="text-sm text-muted-foreground">Desktop Users</p>
+              <p className="text-lg font-bold">{totals.desktop.toLocaleString()}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 rounded-lg bg-primary/5 p-3">
+            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-2))]" />
+            <div className="flex-1">
+              <p className="text-sm text-muted-foreground">Mobile Users</p>
+              <p className="text-lg font-bold">{totals.mobile.toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   )

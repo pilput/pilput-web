@@ -3,8 +3,10 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Paperclip, Smile } from "lucide-react";
+import { Send, Paperclip, Smile, AlertCircle } from "lucide-react";
 import { ModelPicker } from "./model-picker";
+import { useChatStore } from "@/stores/chat-store";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -20,6 +22,7 @@ export function ChatInput({
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState(1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { selectedModel, availableModels } = useChatStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,14 +61,15 @@ export function ChatInput({
     }
   }, [message]);
 
+  // Find the selected model name for display
+  const selectedModelName = availableModels.find(model => model.id === selectedModel)?.name || "Unknown Model";
+
   return (
-    <div className="sticky bottom-0 w-full">
-      <div className="mx-auto max-w-2xl px-2 py-4">
+    <div className="sticky bottom-0 w-full bg-background/90 backdrop-blur-lg border-t border-border/50">
+      <div className="mx-auto max-w-3xl px-4 py-4">
         <form onSubmit={handleSubmit}>
-          <div className="flex items-end gap-2 p-0 bg-transparent">
-            <div className="flex items-center">
-              {showModelPicker && <ModelPicker />}
-            </div>
+          <div className="flex items-end gap-2">
+            {showModelPicker && <ModelPicker />}
             <div className="flex-1 relative">
               <Textarea
                 ref={textareaRef}
@@ -74,50 +78,87 @@ export function ChatInput({
                 onKeyDown={handleKeyDown}
                 onInput={handleInput}
                 placeholder="Type your message..."
-                className="min-h-[40px] max-h-[120px] w-full resize-none border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-3 py-2 text-sm rounded-lg shadow-none focus-visible:ring-1 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 transition-all"
+                className="min-h-[44px] max-h-[140px] w-full resize-none border border-input bg-background px-4 py-3 text-sm rounded-xl shadow-sm focus-visible:ring-2 focus-visible:ring-ring transition-all pr-20"
                 disabled={isDisabled}
                 rows={rows}
               />
               <div className="absolute right-2 bottom-2 flex items-center gap-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md opacity-70 hover:opacity-100 transition-colors"
-                  disabled={isDisabled}
-                >
-                  <Smile className="h-4 w-4" />
-                  <span className="sr-only">Add emoji</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md opacity-70 hover:opacity-100 transition-colors"
-                  disabled={isDisabled}
-                >
-                  <Paperclip className="h-4 w-4" />
-                  <span className="sr-only">Attach file</span>
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md opacity-70 hover:opacity-100 transition-colors"
+                        disabled={isDisabled}
+                      >
+                        <Smile className="h-4 w-4" />
+                        <span className="sr-only">Add emoji</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add emoji</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md opacity-70 hover:opacity-100 transition-colors"
+                        disabled={isDisabled}
+                      >
+                        <Paperclip className="h-4 w-4" />
+                        <span className="sr-only">Attach file</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Attach file</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
-            <Button
-              type="submit"
-              size="icon"
-              className="h-9 w-9 shrink-0 rounded-lg bg-gray-900 dark:bg-gray-800 text-white hover:bg-gray-800 dark:hover:bg-gray-700 focus-visible:ring-1 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-700 transition-all disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-gray-400"
-              disabled={isDisabled || !message.trim()}
-            >
-              {isDisabled ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-              <span className="sr-only">Send message</span>
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="h-10 w-10 shrink-0 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-muted disabled:text-muted-foreground"
+                    disabled={isDisabled || !message.trim()}
+                  >
+                    {isDisabled ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                    <span className="sr-only">Send message</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="flex items-center gap-2">
+                  {message.trim() ? (
+                    <>
+                      <span>Send with {selectedModelName}</span>
+                      <Send className="h-4 w-4" />
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="h-4 w-4" />
+                      <span>Type a message first</span>
+                    </>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </form>
-        <p className="mt-2 text-center text-xs text-gray-400 dark:text-gray-500">
-          AI can make mistakes. Please verify important information.
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          AI can make mistakes. Please verify important information. Press Enter to send, Shift+Enter for new line.
         </p>
       </div>
     </div>

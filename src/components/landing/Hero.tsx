@@ -63,11 +63,12 @@ const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Generate particles
+  // Generate particles - reduced number for better performance
   useEffect(() => {
     const generateParticles = () => {
       const newParticles = [];
-      for (let i = 0; i < 50; i++) {
+      // Reduced from 50 to 20 particles for better performance
+      for (let i = 0; i < 20; i++) {
         newParticles.push({
           id: i,
           x: Math.random() * 100,
@@ -81,9 +82,14 @@ const Hero = () => {
     generateParticles();
   }, []);
 
-  // Mouse tracking
+  // Mouse tracking with throttling for better performance
   useEffect(() => {
+    let throttleTimer: NodeJS.Timeout | null = null;
+    
     const handleMouseMove = (e: MouseEvent) => {
+      // Throttle mouse movement updates to reduce CPU usage
+      if (throttleTimer) return;
+      
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width;
@@ -92,12 +98,19 @@ const Hero = () => {
         mouseX.set((x - 0.5) * 100);
         mouseY.set((y - 0.5) * 100);
       }
+      
+      throttleTimer = setTimeout(() => {
+        throttleTimer = null;
+      }, 16); // ~60fps
     };
 
     const container = containerRef.current;
     if (container) {
       container.addEventListener("mousemove", handleMouseMove);
-      return () => container.removeEventListener("mousemove", handleMouseMove);
+      return () => {
+        container.removeEventListener("mousemove", handleMouseMove);
+        if (throttleTimer) clearTimeout(throttleTimer);
+      };
     }
   }, [mouseX, mouseY]);
 
@@ -173,24 +186,24 @@ const Hero = () => {
       <motion.div
         className="absolute inset-0 opacity-20"
         style={{
-          background: `radial-gradient(800px circle at ${
+          background: `radial-gradient(600px circle at ${
             mousePosition.x * 100
           }% ${
             mousePosition.y * 100
-          }%, rgba(59, 130, 246, 0.08), transparent 50%)`,
+          }%, rgba(59, 130, 246, 0.06), transparent 50%)`,
         }}
       />
 
-      {/* Animated geometric grid */}
-      <div className="absolute inset-0 opacity-10">
+      {/* Animated geometric grid - simplified for better performance */}
+      <div className="absolute inset-0 opacity-5">
         <motion.div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+              linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px)
             `,
-            backgroundSize: "60px 60px",
+            backgroundSize: "80px 80px",
             x: springX,
             y: springY,
           }}
@@ -203,7 +216,7 @@ const Hero = () => {
           {particles.map((particle) => (
             <motion.div
               key={particle.id}
-              className="absolute rounded-full bg-primary/20"
+              className="absolute rounded-full bg-primary/10"
               style={{
                 left: `${particle.x}%`,
                 top: `${particle.y}%`,
@@ -211,12 +224,12 @@ const Hero = () => {
                 height: `${particle.size}px`,
               }}
               animate={{
-                y: [0, -100, 0],
-                opacity: [0, 1, 0],
+                y: [0, -80, 0],
+                opacity: [0, 0.7, 0],
                 scale: [0, 1, 0],
               }}
               transition={{
-                duration: 8,
+                duration: 6,
                 repeat: Infinity,
                 delay: particle.delay,
                 ease: "easeInOut",
@@ -226,61 +239,31 @@ const Hero = () => {
         </div>
       )}
 
-      {/* Floating background shapes - Only render if motion is not reduced */}
+      {/* Floating background shapes - reduced for better performance */}
       {!prefersReducedMotion && (
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(4)].map((_, i) => (
+          {[...Array(2)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full mix-blend-multiply filter blur-xl"
               animate={{
-                x: [0, 50, 0],
-                y: [0, 30, 0],
-                scale: [1, 1.1, 1],
+                x: [0, 30, 0],
+                y: [0, 20, 0],
+                scale: [1, 1.05, 1],
               }}
               transition={{
-                duration: 15 + i * 2,
+                duration: 12 + i * 2,
                 repeat: Infinity,
                 delay: i * 3,
                 ease: "linear",
               }}
               style={{
-                width: `${200 + i * 80}px`,
-                height: `${200 + i * 80}px`,
-                left: `${10 + i * 25}%`,
-                top: `${15 + i * 20}%`,
-                backgroundColor: `hsl(${220 + i * 30}, 60%, 95%)`,
-                opacity: 0.4,
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Animated geometric shapes - Only render if motion is not reduced */}
-      {!prefersReducedMotion && (
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={`geo-${i}`}
-              className="absolute border border-primary/10"
-              style={{
-                left: `${20 + i * 15}%`,
-                top: `${10 + i * 12}%`,
-                width: `${60 + i * 20}px`,
-                height: `${60 + i * 20}px`,
-                borderRadius: i % 2 === 0 ? "50%" : "0%",
-              }}
-              animate={{
-                rotate: [0, 360],
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.3, 0.1],
-              }}
-              transition={{
-                duration: 20 + i * 3,
-                repeat: Infinity,
-                delay: i * 2,
-                ease: "linear",
+                width: `${150 + i * 50}px`,
+                height: `${150 + i * 50}px`,
+                left: `${10 + i * 30}%`,
+                top: `${10 + i * 20}%`,
+                backgroundColor: `hsl(${220 + i * 20}, 50%, 90%)`,
+                opacity: 0.2,
               }}
             />
           ))}
@@ -295,7 +278,7 @@ const Hero = () => {
             Math.pow((parseFloat(item.x) / 100 - mousePosition.x) * 100, 2) +
               Math.pow((parseFloat(item.y) / 100 - mousePosition.y) * 100, 2)
           );
-          const isNearMouse = distanceFromMouse < 20;
+          const isNearMouse = distanceFromMouse < 15;
 
           return (
             <motion.div
@@ -303,31 +286,32 @@ const Hero = () => {
               className="absolute hidden lg:block cursor-pointer"
               style={{ left: item.x, top: item.y }}
               animate={{
-                y: [0, -20, 0],
-                rotate: [0, 5, 0],
-                scale: isNearMouse ? 1.2 : 1,
+                y: [0, -15, 0],
+                rotate: [0, 3, 0],
+                scale: isNearMouse ? 1.15 : 1,
               }}
               transition={{
-                duration: 4,
+                duration: 3,
                 repeat: Infinity,
                 delay: item.delay,
                 ease: "easeInOut",
               }}
               whileHover={{
-                scale: 1.3,
-                rotate: 15,
+                scale: 1.2,
+                rotate: 10,
                 transition: { duration: 0.2 },
               }}
             >
               <motion.div
-                className="p-4 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="p-3 bg-card/40 backdrop-blur-sm rounded-xl border border-border/30 shadow-md hover:shadow-lg transition-all duration-200"
                 animate={{
                   boxShadow: isNearMouse
-                    ? "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                    : "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                    ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                    : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
                 }}
+                transition={{ duration: 0.3 }}
               >
-                <IconComponent className="h-6 w-6 text-primary" />
+                <IconComponent className="h-5 w-5 text-primary" />
               </motion.div>
             </motion.div>
           );
@@ -338,7 +322,7 @@ const Hero = () => {
         style={{
           transform: prefersReducedMotion
             ? "none"
-            : `translate(${springX.get() * 0.02}px, ${springY.get() * 0.02}px)`,
+            : `translate(${springX.get() * 0.01}px, ${springY.get() * 0.01}px)`,
         }}
       >
         <header className="relative flex flex-col items-center space-y-6 sm:space-y-8 text-center max-w-6xl mx-auto p-6 sm:p-8 lg:p-12">
@@ -405,36 +389,17 @@ const Hero = () => {
             aria-label="Primary actions"
           >
             <Link href="/register" className="w-full sm:w-auto">
-              <motion.div
-                animate={
-                  prefersReducedMotion
-                    ? {}
-                    : {
-                        boxShadow: [
-                          "0 0 0 0 rgba(var(--primary), 0.4)",
-                          "0 0 0 10px rgba(var(--primary), 0)",
-                          "0 0 0 0 rgba(var(--primary), 0)",
-                        ],
-                      }
-                }
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+              <Button
+                size="lg"
+                className="group px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-6 lg:px-12 lg:py-7 text-sm sm:text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 rounded-xl border-0 w-full"
+                aria-label="Start writing your first article"
               >
-                <Button
-                  size="lg"
-                  className="group px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-6 lg:px-12 lg:py-7 text-sm sm:text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 rounded-xl border-0 w-full"
-                  aria-label="Start writing your first article"
-                >
-                  Start Writing Now
-                  <ArrowRight
-                    className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform"
-                    aria-hidden="true"
-                  />
-                </Button>
-              </motion.div>
+                Start Writing Now
+                <ArrowRight
+                  className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform"
+                  aria-hidden="true"
+                />
+              </Button>
             </Link>
             <Link href="/blog" className="w-full sm:w-auto">
               <Button
@@ -451,27 +416,27 @@ const Hero = () => {
           {/* Stats preview */}
           <motion.section
             variants={itemVariants}
-            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 pt-6 sm:pt-8 md:pt-12 text-center w-full"
+            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 pt-6 sm:pt-8 text-center w-full"
             aria-label="Platform statistics"
           >
-            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-3xl bg-white/5 dark:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300">
+            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-2xl bg-white/5 dark:bg-black/5 backdrop-blur-sm border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-purple-500 transition-all duration-300">
                 1.8K+
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-2 group-hover:text-foreground transition-colors duration-300">
                 Writers
               </div>
             </div>
-            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-3xl bg-white/5 dark:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-pink-500 transition-all duration-300">
+            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-2xl bg-white/5 dark:bg-black/5 backdrop-blur-sm border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-pink-500 transition-all duration-300">
                 12.4K+
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-2 group-hover:text-foreground transition-colors duration-300">
                 Articles Published
               </div>
             </div>
-            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-3xl bg-white/5 dark:bg-black/5 backdrop-blur-md border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent group-hover:from-emerald-500 group-hover:to-teal-500 transition-all duration-300">
+            <div className="group flex flex-col items-center p-4 sm:p-6 rounded-2xl bg-white/5 dark:bg-black/5 backdrop-blur-sm border border-white/10 dark:border-white/5 min-w-[100px] sm:min-w-[120px] md:min-w-[140px] flex-1 sm:flex-none hover:bg-white/10 dark:hover:bg-black/10 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent group-hover:from-emerald-500 group-hover:to-teal-500 transition-all duration-300">
                 67K+
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-2 group-hover:text-foreground transition-colors duration-300">
@@ -492,23 +457,23 @@ const Hero = () => {
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2"
         animate={
           prefersReducedMotion
             ? {}
             : {
-                y: [0, 10, 0],
+                y: [0, 8, 0],
               }
         }
         transition={{
-          duration: 2,
+          duration: 1.5,
           repeat: Infinity,
           ease: "easeInOut",
         }}
         aria-hidden="true"
       >
-        <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center">
-          <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground/50 mt-1.5 sm:mt-2" />
+        <div className="w-4 h-7 sm:w-5 sm:h-8 border-2 border-muted-foreground/20 rounded-full flex justify-center">
+          <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground/40 mt-1" />
         </div>
       </motion.div>
     </motion.section>

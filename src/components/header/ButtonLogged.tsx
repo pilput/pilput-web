@@ -14,14 +14,14 @@ const ButtonLogged = () => {
   return (
     <>
       {token ? (
-        <Link href="/dashboard">
+        <Link href="/dashboard" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md">
           <Button variant="default" size="sm" className="gap-2">
             <User className="h-4 w-4" />
             Dashboard
           </Button>
         </Link>
       ) : (
-        <Link href="/login">
+        <Link href="/login" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md">
           <Button variant="outline" size="sm" className="gap-2">
             <LogIn className="h-4 w-4" />
             Login
