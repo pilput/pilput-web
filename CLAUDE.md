@@ -16,16 +16,22 @@ This is a Next.js 15 blog platform called "pilput" with TypeScript, featuring:
 
 ```bash
 # Start development server with Turbopack
-npm run dev
+bun run dev
 
 # Build for production
-npm run build
+bun run build
 
 # Start production server
-npm start
+bun run start
 
 # Run linter
-npm run lint
+bun run lint
+
+# Install dependencies
+bun install
+
+# Run type checking
+bun tsc --noEmit
 ```
 
 ## Architecture
@@ -52,6 +58,18 @@ npm run lint
 - **Socket.io Client** for real-time features
 - **Axios** for API calls
 
+### Environment Variables and Configuration
+
+The application uses several environment variables configured in `src/utils/getCofig.ts`:
+
+- `NEXT_PUBLIC_API_URL` - Main API base URL
+- `NEXT_PUBLIC_API_URL_2` - Secondary API base URL
+- `NEXT_PUBLIC_DASH_URL` - Dashboard base URL
+- `NEXT_PUBLIC_WS_URL` - WebSocket base URL for real-time features
+- `NEXT_PUBLIC_STORAGE_URL` - Storage base URL for file uploads
+- `NEXT_PUBLIC_MAIN_URL` - Main application URL
+- `NEXT_PUBLIC_DOMAIN` - Main domain for cookie configuration
+
 ### State Management
 - **userStore.ts** - Authentication state management
 - **createPostStore.ts** - Post creation state
@@ -66,10 +84,22 @@ npm run lint
 
 ### Key Features Architecture
 - **Authentication**: JWT-based with cookie storage, automatic token refresh
-- **Rich Text Editor**: Tiptap with extensions for YouTube, images, headings
+- **Rich Text Editor**: Tiptap with extensions for YouTube, images, headings, colors, text styling, and placeholders
 - **Real-time Chat**: Socket.io integration for messaging
 - **Post Management**: CRUD operations with dashboard interface
 - **Analytics**: Charts using Recharts for user engagement metrics
+
+### Editor Configuration
+
+The Tiptap editor includes these extensions:
+- **Starter Kit**: Basic formatting (bold, italic, bullet lists, etc.)
+- **Heading**: H1, H2, H3 heading support
+- **Image**: Image embedding and upload capabilities
+- **YouTube**: YouTube video embedding
+- **Color**: Text color customization
+- **Text Style**: Advanced text formatting
+- **Underline**: Underline text formatting
+- **Placeholder**: Placeholder text for empty editors
 
 ### Image Handling
 Configured remote image domains:
@@ -90,3 +120,30 @@ Located in `src/types/`:
 - Error boundaries are implemented for robust error handling
 - Theme switching is handled by next-themes
 - Forms use React Hook Form with Zod schemas for validation
+
+## Testing and Quality Assurance
+
+- **Linting**: Run `npm run lint` to check code quality
+- **Type Checking**: Run `npx tsc --noEmit` to verify TypeScript compilation
+- **Development Workflow**: Use `npm run dev` for hot reloading and fast feedback
+- **Build Process**: `npm run build` creates optimized production bundles
+- **Error Handling**: Custom ErrorHandlerAPI provides structured error responses
+
+## Key Files and Directories
+
+- **Main Layout**: `src/app/layout.tsx` - Contains metadata and theme provider
+- **API Configuration**: `src/utils/fetch.ts` and `src/utils/getCofig.ts`
+- **Validation Schemas**: `src/lib/validation.ts` - Comprehensive Zod validation schemas for forms
+- **Performance Monitoring**: `src/utils/performance.ts` for tracking metrics
+- **Analytics**: `src/components/analitics/Google.tsx` for Google Analytics integration
+
+## Common Development Tasks
+
+1. **Adding new API endpoints**: Update axios instances in `utils/fetch.ts` or create new endpoints
+2. **Creating forms**: Use React Hook Form with Zod validation from `lib/validation.ts`
+3. **Adding components**: Place in appropriate subdirectory under `src/components/` (chat/, dashboard/, post/, ui/)
+4. **State management**: Use Zustand stores in `src/stores/` - import and subscribe to state
+5. **Type definitions**: Add to relevant files in `src/types/` (post.ts, user.ts, writer.ts, you.ts)
+6. **Form validation**: Extend existing schemas in `src/lib/validation.ts` or create new ones
+7. **Theme support**: Use `next-themes` and Tailwind CSS theme variables
+8. **Error handling**: Use ErrorHandlerAPI from `src/utils/ErrorHandler.ts`
