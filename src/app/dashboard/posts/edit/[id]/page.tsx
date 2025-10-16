@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { postsStore } from "@/stores/createPostStore";
+import { updatePostStore } from "@/stores/updatePostStore";
 import { getToken } from "@/utils/Auth";
 import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
@@ -20,8 +20,15 @@ export default function PostEdit() {
   const [loading, setLoading] = useState(true);
   const token = getToken();
   const { id } = useParams();
-  const { post, updateTitle, updateBody, updatePhotoUrl, updateSlug } =
-    postsStore();
+  const {
+    postId,
+    post,
+    updateTitle,
+    updateBody,
+    updatePhotoUrl,
+    updateSlug,
+    updatePostId,
+  } = updatePostStore();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -42,6 +49,7 @@ export default function PostEdit() {
       }
     };
     if (id) {
+      updatePostId(id.toString());
       fetchPost();
     }
   }, [id, token]);
@@ -77,7 +85,7 @@ export default function PostEdit() {
   async function updateHandler() {
     const toastid = toast.loading("Updating...");
     try {
-      await axiosInstence2.patch(`/v1/posts/${id}`, post, {
+      await axiosInstence2.patch(`/v1/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       seterrortitle("");
