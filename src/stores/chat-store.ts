@@ -26,10 +26,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   ],
   isLoading: false,
   recentChats: [],
-  // Default to Llama 4 Maverick free model
-  selectedModel: 'openai/gpt-oss-20b:free',
+  // Default to Qwen 3 14B model
+  selectedModel: 'qwen/qwen3-14b:free',
   // List of free models available on OpenRouter
   availableModels: [
+    { id: 'qwen/qwen3-14b:free', name: 'Qwen 3 14B' },
     { id: 'x-ai/grok-4-fast:free', name: 'Grok 4 Fast' },
     { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
     { id: 'qwen/qwen3-coder:free', name: 'Qwen 3 Coder' },
