@@ -28,18 +28,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
   recentChats: [],
   // Default to Qwen 3 14B model
   selectedModel: 'qwen/qwen3-14b:free',
-  // List of free models available on OpenRouter
+  // List of most popular free models available on OpenRouter
   availableModels: [
     { id: 'qwen/qwen3-14b:free', name: 'Qwen 3 14B' },
-    { id: 'x-ai/grok-4-fast:free', name: 'Grok 4 Fast' },
     { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
-    { id: 'qwen/qwen3-coder:free', name: 'Qwen 3 Coder' },
-    { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
-    { id: 'openai/gpt-oss-20b:free', name: 'GPT-OSS 20B' },
-    { id: 'mistralai/mistral-7b-instruct:free', name: 'Mistral 7B Instruct' },
     { id: 'anthropic/claude-3-haiku:free', name: 'Claude 3 Haiku' },
-    { id: 'z-ai/glm-4.5-air:free', name: 'GLM 4.5 Air' },
-    { id: 'moonshotai/kimi-k2:free', name: 'Kimi K2' },
+    { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
+    { id: 'x-ai/grok-4-fast:free', name: 'Grok 4 Fast' },
+    { id: 'mistralai/mistral-7b-instruct:free', name: 'Mistral 7B Instruct' },
   ],
   isNewConversation: false,
   setMessages: (messages) => set({ messages }),
