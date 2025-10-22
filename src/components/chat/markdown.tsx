@@ -52,11 +52,8 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
 }
 
 // Type for image props
-interface ImageProps {
-  alt?: string;
-  src?: string;
-  className?: string;
-  [key: string]: any;
+interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  children?: React.ReactNode;
 }
 
 // Copy button component for code blocks
