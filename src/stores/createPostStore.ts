@@ -1,4 +1,4 @@
-import { PostCreate } from '@/types/post'
+import type { PostCreate } from '@/types/post'
 import { create } from 'zustand'
 
 const DEFAULT_BODY = `
