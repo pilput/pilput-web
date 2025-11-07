@@ -35,7 +35,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     { id: 'anthropic/claude-3-haiku:free', name: 'Claude 3 Haiku' },
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
     { id: 'x-ai/grok-4-fast:free', name: 'Grok 4 Fast' },
-    { id: 'mistralai/mistral-7b-instruct:free', name: 'Mistral 7B Instruct' },
+    { id: 'minimax/minimax-m2:free', name: 'Minimax M2' },
   ],
   isNewConversation: false,
   setMessages: (messages) => set({ messages }),
