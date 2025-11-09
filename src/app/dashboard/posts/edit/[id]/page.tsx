@@ -83,27 +83,42 @@ export default function PostEdit() {
   };
 
   async function updateHandler() {
+    // Client-side validation
+    if (!post.title.trim()) {
+      seterrortitle("Title is required");
+      return;
+    }
+    if (!post.body.trim()) {
+      toast.error("Content is required");
+      return;
+    }
+
     const toastid = toast.loading("Updating...");
     try {
       await axiosInstence2.patch(`/v1/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       seterrortitle("");
+      seterrorimage("");
       toast.success("Post updated successfully", { id: toastid });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError: AxiosError = error;
         console.error("Axios error:", axiosError.message);
         if (axiosError.response) {
-          // Handle errors if needed
+          if (axiosError.response.status === 422) {
+            const errorData = axiosError.response.data as any;
+            const titleError = errorData?.error?.issues?.find((issue: any) => issue.path.includes('title'))?.message;
+            const imageError = errorData?.error?.issues?.find((issue: any) => issue.path.includes('photo_url'))?.message;
+            seterrortitle(titleError || "");
+            seterrorimage(imageError || "");
+            toast.error("Validation error", { id: toastid });
+          } else {
+            toast.error("Error updating post", { id: toastid });
+          }
         } else {
           console.error("Other error:", error);
-        }
-
-        if (axiosError.response?.status === 422) {
-          toast.error("Validation error", { id: toastid });
-        } else {
-          toast.error("Error updating post", { id: toastid });
+          toast.error("Network error", { id: toastid });
         }
       }
     }
