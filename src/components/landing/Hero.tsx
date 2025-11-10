@@ -13,6 +13,9 @@ import {
   ArrowRight,
   Sparkles,
   ChevronDown,
+  PenTool,
+  BookOpen,
+  Users,
 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -84,8 +87,15 @@ const Hero = () => {
       animate="visible"
       variants={containerVariants}
     >
-      {/* Clean gradient background */}
+      {/* Enhanced gradient background with mesh effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
+
+      {/* Mesh gradient overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(59,130,246,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(147,51,234,0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_80%,rgba(16,185,129,0.06),transparent_50%)]" />
+      </div>
 
       {/* Subtle animated overlay */}
       <motion.div
@@ -93,12 +103,53 @@ const Hero = () => {
         style={{
           background: `
             radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.1) 0%, transparent 50%)
+            radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%)
           `,
           y,
           opacity,
         }}
       />
+
+      {/* Floating geometric shapes and icons */}
+      <motion.div
+        className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-xl"
+        animate={prefersReducedMotion ? {} : { y: [0, -20, 0], rotate: [0, 180, 360] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-br from-purple-500/10 to-transparent rounded-lg blur-lg"
+        animate={prefersReducedMotion ? {} : { y: [0, 15, 0], x: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      />
+      <motion.div
+        className="absolute bottom-32 left-1/4 w-12 h-12 bg-gradient-to-br from-green-500/10 to-transparent rounded-full blur-md"
+        animate={prefersReducedMotion ? {} : { scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      />
+
+      {/* Subtle background icons */}
+      <motion.div
+        className="absolute top-1/4 right-1/4 opacity-10"
+        animate={prefersReducedMotion ? {} : { rotate: [0, 360] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      >
+        <PenTool className="w-24 h-24 text-primary" />
+      </motion.div>
+      <motion.div
+        className="absolute bottom-1/3 right-10 opacity-8"
+        animate={prefersReducedMotion ? {} : { y: [0, -10, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+      >
+        <BookOpen className="w-16 h-16 text-purple-500" />
+      </motion.div>
+      <motion.div
+        className="absolute top-1/3 left-1/5 opacity-6"
+        animate={prefersReducedMotion ? {} : { scale: [1, 1.1, 1] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+      >
+        <Users className="w-20 h-20 text-green-500" />
+      </motion.div>
 
       {/* Content container with proper constraints */}
       <motion.div
@@ -133,17 +184,26 @@ const Hero = () => {
             </Badge>
           </motion.div>
 
-          {/* Main heading - cleaner and more contained */}
-          <motion.div variants={itemVariants} className="space-y-2">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">
-              <span className="block">Write, Publish &</span>
-              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+          {/* Enhanced main heading with glow effects */}
+          <motion.div variants={itemVariants} className="space-y-2 relative">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight relative">
+              <span className="block relative">
+                Write, Publish &
+                <motion.div
+                  className="absolute -inset-2 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-lg blur-xl opacity-50"
+                  animate={prefersReducedMotion ? {} : { scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </span>
+              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent relative">
                 Share Your Ideas
+                <motion.div
+                  className="absolute -inset-1 bg-gradient-to-r from-primary/30 via-purple-500/30 to-primary/30 rounded-lg blur-lg opacity-60"
+                  animate={prefersReducedMotion ? {} : { opacity: [0.6, 1, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                />
               </span>
             </h1>
-            <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-muted-foreground font-medium">
-              Completely Free
-            </p>
           </motion.div>
 
           {/* Subtitle - better constrained */}
@@ -155,31 +215,31 @@ const Hero = () => {
             No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts.
           </motion.p>
 
-          {/* CTA Buttons - cleaner layout */}
+          {/* Enhanced CTA Buttons with modern effects */}
           <motion.nav
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
             role="navigation"
             aria-label="Primary actions"
           >
-            <Link href="/register" className="w-full sm:w-auto">
+            <Link href="/register" className="w-full sm:w-auto group">
               <Button
                 size="lg"
-                className="group px-8 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 rounded-xl border-0 w-full sm:w-auto min-w-[200px]"
+                className="relative overflow-hidden px-8 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105 rounded-xl border-0 w-full sm:w-auto min-w-[200px] before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700"
                 aria-label="Start writing your first article"
               >
-                Start Writing Now
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                <span className="relative z-10">Start Writing Now</span>
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform relative z-10" aria-hidden="true" />
               </Button>
             </Link>
-            <Link href="/blog" className="w-full sm:w-auto">
+            <Link href="/blog" className="w-full sm:w-auto group">
               <Button
                 variant="outline"
                 size="lg"
-                className="px-8 py-4 text-lg font-semibold border-2 border-primary/30 bg-background/80 backdrop-blur-md hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 rounded-xl w-full sm:w-auto min-w-[200px]"
+                className="relative overflow-hidden px-8 py-4 text-lg font-semibold border-2 border-primary/30 bg-background/80 backdrop-blur-md hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 rounded-xl w-full sm:w-auto min-w-[200px] before:absolute before:inset-0 before:bg-gradient-to-r before:from-primary/10 before:to-purple-500/10 before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700"
                 aria-label="Browse published articles"
               >
-                Browse Articles
+                <span className="relative z-10">Browse Articles</span>
               </Button>
             </Link>
           </motion.nav>
