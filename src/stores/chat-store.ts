@@ -14,6 +14,7 @@ interface ChatState {
   fetchMessages: (conversationId: string) => Promise<void>;
   createConversation: (title: string, message: string, router: any) => Promise<string | null>;
   sendMessage: (content: string, conversationId: string) => Promise<void>;
+  deleteConversation: (conversationId: string) => Promise<boolean>;
   setMessages: (messages: Message[]) => void;
   editMessage: (id: string, content: string) => void;
   setIsLoading: (isLoading: boolean) => void;
@@ -277,6 +278,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }
       clearTimeout(timeoutId);
       set({ isLoading: false });
+    }
+  },
+  deleteConversation: async (conversationId) => {
+    try {
+      const response = await axiosInstence2.delete(`/v1/chat/conversations/${conversationId}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      if (response.status === 200) {
+        // Remove the conversation from recentChats
+        set((state) => ({
+          recentChats: state.recentChats.filter(chat => chat.id !== conversationId)
+        }));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
+      return false;
     }
   },
 }));
