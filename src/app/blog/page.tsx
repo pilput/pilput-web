@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Search,
   TrendingUp,
+  Bookmark,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
@@ -22,6 +23,7 @@ const Blog = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [trendingTags, setTrendingTags] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function fetchPosts() {
@@ -75,23 +77,36 @@ const Blog = () => {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         {/* Minimal Header */}
-        <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-          <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
-            <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3">
+        <div className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+          <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
+            <div className="text-center mb-8">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
                 Latest Stories
               </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 Discover stories, thinking, and expertise from writers on any topic
               </p>
+            </div>
+            {/* Search Bar */}
+            <div className="max-w-md mx-auto">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search articles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-transparent"
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-4 py-16">
           {/* Main Content Area */}
           <div className="flex flex-col xl:flex-row gap-12">
             {/* Main Posts Feed */}
@@ -149,10 +164,10 @@ const Blog = () => {
             <div className="xl:w-80">
               <div className="space-y-8">
                 {/* Trending Topics */}
-                <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">
+                <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-indigo-500" />
+                      <TrendingUp className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                       Trending now
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -177,15 +192,16 @@ const Blog = () => {
                 </Card>
 
                 {/* Reading List */}
-                <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">
+                <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <CardContent className="p-6">
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-4">
-                      See more of what you like
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                      <Bookmark className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      Reading List
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      Your reading list helps you save articles for later
+                      Save articles for later and never miss great content
                     </p>
-                    <button className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+                    <button className="w-full px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium">
                       Create reading list
                     </button>
                   </CardContent>
