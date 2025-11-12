@@ -64,7 +64,7 @@ const Hero = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
-    visible: {
+    visible: { 
       opacity: 1,
       y: 0,
       transition: prefersReducedMotion
@@ -76,8 +76,6 @@ const Hero = () => {
           },
     },
   };
-
-
 
   return (
     <motion.section

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { toast } from "react-hot-toast";
@@ -71,8 +71,6 @@ const Blog = () => {
     }
     fetchTags();
   }, []);
-
-
 
   return (
     <>
