@@ -106,7 +106,7 @@ const Blog = () => {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="max-w-7xl mx-auto px-4 py-9">
           {/* Main Content Area */}
           <div className="flex flex-col xl:flex-row gap-8">
             {/* Main Posts Feed */}
