@@ -108,10 +108,10 @@ const Blog = () => {
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 py-16">
           {/* Main Content Area */}
-          <div className="flex flex-col xl:flex-row gap-12">
+          <div className="flex flex-col xl:flex-row gap-8">
             {/* Main Posts Feed */}
             <div className="flex-1">
-              <div className="space-y-8">
+              <div className="space-y-3">
                 {posts.length > 0 ? (
                   posts.map((post) => (
                     <Postlist key={post.id} post={post} />
@@ -162,7 +162,7 @@ const Blog = () => {
 
             {/* Sidebar */}
             <div className="xl:w-80">
-              <div className="space-y-8">
+              <div className="space-y-3">
                 {/* Trending Topics */}
                 <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <CardContent className="p-6">
