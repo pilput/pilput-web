@@ -1,5 +1,6 @@
 "use client";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useRouter } from "next/navigation";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import {
   BookOpen,
@@ -18,193 +19,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-
-interface FeatureListProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const FeatureList: React.FC<FeatureListProps> = ({ children, className, ...props }) => {
-  return (
-    <div
-      className={cn(
-        "relative flex flex-col w-full gap-8 sm:gap-12 lg:gap-16",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-};
-
-interface FeatureCardProps {
-  children: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
-  role?: string;
-  tabIndex?: number;
-  "aria-label"?: string;
-  glowColor?: string;
-}
-
-const FeatureCard: React.FC<FeatureCardProps> = ({
-  children,
-  className,
-  onClick,
-  role = "button",
-  tabIndex = 0,
-  "aria-label": ariaLabel,
-  glowColor = "primary",
-  ...props
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    setMousePosition({ x, y });
-
-    // Calculate rotation based on mouse position
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
-
-    cardRef.current.style.setProperty("--rotate-x", `${rotateX}deg`);
-    cardRef.current.style.setProperty("--rotate-y", `${rotateY}deg`);
-    cardRef.current.style.setProperty("--mouse-x", `${x}px`);
-    cardRef.current.style.setProperty("--mouse-y", `${y}px`);
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    setIsHovered(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
-    if (cardRef.current) {
-      cardRef.current.style.setProperty("--rotate-x", '0deg');
-      cardRef.current.style.setProperty("--rotate-y", '0deg');
-    }
-  }, []);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick?.();
-    }
-  }, [onClick]);
-
-  return (
-    <div
-      ref={cardRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
-      onKeyDown={handleKeyDown}
-      onClick={onClick}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      role={role}
-      tabIndex={tabIndex}
-      aria-label={ariaLabel}
-      className={cn(
-        "group relative w-full overflow-hidden rounded-3xl",
-        "cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-        // Glassmorphism base
-        "bg-white/60 dark:bg-black/40 backdrop-blur-xl",
-        // Border effects
-        "border border-white/20 dark:border-white/10",
-        // Shadow effects
-        "shadow-lg shadow-black/5 dark:shadow-white/5",
-        // 3D transform effects
-        "transform-gpu transition-all duration-500 ease-out",
-        "hover:scale-105 hover:shadow-2xl",
-        "hover:shadow-primary/20 dark:hover:shadow-primary/30",
-        // 3D perspective
-        "hover:[transform:perspective(1000px)_rotateX(var(--rotate-x,0))_rotateY(var(--rotate-y,0))_translateZ(20px)]",
-        className
-      )}
-      {...props}
-    >
-      {/* Animated gradient border */}
-      <div
-        className={cn(
-          "absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-500",
-          "group-hover:opacity-100",
-          glowColor === "primary" && "bg-gradient-to-r from-primary/30 via-transparent to-primary/30",
-          glowColor === "blue" && "bg-gradient-to-r from-blue-500/30 via-transparent to-blue-500/30",
-          glowColor === "purple" && "bg-gradient-to-r from-purple-500/30 via-transparent to-purple-500/30",
-          glowColor === "green" && "bg-gradient-to-r from-green-500/30 via-transparent to-green-500/30",
-          glowColor === "yellow" && "bg-gradient-to-r from-yellow-500/30 via-transparent to-yellow-500/30"
-        )}
-      />
-
-      {/* Dynamic glow effect that follows mouse */}
-      <div
-        className={cn(
-          "pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 rounded-3xl",
-          (isHovered || isFocused) && "opacity-100"
-        )}
-        style={{
-          background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px,
-            ${glowColor === "primary" ? "rgba(255,255,255,0.15)" :
-              glowColor === "blue" ? "rgba(59,130,246,0.15)" :
-              glowColor === "purple" ? "rgba(147,51,234,0.15)" :
-              glowColor === "green" ? "rgba(34,197,94,0.15)" :
-              "rgba(234,179,8,0.15)"},
-            transparent 40%)`,
-        }}
-      />
-
-      {/* Animated particles system */}
-      <div className="absolute inset-0 overflow-hidden rounded-3xl">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className={cn(
-              "absolute w-1 h-1 rounded-full opacity-0 transition-all duration-500",
-              "group-hover:opacity-100 group-hover:animate-pulse",
-              i % 2 === 0 && "top-1/4 left-1/4",
-              i % 2 === 1 && "top-3/4 right-1/4",
-              i === 2 && "bottom-1/4 left-1/2",
-              glowColor === "primary" && "bg-primary/40",
-              glowColor === "blue" && "bg-blue-500/40",
-              glowColor === "purple" && "bg-purple-500/40",
-              glowColor === "green" && "bg-green-500/40",
-              glowColor === "yellow" && "bg-yellow-500/40"
-            )}
-            style={{
-              animationDelay: `${i * 0.2}s`,
-              animationDuration: `${2 + i * 0.5}s`
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Corner accent lights */}
-      <div className={cn(
-        "absolute -top-1 -right-1 w-16 h-16 opacity-0 transition-opacity duration-500",
-        "group-hover:opacity-100",
-        glowColor === "primary" && "bg-gradient-to-bl from-primary/20 to-transparent",
-        glowColor === "blue" && "bg-gradient-to-bl from-blue-500/20 to-transparent",
-        glowColor === "purple" && "bg-gradient-to-bl from-purple-500/20 to-transparent",
-        glowColor === "green" && "bg-gradient-to-bl from-green-500/20 to-transparent",
-        glowColor === "yellow" && "bg-gradient-to-bl from-yellow-500/20 to-transparent"
-      )} />
-
-      {children}
-    </div>
-  );
-};
+import { FeatureCard, FeatureList } from "./FeatureCard";
 
 interface Feature {
   id: string;
@@ -220,7 +35,10 @@ interface Feature {
   accentIcon?: LucideIcon;
 }
 
+type GlowColor = "primary" | "blue" | "purple" | "green" | "yellow";
+
 const Features: React.FC = () => {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({
@@ -320,10 +138,9 @@ const Features: React.FC = () => {
 
   const handleFeatureClick = useCallback((feature: Feature) => {
     if (feature.href) {
-      // In a real app, you'd use Next.js router
-      window.location.href = feature.href;
+      router.push(feature.href);
     }
-  }, []);
+  }, [router]);
 
   return (
     <motion.section
@@ -519,12 +336,17 @@ const Features: React.FC = () => {
                   <FeatureCard
                     onClick={() => handleFeatureClick(feature)}
                     aria-label={`${feature.title}: ${feature.description}`}
+                    aria-describedby={`feature-stats-${feature.id}`}
                     className="h-auto min-h-[160px] sm:min-h-[180px]"
                   >
                     {feature.background}
                     <div className="z-10 p-4 sm:p-6 space-y-3">
                       <div className="flex items-center justify-between">
-                        <Badge variant="secondary" className="text-sm font-medium">
+                        <Badge
+                          id={`feature-stats-${feature.id}`}
+                          variant="secondary"
+                          className="text-sm font-medium"
+                        >
                           {feature.stats}
                         </Badge>
                       </div>
