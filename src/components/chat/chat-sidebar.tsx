@@ -49,7 +49,7 @@ export function ChatSidebar() {
       className="border-r border-sidebar-border/60 bg-gradient-to-b from-sidebar via-sidebar to-sidebar/90 text-sidebar-foreground shadow-xl shadow-sidebar-border/20 backdrop-blur-sm"
     >
       {/* Header */}
-      <SidebarHeader className="px-4 py-5 border-b border-sidebar-border/40 bg-gradient-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 backdrop-blur-md flex flex-row items-center justify-between group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-4 shadow-sm">
+      <SidebarHeader className="px-3 py-3 border-b border-sidebar-border/40 bg-gradient-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 backdrop-blur-md flex flex-row items-center justify-between group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2 shadow-sm">
         <h2 className="text-xl font-bold text-sidebar-foreground group-data-[collapsible=icon]:hidden bg-gradient-to-r from-sidebar-foreground via-sidebar-foreground/90 to-sidebar-foreground/70 bg-clip-text text-transparent">
           AI Chat
         </h2>
@@ -71,33 +71,31 @@ export function ChatSidebar() {
       <SidebarContent>
         {/* New Chat Button */}
         <SidebarGroup>
-          <SidebarGroupContent className="px-4 py-5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-4">
-            <Link
-              href="/chat"
-              className={cn(
-                "flex items-center gap-3 px-6 py-4 text-sm font-semibold text-center bg-gradient-to-r from-primary via-primary/95 to-primary/90 text-primary-foreground border border-primary/20 rounded-xl hover:from-primary/95 hover:via-primary hover:to-primary/95 shadow-lg hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 group relative overflow-hidden hover:scale-[1.02] active:scale-[0.98]",
-                "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-4 group-data-[collapsible=icon]:py-4 group-data-[collapsible=icon]:rounded-full group-data-[collapsible=icon]:shadow-xl group-data-[collapsible=icon]:hover:shadow-2xl group-data-[collapsible=icon]:hover:shadow-primary/40 group-data-[collapsible=icon]:hover:scale-110"
-              )}
-              title="New Chat"
+          <SidebarGroupContent className="px-3 py-3 group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2">
+            <Button
+              asChild
+              variant="outline"
+              className="w-full justify-start gap-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:px-3"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 rounded-xl"></div>
-              <Plus className="w-5 h-5 flex-shrink-0 group-hover:rotate-180 transition-transform duration-300 relative z-10 group-data-[collapsible=icon]:w-5 group-data-[collapsible=icon]:h-5" />
-              <span className="group-data-[collapsible=icon]:hidden relative z-10">
-                New Chat
-              </span>
-            </Link>
+              <Link href="/chat" title="New Chat">
+                <Plus className="w-5 h-5 flex-shrink-0" />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  New Chat
+                </span>
+              </Link>
+            </Button>
           </SidebarGroupContent>
         </SidebarGroup>
 
         {/* Chat List */}
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-          <SidebarGroupLabel className="px-4 text-xs text-muted-foreground/80 uppercase tracking-wider font-semibold mb-2">
+          <SidebarGroupLabel className="px-3 text-xs text-muted-foreground/80 uppercase tracking-wider font-semibold mb-2">
             Recent Conversations
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1 px-2">
+            <SidebarMenu className="space-y-1 px-1">
               {recentChats.length === 0 ? (
-                <div className="text-center text-muted-foreground/60 py-16 text-sm px-4 flex flex-col items-center gap-3 bg-sidebar-accent/10 rounded-xl border border-dashed border-sidebar-border/30">
+                <div className="text-center text-muted-foreground/60 py-8 text-sm px-3 flex flex-col items-center gap-3 bg-sidebar-accent/10 rounded-xl border border-dashed border-sidebar-border/30">
                   <MessageSquare className="w-10 h-10 opacity-40 text-muted-foreground/50" />
                   <p className="font-medium">No conversations yet.</p>
                   <p className="text-xs text-muted-foreground/70">Start a new chat to get started!</p>
@@ -117,7 +115,7 @@ export function ChatSidebar() {
                         )}
                         tooltip={chat.title}
                       >
-                        <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-4 py-3 pr-8">
+                        <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-3 py-2 pr-8">
                           <MessageSquare className={cn(
                             "h-4 w-4 flex-shrink-0 transition-all duration-250",
                             chat.id === currentConversationId
@@ -163,10 +161,10 @@ export function ChatSidebar() {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="px-4 py-5 border-t border-sidebar-border/40 bg-gradient-to-t from-sidebar-accent/20 via-sidebar-accent/10 to-sidebar-accent/5 backdrop-blur-md group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-4 shadow-inner">
+      <SidebarFooter className="px-3 py-3 border-t border-sidebar-border/40 bg-gradient-to-t from-sidebar-accent/20 via-sidebar-accent/10 to-sidebar-accent/5 backdrop-blur-md group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2 shadow-inner">
         <div className="flex flex-col gap-3 group-data-[collapsible=icon]:items-center">
           {/* User Profile */}
-          <div className="flex items-center justify-center gap-3 mt-1 p-3 rounded-xl bg-gradient-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 hover:from-sidebar-accent/40 hover:via-sidebar-accent/30 hover:to-sidebar-accent/40 transition-all duration-300 group-data-[collapsible=icon]:mt-0 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hover:scale-105 shadow-sm hover:shadow-md border border-sidebar-border/30">
+          <div className="flex items-center justify-center gap-3 mt-1 p-2 rounded-xl bg-gradient-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 hover:from-sidebar-accent/40 hover:via-sidebar-accent/30 hover:to-sidebar-accent/40 transition-all duration-300 group-data-[collapsible=icon]:mt-0 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hover:scale-105 shadow-sm hover:shadow-md border border-sidebar-border/30">
             <Avatar className="h-8 w-8 ring-2 ring-sidebar-accent/60 group-data-[collapsible=icon]:h-7 group-data-[collapsible=icon]:w-7 shadow-sm">
               <AvatarImage src={userData.image} alt={userData.username} />
               <AvatarFallback className="text-xs font-semibold group-data-[collapsible=icon]:text-[10px] bg-gradient-to-br from-primary/20 to-primary/10">
