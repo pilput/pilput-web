@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 # --- Base Stage ---
-FROM oven/bun:latest AS base
+FROM oven/bun:1 AS base
 ARG PORT=3000
 ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
