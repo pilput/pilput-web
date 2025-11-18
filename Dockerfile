@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 # --- Base Stage ---
-FROM oven/bun:1 AS base
+FROM oven/bun:latest AS base
 ARG PORT=3000
 ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
@@ -31,15 +31,10 @@ RUN bun run build
 FROM base AS runner
 WORKDIR /app
 
-# Create a non-root user for enhanced security.
-RUN addgroup --system --gid 1001 bun
-RUN adduser --system --uid 1001 bun
-USER bun
-
 # Copy only the necessary files from the 'builder' stage.
-COPY --from=builder --chown=bun:bun /app/.next/standalone ./
-COPY --from=builder --chown=bun:bun /app/public ./public
-COPY --from=builder --chown=bun:bun /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/static ./.next/static
 
 # Expose the port the Next.js application will run on.
 EXPOSE ${PORT}
