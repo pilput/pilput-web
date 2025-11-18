@@ -8,10 +8,19 @@ import "./global.css";
 export const metadata: Metadata = {
   title: {
     default: "pilput - Publishing Platform for Creators",
-    template: "%s | pilput"
+    template: "%s | pilput",
   },
-  description: "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
-  keywords: ["publishing", "blog", "writing", "content creation", "free platform", "creators", "articles"],
+  description:
+    "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
+  keywords: [
+    "publishing",
+    "blog",
+    "writing",
+    "content creation",
+    "free platform",
+    "creators",
+    "articles",
+  ],
   authors: [{ name: "pilput" }],
   creator: "pilput",
   publisher: "pilput",
@@ -20,13 +29,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://pilput.me",
     title: "pilput - Free Publishing Platform for Creators",
-    description: "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
+    description:
+      "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
     siteName: "pilput",
   },
   twitter: {
     card: "summary_large_image",
     title: "pilput - Free Publishing Platform for Creators",
-    description: "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
+    description:
+      "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
     creator: "@pilput_dev",
   },
   robots: {
