@@ -12,14 +12,13 @@ import MyEditor from "@/components/post/Editor";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ImagePlus } from "lucide-react";
-import { useParams } from "next/navigation";
 
-export default function PostEdit() {
+export default async function PostEdit(params: Promise<{ id: string }>) {
   const [errortitle, seterrortitle] = useState("");
   const [errorimage, seterrorimage] = useState("");
   const [loading, setLoading] = useState(true);
   const token = getToken();
-  const { id } = useParams();
+  const {id} = await params;
   const {
     postId,
     post,

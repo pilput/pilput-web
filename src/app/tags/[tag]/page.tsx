@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { toast } from "react-hot-toast";
@@ -16,8 +15,7 @@ import type { Post } from "@/types/post";
 
 const postsPerPage = 10;
 
-const TagPage = () => {
-  const params = useParams();
+const TagPage = ( { params }: { params: { tag: string } }) => {
   const tag = params.tag as string;
   const [posts, setPosts] = useState<Post[]>([]);
   const [total, setTotal] = useState(0);
