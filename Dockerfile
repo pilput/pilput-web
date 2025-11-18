@@ -19,8 +19,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN -mount=type=secret,id=NEXT_PUBLIC_API_URL 
-RUN -mount=type=secret,id=NEXT_PUBLIC_API_URL_2 
+RUN --mount=type=secret,id=NEXT_PUBLIC_API_URL 
+RUN --mount=type=secret,id=NEXT_PUBLIC_API_URL_2 
 
 # Build the application
 RUN bun run build
