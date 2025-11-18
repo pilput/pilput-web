@@ -18,7 +18,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
   const [errorimage, seterrorimage] = useState("");
   const [loading, setLoading] = useState(true);
   const token = getToken();
-  const {id} = await params;
+  const { id } = await params;
   const {
     postId,
     post,
@@ -107,8 +107,12 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
         if (axiosError.response) {
           if (axiosError.response.status === 422) {
             const errorData = axiosError.response.data as any;
-            const titleError = errorData?.error?.issues?.find((issue: any) => issue.path.includes('title'))?.message;
-            const imageError = errorData?.error?.issues?.find((issue: any) => issue.path.includes('photo_url'))?.message;
+            const titleError = errorData?.error?.issues?.find((issue: any) =>
+              issue.path.includes("title")
+            )?.message;
+            const imageError = errorData?.error?.issues?.find((issue: any) =>
+              issue.path.includes("photo_url")
+            )?.message;
             seterrortitle(titleError || "");
             seterrorimage(imageError || "");
             toast.error("Validation error", { id: toastid });

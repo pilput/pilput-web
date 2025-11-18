@@ -21,7 +21,8 @@ export default function Home() {
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover the latest posts, insights, and stories shared by our amazing community of creators.
+              Discover the latest posts, insights, and stories shared by our
+              amazing community of creators.
             </p>
           </div>
           <RandomPosts />
