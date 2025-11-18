@@ -22,7 +22,6 @@ COPY . .
 RUN --mount=secret=id=NEXT_PUBLIC_API_URL 
 RUN --mount=secret=id=NEXT_PUBLIC_API_URL_2 
 
-
 # Build the application
 RUN bun run build
 
