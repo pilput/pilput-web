@@ -9,7 +9,7 @@ WORKDIR /app
 # --- Dependencies Stage ---
 FROM base AS deps
 # Copy package.json and lock files first to optimize caching.
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Install dependencies using bun
 RUN bun install --frozen-lockfile
