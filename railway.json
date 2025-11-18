@@ -1,0 +1,12 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "restartPolicyType": "ON_FAILURE",
+    "startCommand": "npm start"
+  },
+  "apt": {
+    "packages": ["libatomic1"]
+  }
+}
