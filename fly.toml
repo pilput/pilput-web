@@ -18,7 +18,3 @@ primary_region = 'sin'
 
 [[vm]]
   size = 'shared-cpu-1x'
-
-[env]
-  NEXT_PUBLIC_API_URL=https://echo.pilput.me
-  NEXT_PUBLIC_API_URL_2=https://api.pilput.me
