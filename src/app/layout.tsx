@@ -7,7 +7,7 @@ import "./global.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "pilput - Free Publishing Platform for Creators",
+    default: "pilput - Publishing Platform for Creators",
     template: "%s | pilput"
   },
   description: "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
