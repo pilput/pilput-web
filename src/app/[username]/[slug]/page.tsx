@@ -54,16 +54,13 @@ export default async function Page(props: {
               {/* Author and Meta Information */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 py-6 border-y border-gray-100 dark:border-gray-800">
                 <div className="flex items-center gap-3">
-                  <a
-                    href={`/${post.creator.username}`}
-                    className="flex-shrink-0"
-                  >
+                  <a href={`/${post.creator.username}`} className="shrink-0">
                     <Avatar className="w-12 h-12 ring-2 ring-gray-100 dark:ring-gray-800">
                       <AvatarImage
                         src={getProfilePicture(post.creator.image)}
                         alt={`@${post.creator.username}`}
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
+                      <AvatarFallback className="bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
                         {post.creator.username[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
