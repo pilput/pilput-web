@@ -16,9 +16,12 @@ export function proxy(request: NextRequest) {
     // Get the token from cookies
     const token = request.cookies.get("token");
 
-    // If no token is present, redirect to login
+    // If no token is present, redirect to login with current URL for redirect after login
     if (!token) {
+      const currentUrl = pathname + request.nextUrl.search;
+      const redirectParam = encodeURIComponent(currentUrl);
       const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set('redirect', redirectParam);
       return NextResponse.redirect(loginUrl);
     }
   }

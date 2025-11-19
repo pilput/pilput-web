@@ -52,6 +52,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  // Check for redirect parameter from URL (from proxy middleware)
+  const redirectParam = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "").get('redirect');
+  const redirectUrl = redirectParam ? decodeURIComponent(redirectParam) : null;
+
   const {
     register,
     handleSubmit,
@@ -98,19 +102,32 @@ export default function LoginPage() {
       });
 
       toast.success("Login successful! Redirecting...");
+
+      // Redirect to the stored URL or default to home
+      if (redirectUrl) {
+        // Redirect to the original URL
+        router.push(redirectUrl);
+      } else {
+        // Default redirect to home
+        router.push("/");
+      }
       setLoginWait(false);
-      router.push("/");
     } catch (error: unknown) {
       const apiError = error as ApiError;
       const errorMessage = getErrorMessage(apiError);
-      
+
       toast.error(errorMessage, { duration: 5000 });
       console.error("Login error:", error);
+
       setLoginWait(false);
     }
   };
 
   function oauthGithub() {
+    // For GitHub OAuth, we could theoretically store the redirect URL,
+    // but this depends on how your backend handles OAuth state.
+    // For now, we'll keep it simple - the backend should handle redirect
+    // after OAuth completion if it's set up to do so.
     window.location.href = `${Config.apibaseurl2}/v1/auth/github`;
   }
 

@@ -25,11 +25,23 @@ export const ErrorHandlerAPI = (error: any) => {
     "Authentication invalid",
     "invalid algorithm"
   ];
-  
-  if (authErrors.includes(error?.response?.data?.message)) {
+
+  if (authErrors.includes(error?.response?.data?.message) || error.response?.status === 401) {
     deleteCookie("token");
+
+    // Store current URL for redirect after login (same method as proxy middleware)
+    if (typeof window !== "undefined" && window.location) {
+      const currentUrl = window.location.pathname + window.location.search;
+      // Only redirect if not already on login or auth-related pages
+      if (!currentUrl.startsWith('/login') && !currentUrl.startsWith('/register')) {
+        const redirectParam = encodeURIComponent(currentUrl);
+        window.location.href = `/login?redirect=${redirectParam}`;
+      } else {
+        window.location.href = "/login";
+      }
+    }
+
     toast.error("Session expired. Please log in again.");
-    window.location.href = "/login";
     return error.response;
   }
   
