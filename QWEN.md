@@ -1,133 +1,188 @@
-# Project QWEN.md
+# pilput - Enhanced Next.js Publishing Platform
 
 ## Project Overview
 
-This is a Next.js application named "next-turbo" with the version 1.0.1. It's a comprehensive web application using modern technologies like React 19, Next.js 15, Tailwind CSS, and TypeScript. The project follows the App Router pattern and is styled using shadcn/ui components with the New York design system. It appears to be a social platform or content sharing site called "pilput" based on the metadata and component structure.
+This is a Next.js-based publishing platform called "pilput" that allows creators to publish and share articles without restrictions. It's built using modern React and Next.js technologies with a focus on performance, accessibility, and user experience.
 
-Key technologies and features:
-- Next.js 15 with App Router and server components
-- React 19 with TypeScript
-- Tailwind CSS for styling with custom CSS variables
-- shadcn/ui component library
-- Radix UI primitives for accessible components
-- Tiptap for rich text editing
+### Key Technologies
+- Next.js 16+ with App Router
+- TypeScript
+- Tailwind CSS
+- Shadcn UI components
+- Framer Motion for animations
 - Zustand for state management
-- React Hook Form with Zod for form validation
-- Tailwind CSS animations and typography
-- Dark mode support using next-themes
-- Authentication middleware for protected routes
-- Google Analytics integration
-- Responsive design with mobile-first approach
+- Zod for form validation
+- React Hook Form
+- Axios for API calls
+- Recharts for data visualization
+- TipTap for rich text editing
+
+### Project Architecture
+- **Frontend Framework**: Next.js App Router (src/app)
+- **Styling**: Tailwind CSS with custom components
+- **State Management**: Zustand
+- **Form Validation**: Zod with React Hook Form
+- **Rich Text Editing**: TipTap editor
+- **Authentication**: Cookie-based with JWT tokens
+- **Analytics**: Google Analytics integration
+- **Theming**: Dark/light mode support via next-themes
+
+## Building and Running
+
+### Development
+```bash
+# Install dependencies
+bun install
+# or
+npm install
+
+# Run development server
+bun run dev
+# or
+npm run dev
+```
+Then visit [http://localhost:3000](http://localhost:3000)
+
+### Production
+```bash
+# Build for production
+bun run build
+# or
+npm run build
+
+# Start production server
+bun run start
+# or
+npm run start
+```
+
+### Docker
+The application is Docker-ready with a multi-stage build process:
+```bash
+# Build and run with Docker
+docker build -t pilput .
+docker run -p 3000:3000 pilput
+```
 
 ## Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── [username]/         # Dynamic user profile routes
-│   ├── about/              # About page
-│   ├── blog/               # Blog functionality
-│   ├── chat/               # Chat feature
-│   ├── contact/            # Contact page
-│   ├── dashboard/          # Dashboard for authenticated users
-│   ├── forum/              # Forum functionality
-│   ├── login/              # Login page
-│   ├── privacy/            # Privacy policy
+│   ├── [username]/         # User profile routes
+│   ├── blog/               # Blog related pages
+│   ├── chat/               # Chat interface
+│   ├── dashboard/          # User dashboard
+│   ├── forum/              # Discussion forum
 │   ├── profile/            # User profile
-│   ├── register/           # Registration page
-│   └── tags/               # Tag-based content organization
-├── components/             # Reusable React components
-│   ├── analitics/          # Analytics components
-│   ├── footer/             # Footer components
-│   ├── header/             # Navigation and header components
-│   ├── landing/            # Landing page components
-│   ├── post/               # Post-related components
-│   └── ui/                 # shadcn/ui components
-├── examples/               # Example implementations
-├── hooks/                  # Custom React hooks
-├── lib/                    # Utility functions and libraries
-├── middleware/             # Middleware functions
-├── stores/                 # State management stores (Zustand)
-├── test/                   # Test files
-├── types/                  # TypeScript type definitions
-├── utils/                  # General utility functions
-├── middleware.ts           # Global middleware for authentication
-└── app/                    # App Router structure
+│   └── ...                 # Other pages
+├── components/            # React UI components
+├── hooks/                 # Custom React hooks
+├── lib/                   # Library files (validation, utilities)
+├── stores/                # Zustand stores
+├── types/                 # TypeScript type definitions
+├── utils/                 # Utility functions
+├── middleware/            # Next.js middleware
+├── layouts/               # Layout components
+└── styles/                # Global styles
 ```
-
-## Building and Running
-
-### Development
-To run the development server:
-```bash
-bun run dev
-# or
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-The application will be available at http://localhost:3000.
-
-### Production
-To build the application for production:
-```bash
-bun run build
-```
-
-To start the production server:
-```bash
-bun run start
-```
-
-### Linting
-To lint the code:
-```bash
-bun run lint
-```
-
-### Package Management
-This project uses Bun for package management:
-- To install dependencies: `bun install`
-- To add a dependency: `bun add [package-name]`
-- To add a dev dependency: `bun add --dev [package-name]`
-- To run scripts: `bun run [script-name]`
 
 ## Key Features
 
-1. **Authentication System**: Implemented with middleware to protect certain routes like `/chat` and `/dashboard`. Uses cookie-based authentication.
+### 1. Rich Text Editor
+- Uses TipTap editor with extensions for:
+  - Headings (H1, H2, H3)
+  - Images and YouTube embeds
+  - Underline formatting
+  - Placeholders and custom styling
+  - Syntax highlighting
 
-2. **Rich Text Editing**: Uses Tiptap for rich text editing capabilities across the application.
+### 2. Form Validation
+Comprehensive Zod-based validation schemas for:
+- Post creation (title, body, slug, photo_url, tags)
+- User registration (username, email, password requirements)
+- User login
+- Chat messages
+- Comments
 
-3. **Responsive Design**: Fully responsive layout with mobile-first approach using Tailwind CSS.
+### 3. Performance Optimization
+- Component render time tracking
+- API call performance monitoring
+- Loading skeletons for better UX
+- Mouse movement throttling
+- Reduced animated elements
 
-4. **Dark Mode**: Implemented with next-themes for seamless light/dark mode switching.
+### 4. Accessibility
+- ARIA attributes throughout the application
+- Keyboard navigation support
+- Focus indicators for interactive elements
+- Semantic HTML structure
+- Screen reader friendly labels
 
-5. **Component Library**: Uses shadcn/ui with Radix UI primitives for accessible components.
+### 5. Security
+- HTTP security headers configured in next.config.ts
+- JWT token management with automatic session refresh
+- Input validation and sanitization
+- Protected routes with authentication
 
-6. **Analytics**: Google Analytics integration for tracking user behavior.
-
-7. **SEO Optimized**: Proper metadata implementation for SEO.
+### 6. SEO & Metadata
+- Comprehensive OpenGraph and Twitter card metadata
+- Dynamic title templates
+- Descriptive page content
+- Proper canonical URLs
 
 ## Development Conventions
 
-- Uses TypeScript for type safety throughout the application
-- Component organization follows the shadcn/ui pattern
-- CSS variables for consistent theming (using oklch color space)
-- Absolute imports using @/* paths (configured in tsconfig.json)
-- ESLint for code linting with Next.js recommended rules
-- Tailwind CSS for styling with custom configuration
-- Modern React patterns with hooks and server components
-- API routes protected under /api path (excluded from middleware)
+### TypeScript
+- Strict mode enabled
+- Path aliases configured (e.g., `@/components/`, `@/utils/`)
+- Zod schemas used for form validation with inferred TypeScript types
 
-## Environment Configuration
+### Styling
+- Tailwind CSS with shadcn/ui components
+- Responsive design using Tailwind's responsive prefixes
+- Dark mode support with automatic theme switching
+- Consistent component styling across the application
 
-The project includes an `.env.local.example` file, suggesting environment variables are used for sensitive configurations like API keys, database URLs, etc.
+### Components
+- Organized in the `components/` directory by feature
+- Reusable and well-documented components
+- Proper separation between presentational and container components
 
-## Security Features
+### Data Management
+- Zustand for global state management
+- React Query/SWR for server state (if present)
+- Form handling with React Hook Form and Zod validation
 
-- Middleware protection for sensitive routes
-- Secure cookie handling for authentication
-- Input validation with Zod schemas
-- Content Security Policy considerations through Next.js headers
+## Important Files & Configuration
+
+### Configuration Files
+- `next.config.ts` - Next.js configuration with security headers and image optimization
+- `tsconfig.json` - TypeScript configuration with path aliases
+- `package.json` - Dependencies and scripts
+- `Dockerfile` - Multi-stage Docker build configuration
+
+### Key Utilities
+- `src/lib/validation.ts` - Centralized Zod validation schemas
+- `src/utils/ErrorHandler.ts` - API error handling with user feedback
+- `src/utils/performance.ts` - Performance monitoring utilities
+- `src/components/post/Editor.tsx` - Rich text editor implementation
+
+### Environment Variables
+- `.env.local` for local development (example in `.env.local.example`)
+
+## Deployment
+
+The application is configured for:
+- Standalone output for Docker deployment
+- Vercel/Netlify deployment (Next.js compatible)
+- Custom Node.js server deployment
+- Security headers for production environments
+
+## Error Handling
+
+- Centralized error handling via `ErrorHandlerAPI` utility
+- Automatic session management (logout on JWT expiration)
+- User-friendly toast notifications
+- Network error detection and handling
+- HTTP status code specific error messages
