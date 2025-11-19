@@ -3,7 +3,9 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles, Target, Lightbulb, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Sparkles, Target, Lightbulb, Heart, Github, Users } from "lucide-react";
 
 const MissionSection = () => {
   const containerVariants = {
@@ -176,6 +178,61 @@ const MissionSection = () => {
               </Card>
             </motion.div>
           ))}
+        </motion.div>
+        <motion.div
+          className="mt-20 text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={itemVariants}
+        >
+          <div className="bg-linear-to-r from-primary/10 via-secondary/10 to-purple/10 rounded-3xl p-12 backdrop-blur-sm border border-border/50">
+            <motion.h3
+              className="text-3xl md:text-4xl font-bold text-foreground mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              Join Our Journey
+            </motion.h3>
+            <motion.p
+              className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              Whether you're a writer, developer, designer, or simply someone who 
+              believes in the power of open publishing, there's a place for you here.
+            </motion.p>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Button 
+                asChild 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-white px-8 py-6 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
+              >
+                <Link href="https://github.com/cecep31/next-turbo" target="_blank">
+                  <Github className="mr-2 h-5 w-5" />
+                  Contribute on GitHub
+                </Link>
+              </Button>
+              <Button 
+                asChild 
+                variant="outline" 
+                size="lg" 
+                className="border border-border hover:border-primary/50 hover:bg-primary/5 px-8 py-6 rounded-full font-semibold transition-all duration-300 hover:scale-105"
+              >
+                <Link href="/register">
+                  <Users className="mr-2 h-5 w-5" />
+                  Join Our Community
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>

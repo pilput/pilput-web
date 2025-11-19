@@ -6,15 +6,15 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="max-w-6xl mx-auto px-6 py-12">
+    <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
+      <div className="container mx-auto px-4 py-12">
         {/* Main content */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           {/* Brand and description */}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-foreground mb-2">
+            <Link href="/" className="text-lg font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-2 inline-block">
               pilput.me
-            </h3>
+            </Link>
             <p className="text-sm text-muted-foreground max-w-md">
               Building digital experiences with modern web technologies.
             </p>
