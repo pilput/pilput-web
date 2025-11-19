@@ -75,7 +75,7 @@ const Blog = () => {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         {/* Minimal Header */}
         <div className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
