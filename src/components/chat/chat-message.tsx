@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Markdown } from "./markdown";
 
@@ -20,6 +23,7 @@ interface ChatMessageProps {
   className?: string;
   onEdit?: (id: string, content: string) => void;
   onFeedback?: (id: string, type: "like" | "dislike" | "none") => void;
+  showSeparator?: boolean;
 }
 
 export function ChatMessage({
@@ -27,6 +31,7 @@ export function ChatMessage({
   className,
   onEdit,
   onFeedback,
+  showSeparator = false,
 }: ChatMessageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
@@ -79,27 +84,29 @@ export function ChatMessage({
   return (
     <div
       className={cn(
-        "group relative py-4 px-4 hover:bg-muted transition-colors w-full",
+        "group relative py-2 px-4 w-full",
         className
       )}
     >
       <div
         className={cn(
-          "max-w-3xl mx-auto w-full py-2",
+          "max-w-3xl mx-auto w-full",
           isEditing ? "pb-16" : ""
         )}
       >
-        <div className="flex gap-4">
+        <Card className="border-0 shadow-none bg-transparent hover:bg-muted/50 transition-colors">
+          <CardContent className="p-4">
+            <div className="flex gap-4">
           <div className="flex-shrink-0">
-            {message.role === "assistant" ? (
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <Bot className="h-4 w-4 text-white" />
-              </div>
-            ) : (
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <User className="h-4 w-4 text-white" />
-              </div>
-            )}
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white">
+                {message.role === "assistant" ? (
+                  <Bot className="h-4 w-4" />
+                ) : (
+                  <User className="h-4 w-4" />
+                )}
+              </AvatarFallback>
+            </Avatar>
           </div>
 
           <div className="flex-1 min-w-0">
@@ -242,8 +249,11 @@ export function ChatMessage({
           </div>
 
           {/* Action buttons have been moved below the message content */}
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
+      {showSeparator && <Separator className="my-4" />}
     </div>
-  );
+  </div>
+);
 }

@@ -33,10 +33,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
   availableModels: [
     { id: 'qwen/qwen3-14b:free', name: 'Qwen 3 14B' },
     { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
+    { id: 'tngtech/deepseek-r1t2-chimera:free', name: 'DeepSeek R1T2 Chimera' },
     { id: 'anthropic/claude-3-haiku:free', name: 'Claude 3 Haiku' },
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
-    { id: 'x-ai/grok-4-fast:free', name: 'Grok 4 Fast' },
-    { id: 'minimax/minimax-m2:free', name: 'Minimax M2' },
+    { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 24B' },
   ],
   isNewConversation: false,
   setMessages: (messages) => set({ messages }),

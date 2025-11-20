@@ -4,6 +4,9 @@ import { useRef, useEffect, useCallback } from "react";
 import { useChatStore } from "@/stores/chat-store";
 import { ChatInput } from "./chat-input";
 import { ChatMessage } from "./chat-message";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 interface ChatContainerProps {
@@ -21,6 +24,8 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
     sendMessage,
     createConversation,
     isNewConversation,
+    selectedModel,
+    availableModels,
   } = useChatStore();
 
   // Auto-scroll to bottom when messages change
@@ -106,29 +111,51 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
     return (
       <div className="flex flex-col h-full bg-background">
         {/* Messages area */}
-        <div
-          ref={chatContainerRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden py-4 min-h-0"
-        >
-          <div className="max-w-6xl mx-auto w-full px-4 h-full">
-            {messages.map((message, index) => (
-              <ChatMessage
-                key={`${message.id}-${index}`}
-                message={message}
-                className={index === messages.length - 1 ? "pb-20" : ""}
-                onFeedback={(id, type) => {
-                  // Handle feedback (e.g., send to analytics)
-                  console.log(`Feedback for message ${id}: ${type}`);
-                }}
-              />
-            ))}
-            <div ref={messagesEndRef} className="h-4" />
+        <ScrollArea className="flex-1 min-h-0">
+          <div
+            ref={chatContainerRef}
+            className="py-4"
+          >
+            <div className="max-w-6xl mx-auto w-full px-4">
+              {messages.map((message, index) => (
+                <ChatMessage
+                  key={`${message.id}-${index}`}
+                  message={message}
+                  className={index === messages.length - 1 ? "pb-20" : ""}
+                  showSeparator={index < messages.length - 1}
+                  onFeedback={(id, type) => {
+                    // Handle feedback (e.g., send to analytics)
+                    console.log(`Feedback for message ${id}: ${type}`);
+                  }}
+                />
+              ))}
+              {isLoading && (
+                <div className="py-4 px-4">
+                  <div className="max-w-3xl mx-auto w-full">
+                    <div className="flex gap-4">
+                      <Skeleton className="h-8 w-8 rounded-full" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} className="h-4" />
+            </div>
           </div>
-        </div>
+        </ScrollArea>
 
         {/* Input area - fixed at bottom */}
         <div className="bg-background border-t border-border">
           <div className="max-w-3xl mx-auto w-full p-4">
+            <div className="flex items-center justify-between mb-2">
+              <Badge variant="secondary" className="text-xs">
+                {availableModels.find(model => model.id === selectedModel)?.name || "Unknown Model"}
+              </Badge>
+            </div>
             <ChatInput
               onSendMessage={handleSendMessage}
               isDisabled={isLoading}
