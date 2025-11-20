@@ -4,18 +4,18 @@ import { toast } from "react-hot-toast";
 export const ErrorHandlerAPI = (error: any) => {
   // Log the error for debugging purposes
   console.error("API Error:", error);
-  
+
   // Handle network errors
   if (!error.response) {
     toast.error("Network error. Please check your connection.");
-    return { 
-      data: { 
+    return {
+      data: {
         message: "Network error. Please check your connection.",
-        success: false
-      }
+        success: false,
+      },
     };
   }
-  
+
   // Handle authentication errors
   const authErrors = [
     "Invalid or expired JWT",
@@ -23,17 +23,23 @@ export const ErrorHandlerAPI = (error: any) => {
     "invalid token",
     "invalid signature",
     "Authentication invalid",
-    "invalid algorithm"
+    "invalid algorithm",
   ];
 
-  if (authErrors.includes(error?.response?.data?.message) || error.response?.status === 401) {
+  if (
+    authErrors.includes(error?.response?.data?.message) ||
+    error.response?.status === 401
+  ) {
     deleteCookie("token");
 
     // Store current URL for redirect after login (same method as proxy middleware)
     if (typeof window !== "undefined" && window.location) {
       const currentUrl = window.location.pathname + window.location.search;
       // Only redirect if not already on login or auth-related pages
-      if (!currentUrl.startsWith('/login') && !currentUrl.startsWith('/register')) {
+      if (
+        !currentUrl.startsWith("/login") &&
+        !currentUrl.startsWith("/register")
+      ) {
         const redirectParam = encodeURIComponent(currentUrl);
         window.location.href = `/login?redirect=${redirectParam}`;
       } else {
@@ -44,7 +50,7 @@ export const ErrorHandlerAPI = (error: any) => {
     toast.error("Session expired. Please log in again.");
     return error.response;
   }
-  
+
   // Handle specific status codes
   switch (error.response.status) {
     case 400:
@@ -54,7 +60,9 @@ export const ErrorHandlerAPI = (error: any) => {
       toast.error("Unauthorized. Please log in.");
       break;
     case 403:
-      toast.error("Forbidden. You don't have permission to access this resource.");
+      toast.error(
+        "Forbidden. You don't have permission to access this resource."
+      );
       break;
     case 404:
       toast.error("Resource not found.");
@@ -69,8 +77,10 @@ export const ErrorHandlerAPI = (error: any) => {
       toast.error("Service unavailable. Please try again later.");
       break;
     default:
-      toast.error(error?.response?.data?.message || "An unexpected error occurred.");
+      toast.error(
+        error?.response?.data?.message || "An unexpected error occurred."
+      );
   }
-  
+
   return error.response;
 };
