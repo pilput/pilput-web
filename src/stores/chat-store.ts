@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { ChatMessage, type Message } from '@/components/chat/chat-message';
-import { axiosInstence2 } from '@/utils/fetch';
+import { type Message } from '@/components/chat/chat-message';
+import { axiosInstence, axiosInstence2 } from '@/utils/fetch';
 import { getToken } from '@/utils/Auth';
 import { Config } from '@/utils/getCofig';
 
@@ -51,7 +51,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
   fetchRecentChats: async () => {
     try {
-      const response = await axiosInstence2.get('/v1/chat/conversations', {
+      const response = await axiosInstence.get('/v1/chat/conversations', {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
