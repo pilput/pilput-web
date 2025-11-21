@@ -7,7 +7,7 @@ import { Config } from '@/utils/getCofig';
 interface ChatState {
   messages: Message[];
   isLoading: boolean;
-  recentChats: any[];
+  conversations: any[];
   selectedModel: string;
   availableModels: { id: string; name: string }[];
   conversationsPagination: {
@@ -34,7 +34,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: [
   ],
   isLoading: false,
-  recentChats: [],
+  conversations: [],
   // Default to Qwen 3 14B model
   selectedModel: 'qwen/qwen3-14b:free',
   // List of most popular free models available on OpenRouter
@@ -89,17 +89,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
         // Ensure no duplicate chats by using a Map keyed by chat.id
         const chatMap = new Map();
         if (!isReset) {
-          state.recentChats.forEach((chat: any) => chatMap.set(chat.id, chat));
+          state.conversations.forEach((chat: any) => chatMap.set(chat.id, chat));
         }
         data.forEach((chat: any) => chatMap.set(chat.id, chat));
         const uniqueChats = Array.from(chatMap.values());
 
         // If loading more and no new unique items were added, stop pagination
-        const hasNewItems = uniqueChats.length > state.recentChats.length;
+        const hasNewItems = uniqueChats.length > state.conversations.length;
         const effectiveHasMore = isReset ? hasMore : (hasMore && hasNewItems);
 
         return {
-          recentChats: uniqueChats,
+          conversations: uniqueChats,
           conversationsPagination: {
             page: currentPage,
             limit,
@@ -132,7 +132,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         total: 0,
         hasMore: true,
       },
-      recentChats: [],
+      conversations: [],
     });
   },
   fetchMessages: async (conversationId) => {
@@ -186,7 +186,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         isNewConversation: true,
         messages: [],
         // Reset pagination when creating new conversation to ensure fresh state
-        recentChats: [],
+        conversations: [],
         conversationsPagination: {
           page: 0,
           limit: 15,
@@ -368,9 +368,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
       if (response.status === 200) {
-        // Remove the conversation from recentChats
+        // Remove the conversation from conversations
         set((state) => ({
-          recentChats: state.recentChats.filter(chat => chat.id !== conversationId)
+          conversations: state.conversations.filter(chat => chat.id !== conversationId)
         }));
         return true;
       }

@@ -34,7 +34,7 @@ export function ChatSidebar() {
   const params = useParams();
   const currentConversationId = params?.id as string;
   const {
-    recentChats,
+    conversations,
     fetchRecentChats,
     conversationsPagination,
     loadMoreConversations,
@@ -102,7 +102,7 @@ export function ChatSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1 px-1">
-              {recentChats.length === 0 ? (
+              {conversations.length === 0 ? (
                 <div className="text-center text-muted-foreground/60 py-8 text-sm px-3 flex flex-col items-center gap-3 bg-sidebar-accent/10 rounded-xl border border-dashed border-sidebar-border/30">
                   <MessageSquare className="w-10 h-10 opacity-40 text-muted-foreground/50" />
                   <p className="font-medium">No conversations yet.</p>
@@ -110,7 +110,7 @@ export function ChatSidebar() {
                 </div>
               ) : (
                 <>
-                  {recentChats.map((chat: any) => (
+                  {conversations.map((chat: any) => (
                     <SidebarMenuItem key={chat.id}>
                       <div className="relative group/item flex items-center">
                         <SidebarMenuButton
@@ -171,7 +171,7 @@ export function ChatSidebar() {
                     onLoadMore={loadMoreConversations}
                     hasMore={conversationsPagination.hasMore}
                     totalConversations={conversationsPagination.total}
-                    currentCount={recentChats.length}
+                    currentCount={conversations.length}
                   />
                 </>
               )}
