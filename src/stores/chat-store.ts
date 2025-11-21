@@ -63,7 +63,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       ),
     }));
   },
-  fetchRecentChats: async (page = 0, limit = 10) => {
+  fetchRecentChats: async (page = 0, limit = 15) => {
     try {
       set({ isLoading: true });
       
@@ -72,7 +72,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           Authorization: `Bearer ${getToken()}`,
         },
         params: {
-          page,
+          offset: page * limit,
           limit,
         },
       });
@@ -83,16 +83,28 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const isReset = page === 0;
         const total = meta?.total_items || data?.length || 0;
         const totalPages = meta?.total_pages || Math.ceil(total / limit);
-        const currentPage = meta?.offset !== undefined ? Math.floor(meta.offset / limit) : page;
+        const currentPage = page;
         const hasMore = currentPage + 1 < totalPages;
-        
+
+        // Ensure no duplicate chats by using a Map keyed by chat.id
+        const chatMap = new Map();
+        if (!isReset) {
+          state.recentChats.forEach((chat: any) => chatMap.set(chat.id, chat));
+        }
+        data.forEach((chat: any) => chatMap.set(chat.id, chat));
+        const uniqueChats = Array.from(chatMap.values());
+
+        // If loading more and no new unique items were added, stop pagination
+        const hasNewItems = uniqueChats.length > state.recentChats.length;
+        const effectiveHasMore = isReset ? hasMore : (hasMore && hasNewItems);
+
         return {
-          recentChats: isReset ? data : [...state.recentChats, ...data],
+          recentChats: uniqueChats,
           conversationsPagination: {
             page: currentPage,
             limit,
             total,
-            hasMore,
+            hasMore: effectiveHasMore,
           },
           isLoading: false,
         };
@@ -116,7 +128,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({
       conversationsPagination: {
         page: 0,
-        limit: 10,
+        limit: 15,
         total: 0,
         hasMore: true,
       },
@@ -177,7 +189,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         recentChats: [],
         conversationsPagination: {
           page: 0,
-          limit: 10,
+          limit: 15,
           total: 0,
           hasMore: true,
         },
