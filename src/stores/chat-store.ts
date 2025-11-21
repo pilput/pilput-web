@@ -10,9 +10,16 @@ interface ChatState {
   recentChats: any[];
   selectedModel: string;
   availableModels: { id: string; name: string }[];
-  fetchRecentChats: () => Promise<void>;
+  conversationsPagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+  fetchRecentChats: (page?: number, limit?: number) => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   createConversation: (title: string, message: string, router: any) => Promise<string | null>;
+  resetPagination: () => void;
   sendMessage: (content: string, conversationId: string) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<boolean>;
   setMessages: (messages: Message[]) => void;
@@ -20,6 +27,7 @@ interface ChatState {
   setIsLoading: (isLoading: boolean) => void;
   setSelectedModel: (model: string) => void;
   isNewConversation: boolean;
+  loadMoreConversations: () => Promise<void>;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -38,6 +46,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
     { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 24B' },
   ],
+  conversationsPagination: {
+    page: 0,
+    limit: 10,
+    total: 0,
+    hasMore: true,
+  },
   isNewConversation: false,
   setMessages: (messages) => set({ messages }),
   setIsLoading: (isLoading) => set({ isLoading }),
@@ -49,20 +63,65 @@ export const useChatStore = create<ChatState>((set, get) => ({
       ),
     }));
   },
-  fetchRecentChats: async () => {
+  fetchRecentChats: async (page = 0, limit = 10) => {
     try {
+      set({ isLoading: true });
+      
       const response = await axiosInstence.get('/v1/chat/conversations', {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
+        params: {
+          page,
+          limit,
+        },
       });
-      set({ recentChats: response.data.data });
+      
+      const { data, meta } = response.data;
+      
+      set((state) => {
+        const isReset = page === 0;
+        const total = meta?.total_items || data?.length || 0;
+        const totalPages = meta?.total_pages || Math.ceil(total / limit);
+        const currentPage = meta?.offset !== undefined ? Math.floor(meta.offset / limit) : page;
+        const hasMore = currentPage + 1 < totalPages;
+        
+        return {
+          recentChats: isReset ? data : [...state.recentChats, ...data],
+          conversationsPagination: {
+            page: currentPage,
+            limit,
+            total,
+            hasMore,
+          },
+          isLoading: false,
+        };
+      });
     } catch (err) {
+      set({ isLoading: false });
       // Optionally handle logout here, or expose error to UI
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
       }
     }
+  },
+  loadMoreConversations: async () => {
+    const { conversationsPagination, fetchRecentChats, isLoading } = get();
+    if (!conversationsPagination.hasMore || isLoading) return;
+    
+    const nextPage = conversationsPagination.page + 1;
+    await fetchRecentChats(nextPage, conversationsPagination.limit);
+  },
+  resetPagination: () => {
+    set({
+      conversationsPagination: {
+        page: 0,
+        limit: 10,
+        total: 0,
+        hasMore: true,
+      },
+      recentChats: [],
+    });
   },
   fetchMessages: async (conversationId) => {
     try {
@@ -114,6 +173,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({
         isNewConversation: true,
         messages: [],
+        // Reset pagination when creating new conversation to ensure fresh state
+        recentChats: [],
+        conversationsPagination: {
+          page: 0,
+          limit: 10,
+          total: 0,
+          hasMore: true,
+        },
       })
 
       router.replace('/chat/' + conversationId);

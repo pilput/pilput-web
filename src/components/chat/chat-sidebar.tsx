@@ -28,16 +28,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ChatPagination } from "./chat-pagination";
 
 export function ChatSidebar() {
   const params = useParams();
   const currentConversationId = params?.id as string;
-  const { recentChats, fetchRecentChats, isNewConversation, deleteConversation } = useChatStore();
+  const {
+    recentChats,
+    fetchRecentChats,
+    conversationsPagination,
+    loadMoreConversations,
+    isNewConversation,
+    deleteConversation
+  } = useChatStore();
   const { toggleSidebar, state } = useSidebar();
   const { fetch: fetchUser, data: userData } = authStore();
 
   useEffect(() => {
-    fetchRecentChats();
+    fetchRecentChats(0, 10);
     fetchUser();
   }, [isNewConversation]);
 
@@ -101,59 +109,71 @@ export function ChatSidebar() {
                   <p className="text-xs text-muted-foreground/70">Start a new chat to get started!</p>
                 </div>
               ) : (
-                recentChats.map((chat: any) => (
-                  <SidebarMenuItem key={chat.id}>
-                    <div className="relative group/item flex items-center">
-                      <SidebarMenuButton
-                        asChild
-                        isActive={chat.id === currentConversationId}
-                        className={cn(
-                          "flex-1 justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-xl transition-all duration-250 group hover:scale-[1.01]",
-                          chat.id === currentConversationId
-                            ? "bg-gradient-to-r from-primary/25 via-primary/20 to-primary/15 text-primary border border-primary/40 shadow-lg shadow-primary/20"
-                            : "hover:bg-sidebar-accent/70 text-muted-foreground hover:text-sidebar-foreground hover:shadow-md hover:border hover:border-sidebar-border/50"
-                        )}
-                        tooltip={chat.title}
-                      >
-                        <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-3 py-2 pr-8">
-                          <MessageSquare className={cn(
-                            "h-4 w-4 flex-shrink-0 transition-all duration-250",
+                <>
+                  {recentChats.map((chat: any) => (
+                    <SidebarMenuItem key={chat.id}>
+                      <div className="relative group/item flex items-center">
+                        <SidebarMenuButton
+                          asChild
+                          isActive={chat.id === currentConversationId}
+                          className={cn(
+                            "flex-1 justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-xl transition-all duration-250 group hover:scale-[1.01]",
                             chat.id === currentConversationId
-                              ? "opacity-100 text-primary scale-110"
-                              : "opacity-70 group-hover:opacity-100 group-hover:scale-105"
-                          )} />
-                          <span className="truncate font-medium">
-                            {chat.title}
-                          </span>
-                        </Link>
-                      </SidebarMenuButton>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 opacity-0 group-hover/item:opacity-100 hover:bg-sidebar-accent/80 transition-all duration-200 rounded-md"
-                            title="More options"
-                          >
-                            <MoreVertical className="h-3 w-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteConversation(chat.id);
-                            }}
-                            className="text-destructive focus:text-destructive focus:bg-destructive/10"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </SidebarMenuItem>
-                ))
+                              ? "bg-gradient-to-r from-primary/25 via-primary/20 to-primary/15 text-primary border border-primary/40 shadow-lg shadow-primary/20"
+                              : "hover:bg-sidebar-accent/70 text-muted-foreground hover:text-sidebar-foreground hover:shadow-md hover:border hover:border-sidebar-border/50"
+                          )}
+                          tooltip={chat.title}
+                        >
+                          <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-3 py-2 pr-8">
+                            <MessageSquare className={cn(
+                              "h-4 w-4 flex-shrink-0 transition-all duration-250",
+                              chat.id === currentConversationId
+                                ? "opacity-100 text-primary scale-110"
+                                : "opacity-70 group-hover:opacity-100 group-hover:scale-105"
+                            )} />
+                            <span className="truncate font-medium">
+                              {chat.title}
+                            </span>
+                          </Link>
+                        </SidebarMenuButton>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 opacity-0 group-hover/item:opacity-100 hover:bg-sidebar-accent/80 transition-all duration-200 rounded-md"
+                              title="More options"
+                            >
+                              <MoreVertical className="h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteConversation(chat.id);
+                              }}
+                              className="text-destructive focus:text-destructive focus:bg-destructive/10"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </SidebarMenuItem>
+                  ))}
+                  
+                  {/* Chat Pagination */}
+                  <ChatPagination
+                    currentPage={conversationsPagination.page}
+                    totalPages={Math.ceil(conversationsPagination.total / conversationsPagination.limit)}
+                    onLoadMore={loadMoreConversations}
+                    hasMore={conversationsPagination.hasMore}
+                    totalConversations={conversationsPagination.total}
+                    currentCount={recentChats.length}
+                  />
+                </>
               )}
             </SidebarMenu>
           </SidebarGroupContent>
