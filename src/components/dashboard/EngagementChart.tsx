@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Bar, BarChart, Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, Line, ComposedChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
 
 import {
   Card,
@@ -10,12 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
 
 const chartData = [
   { month: "Jan", sessions: 120, pageViews: 85, bounceRate: 45 },
@@ -32,21 +26,6 @@ const chartData = [
   { month: "Dec", sessions: 178, pageViews: 132, bounceRate: 29 },
 ]
 
-const chartConfig = {
-  sessions: {
-    label: "Sessions",
-    color: "#06b6d4",
-  },
-  pageViews: {
-    label: "Page Views",
-    color: "#8b5cf6",
-  },
-  bounceRate: {
-    label: "Bounce Rate",
-    color: "#dc2626",
-  },
-} satisfies ChartConfig
-
 export default function Component() {
   return (
     <Card>
@@ -57,9 +36,8 @@ export default function Component() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
+        <ResponsiveContainer width="100%" height={300}>
+          <ComposedChart
             data={chartData}
             margin={{
               left: 12,
@@ -73,7 +51,7 @@ export default function Component() {
               axisLine={false}
               tickMargin={8}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Tooltip />
             <Bar dataKey="sessions" fill="#06b6d4" radius={4} />
             <Bar dataKey="pageViews" fill="#8b5cf6" radius={4} />
             <Line
@@ -83,8 +61,8 @@ export default function Component() {
               strokeWidth={3}
               dot={{ fill: "#dc2626", strokeWidth: 2, r: 4 }}
             />
-          </BarChart>
-        </ChartContainer>
+          </ComposedChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   )

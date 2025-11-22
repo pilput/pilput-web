@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip, Legend } from "recharts"
 
 import {
   Card,
@@ -10,14 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
 import {
   Select,
   SelectContent,
@@ -58,20 +50,6 @@ const generateChartData = () => {
 }
 
 const chartData = generateChartData()
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
 
 export default function Component() {
   const [timeRange, setTimeRange] = React.useState("90d")
@@ -132,10 +110,7 @@ export default function Component() {
             <Skeleton className="h-[200px] w-[90%] rounded-xl" />
           </div>
         ) : (
-          <ChartContainer
-            config={chartConfig}
-            className="aspect-auto h-[250px] w-full"
-          >
+          <ResponsiveContainer width="100%" height={250}>
             <AreaChart
               data={filteredData}
               margin={{
@@ -149,24 +124,24 @@ export default function Component() {
                 <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="var(--color-desktop)"
+                    stopColor="hsl(var(--chart-1))"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="var(--color-desktop)"
+                    stopColor="hsl(var(--chart-1))"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
                 <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="var(--color-mobile)"
+                    stopColor="hsl(var(--chart-2))"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="var(--color-mobile)"
+                    stopColor="hsl(var(--chart-2))"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
@@ -186,25 +161,20 @@ export default function Component() {
                   })
                 }}
               />
-              <ChartTooltip
+              <Tooltip
                 cursor={false}
-                content={
-                  <ChartTooltipContent
-                    labelFormatter={(value) => {
-                      return new Date(value).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      })
-                    }}
-                    indicator="dot"
-                  />
-                }
+                labelFormatter={(value) => {
+                  return new Date(value).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }}
               />
               <Area
                 dataKey="mobile"
                 type="natural"
                 fill="url(#fillMobile)"
-                stroke="var(--color-mobile)"
+                stroke="hsl(var(--chart-2))"
                 stackId="a"
                 name="Mobile"
               />
@@ -212,13 +182,13 @@ export default function Component() {
                 dataKey="desktop"
                 type="natural"
                 fill="url(#fillDesktop)"
-                stroke="var(--color-desktop)"
+                stroke="hsl(var(--chart-1))"
                 stackId="a"
                 name="Desktop"
               />
-              <ChartLegend content={<ChartLegendContent />} />
+              <Legend />
             </AreaChart>
-          </ChartContainer>
+          </ResponsiveContainer>
         )}
         <div className="mt-4 grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2 rounded-lg bg-primary/5 p-3">

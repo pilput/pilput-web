@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Line, LineChart, CartesianGrid, XAxis } from "recharts"
+import { Line, LineChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip } from "recharts"
 
 import {
   Card,
@@ -10,12 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
 
 const chartData = [
   { month: "January", revenue: 186, profit: 80 },
@@ -32,17 +26,6 @@ const chartData = [
   { month: "December", revenue: 420, profit: 320 },
 ]
 
-const chartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "#3b82f6",
-  },
-  profit: {
-    label: "Profit",
-    color: "#10b981",
-  },
-} satisfies ChartConfig
-
 export default function Component() {
   return (
     <Card>
@@ -53,9 +36,8 @@ export default function Component() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart
-            accessibilityLayer
             data={chartData}
             margin={{
               left: 12,
@@ -70,7 +52,7 @@ export default function Component() {
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Tooltip />
             <Line
               dataKey="revenue"
               type="monotone"
@@ -86,7 +68,7 @@ export default function Component() {
               dot={false}
             />
           </LineChart>
-        </ChartContainer>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Pie, PieChart, Cell } from "recharts"
+import { Pie, PieChart, Cell, ResponsiveContainer, Tooltip } from "recharts"
 
 import {
   Card,
@@ -10,12 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
 
 const chartData = [
   { category: "18-24", visitors: 275 },
@@ -25,31 +19,7 @@ const chartData = [
   { category: "55+", visitors: 90 },
 ]
 
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  "18-24": {
-    label: "18-24",
-    color: "#ef4444",
-  },
-  "25-34": {
-    label: "25-34",
-    color: "#f97316",
-  },
-  "35-44": {
-    label: "35-44",
-    color: "#eab308",
-  },
-  "45-54": {
-    label: "45-54",
-    color: "#22c55e",
-  },
-  "55+": {
-    label: "55+",
-    color: "#3b82f6",
-  },
-} satisfies ChartConfig
+const COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6"]
 
 export default function Component() {
   const totalVisitors = React.useMemo(() => {
@@ -63,15 +33,9 @@ export default function Component() {
         <CardDescription>Age distribution of users</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
+        <ResponsiveContainer width="100%" height={250}>
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <Tooltip />
             <Pie
               data={chartData}
               dataKey="visitors"
@@ -79,14 +43,12 @@ export default function Component() {
               innerRadius={60}
               strokeWidth={5}
             >
-              <Cell key="18-24" fill="#ef4444" />
-              <Cell key="25-34" fill="#f97316" />
-              <Cell key="35-44" fill="#eab308" />
-              <Cell key="45-54" fill="#22c55e" />
-              <Cell key="55+" fill="#3b82f6" />
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
             </Pie>
           </PieChart>
-        </ChartContainer>
+        </ResponsiveContainer>
         <div className="flex-col gap-2 text-center text-sm">
           <div className="font-medium leading-none">
             Total Users: {totalVisitors.toLocaleString()}

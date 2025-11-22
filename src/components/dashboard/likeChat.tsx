@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip } from "recharts"
 
 import {
   Card,
@@ -11,12 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
@@ -26,17 +20,6 @@ const chartData = [
   { month: "June", desktop: 214, mobile: 140 },
 ]
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#14b8a6",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#f97316",
-  },
-} satisfies ChartConfig
-
 export default function Component() {
   return (
     <Card>
@@ -45,8 +28,8 @@ export default function Component() {
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -55,14 +38,11 @@ export default function Component() {
               axisLine={false}
               tickFormatter={(value: any) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
+            <Tooltip />
             <Bar dataKey="desktop" fill="#14b8a6" radius={4} />
             <Bar dataKey="mobile" fill="#f97316" radius={4} />
           </BarChart>
-        </ChartContainer>
+        </ResponsiveContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">

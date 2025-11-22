@@ -7,6 +7,8 @@ import {
   PolarRadiusAxis,
   Radar,
   RadarChart,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts"
 
 import {
@@ -16,12 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
 
 const chartData = [
   { metric: "Speed", value: 186 },
@@ -31,13 +27,6 @@ const chartData = [
   { metric: "Scalability", value: 209 },
   { metric: "Performance", value: 214 },
 ]
-
-const chartConfig = {
-  value: {
-    label: "Score",
-    color: "#ec4899",
-  },
-} satisfies ChartConfig
 
 export default function Component() {
   return (
@@ -49,15 +38,9 @@ export default function Component() {
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
+        <ResponsiveContainer width="100%" height={250}>
           <RadarChart data={chartData}>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <Tooltip />
             <PolarAngleAxis dataKey="metric" />
             <PolarGrid />
             <PolarRadiusAxis
@@ -75,7 +58,7 @@ export default function Component() {
               strokeWidth={2}
             />
           </RadarChart>
-        </ChartContainer>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   )
