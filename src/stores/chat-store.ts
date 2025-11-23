@@ -35,8 +35,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
   ],
   isLoading: false,
   conversations: [],
-  // Default to Qwen 3 14B model
-  selectedModel: 'qwen/qwen3-14b:free',
+  // Default to OpenAI GPT-OSS 20B model
+  selectedModel: 'openai/gpt-oss-20b',
   // List of most popular free models available on OpenRouter
   availableModels: [
     { id: 'qwen/qwen3-14b:free', name: 'Qwen 3 14B' },
@@ -45,6 +45,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     { id: 'anthropic/claude-3-haiku:free', name: 'Claude 3 Haiku' },
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
     { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 24B' },
+    { id: 'openai/gpt-oss-20b', name: 'OpenAI GPT-OSS 20B' },
   ],
   conversationsPagination: {
     page: 0,
