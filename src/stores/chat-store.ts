@@ -46,6 +46,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
     { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 24B' },
     { id: 'openai/gpt-oss-20b', name: 'OpenAI GPT-OSS 20B' },
+    { id: 'x-ai/grok-4.1-fast:free', name: 'Grok 4.1 Fast' },
   ],
   conversationsPagination: {
     page: 0,
