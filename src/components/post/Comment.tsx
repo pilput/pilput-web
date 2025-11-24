@@ -16,6 +16,10 @@ import Link from "next/link";
 import { axiosInstence } from "@/utils/fetch";
 import { useSocket } from "@/utils/socketio";
 import { Config } from "@/utils/getCofig";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CommentData {
   id: string;
@@ -190,75 +194,71 @@ const Comment = ({ postId }: { postId: string }) => {
   return (
     <div>
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-6">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
-            <MessageCircle className="w-5 h-5 text-white" />
+      <Card className="mb-6">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
+              <MessageCircle className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-xl">
+                Discussion
+              </CardTitle>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                Share your thoughts and join the conversation
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Discussion
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Share your thoughts and join the conversation
-            </p>
-          </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
       {/* Comments List */}
       <div className="space-y-4 mb-6">
         {comments.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border border-gray-200 dark:border-gray-700">
-            {/* Add a comment button for logged-in users */}
-            {isLoggedIn ? (
-              <button
-                onClick={() =>
-                  document
-                    .getElementById("comment-input")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-medium rounded-lg transition-colors mb-4"
-              >
-                Add Comment
-              </button>
-            ) : null}
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MessageCircle className="w-8 h-8 text-gray-400 dark:text-gray-500" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              No comments yet
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Be the first to share your thoughts about this article.
-            </p>
-          </div>
+          <Card>
+            <CardContent className="p-8 text-center">
+              {/* Add a comment button for logged-in users */}
+              {isLoggedIn ? (
+                <Button
+                  onClick={() =>
+                    document
+                      .getElementById("comment-input")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="mb-4"
+                >
+                  Add Comment
+                </Button>
+              ) : null}
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <CardTitle className="mb-2">
+                No comments yet
+              </CardTitle>
+              <p className="text-muted-foreground text-sm">
+                Be the first to share your thoughts about this article.
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           comments.map((data) => (
-            <div
-              key={data.id}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
-            >
-              <div className="flex gap-4">
-                {/* Avatar */}
-                <div className="flex-shrink-0">
-                  {data.creator?.first_name ? (
-                    <img
-                      className="w-10 h-10 rounded-full object-cover"
+            <Card key={data.id} className="mb-4">
+              <CardContent className="p-6">
+                <div className="flex gap-4">
+                  {/* Avatar */}
+                  <Avatar className="flex-shrink-0">
+                    <AvatarImage
                       src={getProfilePicture(data.creator?.image)}
-                      width={40}
-                      height={40}
                       alt={`${data.creator?.first_name} ${data.creator?.last_name}`}
                     />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                      <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                    </div>
-                  )}
-                </div>
+                    <AvatarFallback>
+                      <User className="w-5 h-5" />
+                    </AvatarFallback>
+                  </Avatar>
 
-                {/* Comment Content */}
-                <div className="flex-1">
+                  {/* Comment Content */}
+                  <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {data.creator?.first_name
@@ -277,32 +277,22 @@ const Comment = ({ postId }: { postId: string }) => {
                     {data.replies && data.replies.length > 0 && (
                       <div className="ml-8 mt-4 space-y-4">
                         {data.replies.map((reply) => (
-                          <div
-                            key={reply.id}
-                            className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-200 dark:border-gray-600"
-                          >
-                            <div className="flex gap-4">
-                              {/* Avatar */}
-                              <div className="flex-shrink-0">
-                                {reply.creator?.first_name ? (
-                                  <img
-                                    className="w-8 h-8 rounded-full object-cover"
-                                    src={getProfilePicture(
-                                      reply.creator?.image
-                                    )}
-                                    width={32}
-                                    height={32}
+                          <Card key={reply.id} className="ml-8 mt-4 bg-muted">
+                            <CardContent className="p-4">
+                              <div className="flex gap-4">
+                                {/* Avatar */}
+                                <Avatar className="flex-shrink-0 w-8 h-8">
+                                  <AvatarImage
+                                    src={getProfilePicture(reply.creator?.image)}
                                     alt={`${reply.creator?.first_name} ${reply.creator?.last_name}`}
                                   />
-                                ) : (
-                                  <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                                    <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                                  </div>
-                                )}
-                              </div>
+                                  <AvatarFallback>
+                                    <User className="w-4 h-4" />
+                                  </AvatarFallback>
+                                </Avatar>
 
-                              {/* Reply Content */}
-                              <div className="flex-1">
+                                {/* Reply Content */}
+                                <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
                                   <span className="font-semibold text-gray-900 dark:text-white text-sm">
                                     {reply.creator?.first_name
@@ -322,15 +312,16 @@ const Comment = ({ postId }: { postId: string }) => {
                                 {/* Reply Actions */}
                                 {isLoggedIn && (
                                   <div className="flex items-center gap-3">
-                                    <button className="flex items-center gap-1 px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-xs">
+                                    <Button variant="ghost" size="sm">
                                       <span>👏</span>
-                                      <span>0</span>
-                                    </button>
+                                      <span className="ml-1">0</span>
+                                    </Button>
                                   </div>
                                 )}
+                                </div>
                               </div>
-                            </div>
-                          </div>
+                            </CardContent>
+                          </Card>
                         ))}
                       </div>
                     )}
@@ -339,173 +330,175 @@ const Comment = ({ postId }: { postId: string }) => {
                   {/* Actions */}
                   {isLoggedIn && (
                     <div className="flex items-center gap-3">
-                      <button className="flex items-center gap-1 px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm">
-                        <MessageCircle className="w-4 h-4" />
-                        <span>Reply</span>
-                      </button>
+                      <Button variant="ghost" size="sm">
+                        <MessageCircle className="w-4 h-4 mr-1" />
+                        Reply
+                      </Button>
                     </div>
                   )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))
         )}
       </div>
 
       {/* Socket Debug Info - Remove this in production */}
       {process.env.NODE_ENV === "development" && (
-        <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4 text-sm">
-          <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">
-            🔍 Socket Debug Info
-          </h4>
-          <div className="space-y-1 text-gray-700 dark:text-gray-300">
-            <div>
-              Status:{" "}
-              <span className={isConnected ? "text-green-600" : "text-red-600"}>
-                {isConnected ? "Connected" : "Disconnected"}
-              </span>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle className="text-sm">🔍 Socket Debug Info</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm">
+            <div className="space-y-1 text-muted-foreground">
+              <div>
+                Status:{" "}
+                <span className={isConnected ? "text-green-600" : "text-red-600"}>
+                  {isConnected ? "Connected" : "Disconnected"}
+                </span>
+              </div>
+              <div>
+                Reconnecting:{" "}
+                <span
+                  className={isReconnecting ? "text-yellow-600" : "text-gray-500"}
+                >
+                  {isReconnecting ? "Yes" : "No"}
+                </span>
+              </div>
+              <div>
+                Token:{" "}
+                <span className={token ? "text-green-600" : "text-red-600"}>
+                  {token ? "Present" : "Missing"}
+                </span>
+              </div>
+              <div>Post ID: {postId}</div>
+              <div>WS URL: {Config.wsbaseurl}</div>
+              <div>Socket ID: {socket?.id || "None"}</div>
             </div>
-            <div>
-              Reconnecting:{" "}
-              <span
-                className={isReconnecting ? "text-yellow-600" : "text-gray-500"}
-              >
-                {isReconnecting ? "Yes" : "No"}
-              </span>
-            </div>
-            <div>
-              Token:{" "}
-              <span className={token ? "text-green-600" : "text-red-600"}>
-                {token ? "Present" : "Missing"}
-              </span>
-            </div>
-            <div>Post ID: {postId}</div>
-            <div>WS URL: {Config.wsbaseurl}</div>
-            <div>Socket ID: {socket?.id || "None"}</div>
-          </div>
-          <button
-            onClick={() => {
-              console.log("🔍 Manual socket debug:");
-              console.log("Socket object:", socket);
-              console.log("Socket connected:", socket?.connected);
-              console.log("Socket ID:", socket?.id);
-              if (socket?.connected) {
-                socket.emit("ping", { timestamp: Date.now() });
-                console.log("Sent ping to server");
-              }
-            }}
-            className="mt-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded"
-          >
-            Debug Socket
-          </button>
-        </div>
+            <Button
+              onClick={() => {
+                console.log("🔍 Manual socket debug:");
+                console.log("Socket object:", socket);
+                console.log("Socket connected:", socket?.connected);
+                console.log("Socket ID:", socket?.id);
+                if (socket?.connected) {
+                  socket.emit("ping", { timestamp: Date.now() });
+                  console.log("Sent ping to server");
+                }
+              }}
+              className="mt-2"
+              size="sm"
+            >
+              Debug Socket
+            </Button>
+          </CardContent>
+        </Card>
       )}
 
       {/* Comment Input Form or Login Prompt */}
       {isLoggedIn ? (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
-              <Edit3 className="w-4 h-4 text-white" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Add Comment
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Share your thoughts
-              </p>
-            </div>
-
-            {/* Connection Status Indicator */}
-            <div className="flex items-center gap-2">
-              {isReconnecting ? (
-                <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
-                  <RotateCcw className="w-4 h-4 animate-spin" />
-                  <span className="text-xs font-medium">Reconnecting...</span>
-                </div>
-              ) : isConnected ? (
-                <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                  <Wifi className="w-4 h-4" />
-                  <span className="text-xs font-medium">Connected</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
-                  <WifiOff className="w-4 h-4" />
-                  <span className="text-xs font-medium">Disconnected</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <form onSubmit={sendComment} className="space-y-3">
-            <div className="flex gap-3">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                  <User className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </div>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
+                <Edit3 className="w-4 h-4 text-white" />
               </div>
               <div className="flex-1">
-                <textarea
-                  value={comment}
-                  required
-                  onChange={(e) => setcomment(e.target.value)}
-                  placeholder="Write your comment..."
-                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors resize-none"
-                  rows={3}
-                />
-                <div className="flex justify-between items-center mt-3">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Be respectful and constructive
-                  </span>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-gray-800 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={!comment.trim() || !isConnected || isReconnecting}
-                    title={
-                      !isConnected
-                        ? "Cannot post comment while disconnected"
-                        : isReconnecting
-                        ? "Reconnecting..."
-                        : "Post your comment"
-                    }
-                  >
-                    {isReconnecting ? "Reconnecting..." : "Post Comment"}
-                  </button>
-                </div>
+                <CardTitle className="text-lg">
+                  Add Comment
+                </CardTitle>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Share your thoughts
+                </p>
+              </div>
+
+              {/* Connection Status Indicator */}
+              <div className="flex items-center gap-2">
+                {isReconnecting ? (
+                  <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
+                    <RotateCcw className="w-4 h-4 animate-spin" />
+                    <span className="text-xs font-medium">Reconnecting...</span>
+                  </div>
+                ) : isConnected ? (
+                  <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                    <Wifi className="w-4 h-4" />
+                    <span className="text-xs font-medium">Connected</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
+                    <WifiOff className="w-4 h-4" />
+                    <span className="text-xs font-medium">Disconnected</span>
+                  </div>
+                )}
               </div>
             </div>
-          </form>
-        </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={sendComment} className="space-y-3">
+              <div className="flex gap-3">
+                <Avatar className="flex-shrink-0">
+                  <AvatarFallback>
+                    <User className="w-5 h-5" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <Textarea
+                    value={comment}
+                    required
+                    onChange={(e) => setcomment(e.target.value)}
+                    placeholder="Write your comment..."
+                    rows={3}
+                  />
+                  <div className="flex justify-between items-center mt-3">
+                    <span className="text-sm text-muted-foreground">
+                      Be respectful and constructive
+                    </span>
+                    <Button
+                      type="submit"
+                      disabled={!comment.trim() || !isConnected || isReconnecting}
+                      title={
+                        !isConnected
+                          ? "Cannot post comment while disconnected"
+                          : isReconnecting
+                          ? "Reconnecting..."
+                          : "Post your comment"
+                      }
+                    >
+                      {isReconnecting ? "Reconnecting..." : "Post Comment"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <LogIn className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+        <Card>
+          <CardContent className="text-center py-8">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <LogIn className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <CardTitle className="mb-2">
               Join the Discussion
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
-              Please log in to share your thoughts and engage with the
-              community.
+            </CardTitle>
+            <p className="text-muted-foreground text-sm mb-6">
+              Please log in to share your thoughts and engage with the community.
             </p>
             <div className="flex gap-3 justify-center">
-              <Link
-                href="/login"
-                className="px-6 py-2 bg-gray-800 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-medium rounded-lg transition-colors"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/register"
-                className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
-              >
-                Sign Up
-              </Link>
+              <Button asChild>
+                <Link href="/login">
+                  Log In
+                </Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/register">
+                  Sign Up
+                </Link>
+              </Button>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
