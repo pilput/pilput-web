@@ -20,13 +20,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, Trash2, UserPlus } from "lucide-react";
+import { PlusCircle, UserPlus } from "lucide-react";
 import { getAuth, getToken, RemoveToken } from "@/utils/Auth";
 import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import type { User } from "@/types/user";
+import UserActionComponent from "@/components/user/action";
 
 export default function ManageUser() {
   const [users, setusers] = useState<User[]>([]);
@@ -44,11 +46,11 @@ export default function ManageUser() {
   }
 
   useEffect(() => {
-    getUsers();
+    refetchUsers();
     localGetAuth();
   }, []);
 
-  async function getUsers() {
+  async function refetchUsers() {
     setIsLoading(true);
     try {
       const { data } = await axiosInstence2.get("/v1/users", {
@@ -79,17 +81,6 @@ export default function ManageUser() {
     }
   }
 
-  async function deleteUser(id: string) {
-    const toastid = toast.loading("Loading...");
-    const response = await axiosInstence.delete("/v1/users/" + id);
-    if (response.status === 200) {
-      toast.success("User Deleted", { id: toastid });
-    } else if (response.status === 403) {
-      toast.error("Forbidden action", { id: toastid });
-    } else {
-      toast.error("Failed", { id: toastid });
-    }
-  }
 
   function showModaluser() {
     setmodaluser(true);
@@ -101,7 +92,7 @@ export default function ManageUser() {
 
   async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
-    getUsers();
+    refetchUsers();
   }
 
   return (
@@ -234,16 +225,7 @@ export default function ManageUser() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    {auth?.issuperadmin && user.id !== auth.id && (
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteUser(user.id)}
-                        className="flex items-center gap-1 shadow-sm hover:shadow transition-shadow"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
+                    <UserActionComponent user={user} auth={auth} refetchUsers={refetchUsers} />
                   </TableCell>
                 </TableRow>
               ))

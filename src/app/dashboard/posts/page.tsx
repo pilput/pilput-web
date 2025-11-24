@@ -15,14 +15,6 @@ import { getProfilePicture } from "@/utils/getImage";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Search, Plus } from "lucide-react";
@@ -35,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Paginate } from "@/components/common/Paginate";
 
 export default function Posts() {
   const limit = 10;
@@ -42,7 +35,6 @@ export default function Posts() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const poststore = postsStore();
-  const totalPages = Math.ceil(poststore.total / limit);
   const currentPage = Math.floor(Offset / limit) + 1;
 
   useEffect(() => {
@@ -174,38 +166,16 @@ export default function Posts() {
               {Math.min(Offset + limit, poststore.total)} of {poststore.total}{" "}
               posts
             </div>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => changeOffset(Offset - limit)}
-                    className="cursor-pointer"
-                    aria-disabled={Offset === 0}
-                  />
-                </PaginationItem>
-                {[...Array(totalPages)].map((_, index) => {
-                  const pageOffset = index * limit;
-                  return (
-                    <PaginationItem key={index}>
-                      <PaginationLink
-                        className="cursor-pointer"
-                        onClick={() => changeOffset(pageOffset)}
-                        isActive={Offset === pageOffset}
-                      >
-                        {index + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                })}
-                <PaginationItem>
-                  <PaginationNext
-                    className="cursor-pointer"
-                    onClick={() => changeOffset(Offset + limit)}
-                    aria-disabled={Offset + limit >= poststore.total}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <Paginate
+              prev={() => changeOffset(Offset - limit)}
+              next={() => changeOffset(Offset + limit)}
+              goToPage={(page: number) => changeOffset(page * limit)}
+              limit={limit}
+              Offset={Offset}
+              total={poststore.total}
+              length={poststore.posts.length}
+              currentPage={currentPage - 1}
+            />
           </div>
         </CardContent>
       </Card>
