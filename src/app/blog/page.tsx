@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { toast } from "react-hot-toast";
@@ -10,6 +10,7 @@ import {
   Search,
   TrendingUp,
   Bookmark,
+  X,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
@@ -24,14 +25,32 @@ const Blog = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [trendingTags, setTrendingTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+      setCurrentPage(0); // Reset to first page when search changes
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstence.get("/v1/posts", {
-          params: { limit: postsPerPage, offset: currentPage * postsPerPage },
-        });
+        const params: any = {
+          limit: postsPerPage,
+          offset: currentPage * postsPerPage,
+        };
+
+        if (debouncedSearchQuery.trim()) {
+          params.search = debouncedSearchQuery.trim();
+        }
+
+        const { data } = await axiosInstence.get("/v1/posts", { params });
         const response = data;
         if (response.data) {
           setPosts(response.data);
@@ -49,7 +68,7 @@ const Blog = () => {
       setIsLoading(false);
     }
     fetchPosts();
-  }, [currentPage]);
+  }, [currentPage, debouncedSearchQuery]);
 
   useEffect(() => {
     async function fetchTags() {
@@ -96,8 +115,17 @@ const Blog = () => {
                   placeholder="Search articles..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-transparent"
+                  className="w-full pl-10 pr-12 py-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-transparent"
                 />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -120,11 +148,13 @@ const Blog = () => {
                       <Search className="w-12 h-12 text-gray-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      No posts found
+                      {debouncedSearchQuery ? `No results for "${debouncedSearchQuery}"` : "No posts found"}
                     </h3>
                     <p className="text-gray-500 dark:text-gray-400">
-                      Try adjusting your filters or check back later for new
-                      content.
+                      {debouncedSearchQuery
+                        ? "Try searching for different keywords or check back later for new content."
+                        : "Try adjusting your filters or check back later for new content."
+                      }
                     </p>
                   </div>
                 ) : null}
