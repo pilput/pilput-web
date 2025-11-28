@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
@@ -28,13 +27,14 @@ type Inputs = {
   username: string;
   password: string;
 };
-const UserSchema: z.ZodType<Inputs> = z.object({
+const UserSchema = z.object({
   username: z.string().min(5).max(20),
   email: z.string().email(),
   password: z.string().min(6).max(255),
 });
 
 export default function Signup() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -114,8 +114,6 @@ export default function Signup() {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [username]);
-
-  const router = useRouter();
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
