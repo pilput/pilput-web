@@ -57,8 +57,8 @@ export function ChatSidebar() {
       className="border-r border-sidebar-border/60 bg-gradient-to-b from-sidebar via-sidebar to-sidebar/90 text-sidebar-foreground shadow-xl shadow-sidebar-border/20 backdrop-blur-sm"
     >
       {/* Header */}
-      <SidebarHeader className="px-3 py-3 border-b border-sidebar-border/40 bg-gradient-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 backdrop-blur-md flex flex-row items-center justify-between group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2 shadow-sm">
-        <h2 className="text-xl font-bold text-sidebar-foreground group-data-[collapsible=icon]:hidden bg-gradient-to-r from-sidebar-foreground via-sidebar-foreground/90 to-sidebar-foreground/70 bg-clip-text text-transparent">
+      <SidebarHeader className="px-3 py-3 border-b border-sidebar-border/40 bg-linear-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 backdrop-blur-md flex flex-row items-center justify-between group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2 shadow-sm">
+        <h2 className="text-xl font-bold group-data-[collapsible=icon]:hidden bg-linear-to-r from-sidebar-foreground via-sidebar-foreground/90 to-sidebar-foreground/70 bg-clip-text text-transparent">
           AI Chat
         </h2>
         <Button
@@ -119,7 +119,7 @@ export function ChatSidebar() {
                           className={cn(
                             "flex-1 justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-xl transition-all duration-250 group hover:scale-[1.01]",
                             chat.id === currentConversationId
-                              ? "bg-gradient-to-r from-primary/25 via-primary/20 to-primary/15 text-primary border border-primary/40 shadow-lg shadow-primary/20"
+                              ? "bg-linear-to-r from-primary/25 via-primary/20 to-primary/15 text-primary border border-primary/40 shadow-lg shadow-primary/20"
                               : "hover:bg-sidebar-accent/70 text-muted-foreground hover:text-sidebar-foreground hover:shadow-md hover:border hover:border-sidebar-border/50"
                           )}
                           tooltip={chat.title}
@@ -181,13 +181,13 @@ export function ChatSidebar() {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="px-3 py-3 border-t border-sidebar-border/40 bg-gradient-to-t from-sidebar-accent/20 via-sidebar-accent/10 to-sidebar-accent/5 backdrop-blur-md group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2 shadow-inner">
+      <SidebarFooter className="px-3 py-3 border-t border-sidebar-border/40 bg-linear-to-t from-sidebar-accent/20 via-sidebar-accent/10 to-sidebar-accent/5 backdrop-blur-md group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2 shadow-inner">
         <div className="flex flex-col gap-3 group-data-[collapsible=icon]:items-center">
           {/* User Profile */}
-          <div className="flex items-center justify-center gap-3 mt-1 p-2 rounded-xl bg-gradient-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 hover:from-sidebar-accent/40 hover:via-sidebar-accent/30 hover:to-sidebar-accent/40 transition-all duration-300 group-data-[collapsible=icon]:mt-0 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hover:scale-105 shadow-sm hover:shadow-md border border-sidebar-border/30">
+          <div className="flex items-center justify-center gap-3 mt-1 p-2 rounded-xl bg-linear-to-r from-sidebar-accent/30 via-sidebar-accent/20 to-sidebar-accent/30 hover:from-sidebar-accent/40 hover:via-sidebar-accent/30 hover:to-sidebar-accent/40 transition-all duration-300 group-data-[collapsible=icon]:mt-0 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hover:scale-105 shadow-sm hover:shadow-md border border-sidebar-border/30">
             <Avatar className="h-8 w-8 ring-2 ring-sidebar-accent/60 group-data-[collapsible=icon]:h-7 group-data-[collapsible=icon]:w-7 shadow-sm">
               <AvatarImage src={userData.image} alt={userData.username} />
-              <AvatarFallback className="text-xs font-semibold group-data-[collapsible=icon]:text-[10px] bg-gradient-to-br from-primary/20 to-primary/10">
+              <AvatarFallback className="text-xs font-semibold group-data-[collapsible=icon]:text-[10px] bg-linear-to-br from-primary/20 to-primary/10">
                 {userData.username ? userData.username[0].toUpperCase() : "U"}
               </AvatarFallback>
             </Avatar>

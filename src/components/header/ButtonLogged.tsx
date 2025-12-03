@@ -21,41 +21,44 @@ const ButtonLogged = () => {
   return (
     <>
       {token ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="default" size="sm" className="gap-2">
+        <div className="flex items-center">
+          {/* Dashboard button */}
+          <Link href="/dashboard">
+            <Button variant="default" size="sm" className="rounded-r-none gap-2">
               <User className="h-4 w-4" />
               Dashboard
-              <ChevronDown className="h-4 w-4" />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                Dashboard
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/account" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                Account Settings
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem 
-              onClick={() => {
-                // Clear token and redirect to login
-                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                window.location.href = "/login";
-              }}
-              className="text-red-600 dark:text-red-400"
-            >
-              <LogIn className="h-4 w-4 rotate-180" />
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </Link>
+
+          {/* Separate dropdown trigger */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="default" size="sm" className="rounded-l-none px-2">
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href="/account" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Account Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  // Clear token and redirect to login
+                  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  window.location.href = "/login";
+                }}
+                className="text-red-600 dark:text-red-400"
+              >
+                <LogIn className="h-4 w-4 rotate-180" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       ) : (
         <Link href="/login" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md">
           <Button variant="outline" size="sm" className="gap-2">
