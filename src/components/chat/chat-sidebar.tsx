@@ -35,7 +35,7 @@ export function ChatSidebar() {
   const currentConversationId = params?.id as string;
   const {
     conversations,
-    fetchRecentChats,
+    fetchConversations,
     conversationsPagination,
     loadMoreConversations,
     isNewConversation,
@@ -45,7 +45,7 @@ export function ChatSidebar() {
   const { fetch: fetchUser, data: userData } = authStore();
 
   useEffect(() => {
-    fetchRecentChats(0, 15);
+    fetchConversations(0, 15);
     fetchUser();
   }, [isNewConversation]);
 

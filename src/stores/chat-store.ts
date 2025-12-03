@@ -93,7 +93,7 @@ interface ChatState {
   };
 
   // Actions
-  fetchRecentChats: (page?: number, limit?: number) => Promise<void>;
+  fetchConversations: (page?: number, limit?: number) => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   createConversation: (title: string, message: string, router: any) => Promise<string | null>;
   resetPagination: () => void;
@@ -258,18 +258,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }));
   },
   /**
-   * Fetch recent conversations with pagination
-   * @param page - Page number (0-based)
-   * @param limit - Number of conversations per page
-   */
-  fetchRecentChats: async (page = 0, limit = 15) => {
+    * Fetch recent conversations with pagination
+    * @param page - Page number (0-based)
+    * @param limit - Number of conversations per page
+    */
+  fetchConversations: async (page = 0, limit = 15) => {
     try {
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingChats: true },
         error: null
       }));
 
-      const response = await axiosInstence2.get<ConversationsResponse>('/v1/chat/conversations', {
+      const response = await axiosInstence.get<ConversationsResponse>('/v1/chat/conversations', {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -329,11 +329,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   loadMoreConversations: async () => {
-    const { conversationsPagination, fetchRecentChats, loadingStates } = get();
+    const { conversationsPagination, fetchConversations, loadingStates } = get();
     if (!conversationsPagination.hasMore || loadingStates.fetchingChats) return;
 
     const nextPage = conversationsPagination.page + 1;
-    await fetchRecentChats(nextPage, conversationsPagination.limit);
+    await fetchConversations(nextPage, conversationsPagination.limit);
   },
   resetPagination: () => {
     set({
