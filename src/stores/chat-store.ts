@@ -4,18 +4,95 @@ import { axiosInstence, axiosInstence2 } from '@/utils/fetch';
 import { getToken } from '@/utils/Auth';
 import { Config } from '@/utils/getCofig';
 
+// Types
+interface Conversation {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
+interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+  total_items?: number; // Some APIs might use this
+}
+
+interface ConversationsResponse {
+  data: Conversation[];
+  meta: PaginationMeta;
+}
+
+interface CreateConversationResponse {
+  data: {
+    id: string;
+    title: string;
+    createdAt: string;
+  };
+}
+
+interface MessagesResponse {
+  data: {
+    messages: Message[];
+  };
+}
+
+interface ChatError {
+  message: string;
+  code?: string;
+}
+
+// Utility functions
+const sanitizeString = (str: string): string => {
+  return str.trim().replace(/[<>]/g, '');
+};
+
+const validateConversationId = (id: string): boolean => {
+  return typeof id === 'string' && id.trim().length > 0 && id.length <= 100;
+};
+
+const validateMessage = (message: string): { isValid: boolean; error?: string } => {
+  const trimmed = message.trim();
+  if (!trimmed) {
+    return { isValid: false, error: 'Message cannot be empty' };
+  }
+  if (trimmed.length > 10000) {
+    return { isValid: false, error: 'Message is too long (max 10000 characters)' };
+  }
+  return { isValid: true };
+};
+
 interface ChatState {
+  // Data
   messages: Message[];
-  isLoading: boolean;
-  conversations: any[];
+  conversations: Conversation[];
   selectedModel: string;
   availableModels: { id: string; name: string }[];
+
+  // UI State
+  isLoading: boolean;
+  isNewConversation: boolean;
+  error: ChatError | null;
+  loadingStates: {
+    fetchingChats: boolean;
+    fetchingMessages: boolean;
+    creatingConversation: boolean;
+    sendingMessage: boolean;
+    deletingConversation: boolean;
+  };
+
+  // Pagination
   conversationsPagination: {
     page: number;
     limit: number;
     total: number;
     hasMore: boolean;
   };
+
+  // Actions
   fetchRecentChats: (page?: number, limit?: number) => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   createConversation: (title: string, message: string, router: any) => Promise<string | null>;
@@ -24,20 +101,21 @@ interface ChatState {
   deleteConversation: (conversationId: string) => Promise<boolean>;
   setMessages: (messages: Message[]) => void;
   editMessage: (id: string, content: string) => void;
-  setIsLoading: (isLoading: boolean) => void;
   setSelectedModel: (model: string) => void;
-  isNewConversation: boolean;
   loadMoreConversations: () => Promise<void>;
+  clearError: () => void;
+  streamMessage: (conversationId: string, content: string, assistantMessageId: string) => Promise<void>;
 }
 
+/**
+ * Zustand store for managing chat functionality
+ * Handles conversations, messages, streaming, and pagination
+ */
 export const useChatStore = create<ChatState>((set, get) => ({
-  messages: [
-  ],
-  isLoading: false,
+  // Initial state
+  messages: [],
   conversations: [],
-  // Default to Grok 4.1 Fast model
   selectedModel: 'x-ai/grok-4.1-fast:free',
-  // List of most popular free models available on OpenRouter
   availableModels: [
     { id: 'qwen/qwen3-14b:free', name: 'Qwen 3 14B' },
     { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
@@ -47,200 +125,33 @@ export const useChatStore = create<ChatState>((set, get) => ({
     { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 24B' },
     { id: 'x-ai/grok-4.1-fast:free', name: 'Grok 4.1 Fast' },
   ],
+  isLoading: false,
+  isNewConversation: false,
+  error: null,
+  loadingStates: {
+    fetchingChats: false,
+    fetchingMessages: false,
+    creatingConversation: false,
+    sendingMessage: false,
+    deletingConversation: false,
+  },
   conversationsPagination: {
     page: 0,
-    limit: 10,
+    limit: 15,
     total: 0,
     hasMore: true,
   },
-  isNewConversation: false,
+
+  // Basic setters
   setMessages: (messages) => set({ messages }),
-  setIsLoading: (isLoading) => set({ isLoading }),
   setSelectedModel: (model) => set({ selectedModel: model }),
-  editMessage: (id, content) => {
-    set((state) => ({
-      messages: state.messages.map((msg) =>
-        msg.id === id ? { ...msg, content } : msg
-      ),
-    }));
-  },
-  fetchRecentChats: async (page = 0, limit = 15) => {
-    try {
-      set({ isLoading: true });
-      
-      const response = await axiosInstence.get('/v1/chat/conversations', {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-        params: {
-          offset: page * limit,
-          limit,
-        },
-      });
-      
-      const { data, meta } = response.data;
-      
-      set((state) => {
-        const isReset = page === 0;
-        const total = meta?.total_items || data?.length || 0;
-        const totalPages = meta?.total_pages || Math.ceil(total / limit);
-        const currentPage = page;
-        const hasMore = currentPage + 1 < totalPages;
+  clearError: () => set({ error: null }),
 
-        // Ensure no duplicate chats by using a Map keyed by chat.id
-        const chatMap = new Map();
-        if (!isReset) {
-          state.conversations.forEach((chat: any) => chatMap.set(chat.id, chat));
-        }
-        data.forEach((chat: any) => chatMap.set(chat.id, chat));
-        const uniqueChats = Array.from(chatMap.values());
-
-        // If loading more and no new unique items were added, stop pagination
-        const hasNewItems = uniqueChats.length > state.conversations.length;
-        const effectiveHasMore = isReset ? hasMore : (hasMore && hasNewItems);
-
-        return {
-          conversations: uniqueChats,
-          conversationsPagination: {
-            page: currentPage,
-            limit,
-            total,
-            hasMore: effectiveHasMore,
-          },
-          isLoading: false,
-        };
-      });
-    } catch (err) {
-      set({ isLoading: false });
-      // Optionally handle logout here, or expose error to UI
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
-    }
-  },
-  loadMoreConversations: async () => {
-    const { conversationsPagination, fetchRecentChats, isLoading } = get();
-    if (!conversationsPagination.hasMore || isLoading) return;
-    
-    const nextPage = conversationsPagination.page + 1;
-    await fetchRecentChats(nextPage, conversationsPagination.limit);
-  },
-  resetPagination: () => {
-    set({
-      conversationsPagination: {
-        page: 0,
-        limit: 15,
-        total: 0,
-        hasMore: true,
-      },
-      conversations: [],
-    });
-  },
-  fetchMessages: async (conversationId) => {
-    try {
-      const response = await axiosInstence2(`/v1/chat/conversations/${conversationId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      if (response.status !== 200) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = response.data.data;
-      set({
-        messages: data.messages.map((message: any) => ({
-          ...message,
-          createdAt: new Date(message.createdAt),
-        })),
-      });
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  },
-  createConversation: async (title, message, router) => {
-    const { isLoading, setIsLoading, selectedModel, sendMessage } = get();
-    if (!message.trim() || isLoading) return null;
-
-    setIsLoading(true);
+  // Helper function for streaming messages
+  streamMessage: async (conversationId: string, content: string, assistantMessageId: string) => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-    try {
-      const response = await axiosInstence2('/v1/chat/conversations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
-        },
-        data: {
-          title: title || message.slice(0, 15) + (message.length > 15 ? '...' : ''),
-          message,
-        },
-      });
-
-      clearTimeout(timeoutId);
-      if (response.status !== 201) throw new Error(`HTTP error! status: ${response.status}`);
-
-      const conversationId = response.data.data.id;
-
-      set({
-        isNewConversation: true,
-        messages: [],
-        // Reset pagination when creating new conversation to ensure fresh state
-        conversations: [],
-        conversationsPagination: {
-          page: 0,
-          limit: 15,
-          total: 0,
-          hasMore: true,
-        },
-      })
-
-      router.replace('/chat/' + conversationId);
-
-      // Automatically send the initial message as a streaming chat
-      setTimeout(() => {
-        sendMessage(message, conversationId);
-      }, 100); // Small delay to ensure page navigation completes
-
-      return conversationId;
-    } catch (error) {
-      console.error('Error creating conversation:', error);
-      return null;
-    } finally {
-      clearTimeout(timeoutId);
-      setIsLoading(false);
-    }
-  },
-  sendMessage: async (content, conversationId) => {
-    const { isLoading, messages, selectedModel } = get();
-    if (!content.trim() || isLoading || !conversationId) return;
-
-    const userMessage = {
-      id: Date.now().toString(),
-      content: content,
-      role: 'user' as const,
-      createdAt: new Date(),
-      isStreaming: false,
-    };
-
-    // Add user message and create placeholder for assistant response
-    const assistantMessage = {
-      id: `assistant-${Date.now()}`,
-      content: '',
-      role: 'assistant' as const,
-      createdAt: new Date(),
-      isStreaming: true,
-    };
-
-    set({
-      messages: [...messages, userMessage, assistantMessage],
-      isLoading: true
-    });
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased timeout for streaming
-    let updateTimeout: number | null = null; // Move to broader scope
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
+    let updateTimeout: number | null = null;
 
     try {
       const response = await fetch(`${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`, {
@@ -251,7 +162,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         },
         body: JSON.stringify({
           content,
-          model: selectedModel // Include the selected model in the request
+          model: get().selectedModel
         }),
         signal: controller.signal,
       });
@@ -269,11 +180,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       let accumulatedContent = '';
 
-      // Batch updates to reduce re-renders
       const batchedUpdate = () => {
         set((state) => ({
           messages: state.messages.map((msg) =>
-            msg.id === assistantMessage.id
+            msg.id === assistantMessageId
               ? { ...msg, content: accumulatedContent }
               : msg
           ),
@@ -293,16 +203,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
             const data = line.slice(6).trim();
 
             if (data === '[DONE]') {
-              // Clear any pending updates and finalize
               if (updateTimeout) {
                 clearTimeout(updateTimeout);
                 updateTimeout = null;
               }
               batchedUpdate();
-              // Stream completed
               set((state) => ({
                 messages: state.messages.map((msg) =>
-                  msg.id === assistantMessage.id
+                  msg.id === assistantMessageId
                     ? { ...msg, isStreaming: false }
                     : msg
                 ),
@@ -315,21 +223,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
               if (parsed.content) {
                 accumulatedContent += parsed.content;
 
-                // Batch updates to avoid too frequent re-renders
                 if (updateTimeout) {
                   clearTimeout(updateTimeout);
                 }
-                updateTimeout = window.setTimeout(batchedUpdate, 16); // ~60fps
+                updateTimeout = window.setTimeout(batchedUpdate, 16);
               }
             } catch (parseError) {
-              // Skip invalid JSON chunks
               console.warn('Failed to parse streaming data:', parseError);
             }
           }
         }
       }
 
-      // Clear any pending update timeout
       if (updateTimeout) {
         clearTimeout(updateTimeout);
       }
@@ -337,6 +242,287 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ isNewConversation: false });
 
     } catch (error) {
+      throw error; // Re-throw to be handled by caller
+    } finally {
+      if (updateTimeout) {
+        clearTimeout(updateTimeout);
+      }
+      clearTimeout(timeoutId);
+    }
+  },
+  editMessage: (id, content) => {
+    set((state) => ({
+      messages: state.messages.map((msg) =>
+        msg.id === id ? { ...msg, content } : msg
+      ),
+    }));
+  },
+  /**
+   * Fetch recent conversations with pagination
+   * @param page - Page number (0-based)
+   * @param limit - Number of conversations per page
+   */
+  fetchRecentChats: async (page = 0, limit = 15) => {
+    try {
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, fetchingChats: true },
+        error: null
+      }));
+
+      const response = await axiosInstence2.get<ConversationsResponse>('/v1/chat/conversations', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        params: {
+          offset: page * limit,
+          limit,
+        },
+      });
+
+      const { data, meta } = response.data;
+
+      set((state) => {
+        const isReset = page === 0;
+        const total = meta?.total_items || meta?.total || 0;
+        const totalPages = meta?.total_pages || Math.ceil(total / limit);
+        const currentPage = page;
+        // More robust hasMore calculation: check if we received a full page of data
+        const hasMore = data.length === limit && (totalPages > currentPage + 1 || total > (currentPage + 1) * limit);
+
+        // Ensure no duplicate conversations by using a Map keyed by conversation.id
+        const conversationMap = new Map<string, Conversation>();
+        if (!isReset) {
+          state.conversations.forEach((conv) => conversationMap.set(conv.id, conv));
+        }
+        data.forEach((conv) => conversationMap.set(conv.id, conv));
+        const uniqueConversations = Array.from(conversationMap.values());
+
+        // If loading more and no new unique items were added, stop pagination
+        const hasNewItems = uniqueConversations.length > state.conversations.length;
+        const effectiveHasMore = isReset ? hasMore : (hasMore && hasNewItems);
+
+        return {
+          conversations: uniqueConversations,
+          conversationsPagination: {
+            page: currentPage,
+            limit,
+            total,
+            hasMore: effectiveHasMore,
+          },
+          loadingStates: { ...state.loadingStates, fetchingChats: false },
+        };
+      });
+    } catch (err: any) {
+      const error: ChatError = {
+        message: err?.response?.data?.message || 'Failed to fetch conversations',
+        code: err?.response?.status?.toString(),
+      };
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, fetchingChats: false },
+        error
+      }));
+
+      // Handle authentication errors
+      if (err?.response?.status === 401 && typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+    }
+  },
+  loadMoreConversations: async () => {
+    const { conversationsPagination, fetchRecentChats, loadingStates } = get();
+    if (!conversationsPagination.hasMore || loadingStates.fetchingChats) return;
+
+    const nextPage = conversationsPagination.page + 1;
+    await fetchRecentChats(nextPage, conversationsPagination.limit);
+  },
+  resetPagination: () => {
+    set({
+      conversationsPagination: {
+        page: 0,
+        limit: 15,
+        total: 0,
+        hasMore: true,
+      },
+      conversations: [],
+    });
+  },
+  fetchMessages: async (conversationId) => {
+    if (!validateConversationId(conversationId)) {
+      set({ error: { message: 'Invalid conversation ID' } });
+      return;
+    }
+
+    try {
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, fetchingMessages: true },
+        error: null
+      }));
+
+      const response = await axiosInstence2.get<MessagesResponse>(`/v1/chat/conversations/${conversationId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      const messages = response.data.data.messages.map((message) => ({
+        ...message,
+        createdAt: new Date(message.createdAt),
+      }));
+
+      set((state) => ({
+        messages,
+        loadingStates: { ...state.loadingStates, fetchingMessages: false }
+      }));
+    } catch (err: any) {
+      const error: ChatError = {
+        message: err?.response?.data?.message || 'Failed to fetch messages',
+        code: err?.response?.status?.toString(),
+      };
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, fetchingMessages: false },
+        error
+      }));
+      console.error('Error fetching messages:', error);
+    }
+  },
+  /**
+   * Create a new conversation and navigate to it
+   * @param title - Optional conversation title
+   * @param message - Initial message content
+   * @param router - Next.js router instance for navigation
+   * @returns Conversation ID or null on failure
+   */
+  createConversation: async (title, message, router) => {
+    const { isLoading, selectedModel, sendMessage } = get();
+
+    // Input validation
+    const messageValidation = validateMessage(message);
+    if (!messageValidation.isValid) {
+      set({ error: { message: messageValidation.error! } });
+      return null;
+    }
+
+    if (isLoading) return null;
+
+    set((state) => ({
+      loadingStates: { ...state.loadingStates, creatingConversation: true },
+      error: null
+    }));
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+    try {
+      const sanitizedMessage = sanitizeString(message);
+      const conversationTitle = title ? sanitizeString(title) : sanitizedMessage.slice(0, 50) + (sanitizedMessage.length > 50 ? '...' : '');
+
+      const response = await axiosInstence2.post<CreateConversationResponse>('/v1/chat/conversations', {
+        title: conversationTitle,
+        message: sanitizedMessage,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
+        signal: controller.signal,
+      });
+
+      const conversationId = response.data.data.id;
+
+      set({
+        isNewConversation: true,
+        messages: [],
+        // Reset pagination when creating new conversation to ensure fresh state
+        conversations: [],
+        conversationsPagination: {
+          page: 0,
+          limit: 15,
+          total: 0,
+          hasMore: true,
+        },
+      });
+
+      router.replace('/chat/' + conversationId);
+
+      // Automatically send the initial message as a streaming chat
+      setTimeout(() => {
+        sendMessage(sanitizedMessage, conversationId);
+      }, 100); // Small delay to ensure page navigation completes
+
+      return conversationId;
+    } catch (err: any) {
+      const error: ChatError = {
+        message: err?.response?.data?.message || 'Failed to create conversation',
+        code: err?.response?.status?.toString(),
+      };
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, creatingConversation: false },
+        error
+      }));
+      console.error('Error creating conversation:', error);
+      return null;
+    } finally {
+      clearTimeout(timeoutId);
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, creatingConversation: false }
+      }));
+    }
+  },
+  /**
+   * Send a message and stream the AI response
+   * @param content - Message content to send
+   * @param conversationId - ID of the conversation
+   */
+  sendMessage: async (content, conversationId) => {
+    const { isLoading, messages, selectedModel } = get();
+
+    // Input validation
+    const messageValidation = validateMessage(content);
+    if (!messageValidation.isValid) {
+      set({ error: { message: messageValidation.error! } });
+      return;
+    }
+
+    if (!validateConversationId(conversationId)) {
+      set({ error: { message: 'Invalid conversation ID' } });
+      return;
+    }
+
+    if (isLoading) return;
+
+    const sanitizedContent = sanitizeString(content);
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: sanitizedContent,
+      role: 'user',
+      createdAt: new Date(),
+      isStreaming: false,
+    };
+
+    // Add user message and create placeholder for assistant response
+    const assistantMessage: Message = {
+      id: `assistant-${Date.now()}`,
+      content: '',
+      role: 'assistant',
+      createdAt: new Date(),
+      isStreaming: true,
+    };
+
+    set((state) => ({
+      messages: [...messages, userMessage, assistantMessage],
+      loadingStates: { ...state.loadingStates, sendingMessage: true },
+      error: null,
+    }));
+
+    try {
+      await get().streamMessage(conversationId, sanitizedContent, assistantMessage.id);
+
+    } catch (err: any) {
+      const error: ChatError = {
+        message: err?.response?.data?.message || 'Failed to send message',
+        code: err?.response?.status?.toString(),
+      };
+
       console.error('Error sending message:', error);
       set((state) => {
         const filtered = state.messages.filter((msg) =>
@@ -349,19 +535,29 @@ export const useChatStore = create<ChatState>((set, get) => ({
           createdAt: new Date(),
           isStreaming: false,
         };
-        return { messages: [...filtered, userMessage, errorMessage] };
+        return {
+          messages: [...filtered, userMessage, errorMessage],
+          error
+        };
       });
     } finally {
-      // Clear any pending update timeout
-      if (updateTimeout) {
-        clearTimeout(updateTimeout);
-      }
-      clearTimeout(timeoutId);
-      set({ isLoading: false });
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, sendingMessage: false }
+      }));
     }
   },
   deleteConversation: async (conversationId) => {
+    if (!validateConversationId(conversationId)) {
+      set({ error: { message: 'Invalid conversation ID' } });
+      return false;
+    }
+
     try {
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, deletingConversation: true },
+        error: null
+      }));
+
       const response = await axiosInstence2.delete(`/v1/chat/conversations/${conversationId}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -371,12 +567,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
       if (response.status === 200) {
         // Remove the conversation from conversations
         set((state) => ({
-          conversations: state.conversations.filter(chat => chat.id !== conversationId)
+          conversations: state.conversations.filter(conv => conv.id !== conversationId),
+          loadingStates: { ...state.loadingStates, deletingConversation: false }
         }));
         return true;
       }
+
+      // Handle non-200 responses
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, deletingConversation: false },
+        error: { message: 'Failed to delete conversation' }
+      }));
       return false;
-    } catch (error) {
+    } catch (err: any) {
+      const error: ChatError = {
+        message: err?.response?.data?.message || 'Failed to delete conversation',
+        code: err?.response?.status?.toString(),
+      };
+      set((state) => ({
+        loadingStates: { ...state.loadingStates, deletingConversation: false },
+        error
+      }));
       console.error('Error deleting conversation:', error);
       return false;
     }
