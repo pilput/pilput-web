@@ -3,7 +3,6 @@ import Hero from "@/components/landing/Hero";
 import Highlights from "@/components/landing/Highlights";
 import Features from "@/components/landing/Features";
 import MissionSection from "@/components/landing/Mission";
-import AboutContent from "@/components/landing/About";
 import Social from "@/components/landing/Social";
 import CallToAction from "@/components/landing/CallToAction";
 import RandomPosts from "@/components/post/RandomPosts";
@@ -18,7 +17,6 @@ export default function Home() {
         <Highlights />
         <Features />
         <MissionSection />
-        <AboutContent />
         <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-b from-primary/5 via-background to-background" />
           <div className="absolute inset-0 bg-grid-slate-100/[0.04] dark:bg-grid-slate-700/[0.05] bg-size-[36px_36px]" />
