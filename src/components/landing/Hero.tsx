@@ -16,6 +16,9 @@ import {
   PenTool,
   BookOpen,
   Users,
+  ShieldCheck,
+  Zap,
+  Globe2,
 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -86,7 +89,7 @@ const Hero = () => {
       variants={containerVariants}
     >
       {/* Enhanced gradient background with mesh effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
+      <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
 
       {/* Mesh gradient overlay */}
       <div className="absolute inset-0 opacity-30">
@@ -241,6 +244,43 @@ const Hero = () => {
               </Button>
             </Link>
           </motion.nav>
+
+          {/* Quick proof bar */}
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 pt-4"
+          >
+            {[
+              {
+                icon: ShieldCheck,
+                title: "Free forever",
+                desc: "No paywalls or hidden limits",
+              },
+              {
+                icon: Zap,
+                title: "Fast by default",
+                desc: "Edge-ready, optimized Next.js",
+              },
+              {
+                icon: Globe2,
+                title: "Built to scale",
+                desc: "SEO, social, and global ready",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="flex items-center gap-3 rounded-2xl border border-border/40 bg-card/60 backdrop-blur-xl px-4 py-3 shadow-sm"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </motion.div>
 

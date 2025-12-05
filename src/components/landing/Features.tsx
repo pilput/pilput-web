@@ -3,21 +3,23 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import {
+  ArrowRight,
+  Award,
   BookOpen,
   Bot,
-  Users,
-  Zap,
-  Sparkles,
-  LucideIcon,
-  Star,
-  TrendingUp,
   Globe,
   Heart,
+  LucideIcon,
   MessageCircle,
-  Award,
-  PenTool
+  PenTool,
+  Sparkles,
+  Star,
+  TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FeatureCard, FeatureList } from "./FeatureCard";
 
@@ -62,7 +64,7 @@ const Features: React.FC = () => {
       description: "Create and share engaging blog posts with our powerful editor featuring markdown support, real-time preview, and collaborative writing tools.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/10 via-transparent to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-blue-500/10 via-transparent to-transparent" />
           <div className="absolute top-4 right-4 opacity-20">
             <PenTool className="w-12 h-12 text-blue-500" />
           </div>
@@ -82,7 +84,7 @@ const Features: React.FC = () => {
       description: "Engage with our intelligent AI assistant. Get help with writing, research, brainstorming, and creative problem-solving in real-time.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/10 via-transparent to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-purple-500/10 via-transparent to-transparent" />
           <div className="absolute bottom-4 left-4 opacity-20">
             <MessageCircle className="w-12 h-12 text-purple-500" />
           </div>
@@ -102,7 +104,7 @@ const Features: React.FC = () => {
       description: "Join a vibrant community of writers, developers, and creators. Share knowledge, collaborate on projects, and build meaningful connections.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-500/10 via-transparent to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-green-500/10 via-transparent to-transparent" />
           <div className="absolute top-4 left-4 opacity-20">
             <Heart className="w-12 h-12 text-green-500" />
           </div>
@@ -122,7 +124,7 @@ const Features: React.FC = () => {
       description: "Built with Next.js and optimized for performance. Experience blazing fast load times and seamless interactions across all devices.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-yellow-500/10 via-transparent to-transparent" />
           <div className="absolute bottom-4 right-4 opacity-20">
             <Award className="w-12 h-12 text-yellow-500" />
           </div>
@@ -145,7 +147,7 @@ const Features: React.FC = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative py-16 sm:py-24 md:py-32 overflow-hidden bg-gradient-to-b from-background to-background/95 dark:from-black dark:to-black/95"
+      className="relative py-16 sm:py-24 md:py-32 overflow-hidden bg-linear-to-b from-background to-background/95 dark:from-black dark:to-black/95"
       aria-labelledby="features-heading"
       style={{ opacity }}
     >
@@ -155,13 +157,13 @@ const Features: React.FC = () => {
         style={{ y: parallaxY }}
       >
         {/* Base pattern */}
-        <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,rgba(240,240,240,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(240,240,240,0.3)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(26,26,26,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(26,26,26,0.3)_1px,transparent_1px)] bg-[size:4rem_4rem]">
+        <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,rgba(240,240,240,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(240,240,240,0.3)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(26,26,26,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(26,26,26,0.3)_1px,transparent_1px)] bg-size-[4rem_4rem]">
           {/* Gradient orbs - Client-side only to prevent hydration issues */}
           {isClient && (
             <>
-              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-pulse" />
-              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-purple-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
-              <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-br from-green-500/20 to-transparent rounded-full blur-2xl animate-pulse delay-2000" />
+              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-linear-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-linear-to-br from-purple-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
+              <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-linear-to-br from-green-500/20 to-transparent rounded-full blur-2xl animate-pulse delay-2000" />
             </>
           )}
         </div>
@@ -293,7 +295,7 @@ const Features: React.FC = () => {
         <div className="max-w-5xl mx-auto relative">
           {/* Enhanced Timeline Line with gradient */}
           <motion.div
-            className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-primary/60 to-primary/20 hidden sm:block rounded-full"
+            className="absolute left-8 top-0 bottom-0 w-1 bg-linear-to-b from-primary via-primary/60 to-primary/20 hidden sm:block rounded-full"
             initial={{ scaleY: 0 }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
@@ -337,17 +339,22 @@ const Features: React.FC = () => {
                     onClick={() => handleFeatureClick(feature)}
                     aria-label={`${feature.title}: ${feature.description}`}
                     aria-describedby={`feature-stats-${feature.id}`}
-                    className="h-auto min-h-[160px] sm:min-h-[180px]"
+                    className="h-auto min-h-[200px] sm:min-h-[220px]"
+                    glowColor={feature.glowColor}
                   >
                     {feature.background}
-                    <div className="z-10 p-4 sm:p-6 space-y-3">
-                      <div className="flex items-center justify-between">
+                    <div className="z-10 p-4 sm:p-6 space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                          {feature.accentIcon && <feature.accentIcon className="h-4 w-4" />}
+                          {feature.stats}
+                        </div>
                         <Badge
                           id={`feature-stats-${feature.id}`}
                           variant="secondary"
-                          className="text-sm font-medium"
+                          className="text-xs font-semibold"
                         >
-                          {feature.stats}
+                          {feature.cta}
                         </Badge>
                       </div>
 
@@ -358,6 +365,22 @@ const Features: React.FC = () => {
                         <p className="text-base sm:text-lg text-neutral-500 dark:text-neutral-400 leading-relaxed">
                           {feature.description}
                         </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 pt-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="px-0 text-primary hover:text-primary"
+                          onClick={() => handleFeatureClick(feature)}
+                          aria-label={`Go to ${feature.title}`}
+                        >
+                          {feature.cta}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          Tailored for fast onboarding and daily use.
+                        </span>
                       </div>
                     </div>
                   </FeatureCard>
