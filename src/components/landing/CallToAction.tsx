@@ -10,7 +10,7 @@ const CallToAction = () => {
   const stats = [
     { label: "Active Users", value: "10K+", icon: Users },
     { label: "Posts Created", value: "50K+", icon: Sparkles },
-    { label: "Communities", value: "100+", icon: Zap }
+    { label: "Communities", value: "100+", icon: Zap },
   ];
 
   const containerVariants = {
@@ -18,9 +18,9 @@ const CallToAction = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const itemVariants = {
@@ -30,43 +30,16 @@ const CallToAction = () => {
       y: 0,
       transition: {
         type: "spring" as const,
-        stiffness: 100
-      }
-    }
+        stiffness: 100,
+      },
+    },
   };
 
   return (
     <section className="py-20 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10" />
-      
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full mix-blend-multiply filter blur-xl opacity-20"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "linear",
-            }}
-            style={{
-              width: `${150 + i * 50}px`,
-              height: `${150 + i * 50}px`,
-              left: `${10 + i * 30}%`,
-              top: `${10 + i * 20}%`,
-              backgroundColor: `hsl(${220 + i * 20}, 70%, 60%)`,
-            }}
-          />
-        ))}
-      </div>
+      <div className="absolute inset-0 bg-background" />
+      <div className="absolute inset-0 bg-grid-slate-100/[0.06] dark:bg-grid-slate-800/[0.1] bg-[length:28px_28px]" />
+      <div className="absolute inset-x-6 inset-y-10 rounded-3xl border border-border/60 bg-card/80 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.35)]" />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
@@ -74,74 +47,73 @@ const CallToAction = () => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={containerVariants}
-          className="text-center"
+          className="text-center space-y-4"
         >
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 mb-6">
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
             <Badge variant="secondary" className="text-sm px-4 py-1">
-              Join the Community
+              Join the community
             </Badge>
           </motion.div>
 
-          <motion.h2 
+          <motion.h2
             variants={itemVariants}
-            className="text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto leading-tight"
+            className="text-4xl md:text-6xl font-bold leading-tight max-w-4xl mx-auto"
           >
-            Ready to Start Your
-            <span className="block bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Creative Journey?
+            Ready to start your
+            <span className="block bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              creative journey?
             </span>
           </motion.h2>
 
-          <motion.p 
+          <motion.p
             variants={itemVariants}
-            className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            Join thousands of creators, developers, and writers who are already building 
-            amazing content and connections on PILPUT.
+            Join thousands of creators, developers, and writers who are already building
+            meaningful content and connections on PILPUT.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
           >
             <Link href="/register">
-              <Button 
-                size="lg" 
-                className="group px-8 py-6 text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+              <Button
+                size="lg"
+                className="group px-8 py-6 text-lg font-semibold rounded-2xl border border-primary/60 bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-200"
               >
-                Get Started Free
+                Get started free
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/blog">
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="px-8 py-6 text-lg font-semibold border-2 hover:bg-muted/50 transition-all duration-300"
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-6 text-lg font-semibold rounded-2xl border border-border/70 bg-background/80 hover:bg-primary/5 hover:border-primary/50 transition-all duration-200"
               >
-                Explore Content
+                Explore content
               </Button>
             </Link>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div 
+          <motion.div
             variants={containerVariants}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto pt-10"
           >
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
-                <motion.div 
-                  key={index} 
+                <motion.div
+                  key={index}
                   variants={itemVariants}
                   className="text-center group"
                 >
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors duration-300">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/15 transition-colors duration-200">
                     <IconComponent className="h-8 w-8 text-primary" />
                   </div>
-                  <div className="text-3xl font-bold text-foreground mb-2">
+                  <div className="text-3xl font-bold text-foreground mb-1">
                     {stat.value}
                   </div>
                   <div className="text-sm text-muted-foreground font-medium">
@@ -152,10 +124,7 @@ const CallToAction = () => {
             })}
           </motion.div>
 
-          <motion.div 
-            variants={itemVariants}
-            className="mt-12 text-center"
-          >
+          <motion.div variants={itemVariants} className="pt-6 text-center">
             <p className="text-sm text-muted-foreground">
               No credit card required • Free forever • Join in 30 seconds
             </p>

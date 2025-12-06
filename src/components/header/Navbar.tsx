@@ -34,13 +34,13 @@ const Navbar = () => {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto px-4">
         <nav className="flex h-16 items-center justify-between" aria-label="Main navigation">
           {/* Logo */}
           <Link
             href="/"
-            className="text-2xl font-bold bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent hover:from-primary/80 hover:to-primary/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md"
+            className="text-xl font-semibold tracking-tight bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent hover:from-primary/90 hover:to-primary/60 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md"
             aria-label="Pilput home"
           >
             pilput
@@ -57,7 +57,7 @@ const Navbar = () => {
                       className={cn(
                         navigationMenuTriggerStyle(),
                         pathname === item.href
-                          ? "bg-accent text-accent-foreground"
+                          ? "bg-primary/10 text-primary border border-primary/30 shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
                       )}
                     >
@@ -78,7 +78,7 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="md:hidden p-2 rounded-lg border border-border/70 bg-background/70 hover:bg-accent/60 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             aria-label={showmenu ? "Close menu" : "Open menu"}
             aria-expanded={showmenu}
           >
@@ -89,7 +89,7 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {showmenu && (
           <div 
-            className="md:hidden border-t bg-background/95 backdrop-blur-sm"
+            className="md:hidden mt-2 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-md shadow-lg"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation menu"
@@ -101,17 +101,17 @@ const Navbar = () => {
                   href={item.href}
                   onClick={() => setshowmenu(false)}
                   className={cn(
-                    "block px-4 py-3 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
+                    "block px-4 py-3 text-sm font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
                     pathname === item.href
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      ? "bg-primary/10 text-primary border border-primary/20"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
                   )}
                   aria-current={pathname === item.href ? "page" : undefined}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="flex items-center justify-between px-4 pt-4 border-t">
+              <div className="flex items-center justify-between px-4 pt-4 border-t border-border/60">
                 <DarkModeButton />
                 <ButtonLogged />
               </div>

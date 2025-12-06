@@ -133,9 +133,9 @@ export default function LoginPage() {
 
   return (
     <ErrorBoundary>
-      <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4" role="main">
+      <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary/5 to-background p-4" role="main">
       <Link
-        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-200 hover:scale-105 group focus:outline-none focus:ring-2 focus:ring-primary"
+        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-card/80 backdrop-blur-md rounded-lg shadow-sm hover:shadow-lg hover:bg-primary/5 border border-border/70 transition-all duration-200 hover:scale-105 group focus:outline-none focus:ring-2 focus:ring-primary"
         href="/"
         aria-label="Back to home page"
       >
@@ -143,7 +143,7 @@ export default function LoginPage() {
         <span className="text-sm font-medium">Back to home</span>
       </Link>
 
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md border border-border/70 shadow-xl shadow-primary/5">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
             Welcome back

@@ -6,91 +6,63 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
-      <div className="container mx-auto px-4 py-12">
-        {/* Main content */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-          {/* Brand and description */}
-          <div className="flex-1">
-            <Link href="/" className="text-lg font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-2 inline-block">
+    <footer className="border-t border-border/70 bg-background/80 backdrop-blur-xl">
+      <div className="container mx-auto px-4 py-12 space-y-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-3 max-w-xl">
+            <Link
+              href="/"
+              className="text-lg font-semibold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+            >
               pilput.me
             </Link>
-            <p className="text-sm text-muted-foreground max-w-md">
-              Building digital experiences with modern web technologies.
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              A calm, fast publishing home for people who want to write and ship without friction.
             </p>
           </div>
 
-          {/* Quick links */}
-          <div className="flex flex-wrap gap-6 text-sm">
-            <Link
-              href="/about"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="/blog"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Blog
-            </Link>
-            <Link
-              href="/contact"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Contact
-            </Link>
-            <Link
-              href="/privacy"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Privacy
-            </Link>
+          <div className="flex flex-wrap gap-4 text-sm">
+            {[
+              { href: "/about", label: "About" },
+              { href: "/blog", label: "Blog" },
+              { href: "/contact", label: "Contact" },
+              { href: "/privacy", label: "Privacy" },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-full border border-border/60 px-4 py-2 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
-          {/* Social links */}
           <div className="flex items-center gap-3">
-            <a
-              href="https://github.com/pilput"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
-              aria-label="GitHub"
-            >
-              <Github className="h-5 w-5" />
-            </a>
-            <a
-              href="https://twitter.com/pilput_dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
-              aria-label="Twitter"
-            >
-              <Twitter className="h-5 w-5" />
-            </a>
-            <a
-              href="https://linkedin.com/in/cecep31"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a
-              href="mailto:cecepjanuardi@proton.me"
-              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all"
-              aria-label="Email"
-            >
-              <Mail className="h-5 w-5" />
-            </a>
+            {[
+              { href: "https://github.com/pilput", label: "GitHub", icon: Github },
+              { href: "https://twitter.com/pilput_dev", label: "Twitter", icon: Twitter },
+              { href: "https://linkedin.com/in/cecep31", label: "LinkedIn", icon: Linkedin },
+              { href: "mailto:cecepjanuardi@proton.me", label: "Email", icon: Mail },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={item.href.startsWith("mailto") ? undefined : "_blank"}
+                rel={item.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+                className="group inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border/70 bg-card/70 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all"
+                aria-label={item.label}
+              >
+                <item.icon className="h-5 w-5 group-hover:scale-105 transition-transform" />
+              </a>
+            ))}
           </div>
         </div>
 
-        {/* Bottom section */}
-        <div className="mt-8 pt-6 border-t border-border">
-          <p className="text-xs text-muted-foreground text-center">
-            © {currentYear} pilput.me. All rights reserved.
+        <div className="flex flex-col gap-2 border-t border-border/60 pt-6 text-sm text-muted-foreground lg:flex-row lg:items-center lg:justify-between">
+          <p className="order-2 lg:order-1">(c) {currentYear} pilput.me. All rights reserved.</p>
+          <p className="order-1 lg:order-2 text-xs uppercase tracking-[0.08em] text-muted-foreground/80">
+            Built for focus, performance, and creators.
           </p>
         </div>
       </div>

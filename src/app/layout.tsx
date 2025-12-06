@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "next-themes";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import Google from "@/components/analitics/Google";
 import { Metadata } from "next";
 import "./global.css";
@@ -49,7 +49,10 @@ export const metadata: Metadata = {
   },
 };
 
-const inter = Inter({ subsets: ["latin"] });
+const grotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+});
 export default function RootLayout({
   children,
 }: {
@@ -60,7 +63,7 @@ export default function RootLayout({
       <head>
         <meta name="robots" content="all" />
       </head>
-      <body className={`${inter.className}`}>
+      <body className={grotesk.className}>
         <Google />
         <ThemeProvider attribute="class">{children}</ThemeProvider>
         <Toaster />

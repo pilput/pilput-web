@@ -138,7 +138,7 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/80 backdrop-blur-md px-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4 flex-1">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -148,7 +148,7 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+          <div className="min-h-[100vh] flex-1 rounded-xl border border-border/60 bg-card/70 md:min-h-min shadow-[0_24px_60px_-40px_rgba(0,0,0,0.45)]">
             <Card className="border-0 shadow-none bg-transparent">
               <CardContent className="p-6">
                 {children}

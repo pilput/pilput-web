@@ -116,16 +116,16 @@ export default function Signup() {
   }, [username]);
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+    <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary/5 to-background p-4">
       <Link
-        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-200 hover:scale-105 group"
+        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-card/80 backdrop-blur-md rounded-lg shadow-sm hover:shadow-lg hover:bg-primary/5 border border-border/70 transition-all duration-200 hover:scale-105 group"
         href="/"
       >
         <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
         <span className="text-sm font-medium">Back to home</span>
       </Link>
 
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md border border-border/70 shadow-xl shadow-primary/5">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
             Create an account
