@@ -65,101 +65,105 @@ export function ChatInput({
   const selectedModelName = availableModels.find(model => model.id === selectedModel)?.name || "Unknown Model";
 
   return (
-    <div className="sticky bottom-0 w-full bg-background/90 backdrop-blur-lg border-t border-border/50">
-      <div className="mx-auto max-w-3xl px-4 py-4">
+    <div className="sticky bottom-0 w-full bg-background/95 backdrop-blur border-t border-border/60">
+      <div className="mx-auto max-w-4xl px-3 py-3 sm:px-4 sm:py-4">
         <form onSubmit={handleSubmit}>
-          <div className="flex items-end gap-2">
-            {showModelPicker && <ModelPicker />}
-            <div className="flex-1 relative">
-              <Textarea
-                ref={textareaRef}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-                onInput={handleInput}
-                placeholder="Type your message..."
-                className="min-h-[44px] max-h-[140px] w-full resize-none border border-input bg-background px-4 py-3 text-sm rounded-xl shadow-sm focus-visible:ring-2 focus-visible:ring-ring transition-all pr-20"
-                disabled={isDisabled}
-                rows={rows}
-              />
-              <div className="absolute right-2 bottom-2 flex items-center gap-1">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md opacity-70 hover:opacity-100 transition-colors"
-                        disabled={isDisabled}
-                      >
-                        <Smile className="h-4 w-4" />
-                        <span className="sr-only">Add emoji</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Add emoji</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md opacity-70 hover:opacity-100 transition-colors"
-                        disabled={isDisabled}
-                      >
-                        <Paperclip className="h-4 w-4" />
-                        <span className="sr-only">Attach file</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Attach file</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              {showModelPicker && <ModelPicker />}
+              <span className="text-xs text-muted-foreground">
+                Enter to send • Shift+Enter for new line
+              </span>
             </div>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="submit"
-                    size="icon"
-                    className="h-10 w-10 shrink-0 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-muted disabled:text-muted-foreground"
-                    disabled={isDisabled || !message.trim()}
-                  >
-                    {isDisabled ? (
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+            <div className="flex items-end gap-2 rounded-2xl border border-border/70 bg-card/90 px-2.5 py-2.5 sm:px-3 sm:py-3 shadow-sm">
+              <div className="flex-1 relative">
+                <Textarea
+                  ref={textareaRef}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onInput={handleInput}
+                  placeholder="Type your message..."
+                  className="min-h-[44px] max-h-[180px] w-full resize-none border-0 bg-transparent px-0 py-1 text-sm focus-visible:ring-0 focus:outline-none pr-16 sm:pr-20"
+                  disabled={isDisabled}
+                  rows={rows}
+                />
+                <div className="absolute right-0 bottom-0 flex items-center gap-1 pb-0.5 sm:pb-1 pr-1">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md"
+                          disabled={isDisabled}
+                        >
+                          <Smile className="h-4 w-4" />
+                          <span className="sr-only">Add emoji</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Add emoji</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md"
+                          disabled={isDisabled}
+                        >
+                          <Paperclip className="h-4 w-4" />
+                          <span className="sr-only">Attach file</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Attach file</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="submit"
+                      size="icon"
+                      className="h-11 w-11 shrink-0 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-muted disabled:text-muted-foreground"
+                      disabled={isDisabled || !message.trim()}
+                    >
+                      {isDisabled ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">Send message</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="flex items-center gap-2">
+                    {message.trim() ? (
+                      <>
+                        <span>Send with {selectedModelName}</span>
+                        <Send className="h-4 w-4" />
+                      </>
                     ) : (
-                      <Send className="h-4 w-4" />
+                      <>
+                        <AlertCircle className="h-4 w-4" />
+                        <span>Type a message first</span>
+                      </>
                     )}
-                    <span className="sr-only">Send message</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="flex items-center gap-2">
-                  {message.trim() ? (
-                    <>
-                      <span>Send with {selectedModelName}</span>
-                      <Send className="h-4 w-4" />
-                    </>
-                  ) : (
-                    <>
-                      <AlertCircle className="h-4 w-4" />
-                      <span>Type a message first</span>
-                    </>
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
         </form>
-        <p className="mt-3 text-center text-xs text-muted-foreground">
-          AI can make mistakes. Please verify important information. Press Enter to send, Shift+Enter for new line.
-        </p>
       </div>
     </div>
   );
