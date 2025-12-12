@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { type Message } from '@/components/chat/chat-message';
-import { axiosInstence, axiosInstence2 } from '@/utils/fetch';
-import { getToken } from '@/utils/Auth';
-import { Config } from '@/utils/getConfig';
+import { create } from "zustand";
+import { type Message } from "@/components/chat/chat-message";
+import { axiosInstence2, axiosInstence3 } from "@/utils/fetch";
+import { getToken } from "@/utils/Auth";
+import { Config } from "@/utils/getConfig";
 
 // Types
 interface Conversation {
@@ -47,20 +47,25 @@ interface ChatError {
 
 // Utility functions
 const sanitizeString = (str: string): string => {
-  return str.trim().replace(/[<>]/g, '');
+  return str.trim().replace(/[<>]/g, "");
 };
 
 const validateConversationId = (id: string): boolean => {
-  return typeof id === 'string' && id.trim().length > 0 && id.length <= 100;
+  return typeof id === "string" && id.trim().length > 0 && id.length <= 100;
 };
 
-const validateMessage = (message: string): { isValid: boolean; error?: string } => {
+const validateMessage = (
+  message: string
+): { isValid: boolean; error?: string } => {
   const trimmed = message.trim();
   if (!trimmed) {
-    return { isValid: false, error: 'Message cannot be empty' };
+    return { isValid: false, error: "Message cannot be empty" };
   }
   if (trimmed.length > 10000) {
-    return { isValid: false, error: 'Message is too long (max 10000 characters)' };
+    return {
+      isValid: false,
+      error: "Message is too long (max 10000 characters)",
+    };
   }
   return { isValid: true };
 };
@@ -95,7 +100,11 @@ interface ChatState {
   // Actions
   fetchConversations: (page?: number, limit?: number) => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
-  createConversation: (title: string, message: string, router: any) => Promise<string | null>;
+  createConversation: (
+    title: string,
+    message: string,
+    router: any
+  ) => Promise<string | null>;
   resetPagination: () => void;
   sendMessage: (content: string, conversationId: string) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<boolean>;
@@ -104,7 +113,11 @@ interface ChatState {
   setSelectedModel: (model: string) => void;
   loadMoreConversations: () => Promise<void>;
   clearError: () => void;
-  streamMessage: (conversationId: string, content: string, assistantMessageId: string) => Promise<void>;
+  streamMessage: (
+    conversationId: string,
+    content: string,
+    assistantMessageId: string
+  ) => Promise<void>;
 }
 
 /**
@@ -115,15 +128,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
   // Initial state
   messages: [],
   conversations: [],
-  selectedModel: 'z-ai/glm-4.5-air:free',
+  selectedModel: "z-ai/glm-4.5-air:free",
   availableModels: [
-    { id: 'z-ai/glm-4.5-air:free', name: 'GLM 4.5 Air' },
-    { id: 'qwen/qwen3-14b:free', name: 'Qwen 3 14B' },
-    { id: 'deepseek/deepseek-chat-v3.1:free', name: 'DeepSeek V3.1' },
-    { id: 'tngtech/deepseek-r1t2-chimera:free', name: 'DeepSeek R1T2 Chimera' },
-    { id: 'anthropic/claude-3-haiku:free', name: 'Claude 3 Haiku' },
-    { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Meta Llama 3 8B' },
-    { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 24B' },
+    { id: "z-ai/glm-4.5-air:free", name: "GLM 4.5 Air" },
+    { id: "qwen/qwen3-14b:free", name: "Qwen 3 14B" },
+    { id: "deepseek/deepseek-chat-v3.1:free", name: "DeepSeek V3.1" },
+    { id: "tngtech/deepseek-r1t2-chimera:free", name: "DeepSeek R1T2 Chimera" },
+    { id: "anthropic/claude-3-haiku:free", name: "Claude 3 Haiku" },
+    { id: "meta-llama/llama-3-8b-instruct:free", name: "Meta Llama 3 8B" },
+    {
+      id: "mistralai/mistral-small-3.1-24b-instruct:free",
+      name: "Mistral Small 3.1 24B",
+    },
   ],
   isLoading: false,
   isNewConversation: false,
@@ -148,24 +164,31 @@ export const useChatStore = create<ChatState>((set, get) => ({
   clearError: () => set({ error: null }),
 
   // Helper function for streaming messages
-  streamMessage: async (conversationId: string, content: string, assistantMessageId: string) => {
+  streamMessage: async (
+    conversationId: string,
+    content: string,
+    assistantMessageId: string
+  ) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000);
     let updateTimeout: number | null = null;
 
     try {
-      const response = await fetch(`${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({
-          content,
-          model: get().selectedModel
-        }),
-        signal: controller.signal,
-      });
+      const response = await fetch(
+        `${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+          body: JSON.stringify({
+            content,
+            model: get().selectedModel,
+          }),
+          signal: controller.signal,
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -175,10 +198,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const decoder = new TextDecoder();
 
       if (!reader) {
-        throw new Error('No response body reader available');
+        throw new Error("No response body reader available");
       }
 
-      let accumulatedContent = '';
+      let accumulatedContent = "";
 
       const batchedUpdate = () => {
         set((state) => ({
@@ -196,13 +219,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
+        const lines = chunk.split("\n");
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
+          if (line.startsWith("data: ")) {
             const data = line.slice(6).trim();
 
-            if (data === '[DONE]') {
+            if (data === "[DONE]") {
               if (updateTimeout) {
                 clearTimeout(updateTimeout);
                 updateTimeout = null;
@@ -229,7 +252,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 updateTimeout = window.setTimeout(batchedUpdate, 16);
               }
             } catch (parseError) {
-              console.warn('Failed to parse streaming data:', parseError);
+              console.warn("Failed to parse streaming data:", parseError);
             }
           }
         }
@@ -240,7 +263,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }
       clearTimeout(timeoutId);
       set({ isNewConversation: false });
-
     } catch (error) {
       throw error; // Re-throw to be handled by caller
     } finally {
@@ -258,26 +280,29 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }));
   },
   /**
-    * Fetch recent conversations with pagination
-    * @param page - Page number (0-based)
-    * @param limit - Number of conversations per page
-    */
+   * Fetch recent conversations with pagination
+   * @param page - Page number (0-based)
+   * @param limit - Number of conversations per page
+   */
   fetchConversations: async (page = 0, limit = 15) => {
     try {
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingChats: true },
-        error: null
+        error: null,
       }));
 
-      const response = await axiosInstence.get<ConversationsResponse>('/v1/chat/conversations', {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-        params: {
-          offset: page * limit,
-          limit,
-        },
-      });
+      const response = await axiosInstence3.get<ConversationsResponse>(
+        "/v1/chat/conversations",
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+          params: {
+            offset: page * limit,
+            limit,
+          },
+        }
+      );
 
       const { data, meta } = response.data;
 
@@ -287,19 +312,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const totalPages = meta?.total_pages || Math.ceil(total / limit);
         const currentPage = page;
         // More robust hasMore calculation: check if we received a full page of data
-        const hasMore = data.length === limit && (totalPages > currentPage + 1 || total > (currentPage + 1) * limit);
+        const hasMore =
+          data.length === limit &&
+          (totalPages > currentPage + 1 || total > (currentPage + 1) * limit);
 
         // Ensure no duplicate conversations by using a Map keyed by conversation.id
         const conversationMap = new Map<string, Conversation>();
         if (!isReset) {
-          state.conversations.forEach((conv) => conversationMap.set(conv.id, conv));
+          state.conversations.forEach((conv) =>
+            conversationMap.set(conv.id, conv)
+          );
         }
         data.forEach((conv) => conversationMap.set(conv.id, conv));
         const uniqueConversations = Array.from(conversationMap.values());
 
         // If loading more and no new unique items were added, stop pagination
-        const hasNewItems = uniqueConversations.length > state.conversations.length;
-        const effectiveHasMore = isReset ? hasMore : (hasMore && hasNewItems);
+        const hasNewItems =
+          uniqueConversations.length > state.conversations.length;
+        const effectiveHasMore = isReset ? hasMore : hasMore && hasNewItems;
 
         return {
           conversations: uniqueConversations,
@@ -314,22 +344,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
     } catch (err: any) {
       const error: ChatError = {
-        message: err?.response?.data?.message || 'Failed to fetch conversations',
+        message:
+          err?.response?.data?.message || "Failed to fetch conversations",
         code: err?.response?.status?.toString(),
       };
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingChats: false },
-        error
+        error,
       }));
 
       // Handle authentication errors
-      if (err?.response?.status === 401 && typeof window !== 'undefined') {
-        window.location.href = '/login';
+      if (err?.response?.status === 401 && typeof window !== "undefined") {
+        window.location.href = "/login";
       }
     }
   },
   loadMoreConversations: async () => {
-    const { conversationsPagination, fetchConversations, loadingStates } = get();
+    const { conversationsPagination, fetchConversations, loadingStates } =
+      get();
     if (!conversationsPagination.hasMore || loadingStates.fetchingChats) return;
 
     const nextPage = conversationsPagination.page + 1;
@@ -348,22 +380,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
   fetchMessages: async (conversationId) => {
     if (!validateConversationId(conversationId)) {
-      set({ error: { message: 'Invalid conversation ID' } });
+      set({ error: { message: "Invalid conversation ID" } });
       return;
     }
 
     try {
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingMessages: true },
-        error: null
+        error: null,
       }));
 
-      const response = await axiosInstence2.get<MessagesResponse>(`/v1/chat/conversations/${conversationId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const response = await axiosInstence2.get<MessagesResponse>(
+        `/v1/chat/conversations/${conversationId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
 
       const messages = response.data.data.messages.map((message) => ({
         ...message,
@@ -372,18 +407,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       set((state) => ({
         messages,
-        loadingStates: { ...state.loadingStates, fetchingMessages: false }
+        loadingStates: { ...state.loadingStates, fetchingMessages: false },
       }));
     } catch (err: any) {
       const error: ChatError = {
-        message: err?.response?.data?.message || 'Failed to fetch messages',
+        message: err?.response?.data?.message || "Failed to fetch messages",
         code: err?.response?.status?.toString(),
       };
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingMessages: false },
-        error
+        error,
       }));
-      console.error('Error fetching messages:', error);
+      console.error("Error fetching messages:", error);
     }
   },
   /**
@@ -407,25 +442,32 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     set((state) => ({
       loadingStates: { ...state.loadingStates, creatingConversation: true },
-      error: null
+      error: null,
     }));
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     try {
       const sanitizedMessage = sanitizeString(message);
-      const conversationTitle = title ? sanitizeString(title) : sanitizedMessage.slice(0, 50) + (sanitizedMessage.length > 50 ? '...' : '');
+      const conversationTitle = title
+        ? sanitizeString(title)
+        : sanitizedMessage.slice(0, 50) +
+          (sanitizedMessage.length > 50 ? "..." : "");
 
-      const response = await axiosInstence2.post<CreateConversationResponse>('/v1/chat/conversations', {
-        title: conversationTitle,
-        message: sanitizedMessage,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
+      const response = await axiosInstence2.post<CreateConversationResponse>(
+        "/v1/chat/conversations",
+        {
+          title: conversationTitle,
+          message: sanitizedMessage,
         },
-        signal: controller.signal,
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+          signal: controller.signal,
+        }
+      );
 
       const conversationId = response.data.data.id;
 
@@ -442,7 +484,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         },
       });
 
-      router.replace('/chat/' + conversationId);
+      router.replace("/chat/" + conversationId);
 
       // Automatically send the initial message as a streaming chat
       setTimeout(() => {
@@ -452,19 +494,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return conversationId;
     } catch (err: any) {
       const error: ChatError = {
-        message: err?.response?.data?.message || 'Failed to create conversation',
+        message:
+          err?.response?.data?.message || "Failed to create conversation",
         code: err?.response?.status?.toString(),
       };
       set((state) => ({
         loadingStates: { ...state.loadingStates, creatingConversation: false },
-        error
+        error,
       }));
-      console.error('Error creating conversation:', error);
+      console.error("Error creating conversation:", error);
       return null;
     } finally {
       clearTimeout(timeoutId);
       set((state) => ({
-        loadingStates: { ...state.loadingStates, creatingConversation: false }
+        loadingStates: { ...state.loadingStates, creatingConversation: false },
       }));
     }
   },
@@ -484,7 +527,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
 
     if (!validateConversationId(conversationId)) {
-      set({ error: { message: 'Invalid conversation ID' } });
+      set({ error: { message: "Invalid conversation ID" } });
       return;
     }
 
@@ -494,7 +537,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const userMessage: Message = {
       id: Date.now().toString(),
       content: sanitizedContent,
-      role: 'user',
+      role: "user",
       createdAt: new Date(),
       isStreaming: false,
     };
@@ -502,8 +545,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
     // Add user message and create placeholder for assistant response
     const assistantMessage: Message = {
       id: `assistant-${Date.now()}`,
-      content: '',
-      role: 'assistant',
+      content: "",
+      role: "assistant",
       createdAt: new Date(),
       isStreaming: true,
     };
@@ -515,60 +558,71 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }));
 
     try {
-      await get().streamMessage(conversationId, sanitizedContent, assistantMessage.id);
-
+      await get().streamMessage(
+        conversationId,
+        sanitizedContent,
+        assistantMessage.id
+      );
     } catch (err: any) {
       const error: ChatError = {
-        message: err?.response?.data?.message || 'Failed to send message',
+        message: err?.response?.data?.message || "Failed to send message",
         code: err?.response?.status?.toString(),
       };
 
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
       set((state) => {
-        const filtered = state.messages.filter((msg) =>
-          msg.id !== userMessage.id && msg.id !== assistantMessage.id
+        const filtered = state.messages.filter(
+          (msg) => msg.id !== userMessage.id && msg.id !== assistantMessage.id
         );
         const errorMessage: Message = {
           id: `error-${Date.now()}`,
-          content: 'Sorry, I encountered an error. Please try again.',
-          role: 'assistant',
+          content: "Sorry, I encountered an error. Please try again.",
+          role: "assistant",
           createdAt: new Date(),
           isStreaming: false,
         };
         return {
           messages: [...filtered, userMessage, errorMessage],
-          error
+          error,
         };
       });
     } finally {
       set((state) => ({
-        loadingStates: { ...state.loadingStates, sendingMessage: false }
+        loadingStates: { ...state.loadingStates, sendingMessage: false },
       }));
     }
   },
   deleteConversation: async (conversationId) => {
     if (!validateConversationId(conversationId)) {
-      set({ error: { message: 'Invalid conversation ID' } });
+      set({ error: { message: "Invalid conversation ID" } });
       return false;
     }
 
     try {
       set((state) => ({
         loadingStates: { ...state.loadingStates, deletingConversation: true },
-        error: null
+        error: null,
       }));
 
-      const response = await axiosInstence2.delete(`/v1/chat/conversations/${conversationId}`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const response = await axiosInstence2.delete(
+        `/v1/chat/conversations/${conversationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
         // Remove the conversation from conversations
         set((state) => ({
-          conversations: state.conversations.filter(conv => conv.id !== conversationId),
-          loadingStates: { ...state.loadingStates, deletingConversation: false }
+          conversations: state.conversations.filter(
+            (conv) => conv.id !== conversationId
+          ),
+          loadingStates: {
+            ...state.loadingStates,
+            deletingConversation: false,
+          },
         }));
         return true;
       }
@@ -576,19 +630,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
       // Handle non-200 responses
       set((state) => ({
         loadingStates: { ...state.loadingStates, deletingConversation: false },
-        error: { message: 'Failed to delete conversation' }
+        error: { message: "Failed to delete conversation" },
       }));
       return false;
     } catch (err: any) {
       const error: ChatError = {
-        message: err?.response?.data?.message || 'Failed to delete conversation',
+        message:
+          err?.response?.data?.message || "Failed to delete conversation",
         code: err?.response?.status?.toString(),
       };
       set((state) => ({
         loadingStates: { ...state.loadingStates, deletingConversation: false },
-        error
+        error,
       }));
-      console.error('Error deleting conversation:', error);
+      console.error("Error deleting conversation:", error);
       return false;
     }
   },
