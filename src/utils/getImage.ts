@@ -1,4 +1,4 @@
-import { Config } from "./getCofig";
+import { Config } from "./getConfig";
 
 function isFullUrl(url: string): boolean {
     return url.startsWith('http://') || url.startsWith('https://');

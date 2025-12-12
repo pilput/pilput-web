@@ -20,7 +20,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Mail, Lock, User, Loader2 } from "lucide-react";
-import { Config } from "@/utils/getCofig";
+import { Config } from "@/utils/getConfig";
 
 type Inputs = {
   email: string;

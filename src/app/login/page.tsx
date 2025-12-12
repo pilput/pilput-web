@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { axiosInstence2 } from "@/utils/fetch";
-import { Config } from "@/utils/getCofig";
+import { Config } from "@/utils/getConfig";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface LoginFormData {

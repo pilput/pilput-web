@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { type Message } from '@/components/chat/chat-message';
 import { axiosInstence, axiosInstence2 } from '@/utils/fetch';
 import { getToken } from '@/utils/Auth';
-import { Config } from '@/utils/getCofig';
+import { Config } from '@/utils/getConfig';
 
 // Types
 interface Conversation {

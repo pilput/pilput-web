@@ -1,6 +1,6 @@
 import { getCookie } from "cookies-next";
 import { axiosInstence2 } from "./fetch";
-import { Config } from "./getCofig";
+import { Config } from "./getConfig";
 
 export function getToken() {
   let token = getCookie("token");

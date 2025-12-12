@@ -1,4 +1,4 @@
-import { Config } from "@/utils/getCofig";
+import { Config } from "@/utils/getConfig";
 import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
