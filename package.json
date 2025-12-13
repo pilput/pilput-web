@@ -35,7 +35,7 @@
     "clsx": "^2.1.1",
     "cookies-next": "^6.1.1",
     "date-fns": "^4.1.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "eslint-config-next": "16.0.0",
     "framer-motion": "^12.23.26",
     "highlight.js": "^11.11.1",
