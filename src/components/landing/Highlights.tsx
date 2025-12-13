@@ -74,19 +74,21 @@ const Highlights = () => {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
             >
-              <Card className="relative overflow-hidden border-border/40 bg-card/60 backdrop-blur-xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:-translate-y-1">
+              <Card className="relative overflow-hidden border-border/40 bg-card/60 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:-translate-y-1">
                 <div
                   className={cn(
-                    "absolute inset-0 opacity-80 bg-gradient-to-br",
+                    "absolute inset-0 opacity-90 bg-gradient-to-br",
                     item.accent,
                   )}
                 />
                 <CardContent className="relative z-10 p-6 sm:p-8 space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background/80 shadow-inner shadow-primary/10">
+                    <motion.div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-background/80 shadow-inner shadow-primary/10" whileHover={{ scale: 1.1, rotate: 5 }} transition={{ duration: 0.2 }}>
                       <item.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <Sparkles className="h-5 w-5 text-primary/80" />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.2, rotate: -10 }} transition={{ duration: 0.2 }}>
+                      <Sparkles className="h-5 w-5 text-primary/80" />
+                    </motion.div>
                   </div>
                   <div className="space-y-2">
                     <h3 className="text-xl sm:text-2xl font-semibold text-foreground">
@@ -107,4 +109,3 @@ const Highlights = () => {
 };
 
 export default Highlights;
-
