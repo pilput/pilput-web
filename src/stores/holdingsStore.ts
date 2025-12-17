@@ -14,9 +14,11 @@ interface HoldingsState {
   holdingTypes: HoldingType[];
   isLoading: boolean;
   expandedRows: Set<bigint>;
-  
+  selectedMonth: number;
+  selectedYear: number;
+
   // Actions
-  fetchHoldings: () => Promise<void>;
+  fetchHoldings: (params?: { month?: number; year?: number }) => Promise<void>;
   fetchHoldingTypes: () => Promise<void>;
   addHolding: (payload: any) => Promise<void>;
   updateHolding: (id: bigint, payload: any) => Promise<void>;
@@ -31,13 +33,25 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   holdingTypes: [],
   isLoading: false,
   expandedRows: new Set(),
+  selectedMonth: new Date().getMonth() + 1,
+  selectedYear: new Date().getFullYear(),
 
-  fetchHoldings: async () => {
+  fetchHoldings: async (params) => {
+    const now = new Date();
+    const month = params?.month ?? get().selectedMonth ?? now.getMonth() + 1;
+    const year = params?.year ?? get().selectedYear ?? now.getFullYear();
+
     set({ isLoading: true });
     try {
+      set({ selectedMonth: month, selectedYear: year });
+
       const { data } = await axiosInstence2.get('/v1/holdings', {
         headers: {
           Authorization: `Bearer ${getToken()}`,
+        },
+        params: {
+          month,
+          year,
         },
       });
       const response = data as {

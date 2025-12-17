@@ -54,6 +54,10 @@ export default function FinanceHolding() {
     toYear: "",
     overwrite: false,
   });
+  const [filterMonth, setFilterMonth] = useState(
+    (new Date().getMonth() + 1).toString(),
+  );
+  const [filterYear, setFilterYear] = useState(new Date().getFullYear().toString());
 
   useEffect(() => {
     fetchHoldings();
@@ -163,9 +167,41 @@ export default function FinanceHolding() {
     }
   }
 
+  async function handleFilterSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const month = parseInt(filterMonth, 10);
+    const year = parseInt(filterYear, 10);
+    await fetchHoldings({ month, year });
+  }
+
   return (
     <div className="p-8">
       <HoldingHeader onAddClick={openAddModal} onDuplicateClick={openDuplicateModal} />
+      <form onSubmit={handleFilterSubmit} className="mb-6 flex flex-wrap items-end gap-4">
+        <div className="space-y-1">
+          <Label htmlFor="filterMonth">Month</Label>
+          <Input
+            id="filterMonth"
+            type="number"
+            min="1"
+            max="12"
+            value={filterMonth}
+            onChange={(e) => setFilterMonth(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="filterYear">Year</Label>
+          <Input
+            id="filterYear"
+            type="number"
+            min="1900"
+            max="2100"
+            value={filterYear}
+            onChange={(e) => setFilterYear(e.target.value)}
+          />
+        </div>
+        <Button type="submit">Apply</Button>
+      </form>
       <HoldingFormModal
         open={modalOpen}
         onOpenChange={setModalOpen}

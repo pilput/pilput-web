@@ -87,6 +87,12 @@ export default function HoldingTable({
                 </TableCell>
               </TableRow>
             ))
+          ) : holdings.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={12} className="text-center text-muted-foreground py-10">
+                No holdings found for this period. Try another month/year or add a holding.
+              </TableCell>
+            </TableRow>
           ) : (
             <>
               {holdings.map((holding) => (
@@ -98,9 +104,7 @@ export default function HoldingTable({
                   onEdit={onEdit}
                 />
               ))}
-              {holdings.length > 0 && (
-                <HoldingTotalRow holdings={holdings} />
-              )}
+              <HoldingTotalRow holdings={holdings} />
             </>
           )}
         </TableBody>
