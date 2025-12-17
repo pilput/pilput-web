@@ -28,6 +28,7 @@ import {
   FolderOpen,
   User,
   Menu,
+  DollarSign,
 } from "lucide-react";
 
 const data = {
@@ -64,6 +65,16 @@ const data = {
           title: "My Workspace",
           url: "/dashboard/workspace",
           icon: FolderOpen,
+        },
+      ],
+    },
+    {
+      title: "Finance",
+      items: [
+        {
+          title: "Holding",
+          url: "/dashboard/finance-holding",
+          icon: DollarSign,
         },
       ],
     },
