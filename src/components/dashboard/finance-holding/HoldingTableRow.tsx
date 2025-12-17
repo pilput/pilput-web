@@ -11,7 +11,6 @@ interface HoldingTableRowProps {
   expandedRows: Set<bigint>;
   toggleExpand: (id: bigint) => void;
   onEdit: (holding: Holding) => void;
-  refetchHoldings: () => void;
 }
 
 export default function HoldingTableRow({
@@ -19,7 +18,6 @@ export default function HoldingTableRow({
   expandedRows,
   toggleExpand,
   onEdit,
-  refetchHoldings,
 }: HoldingTableRowProps) {
   const invested = parseFloat(holding.invested_amount);
   const current = parseFloat(holding.current_value);
@@ -76,7 +74,6 @@ export default function HoldingTableRow({
       <TableCell>
         <HoldingActionComponent
           holding={holding}
-          refetchHoldings={refetchHoldings}
           onEdit={onEdit}
         />
       </TableCell>

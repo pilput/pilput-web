@@ -12,17 +12,18 @@ import { Button } from "@/components/ui/button";
 import { axiosInstence2 } from "@/utils/fetch";
 import toast from "react-hot-toast";
 import { getToken } from "@/utils/Auth";
+import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
 
 const HoldingActionComponent = ({
   holding,
-  refetchHoldings,
   onEdit,
 }: {
   holding: Holding;
-  refetchHoldings: () => void;
   onEdit: (holding: Holding) => void;
 }) => {
+  const deleteHolding = useHoldingsStore((state) => state.deleteHolding);
+
   const onDuplicate = () => {
     // Create a duplicate holding without the ID and timestamps
     const duplicatedHolding: Holding = {
@@ -37,17 +38,10 @@ const HoldingActionComponent = ({
   const onDelete = async () => {
     if (!confirm("Are you sure you want to delete this holding?")) return;
 
-    const toastId = toast.loading("Deleting...");
     try {
-      await axiosInstence2.delete(`/v1/holdings/${holding.id}`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      toast.success("Holding deleted", { id: toastId });
-      refetchHoldings();
+      await deleteHolding(holding.id);
     } catch (error) {
-      toast.error("Failed to delete holding", { id: toastId });
+      // Error handling is done in the store
     }
   };
 

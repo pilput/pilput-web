@@ -1,0 +1,151 @@
+import { create } from 'zustand';
+import { getToken, RemoveToken } from '@/utils/Auth';
+import { axiosInstence2 } from '@/utils/fetch';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
+import type { Holding, HoldingType } from '@/types/holding';
+
+interface HoldingsState {
+  holdings: Holding[];
+  holdingTypes: HoldingType[];
+  isLoading: boolean;
+  expandedRows: Set<bigint>;
+  
+  // Actions
+  fetchHoldings: () => Promise<void>;
+  fetchHoldingTypes: () => Promise<void>;
+  addHolding: (payload: any) => Promise<void>;
+  updateHolding: (id: bigint, payload: any) => Promise<void>;
+  deleteHolding: (id: bigint) => Promise<void>;
+  toggleExpand: (id: bigint) => void;
+  clearExpandedRows: () => void;
+}
+
+export const useHoldingsStore = create<HoldingsState>((set, get) => ({
+  holdings: [],
+  holdingTypes: [],
+  isLoading: false,
+  expandedRows: new Set(),
+
+  fetchHoldings: async () => {
+    set({ isLoading: true });
+    try {
+      const { data } = await axiosInstence2.get('/v1/holdings', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      const response = data as {
+        data: Holding[];
+        success: boolean;
+        metadata: { totalItems: number };
+      };
+      if (response.success) {
+        set({ holdings: response.data });
+      } else {
+        console.log(response);
+        toast.error('Cannot connect to server');
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          RemoveToken();
+          window.location.href = '/login';
+        }
+      }
+      toast.error('Cannot connect to server');
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchHoldingTypes: async () => {
+    try {
+      const { data } = await axiosInstence2.get('/v1/holdings/types', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      const response = data as {
+        data: HoldingType[];
+        success: boolean;
+      };
+
+      if (response.success) {
+        set({ holdingTypes: response.data });
+      }
+    } catch (error) {
+      console.error('Failed to fetch holding types', error);
+    }
+  },
+
+  addHolding: async (payload) => {
+    const toastId = toast.loading('Creating...');
+    try {
+      await axiosInstence2.post('/v1/holdings', payload, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      toast.success('Holding created', { id: toastId });
+      
+      // Refetch holdings after successful creation
+      await get().fetchHoldings();
+    } catch (error) {
+      toast.error('Failed to save holding', { id: toastId });
+      throw error;
+    }
+  },
+
+  updateHolding: async (id, payload) => {
+    const toastId = toast.loading('Updating...');
+    try {
+      await axiosInstence2.put(`/v1/holdings/${id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      toast.success('Holding updated', { id: toastId });
+      
+      // Refetch holdings after successful update
+      await get().fetchHoldings();
+    } catch (error) {
+      toast.error('Failed to save holding', { id: toastId });
+      throw error;
+    }
+  },
+
+  deleteHolding: async (id) => {
+    const toastId = toast.loading('Deleting...');
+    try {
+      await axiosInstence2.delete(`/v1/holdings/${id}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      toast.success('Holding deleted', { id: toastId });
+      
+      // Refetch holdings after successful deletion
+      await get().fetchHoldings();
+    } catch (error) {
+      toast.error('Failed to delete holding', { id: toastId });
+      throw error;
+    }
+  },
+
+  toggleExpand: (id) => {
+    set((state) => {
+      const newSet = new Set(state.expandedRows);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return { expandedRows: newSet };
+    });
+  },
+
+  clearExpandedRows: () => {
+    set({ expandedRows: new Set() });
+  },
+}));

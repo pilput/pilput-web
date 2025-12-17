@@ -1,19 +1,23 @@
 "use client";
 
-import { getToken, RemoveToken } from "@/utils/Auth";
-import { axiosInstence2 } from "@/utils/fetch";
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import type { Holding, HoldingType } from "@/types/holding";
 import HoldingHeader from "@/components/dashboard/finance-holding/HoldingHeader";
 import HoldingFormModal from "@/components/dashboard/finance-holding/HoldingFormModal";
 import HoldingTable from "@/components/dashboard/finance-holding/HoldingTable";
+import { useHoldingsStore } from "@/stores/holdingsStore";
+import type { Holding } from "@/types/holding";
 
 export default function FinanceHolding() {
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-  const [holdingTypes, setHoldingTypes] = useState<HoldingType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    holdings,
+    holdingTypes,
+    isLoading,
+    expandedRows,
+    fetchHoldings,
+    fetchHoldingTypes,
+    toggleExpand,
+  } = useHoldingsStore();
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingHolding, setEditingHolding] = useState<Holding | null>(null);
   const [formData, setFormData] = useState({
@@ -30,65 +34,11 @@ export default function FinanceHolding() {
     year: "",
     notes: "",
   });
-  const [expandedRows, setExpandedRows] = useState<Set<bigint>>(new Set());
 
   useEffect(() => {
-    refetchHoldings();
+    fetchHoldings();
     fetchHoldingTypes();
-  }, []);
-
-  async function fetchHoldingTypes() {
-    try {
-      const { data } = await axiosInstence2.get("/v1/holdings/types", {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      const response = data as {
-        data: HoldingType[];
-        success: boolean;
-      };
-
-      if (response.success) {
-        setHoldingTypes(response.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch holding types", error);
-    }
-  }
-
-  async function refetchHoldings() {
-    setIsLoading(true);
-    try {
-      const { data } = await axiosInstence2.get("/v1/holdings", {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      const response = data as {
-        data: Holding[];
-        success: boolean;
-        metadata: { totalItems: number };
-      };
-      if (response.success) {
-        setHoldings(response.data);
-      } else {
-        console.log(response);
-
-        toast.error("Cannot connect to server");
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          RemoveToken();
-          window.location.href = "/login";
-        }
-      }
-      toast.error("Cannot connect to server");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  }, [fetchHoldings, fetchHoldingTypes]);
 
   function openAddModal() {
     const now = new Date();
@@ -133,9 +83,6 @@ export default function FinanceHolding() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const toastId = toast.loading(
-      editingHolding ? "Updating..." : "Creating..."
-    );
 
     try {
       const payload = {
@@ -155,38 +102,15 @@ export default function FinanceHolding() {
       };
 
       if (editingHolding) {
-        await axiosInstence2.put(`/v1/holdings/${editingHolding.id}`, payload, {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        });
-        toast.success("Holding updated", { id: toastId });
+        await useHoldingsStore.getState().updateHolding(editingHolding.id, payload);
       } else {
-        await axiosInstence2.post("/v1/holdings", payload, {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        });
-        toast.success("Holding created", { id: toastId });
+        await useHoldingsStore.getState().addHolding(payload);
       }
 
       setModalOpen(false);
-      refetchHoldings();
     } catch (error) {
-      toast.error("Failed to save holding", { id: toastId });
+      // Error handling is done in the store
     }
-  }
-
-  function toggleExpand(id: bigint) {
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
   }
 
   return (
@@ -207,7 +131,6 @@ export default function FinanceHolding() {
         expandedRows={expandedRows}
         toggleExpand={toggleExpand}
         onEdit={openEditModal}
-        refetchHoldings={refetchHoldings}
       />
     </div>
   );

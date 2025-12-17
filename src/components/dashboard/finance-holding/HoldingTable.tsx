@@ -17,7 +17,6 @@ interface HoldingTableProps {
   expandedRows: Set<bigint>;
   toggleExpand: (id: bigint) => void;
   onEdit: (holding: Holding) => void;
-  refetchHoldings: () => void;
 }
 
 export default function HoldingTable({
@@ -26,7 +25,6 @@ export default function HoldingTable({
   expandedRows,
   toggleExpand,
   onEdit,
-  refetchHoldings,
 }: HoldingTableProps) {
   return (
     <div className="rounded-lg border bg-card shadow-sm dark:shadow-gray-900/30">
@@ -98,7 +96,6 @@ export default function HoldingTable({
                   expandedRows={expandedRows}
                   toggleExpand={toggleExpand}
                   onEdit={onEdit}
-                  refetchHoldings={refetchHoldings}
                 />
               ))}
               {holdings.length > 0 && (
