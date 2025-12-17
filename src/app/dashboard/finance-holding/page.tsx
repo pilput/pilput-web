@@ -55,9 +55,11 @@ export default function FinanceHolding() {
     overwrite: false,
   });
   const [filterMonth, setFilterMonth] = useState(
-    (new Date().getMonth() + 1).toString(),
+    (new Date().getMonth() + 1).toString()
   );
-  const [filterYear, setFilterYear] = useState(new Date().getFullYear().toString());
+  const [filterYear, setFilterYear] = useState(
+    new Date().getFullYear().toString()
+  );
 
   useEffect(() => {
     fetchHoldings();
@@ -139,7 +141,9 @@ export default function FinanceHolding() {
       };
 
       if (editingHolding) {
-        await useHoldingsStore.getState().updateHolding(editingHolding.id, payload);
+        await useHoldingsStore
+          .getState()
+          .updateHolding(editingHolding.id, payload);
       } else {
         await useHoldingsStore.getState().addHolding(payload);
       }
@@ -176,8 +180,14 @@ export default function FinanceHolding() {
 
   return (
     <div className="p-8">
-      <HoldingHeader onAddClick={openAddModal} onDuplicateClick={openDuplicateModal} />
-      <form onSubmit={handleFilterSubmit} className="mb-6 flex flex-wrap items-end gap-4">
+      <HoldingHeader
+        onAddClick={openAddModal}
+        onDuplicateClick={openDuplicateModal}
+      />
+      <form
+        onSubmit={handleFilterSubmit}
+        className="mb-6 flex flex-wrap items-end gap-4"
+      >
         <div className="space-y-1">
           <Label htmlFor="filterMonth">Month</Label>
           <Input
@@ -223,7 +233,8 @@ export default function FinanceHolding() {
           <DialogHeader>
             <DialogTitle>Duplicate holdings by month</DialogTitle>
             <DialogDescription>
-              Copy holdings from one month/year to another. Existing data in the target month can be overwritten.
+              Copy holdings from one month/year to another. Existing data in the
+              target month can be overwritten.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleDuplicateSubmit} className="space-y-4">
@@ -237,7 +248,10 @@ export default function FinanceHolding() {
                   max="12"
                   value={duplicateForm.fromMonth}
                   onChange={(e) =>
-                    setDuplicateForm({ ...duplicateForm, fromMonth: e.target.value })
+                    setDuplicateForm({
+                      ...duplicateForm,
+                      fromMonth: e.target.value,
+                    })
                   }
                   required
                 />
@@ -251,7 +265,10 @@ export default function FinanceHolding() {
                   max="2100"
                   value={duplicateForm.fromYear}
                   onChange={(e) =>
-                    setDuplicateForm({ ...duplicateForm, fromYear: e.target.value })
+                    setDuplicateForm({
+                      ...duplicateForm,
+                      fromYear: e.target.value,
+                    })
                   }
                   required
                 />
@@ -265,7 +282,10 @@ export default function FinanceHolding() {
                   max="12"
                   value={duplicateForm.toMonth}
                   onChange={(e) =>
-                    setDuplicateForm({ ...duplicateForm, toMonth: e.target.value })
+                    setDuplicateForm({
+                      ...duplicateForm,
+                      toMonth: e.target.value,
+                    })
                   }
                   required
                 />
@@ -279,7 +299,10 @@ export default function FinanceHolding() {
                   max="2100"
                   value={duplicateForm.toYear}
                   onChange={(e) =>
-                    setDuplicateForm({ ...duplicateForm, toYear: e.target.value })
+                    setDuplicateForm({
+                      ...duplicateForm,
+                      toYear: e.target.value,
+                    })
                   }
                   required
                 />
@@ -300,7 +323,11 @@ export default function FinanceHolding() {
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" type="button" onClick={() => setDuplicateOpen(false)}>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => setDuplicateOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit">Duplicate</Button>
