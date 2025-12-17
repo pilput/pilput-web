@@ -386,6 +386,8 @@ export default function FinanceHolding() {
               <TableHead className="font-semibold">Currency</TableHead>
               <TableHead className="font-semibold">Invested Amount</TableHead>
               <TableHead className="font-semibold">Current Value</TableHead>
+              <TableHead className="font-semibold">Realized Value</TableHead>
+              <TableHead className="font-semibold">Realized %</TableHead>
               <TableHead className="font-semibold">Units</TableHead>
               <TableHead className="font-semibold">Avg Buy Price</TableHead>
               <TableHead className="font-semibold">Current Price</TableHead>
@@ -404,7 +406,10 @@ export default function FinanceHolding() {
                   <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
@@ -421,6 +426,22 @@ export default function FinanceHolding() {
                   <TableCell>{holding.currency}</TableCell>
                   <TableCell>{parseFloat(holding.invested_amount).toLocaleString()}</TableCell>
                   <TableCell>{parseFloat(holding.current_value).toLocaleString()}</TableCell>
+                  <TableCell>
+                    {(() => {
+                      const invested = parseFloat(holding.invested_amount);
+                      const current = parseFloat(holding.current_value);
+                      const realized = current - invested;
+                      return realized.toLocaleString();
+                    })()}
+                  </TableCell>
+                  <TableCell>
+                    {(() => {
+                      const invested = parseFloat(holding.invested_amount);
+                      const current = parseFloat(holding.current_value);
+                      const percent = invested > 0 ? ((current - invested) / invested) * 100 : 0;
+                      return `${percent.toFixed(2)}%`;
+                    })()}
+                  </TableCell>
                   <TableCell>{holding.units ? parseFloat(holding.units).toLocaleString() : '-'}</TableCell>
                   <TableCell>{holding.avg_buy_price ? parseFloat(holding.avg_buy_price).toLocaleString() : '-'}</TableCell>
                   <TableCell>{holding.current_price ? parseFloat(holding.current_price).toLocaleString() : '-'}</TableCell>
