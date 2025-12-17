@@ -156,7 +156,8 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading('Duplicating...');
     try {
       const validatedPayload = duplicateHoldingSchema.parse(payload);
-      await axiosInstence2.post('/v1/holding/duplicate', validatedPayload, {
+      // Backend endpoint uses the plural `/holdings` namespace
+      await axiosInstence2.post('/v1/holdings/duplicate', validatedPayload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
