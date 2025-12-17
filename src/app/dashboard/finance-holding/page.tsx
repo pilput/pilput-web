@@ -35,7 +35,7 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import type { Holding, HoldingType } from "@/types/holding";
-import { PlusCircle, Edit, Trash } from "lucide-react";
+import { PlusCircle, Edit, Trash, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function FinanceHolding() {
   const [holdings, setHoldings] = useState<Holding[]>([]);
@@ -57,6 +57,7 @@ export default function FinanceHolding() {
     year: "",
     notes: "",
   });
+  const [expandedRows, setExpandedRows] = useState<Set<bigint>>(new Set());
 
   useEffect(() => {
     refetchHoldings();
@@ -209,6 +210,18 @@ export default function FinanceHolding() {
     } catch (error) {
       toast.error("Failed to delete holding", { id: toastId });
     }
+  }
+
+  function toggleExpand(id: bigint) {
+    setExpandedRows(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   }
 
   return (
@@ -389,11 +402,9 @@ export default function FinanceHolding() {
               <TableHead className="font-semibold">Current Value</TableHead>
               <TableHead className="font-semibold">Realized Value</TableHead>
               <TableHead className="font-semibold">Realized %</TableHead>
-              <TableHead className="font-semibold">Units</TableHead>
-              <TableHead className="font-semibold">Avg Buy Price</TableHead>
-              <TableHead className="font-semibold">Current Price</TableHead>
               <TableHead className="font-semibold">Month</TableHead>
               <TableHead className="font-semibold">Year</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
               <TableHead className="w-[120px] font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -409,12 +420,9 @@ export default function FinanceHolding() {
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[20px]" /></TableCell>
                   <TableCell><Skeleton className="h-8 w-[80px]" /></TableCell>
                 </TableRow>
               ))
@@ -424,7 +432,7 @@ export default function FinanceHolding() {
                 const current = parseFloat(holding.current_value);
                 const realized = current - invested;
                 const percent = invested > 0 ? ((current - invested) / invested) * 100 : 0;
-                return (
+                const mainRow = (
                   <TableRow key={holding.id.toString()} className="hover:bg-muted/50">
                     <TableCell className="font-medium">{holding.name}</TableCell>
                     <TableCell>{holding.platform}</TableCell>
@@ -438,11 +446,9 @@ export default function FinanceHolding() {
                     <TableCell className={percent > 0 ? 'text-green-600 font-medium' : percent < 0 ? 'text-red-600 font-medium' : 'text-gray-600'}>
                       {`${percent > 0 ? '+' : ''}${percent.toFixed(2)}%`}
                     </TableCell>
-                    <TableCell>{holding.units ? parseFloat(holding.units).toLocaleString() : '-'}</TableCell>
-                    <TableCell>{holding.avg_buy_price ? parseFloat(holding.avg_buy_price).toLocaleString() : '-'}</TableCell>
-                    <TableCell>{holding.current_price ? parseFloat(holding.current_price).toLocaleString() : '-'}</TableCell>
                     <TableCell>{holding.month}</TableCell>
                     <TableCell>{holding.year}</TableCell>
+                    <TableCell><Button variant="ghost" size="sm" onClick={() => toggleExpand(holding.id)}>{expandedRows.has(holding.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</Button></TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" onClick={() => openEditModal(holding)}>
@@ -455,6 +461,18 @@ export default function FinanceHolding() {
                     </TableCell>
                   </TableRow>
                 );
+                const expandedRow = expandedRows.has(holding.id) ? (
+                  <TableRow key={`${holding.id}-expanded`}>
+                    <TableCell colSpan={12} className="bg-muted/20 p-4">
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div><strong>Units:</strong> {holding.units ? parseFloat(holding.units as string).toLocaleString() : '-'}</div>
+                        <div><strong>Avg Buy Price:</strong> {holding.avg_buy_price ? parseFloat(holding.avg_buy_price as string).toLocaleString() : '-'}</div>
+                        <div><strong>Current Price:</strong> {holding.current_price ? parseFloat(holding.current_price as string).toLocaleString() : '-'}</div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : null;
+                return [mainRow, expandedRow].filter(Boolean);
               })
             )}
           </TableBody>
