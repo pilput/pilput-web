@@ -18,6 +18,8 @@ export interface Holding {
   units?: string;
   avg_buy_price?: string;
   current_price?: string;
+  month: number;
+  year: number;
   last_updated?: string;
   notes?: string;
   created_at: string;

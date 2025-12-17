@@ -52,6 +52,8 @@ export default function FinanceHolding() {
     units: "",
     avg_buy_price: "",
     current_price: "",
+    month: "",
+    year: "",
     notes: "",
   });
 
@@ -125,6 +127,8 @@ export default function FinanceHolding() {
       units: "",
       avg_buy_price: "",
       current_price: "",
+      month: "",
+      year: "",
       notes: "",
     });
     setModalOpen(true);
@@ -142,6 +146,8 @@ export default function FinanceHolding() {
       units: holding.units || "",
       avg_buy_price: holding.avg_buy_price || "",
       current_price: holding.current_price || "",
+      month: holding.month.toString(),
+      year: holding.year.toString(),
       notes: holding.notes || "",
     });
     setModalOpen(true);
@@ -160,6 +166,8 @@ export default function FinanceHolding() {
         units: formData.units ? parseFloat(formData.units) : null,
         avg_buy_price: formData.avg_buy_price ? parseFloat(formData.avg_buy_price) : null,
         current_price: formData.current_price ? parseFloat(formData.current_price) : null,
+        month: parseInt(formData.month),
+        year: parseInt(formData.year),
       };
 
       if (editingHolding) {
@@ -324,6 +332,30 @@ export default function FinanceHolding() {
                     onChange={(e) => setFormData({ ...formData, current_price: e.target.value })}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="month">Month</Label>
+                  <Input
+                    id="month"
+                    type="number"
+                    min="1"
+                    max="12"
+                    value={formData.month}
+                    onChange={(e) => setFormData({ ...formData, month: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="year">Year</Label>
+                  <Input
+                    id="year"
+                    type="number"
+                    min="1900"
+                    max="2100"
+                    value={formData.year}
+                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="notes">Notes</Label>
@@ -357,6 +389,8 @@ export default function FinanceHolding() {
               <TableHead className="font-semibold">Units</TableHead>
               <TableHead className="font-semibold">Avg Buy Price</TableHead>
               <TableHead className="font-semibold">Current Price</TableHead>
+              <TableHead className="font-semibold">Month</TableHead>
+              <TableHead className="font-semibold">Year</TableHead>
               <TableHead className="w-[120px] font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -373,6 +407,8 @@ export default function FinanceHolding() {
                   <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
                   <TableCell><Skeleton className="h-8 w-[80px]" /></TableCell>
                 </TableRow>
               ))
@@ -388,6 +424,8 @@ export default function FinanceHolding() {
                   <TableCell>{holding.units ? parseFloat(holding.units).toLocaleString() : '-'}</TableCell>
                   <TableCell>{holding.avg_buy_price ? parseFloat(holding.avg_buy_price).toLocaleString() : '-'}</TableCell>
                   <TableCell>{holding.current_price ? parseFloat(holding.current_price).toLocaleString() : '-'}</TableCell>
+                  <TableCell>{holding.month}</TableCell>
+                  <TableCell>{holding.year}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" onClick={() => openEditModal(holding)}>
