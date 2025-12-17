@@ -1,5 +1,5 @@
 import React from "react";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Copy, Edit, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +23,17 @@ const HoldingActionComponent = ({
   refetchHoldings: () => void;
   onEdit: (holding: Holding) => void;
 }) => {
+  const onDuplicate = () => {
+    // Create a duplicate holding without the ID and timestamps
+    const duplicatedHolding: Holding = {
+      ...holding,
+      id: BigInt(0), // Will be set by the backend
+      name: `${holding.name} (Copy)`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    onEdit(duplicatedHolding);
+  };
   const onDelete = async () => {
     if (!confirm("Are you sure you want to delete this holding?")) return;
 
@@ -51,7 +62,12 @@ const HoldingActionComponent = ({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => onEdit(holding)}>
+          <Edit className="mr-2 h-4 w-4" />
           Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={onDuplicate}>
+          <Copy className="mr-2 h-4 w-4" />
+          Duplicate
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onDelete} className="text-red-600">

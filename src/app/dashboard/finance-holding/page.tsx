@@ -139,7 +139,9 @@ export default function FinanceHolding() {
   }
 
   function openEditModal(holding: Holding) {
-    setEditingHolding(holding);
+    // Check if this is a duplicate (id = 0) - treat as new holding
+    const isDuplicate = holding.id === BigInt(0);
+    setEditingHolding(isDuplicate ? null : holding);
     setFormData({
       name: holding.name,
       platform: holding.platform,
