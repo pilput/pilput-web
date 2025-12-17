@@ -6,6 +6,22 @@ import type { Holding } from "@/types/holding";
 import HoldingActionComponent from "./action";
 import HoldingExpandedRow from "./HoldingExpandedRow";
 
+function getHoldingTypeColor(typeName: string) {
+  const colors: Record<string, string> = {
+    Stock: "bg-blue-100 text-blue-800 border-blue-200",
+    Crypto: "bg-orange-100 text-orange-800 border-orange-200",
+    Bond: "bg-green-100 text-green-800 border-green-200",
+    ETF: "bg-purple-100 text-purple-800 border-purple-200",
+    "Mutual Fund": "bg-indigo-100 text-indigo-800 border-indigo-200",
+    Commodity: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    Gold: "bg-yellow-400 text-yellow-900 border-yellow-500",
+    "Real Estate": "bg-red-100 text-red-800 border-red-200",
+    Cash: "bg-gray-100 text-gray-800 border-gray-200",
+  };
+
+  return colors[typeName] || "bg-secondary text-secondary-foreground";
+}
+
 interface HoldingTableRowProps {
   holding: Holding;
   expandedRows: Set<bigint>;
@@ -29,7 +45,9 @@ export default function HoldingTableRow({
       <TableCell className="font-medium">{holding.name}</TableCell>
       <TableCell>{holding.platform}</TableCell>
       <TableCell>
-        <Badge variant="secondary">{holding.holding_types.name}</Badge>
+        <Badge className={getHoldingTypeColor(holding.holding_types.name)}>
+          {holding.holding_types.name}
+        </Badge>
       </TableCell>
       <TableCell>{holding.currency}</TableCell>
       <TableCell>{invested.toLocaleString()}</TableCell>
@@ -72,10 +90,7 @@ export default function HoldingTableRow({
         </Button>
       </TableCell>
       <TableCell>
-        <HoldingActionComponent
-          holding={holding}
-          onEdit={onEdit}
-        />
+        <HoldingActionComponent holding={holding} onEdit={onEdit} />
       </TableCell>
     </TableRow>
   );
