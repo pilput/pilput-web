@@ -65,9 +65,19 @@ export const commentSchema = z.object({
     .max(500, "Comment must be less than 500 characters")
 });
 
+// Duplicate holdings validation schema
+export const duplicateHoldingSchema = z.object({
+  fromMonth: z.number().int().min(1).max(12),
+  fromYear: z.number().int().min(1900).max(2100),
+  toMonth: z.number().int().min(1).max(12),
+  toYear: z.number().int().min(1900).max(2100),
+  overwrite: z.boolean().optional().default(false),
+});
+
 // Export types
 export type PostFormData = z.infer<typeof postSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type ChatMessageFormData = z.infer<typeof chatMessageSchema>;
 export type CommentFormData = z.infer<typeof commentSchema>;
+export type DuplicateHoldingPayload = z.infer<typeof duplicateHoldingSchema>;

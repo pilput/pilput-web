@@ -4,6 +4,10 @@ import { axiosInstence2 } from '@/utils/fetch';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import type { Holding, HoldingType } from '@/types/holding';
+import {
+  duplicateHoldingSchema,
+  type DuplicateHoldingPayload,
+} from '@/lib/validation';
 
 interface HoldingsState {
   holdings: Holding[];
@@ -17,6 +21,7 @@ interface HoldingsState {
   addHolding: (payload: any) => Promise<void>;
   updateHolding: (id: bigint, payload: any) => Promise<void>;
   deleteHolding: (id: bigint) => Promise<void>;
+  duplicateHoldings: (payload: DuplicateHoldingPayload) => Promise<void>;
   toggleExpand: (id: bigint) => void;
   clearExpandedRows: () => void;
 }
@@ -129,6 +134,25 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
       await get().fetchHoldings();
     } catch (error) {
       toast.error('Failed to delete holding', { id: toastId });
+      throw error;
+    }
+  },
+
+  duplicateHoldings: async (payload) => {
+    const toastId = toast.loading('Duplicating...');
+    try {
+      const validatedPayload = duplicateHoldingSchema.parse(payload);
+      await axiosInstence2.post('/v1/holding/duplicate', validatedPayload, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      toast.success('Holdings duplicated', { id: toastId });
+
+      // Refresh holdings to reflect the duplicated data
+      await get().fetchHoldings();
+    } catch (error) {
+      toast.error('Failed to duplicate holdings', { id: toastId });
       throw error;
     }
   },

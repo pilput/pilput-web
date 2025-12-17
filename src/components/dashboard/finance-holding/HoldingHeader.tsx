@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Copy } from "lucide-react";
 
 interface HoldingHeaderProps {
   onAddClick: () => void;
+  onDuplicateClick: () => void;
 }
 
-export default function HoldingHeader({ onAddClick }: HoldingHeaderProps) {
+export default function HoldingHeader({
+  onAddClick,
+  onDuplicateClick,
+}: HoldingHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-8">
       <div>
@@ -16,13 +20,23 @@ export default function HoldingHeader({ onAddClick }: HoldingHeaderProps) {
           Manage your financial holdings and assets.
         </p>
       </div>
-      <Button
-        className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
-        onClick={onAddClick}
-      >
-        <PlusCircle className="w-4 h-4" />
-        Add Holding
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+          onClick={onDuplicateClick}
+        >
+          <Copy className="w-4 h-4" />
+          Duplicate Month
+        </Button>
+        <Button
+          className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+          onClick={onAddClick}
+        >
+          <PlusCircle className="w-4 h-4" />
+          Add Holding
+        </Button>
+      </div>
     </div>
   );
 }
