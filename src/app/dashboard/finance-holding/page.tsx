@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -418,47 +419,43 @@ export default function FinanceHolding() {
                 </TableRow>
               ))
             ) : (
-              holdings.map((holding) => (
-                <TableRow key={holding.id.toString()} className="hover:bg-muted/50">
-                  <TableCell className="font-medium">{holding.name}</TableCell>
-                  <TableCell>{holding.platform}</TableCell>
-                  <TableCell>{holding.holding_types.name}</TableCell>
-                  <TableCell>{holding.currency}</TableCell>
-                  <TableCell>{parseFloat(holding.invested_amount).toLocaleString()}</TableCell>
-                  <TableCell>{parseFloat(holding.current_value).toLocaleString()}</TableCell>
-                  <TableCell>
-                    {(() => {
-                      const invested = parseFloat(holding.invested_amount);
-                      const current = parseFloat(holding.current_value);
-                      const realized = current - invested;
-                      return realized.toLocaleString();
-                    })()}
-                  </TableCell>
-                  <TableCell>
-                    {(() => {
-                      const invested = parseFloat(holding.invested_amount);
-                      const current = parseFloat(holding.current_value);
-                      const percent = invested > 0 ? ((current - invested) / invested) * 100 : 0;
-                      return `${percent.toFixed(2)}%`;
-                    })()}
-                  </TableCell>
-                  <TableCell>{holding.units ? parseFloat(holding.units).toLocaleString() : '-'}</TableCell>
-                  <TableCell>{holding.avg_buy_price ? parseFloat(holding.avg_buy_price).toLocaleString() : '-'}</TableCell>
-                  <TableCell>{holding.current_price ? parseFloat(holding.current_price).toLocaleString() : '-'}</TableCell>
-                  <TableCell>{holding.month}</TableCell>
-                  <TableCell>{holding.year}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => openEditModal(holding)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleDelete(holding)}>
-                        <Trash className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+              holdings.map((holding) => {
+                const invested = parseFloat(holding.invested_amount);
+                const current = parseFloat(holding.current_value);
+                const realized = current - invested;
+                const percent = invested > 0 ? ((current - invested) / invested) * 100 : 0;
+                return (
+                  <TableRow key={holding.id.toString()} className="hover:bg-muted/50">
+                    <TableCell className="font-medium">{holding.name}</TableCell>
+                    <TableCell>{holding.platform}</TableCell>
+                    <TableCell><Badge variant="secondary">{holding.holding_types.name}</Badge></TableCell>
+                    <TableCell>{holding.currency}</TableCell>
+                    <TableCell>{invested.toLocaleString()}</TableCell>
+                    <TableCell>{current.toLocaleString()}</TableCell>
+                    <TableCell className={realized > 0 ? 'text-green-600 font-medium' : realized < 0 ? 'text-red-600 font-medium' : 'text-gray-600'}>
+                      {realized.toLocaleString()}
+                    </TableCell>
+                    <TableCell className={percent > 0 ? 'text-green-600 font-medium' : percent < 0 ? 'text-red-600 font-medium' : 'text-gray-600'}>
+                      {`${percent > 0 ? '+' : ''}${percent.toFixed(2)}%`}
+                    </TableCell>
+                    <TableCell>{holding.units ? parseFloat(holding.units).toLocaleString() : '-'}</TableCell>
+                    <TableCell>{holding.avg_buy_price ? parseFloat(holding.avg_buy_price).toLocaleString() : '-'}</TableCell>
+                    <TableCell>{holding.current_price ? parseFloat(holding.current_price).toLocaleString() : '-'}</TableCell>
+                    <TableCell>{holding.month}</TableCell>
+                    <TableCell>{holding.year}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => openEditModal(holding)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleDelete(holding)}>
+                          <Trash className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
