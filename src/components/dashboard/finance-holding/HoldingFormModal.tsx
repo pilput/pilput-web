@@ -63,6 +63,17 @@ export default function HoldingFormModal({
   holdingTypes,
   onSubmit,
 }: HoldingFormModalProps) {
+  const platformOptions = [
+    "Stockbit",
+    "Bank Jago",
+    "Bank BSI",
+    "Bareksa",
+    "Bibit",
+    "Growin",
+    "Pluang",
+    "Others",
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -92,15 +103,23 @@ export default function HoldingFormModal({
             </div>
             <div className="space-y-2">
               <Label htmlFor="platform">Platform</Label>
-              <Input
-                id="platform"
-                placeholder="e.g., Robinhood, Coinbase"
+              <Select
                 value={formData.platform}
-                onChange={(e) =>
-                  setFormData({ ...formData, platform: e.target.value })
+                onValueChange={(value) =>
+                  setFormData({ ...formData, platform: value })
                 }
-                required
-              />
+              >
+                <SelectTrigger id="platform">
+                  <SelectValue placeholder="Select platform" />
+                </SelectTrigger>
+                <SelectContent>
+                  {platformOptions.map((platform) => (
+                    <SelectItem key={platform} value={platform}>
+                      {platform}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="holding_type_id">Type</Label>
