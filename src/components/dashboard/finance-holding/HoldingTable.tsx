@@ -27,7 +27,7 @@ export default function HoldingTable({
   onEdit,
 }: HoldingTableProps) {
   return (
-    <div className="rounded-lg border bg-card shadow-sm dark:shadow-gray-900/30">
+    <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/60">

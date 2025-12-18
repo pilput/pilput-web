@@ -8,6 +8,13 @@ import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
 import { Button } from "@/components/ui/button";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -16,6 +23,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
 export default function FinanceHolding() {
@@ -178,40 +192,86 @@ export default function FinanceHolding() {
     await fetchHoldings({ month, year });
   }
 
+  const months = [
+    { value: "1", label: "January" },
+    { value: "2", label: "February" },
+    { value: "3", label: "March" },
+    { value: "4", label: "April" },
+    { value: "5", label: "May" },
+    { value: "6", label: "June" },
+    { value: "7", label: "July" },
+    { value: "8", label: "August" },
+    { value: "9", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
+
   return (
-    <div className="p-8">
+    <div className="p-8 space-y-6">
       <HoldingHeader
         onAddClick={openAddModal}
         onDuplicateClick={openDuplicateModal}
       />
-      <form
-        onSubmit={handleFilterSubmit}
-        className="mb-6 flex flex-wrap items-end gap-4"
-      >
-        <div className="space-y-1">
-          <Label htmlFor="filterMonth">Month</Label>
-          <Input
-            id="filterMonth"
-            type="number"
-            min="1"
-            max="12"
-            value={filterMonth}
-            onChange={(e) => setFilterMonth(e.target.value)}
+      
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <CardTitle>Holdings Overview</CardTitle>
+              <CardDescription>
+                Review your investment performance for the selected period.
+              </CardDescription>
+            </div>
+            <form
+              onSubmit={handleFilterSubmit}
+              className="flex flex-wrap items-end gap-2"
+            >
+              <div className="w-[140px]">
+                <Label htmlFor="filterMonth" className="sr-only">Month</Label>
+                <Select
+                  value={filterMonth}
+                  onValueChange={(val) => setFilterMonth(val)}
+                >
+                  <SelectTrigger id="filterMonth">
+                    <SelectValue placeholder="Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-[100px]">
+                <Label htmlFor="filterYear" className="sr-only">Year</Label>
+                <Input
+                  id="filterYear"
+                  type="number"
+                  min="1900"
+                  max="2100"
+                  value={filterYear}
+                  onChange={(e) => setFilterYear(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              <Button type="submit" variant="secondary">Filter</Button>
+            </form>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <HoldingTable
+            holdings={holdings}
+            isLoading={isLoading}
+            expandedRows={expandedRows}
+            toggleExpand={toggleExpand}
+            onEdit={openEditModal}
           />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="filterYear">Year</Label>
-          <Input
-            id="filterYear"
-            type="number"
-            min="1900"
-            max="2100"
-            value={filterYear}
-            onChange={(e) => setFilterYear(e.target.value)}
-          />
-        </div>
-        <Button type="submit">Apply</Button>
-      </form>
+        </CardContent>
+      </Card>
+
       <HoldingFormModal
         open={modalOpen}
         onOpenChange={setModalOpen}
@@ -221,13 +281,7 @@ export default function FinanceHolding() {
         holdingTypes={holdingTypes}
         onSubmit={handleSubmit}
       />
-      <HoldingTable
-        holdings={holdings}
-        isLoading={isLoading}
-        expandedRows={expandedRows}
-        toggleExpand={toggleExpand}
-        onEdit={openEditModal}
-      />
+
       <Dialog open={duplicateOpen} onOpenChange={setDuplicateOpen}>
         <DialogContent>
           <DialogHeader>
@@ -241,20 +295,21 @@ export default function FinanceHolding() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="fromMonth">From month</Label>
-                <Input
-                  id="fromMonth"
-                  type="number"
-                  min="1"
-                  max="12"
+                <Select
                   value={duplicateForm.fromMonth}
-                  onChange={(e) =>
-                    setDuplicateForm({
-                      ...duplicateForm,
-                      fromMonth: e.target.value,
-                    })
-                  }
-                  required
-                />
+                  onValueChange={(val) => setDuplicateForm({...duplicateForm, fromMonth: val})}
+                >
+                   <SelectTrigger id="fromMonth">
+                    <SelectValue placeholder="Month" />
+                   </SelectTrigger>
+                   <SelectContent>
+                      {months.map((m) => (
+                        <SelectItem key={m.value} value={m.value}>
+                          {m.label}
+                        </SelectItem>
+                      ))}
+                   </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="fromYear">From year</Label>
@@ -275,20 +330,21 @@ export default function FinanceHolding() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="toMonth">To month</Label>
-                <Input
-                  id="toMonth"
-                  type="number"
-                  min="1"
-                  max="12"
+                 <Select
                   value={duplicateForm.toMonth}
-                  onChange={(e) =>
-                    setDuplicateForm({
-                      ...duplicateForm,
-                      toMonth: e.target.value,
-                    })
-                  }
-                  required
-                />
+                  onValueChange={(val) => setDuplicateForm({...duplicateForm, toMonth: val})}
+                >
+                   <SelectTrigger id="toMonth">
+                    <SelectValue placeholder="Month" />
+                   </SelectTrigger>
+                   <SelectContent>
+                      {months.map((m) => (
+                        <SelectItem key={m.value} value={m.value}>
+                          {m.label}
+                        </SelectItem>
+                      ))}
+                   </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="toYear">To year</Label>
