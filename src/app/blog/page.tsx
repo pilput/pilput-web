@@ -13,6 +13,7 @@ import {
   X,
   Sparkles,
   Clock3,
+  FileQuestion,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { axiosInstence } from "@/utils/fetch";
@@ -206,19 +207,27 @@ const Blog = () => {
                     <Postlist key={post.id} post={post} />
                   ))
                 ) : !isLoading ? (
-                  <div className="text-center py-16">
-                    <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-                      <Search className="w-12 h-12 text-muted-foreground" />
+                  <div className="text-center py-20 px-4 bg-card/50 rounded-2xl border border-dashed border-border">
+                    <div className="w-20 h-20 mx-auto mb-6 bg-muted/50 rounded-full flex items-center justify-center">
+                      <FileQuestion className="w-10 h-10 text-muted-foreground/60" />
                     </div>
                     <h3 className="text-xl font-semibold text-foreground mb-2">
                       {debouncedSearchQuery ? `No results for "${debouncedSearchQuery}"` : "No posts found"}
                     </h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground max-w-md mx-auto">
                       {debouncedSearchQuery
-                        ? "Try searching for different keywords or check back later for new content."
-                        : "Try adjusting your filters or check back later for new content."
+                        ? "We couldn't find any articles matching your search. Try different keywords or browse our trending topics."
+                        : "There are no stories published yet. Check back soon for new content."
                       }
                     </p>
+                    {debouncedSearchQuery && (
+                      <button 
+                        onClick={handleClearSearch}
+                        className="mt-6 px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
+                      >
+                        Clear filters
+                      </button>
+                    )}
                   </div>
                 ) : null}
                 {isLoading &&

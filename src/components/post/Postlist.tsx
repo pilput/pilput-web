@@ -35,15 +35,14 @@ const Postlist = ({ post }: { post: Post }) => {
       <div className="p-6">
         {/* Author Info */}
         <div className="flex items-center gap-3 mb-4">
-          <Link href={`/${post.creator.username}`} className="shrink-0">
+          <Link href={`/${post.creator.username}`} className="shrink-0 relative">
             {post.creator?.image && (
-              <img
-                className="rounded-full object-cover w-8 h-8"
+              <Image
+                className="rounded-full object-cover border border-gray-100 dark:border-gray-800"
                 src={getProfilePicture(post.creator?.image)}
                 width={32}
                 height={32}
-                loading="lazy"
-                alt={post.creator?.first_name}
+                alt={post.creator?.first_name || "Author"}
               />
             )}
           </Link>
