@@ -5,7 +5,8 @@ import { axiosInstence } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemPulse from "./PostItemPulse";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import type { Post } from "@/types/post";
 
 interface succesResponse {
@@ -32,43 +33,22 @@ const PostsRandomList = () => {
     fetchRandomPosts();
   }, []);
 
-  let content;
-  if (posts.length) {
-    content = (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
-        ))}
-      </div>
-    );
-  } else {
-    content = (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tempposts.map((post) => (
-          <PostItemPulse key={post} />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-3">
-          <BookOpen className="h-8 w-8 text-primary" />
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">Featured Posts</h2>
-            <p className="text-muted-foreground">Discover interesting articles from our community</p>
-          </div>
-        </div>
-        <Link
-          href="/blog"
-          className="text-primary hover:text-primary/80 font-medium transition-colors"
-        >
-          View All →
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.length > 0
+          ? posts.map((post) => <PostItem key={post.id} post={post} />)
+          : tempposts.map((post) => <PostItemPulse key={post} />)}
+      </div>
+      
+      <div className="flex justify-center pt-4">
+        <Link href="/blog">
+          <Button variant="outline" size="lg" className="rounded-full px-8 border-border/60 bg-background/50 backdrop-blur-sm hover:bg-primary/5 hover:border-primary/30 transition-all duration-300">
+            Explore More Community Posts
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </Link>
       </div>
-      {content}
     </div>
   );
 };

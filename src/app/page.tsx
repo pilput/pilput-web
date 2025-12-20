@@ -32,7 +32,7 @@ export default function Home() {
                 amazing community of creators.
               </p>
             </div>
-            <div className="rounded-3xl border border-border/40 bg-card/60 backdrop-blur-xl shadow-lg p-4 sm:p-6 lg:p-8">
+            <div className="relative">
               <RandomPosts />
             </div>
           </div>
