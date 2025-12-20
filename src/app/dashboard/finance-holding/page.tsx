@@ -227,7 +227,7 @@ export default function FinanceHolding() {
               onSubmit={handleFilterSubmit}
               className="flex flex-wrap items-end gap-2"
             >
-              <div className="w-[140px]">
+              <div className="w-35">
                 <Label htmlFor="filterMonth" className="sr-only">Month</Label>
                 <Select
                   value={filterMonth}
@@ -245,7 +245,7 @@ export default function FinanceHolding() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="w-[100px]">
+              <div className="w-25">
                 <Label htmlFor="filterYear" className="sr-only">Year</Label>
                 <Input
                   id="filterYear"
