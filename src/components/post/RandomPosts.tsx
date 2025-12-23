@@ -6,8 +6,9 @@ import { toast } from "react-hot-toast";
 import PostItemPulse from "./PostItemPulse";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, RefreshCw } from "lucide-react";
 import type { Post } from "@/types/post";
+import { cn } from "@/lib/utils";
 
 interface succesResponse {
   data: Post[];
@@ -15,18 +16,31 @@ interface succesResponse {
   success: boolean;
 }
 
+const tempposts = [1, 2, 3, 4, 5, 6];
+
 const PostsRandomList = () => {
   const [posts, setposts] = useState<Post[]>([]);
-  const tempposts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchRandomPosts = async () => {
     try {
-      const response = await axiosInstence3.get("/v1/posts/random?limit=9");
+      setIsLoading(true);
+      const response = await axiosInstence3.get("/v1/posts/random?limit=6");
       const result = response.data as succesResponse;
       setposts(result.data);
     } catch {
       toast.error("Failed to fetch random posts");
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchRandomPosts();
+    setIsRefreshing(false);
+    toast.success("New posts loaded!");
   };
 
   useEffect(() => {
@@ -34,25 +48,75 @@ const PostsRandomList = () => {
   }, []);
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.length > 0
-          ? posts.map((post) => <PostItem key={post.id} post={post} />)
-          : tempposts.map((post) => <PostItemPulse key={post} />)}
+    <div className="py-8">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="space-y-2">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+            Random Posts
+          </h2>
+          <p className="text-muted-foreground text-sm md:text-base max-w-md">
+            Explore interesting posts from our community
+          </p>
+        </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          className="self-start sm:self-auto rounded-full gap-2"
+        >
+          <RefreshCw
+            className={cn(
+              "h-4 w-4 transition-transform duration-300",
+              isRefreshing && "animate-spin"
+            )}
+          />
+          Refresh
+        </Button>
       </div>
 
-      <div className="flex justify-center pt-4">
-        <Link href="/blog">
-          <Button
-            variant="outline"
-            size="lg"
-            className="rounded-full px-8 border-border/60 bg-background/50 backdrop-blur-sm hover:bg-primary/5 hover:border-primary/30 transition-all duration-300"
-          >
-            Explore More Community Posts
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
+      {/* Posts Grid */}
+      <div
+        className={cn(
+          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6",
+          isLoading && "animate-pulse"
+        )}
+      >
+        {isLoading
+          ? tempposts.map((post) => <PostItemPulse key={post} />)
+          : posts.map((post) => <PostItem key={post.id} post={post} />)}
       </div>
+
+      {/* Empty State */}
+      {!isLoading && posts.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <p className="text-muted-foreground text-sm mb-4">No posts found</p>
+          <Link href="/blog">
+            <Button size="sm" variant="outline" className="rounded-full gap-2">
+              Browse Blog
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Explore More Button */}
+      {!isLoading && posts.length > 0 && (
+        <div className="flex justify-center mt-8">
+          <Link href="/blog">
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full px-8 gap-2"
+            >
+              Explore More Posts
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
