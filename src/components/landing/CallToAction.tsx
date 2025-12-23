@@ -11,20 +11,19 @@ const CallToAction = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section 
+    <section
       ref={containerRef}
       className="relative py-24 sm:py-32 overflow-hidden bg-background"
     >
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-slate-100/[0.04] dark:bg-grid-slate-800/[0.04] bg-[length:32px_32px]" />
+      <div className="absolute inset-0 bg-grid-slate-100/[0.04] dark:bg-grid-slate-800/[0.04] bg-size-[32px_32px]" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
-         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] animate-pulse" />
-         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] animate-pulse delay-1000" />
+        <div className="absolute top-1/4 left-1/4 w-125 h-125 bg-primary/10 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-125 h-125 bg-blue-500/10 rounded-full blur-[100px] animate-pulse delay-1000" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -33,8 +32,8 @@ const CallToAction = () => {
             transition={{ duration: 0.5 }}
             className="flex justify-center"
           >
-            <Badge 
-              variant="outline" 
+            <Badge
+              variant="outline"
               className="px-4 py-1.5 text-sm border-primary/20 bg-primary/5 text-primary backdrop-blur-sm rounded-full"
             >
               <Star className="w-3.5 h-3.5 mr-2 fill-primary" />
@@ -51,7 +50,7 @@ const CallToAction = () => {
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight"
           >
             Ready to start your <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-primary via-primary/80 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary via-primary/80 to-blue-600 bg-clip-text text-transparent">
               creative journey?
             </span>
           </motion.h2>
@@ -64,8 +63,9 @@ const CallToAction = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            Join thousands of creators, developers, and writers who are already building
-            meaningful content and connections on PILPUT. Start your journey today.
+            Join thousands of creators, developers, and writers who are already
+            building meaningful content and connections on PILPUT. Start your
+            journey today.
           </motion.p>
 
           {/* Buttons */}
@@ -97,7 +97,7 @@ const CallToAction = () => {
           </motion.div>
 
           {/* Minimal Trust Indicators */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -117,7 +117,6 @@ const CallToAction = () => {
               <span>Join in 30 seconds</span>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
