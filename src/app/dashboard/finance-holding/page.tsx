@@ -213,7 +213,7 @@ export default function FinanceHolding() {
         onAddClick={openAddModal}
         onDuplicateClick={openDuplicateModal}
       />
-      
+
       <Card>
         <CardHeader className="pb-4">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -228,7 +228,9 @@ export default function FinanceHolding() {
               className="flex flex-wrap items-end gap-2"
             >
               <div className="w-35">
-                <Label htmlFor="filterMonth" className="sr-only">Month</Label>
+                <Label htmlFor="filterMonth" className="sr-only">
+                  Month
+                </Label>
                 <Select
                   value={filterMonth}
                   onValueChange={(val) => setFilterMonth(val)}
@@ -246,7 +248,9 @@ export default function FinanceHolding() {
                 </Select>
               </div>
               <div className="w-25">
-                <Label htmlFor="filterYear" className="sr-only">Year</Label>
+                <Label htmlFor="filterYear" className="sr-only">
+                  Year
+                </Label>
                 <Input
                   id="filterYear"
                   type="number"
@@ -257,7 +261,9 @@ export default function FinanceHolding() {
                   className="w-full"
                 />
               </div>
-              <Button type="submit" variant="secondary">Filter</Button>
+              <Button type="submit" variant="secondary">
+                Filter
+              </Button>
             </form>
           </div>
         </CardHeader>
@@ -297,18 +303,20 @@ export default function FinanceHolding() {
                 <Label htmlFor="fromMonth">From month</Label>
                 <Select
                   value={duplicateForm.fromMonth}
-                  onValueChange={(val) => setDuplicateForm({...duplicateForm, fromMonth: val})}
+                  onValueChange={(val) =>
+                    setDuplicateForm({ ...duplicateForm, fromMonth: val })
+                  }
                 >
-                   <SelectTrigger id="fromMonth">
+                  <SelectTrigger id="fromMonth">
                     <SelectValue placeholder="Month" />
-                   </SelectTrigger>
-                   <SelectContent>
-                      {months.map((m) => (
-                        <SelectItem key={m.value} value={m.value}>
-                          {m.label}
-                        </SelectItem>
-                      ))}
-                   </SelectContent>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
@@ -330,20 +338,22 @@ export default function FinanceHolding() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="toMonth">To month</Label>
-                 <Select
+                <Select
                   value={duplicateForm.toMonth}
-                  onValueChange={(val) => setDuplicateForm({...duplicateForm, toMonth: val})}
+                  onValueChange={(val) =>
+                    setDuplicateForm({ ...duplicateForm, toMonth: val })
+                  }
                 >
-                   <SelectTrigger id="toMonth">
+                  <SelectTrigger id="toMonth">
                     <SelectValue placeholder="Month" />
-                   </SelectTrigger>
-                   <SelectContent>
-                      {months.map((m) => (
-                        <SelectItem key={m.value} value={m.value}>
-                          {m.label}
-                        </SelectItem>
-                      ))}
-                   </SelectContent>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
