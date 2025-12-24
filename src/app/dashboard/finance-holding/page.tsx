@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import HoldingHeader from "@/components/dashboard/finance-holding/HoldingHeader";
 import HoldingFormModal from "@/components/dashboard/finance-holding/HoldingFormModal";
 import HoldingTable from "@/components/dashboard/finance-holding/HoldingTable";
+import HoldingDuplicateModal from "@/components/dashboard/finance-holding/HoldingDuplicateModal";
+import HoldingFilter from "@/components/dashboard/finance-holding/HoldingFilter";
+import HoldingSummaryCards from "@/components/dashboard/finance-holding/HoldingSummaryCards";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,23 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 
 export default function FinanceHolding() {
   const {
@@ -60,14 +45,8 @@ export default function FinanceHolding() {
     year: "",
     notes: "",
   });
+  
   const [duplicateOpen, setDuplicateOpen] = useState(false);
-  const [duplicateForm, setDuplicateForm] = useState({
-    fromMonth: "",
-    fromYear: "",
-    toMonth: "",
-    toYear: "",
-    overwrite: false,
-  });
   const [filterMonth, setFilterMonth] = useState(
     (new Date().getMonth() + 1).toString()
   );
@@ -101,15 +80,6 @@ export default function FinanceHolding() {
   }
 
   function openDuplicateModal() {
-    const now = new Date();
-    const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    setDuplicateForm({
-      fromMonth: (prevMonth.getMonth() + 1).toString(),
-      fromYear: prevMonth.getFullYear().toString(),
-      toMonth: (now.getMonth() + 1).toString(),
-      toYear: now.getFullYear().toString(),
-      overwrite: false,
-    });
     setDuplicateOpen(true);
   }
 
@@ -168,104 +138,53 @@ export default function FinanceHolding() {
     }
   }
 
-  async function handleDuplicateSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
+  async function handleDuplicateSubmit(data: {
+    fromMonth: number;
+    fromYear: number;
+    toMonth: number;
+    toYear: number;
+    overwrite: boolean;
+  }) {
     try {
-      await duplicateHoldings({
-        fromMonth: parseInt(duplicateForm.fromMonth, 10),
-        fromYear: parseInt(duplicateForm.fromYear, 10),
-        toMonth: parseInt(duplicateForm.toMonth, 10),
-        toYear: parseInt(duplicateForm.toYear, 10),
-        overwrite: duplicateForm.overwrite,
-      });
+      await duplicateHoldings(data);
       setDuplicateOpen(false);
     } catch (error) {
       // Error handling is done in the store
     }
   }
 
-  async function handleFilterSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleFilter() {
     const month = parseInt(filterMonth, 10);
     const year = parseInt(filterYear, 10);
     await fetchHoldings({ month, year });
   }
 
-  const months = [
-    { value: "1", label: "January" },
-    { value: "2", label: "February" },
-    { value: "3", label: "March" },
-    { value: "4", label: "April" },
-    { value: "5", label: "May" },
-    { value: "6", label: "June" },
-    { value: "7", label: "July" },
-    { value: "8", label: "August" },
-    { value: "9", label: "September" },
-    { value: "10", label: "October" },
-    { value: "11", label: "November" },
-    { value: "12", label: "December" },
-  ];
-
   return (
-    <div className="p-8 space-y-6">
-      <HoldingHeader
-        onAddClick={openAddModal}
-        onDuplicateClick={openDuplicateModal}
-      />
+    <div className="p-8 space-y-8">
+      <div className="space-y-4">
+        <HoldingHeader
+          onAddClick={openAddModal}
+          onDuplicateClick={openDuplicateModal}
+        />
+        <div className="flex justify-end">
+          <HoldingFilter
+            month={filterMonth}
+            year={filterYear}
+            onMonthChange={setFilterMonth}
+            onYearChange={setFilterYear}
+            onFilter={handleFilter}
+          />
+        </div>
+      </div>
+
+      <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
 
       <Card>
         <CardHeader className="pb-4">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <CardTitle>Holdings Overview</CardTitle>
-              <CardDescription>
-                Review your investment performance for the selected period.
-              </CardDescription>
-            </div>
-            <form
-              onSubmit={handleFilterSubmit}
-              className="flex flex-wrap items-end gap-2"
-            >
-              <div className="w-35">
-                <Label htmlFor="filterMonth" className="sr-only">
-                  Month
-                </Label>
-                <Select
-                  value={filterMonth}
-                  onValueChange={(val) => setFilterMonth(val)}
-                >
-                  <SelectTrigger id="filterMonth">
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((m) => (
-                      <SelectItem key={m.value} value={m.value}>
-                        {m.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-25">
-                <Label htmlFor="filterYear" className="sr-only">
-                  Year
-                </Label>
-                <Input
-                  id="filterYear"
-                  type="number"
-                  min="1900"
-                  max="2100"
-                  value={filterYear}
-                  onChange={(e) => setFilterYear(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-              <Button type="submit" variant="secondary">
-                Filter
-              </Button>
-            </form>
-          </div>
+          <CardTitle>Holdings Overview</CardTitle>
+          <CardDescription>
+            Review your investment performance for the selected period.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <HoldingTable
@@ -288,119 +207,11 @@ export default function FinanceHolding() {
         onSubmit={handleSubmit}
       />
 
-      <Dialog open={duplicateOpen} onOpenChange={setDuplicateOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Duplicate holdings by month</DialogTitle>
-            <DialogDescription>
-              Copy holdings from one month/year to another. Existing data in the
-              target month can be overwritten.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleDuplicateSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="fromMonth">From month</Label>
-                <Select
-                  value={duplicateForm.fromMonth}
-                  onValueChange={(val) =>
-                    setDuplicateForm({ ...duplicateForm, fromMonth: val })
-                  }
-                >
-                  <SelectTrigger id="fromMonth">
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((m) => (
-                      <SelectItem key={m.value} value={m.value}>
-                        {m.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="fromYear">From year</Label>
-                <Input
-                  id="fromYear"
-                  type="number"
-                  min="1900"
-                  max="2100"
-                  value={duplicateForm.fromYear}
-                  onChange={(e) =>
-                    setDuplicateForm({
-                      ...duplicateForm,
-                      fromYear: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="toMonth">To month</Label>
-                <Select
-                  value={duplicateForm.toMonth}
-                  onValueChange={(val) =>
-                    setDuplicateForm({ ...duplicateForm, toMonth: val })
-                  }
-                >
-                  <SelectTrigger id="toMonth">
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((m) => (
-                      <SelectItem key={m.value} value={m.value}>
-                        {m.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="toYear">To year</Label>
-                <Input
-                  id="toYear"
-                  type="number"
-                  min="1900"
-                  max="2100"
-                  value={duplicateForm.toYear}
-                  onChange={(e) =>
-                    setDuplicateForm({
-                      ...duplicateForm,
-                      toYear: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-            </div>
-            <div className="flex items-center justify-between rounded-lg border p-3">
-              <div>
-                <p className="font-medium">Overwrite target month</p>
-                <p className="text-sm text-muted-foreground">
-                  Replace any existing holdings in the destination month/year.
-                </p>
-              </div>
-              <Switch
-                checked={duplicateForm.overwrite}
-                onCheckedChange={(checked) =>
-                  setDuplicateForm({ ...duplicateForm, overwrite: checked })
-                }
-              />
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => setDuplicateOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">Duplicate</Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <HoldingDuplicateModal
+        open={duplicateOpen}
+        onOpenChange={setDuplicateOpen}
+        onDuplicate={handleDuplicateSubmit}
+      />
     </div>
   );
 }
