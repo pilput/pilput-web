@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "storage.pilput.dev",
+        hostname: "storage.pilput.net",
+      },
+      {
+        protocol: "https",
+        hostname: "storage.pilput.me",
       },
       {
         protocol: "https",
