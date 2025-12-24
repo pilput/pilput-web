@@ -9,6 +9,7 @@ import HoldingFilter from "@/components/dashboard/finance-holding/HoldingFilter"
 import HoldingSummaryCards from "@/components/dashboard/finance-holding/HoldingSummaryCards";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PlusCircle, Copy } from "lucide-react";
 
 export default function FinanceHolding() {
   const {
@@ -60,7 +62,6 @@ export default function FinanceHolding() {
   }, [fetchHoldings, fetchHoldingTypes]);
 
   function openAddModal() {
-    const now = new Date();
     setEditingHolding(null);
     setFormData({
       name: "",
@@ -72,8 +73,8 @@ export default function FinanceHolding() {
       units: "",
       avg_buy_price: "",
       current_price: "",
-      month: (now.getMonth() + 1).toString(),
-      year: now.getFullYear().toString(),
+      month: filterMonth,
+      year: filterYear,
       notes: "",
     });
     setModalOpen(true);
@@ -161,19 +162,32 @@ export default function FinanceHolding() {
 
   return (
     <div className="p-8 space-y-8">
-      <div className="space-y-4">
-        <HoldingHeader
-          onAddClick={openAddModal}
-          onDuplicateClick={openDuplicateModal}
+      <HoldingHeader />
+
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <HoldingFilter
+          month={filterMonth}
+          year={filterYear}
+          onMonthChange={setFilterMonth}
+          onYearChange={setFilterYear}
+          onFilter={handleFilter}
         />
-        <div className="flex justify-end">
-          <HoldingFilter
-            month={filterMonth}
-            year={filterYear}
-            onMonthChange={setFilterMonth}
-            onYearChange={setFilterYear}
-            onFilter={handleFilter}
-          />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+            onClick={openDuplicateModal}
+          >
+            <Copy className="w-4 h-4" />
+            Duplicate Month
+          </Button>
+          <Button
+            className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+            onClick={openAddModal}
+          >
+            <PlusCircle className="w-4 h-4" />
+            Add Holding
+          </Button>
         </div>
       </div>
 
