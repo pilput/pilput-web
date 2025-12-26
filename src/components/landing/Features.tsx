@@ -61,7 +61,8 @@ const Features: React.FC = () => {
       id: "content-creation",
       icon: BookOpen,
       title: "Rich Content Creation",
-      description: "Create and share engaging blog posts with our powerful editor featuring markdown support, real-time preview, and collaborative writing tools.",
+      description:
+        "Create and share engaging blog posts with our powerful editor featuring markdown support, real-time preview, and collaborative writing tools.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-blue-500/10 via-transparent to-transparent" />
@@ -81,7 +82,8 @@ const Features: React.FC = () => {
       id: "ai-chat",
       icon: Bot,
       title: "AI-Powered Chat",
-      description: "Engage with our intelligent AI assistant. Get help with writing, research, brainstorming, and creative problem-solving in real-time.",
+      description:
+        "Engage with our intelligent AI assistant. Get help with writing, research, brainstorming, and creative problem-solving in real-time.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-purple-500/10 via-transparent to-transparent" />
@@ -101,7 +103,8 @@ const Features: React.FC = () => {
       id: "community",
       icon: Users,
       title: "Thriving Community",
-      description: "Join a vibrant community of writers, developers, and creators. Share knowledge, collaborate on projects, and build meaningful connections.",
+      description:
+        "Join a vibrant community of writers, developers, and creators. Share knowledge, collaborate on projects, and build meaningful connections.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-green-500/10 via-transparent to-transparent" />
@@ -121,7 +124,8 @@ const Features: React.FC = () => {
       id: "performance",
       icon: Zap,
       title: "Lightning Fast",
-      description: "Built with Next.js and optimized for performance. Experience blazing fast load times and seamless interactions across all devices.",
+      description:
+        "Built with Next.js and optimized for performance. Experience blazing fast load times and seamless interactions across all devices.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-yellow-500/10 via-transparent to-transparent" />
@@ -135,14 +139,17 @@ const Features: React.FC = () => {
       delay: 0.4,
       glowColor: "yellow",
       accentIcon: Zap,
-    }
+    },
   ];
 
-  const handleFeatureClick = useCallback((feature: Feature) => {
-    if (feature.href) {
-      router.push(feature.href);
-    }
-  }, [router]);
+  const handleFeatureClick = useCallback(
+    (feature: Feature) => {
+      if (feature.href) {
+        router.push(feature.href);
+      }
+    },
+    [router]
+  );
 
   return (
     <motion.section
@@ -152,10 +159,7 @@ const Features: React.FC = () => {
       style={{ opacity }}
     >
       {/* Enhanced Background with Parallax Effects */}
-      <motion.div
-        className="absolute inset-0 -z-10"
-        style={{ y: parallaxY }}
-      >
+      <motion.div className="absolute inset-0 -z-10" style={{ y: parallaxY }}>
         {/* Base pattern */}
         <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,rgba(240,240,240,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(240,240,240,0.3)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(26,26,26,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(26,26,26,0.3)_1px,transparent_1px)] bg-size-[4rem_4rem]">
           {/* Gradient orbs - Client-side only to prevent hydration issues */}
@@ -187,7 +191,7 @@ const Features: React.FC = () => {
               transition={{
                 duration: 3 + (i % 3),
                 repeat: Infinity,
-                delay: (i % 4),
+                delay: i % 4,
                 ease: "easeInOut",
               }}
             />
@@ -206,9 +210,9 @@ const Features: React.FC = () => {
               opacity: 1,
               transition: {
                 staggerChildren: 0.15,
-                delayChildren: 0.2
-              }
-            }
+                delayChildren: 0.2,
+              },
+            },
           }}
           className="text-center mb-16 sm:mb-20 lg:mb-24"
         >
@@ -222,9 +226,9 @@ const Features: React.FC = () => {
                 transition: {
                   duration: 0.6,
                   type: "spring",
-                  stiffness: 100
-                }
-              }
+                  stiffness: 100,
+                },
+              },
             }}
             className="inline-flex items-center gap-3 mb-6 sm:mb-8"
           >
@@ -241,7 +245,7 @@ const Features: React.FC = () => {
               Why Choose PILPUT
             </Badge>
           </motion.div>
-          
+
           <motion.h2
             id="features-heading"
             variants={{
@@ -253,9 +257,9 @@ const Features: React.FC = () => {
                   duration: 0.8,
                   delay: 0.2,
                   type: "spring",
-                  stiffness: 80
-                }
-              }
+                  stiffness: 80,
+                },
+              },
             }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 leading-tight"
           >
@@ -271,7 +275,7 @@ const Features: React.FC = () => {
               Modern Creators
             </motion.span>
           </motion.h2>
-          
+
           <motion.p
             variants={{
               hidden: { opacity: 0, y: 30 },
@@ -280,14 +284,15 @@ const Features: React.FC = () => {
                 y: 0,
                 transition: {
                   duration: 0.6,
-                  delay: 0.4
-                }
-              }
+                  delay: 0.4,
+                },
+              },
             }}
             className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light"
           >
-            Everything you need to create, share, and connect. Built with cutting-edge technology
-            and designed for the ultimate creative experience.
+            Everything you need to create, share, and connect. Built with
+            cutting-edge technology and designed for the ultimate creative
+            experience.
           </motion.p>
         </motion.header>
 
@@ -309,7 +314,11 @@ const Features: React.FC = () => {
                 <motion.div
                   key={feature.id}
                   initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isEven ? -50 : 50 }}
+                  animate={
+                    isInView
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: isEven ? -50 : 50 }
+                  }
                   transition={{ duration: 0.6, delay: feature.delay }}
                   role="listitem"
                   className={cn(
@@ -322,7 +331,11 @@ const Features: React.FC = () => {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={isInView ? { scale: 1 } : { scale: 0 }}
-                      transition={{ duration: 0.4, delay: feature.delay + 0.2, type: "spring" }}
+                      transition={{
+                        duration: 0.4,
+                        delay: feature.delay + 0.2,
+                        type: "spring",
+                      }}
                       className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary border-4 border-background dark:border-background shadow-xl shadow-primary/20 flex items-center justify-center"
                     >
                       <feature.icon
@@ -333,14 +346,18 @@ const Features: React.FC = () => {
                   </div>
 
                   {/* Content Card Side */}
-                  <div className={cn(
-                    "w-full lg:w-1/2 relative",
-                    "pl-24 sm:pl-32 lg:pl-0", // Mobile indentation
-                    isEven ? "lg:pr-16" : "lg:pl-16" // Desktop spacing
-                  )}>
+                  <div
+                    className={cn(
+                      "w-full lg:w-1/2 relative",
+                      "pl-24 sm:pl-32 lg:pl-0", // Mobile indentation
+                      isEven ? "lg:pr-16" : "lg:pl-16" // Desktop spacing
+                    )}
+                  >
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                      animate={
+                        isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                      }
                       transition={{ duration: 0.6, delay: feature.delay + 0.3 }}
                       className="w-full"
                     >
@@ -355,7 +372,9 @@ const Features: React.FC = () => {
                         <div className="z-10 p-4 sm:p-6 space-y-4">
                           <div className="flex items-center justify-between gap-3">
                             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary backdrop-blur-md">
-                              {feature.accentIcon && <feature.accentIcon className="h-4 w-4" />}
+                              {feature.accentIcon && (
+                                <feature.accentIcon className="h-4 w-4" />
+                              )}
                               {feature.stats}
                             </div>
                             <Badge
