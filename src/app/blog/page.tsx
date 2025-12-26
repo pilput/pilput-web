@@ -16,7 +16,7 @@ import {
   FileQuestion,
 } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstence3 } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 
 const postsPerPage = 10;
@@ -66,7 +66,7 @@ const Blog = () => {
           params.search = debouncedSearchQuery.trim();
         }
 
-        const { data } = await axiosInstence.get("/v1/posts", { params });
+        const { data } = await axiosInstence3.get("/v1/posts", { params });
         const response = data;
         if (response.data) {
           setPosts(response.data);
@@ -89,7 +89,9 @@ const Blog = () => {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await axiosInstence.get("/v1/tags");
+        const response = await axiosInstence3.get("/v1/tags");
+        console.log(response.data);
+        
         setTrendingTags(response.data.data.map((tag: any) => tag.name));
       } catch (error) {
         console.error("Error fetching tags:", error);
@@ -113,7 +115,7 @@ const Blog = () => {
       <div className="min-h-screen bg-background">
         {/* Hero / search */}
         <div className="relative overflow-hidden border-b border-border/70 bg-background/90 backdrop-blur">
-          <div className="absolute inset-0 bg-grid-slate-100/[0.08] dark:bg-grid-slate-800/[0.1] bg-[length:32px_32px]" />
+          <div className="absolute inset-0 bg-grid-slate-100/[0.08] dark:bg-grid-slate-800/[0.1] bg-size-[32px_32px]" />
           <div className="relative max-w-6xl mx-auto px-4 py-12 md:py-16">
             <div className="text-center mb-10 space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold border border-primary/20 shadow-sm">
