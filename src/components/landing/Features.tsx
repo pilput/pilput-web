@@ -292,10 +292,10 @@ const Features: React.FC = () => {
         </motion.header>
 
         {/* Enhanced Features Timeline */}
-        <div className="max-w-5xl mx-auto relative">
+        <div className="max-w-7xl mx-auto relative">
           {/* Enhanced Timeline Line with gradient */}
           <motion.div
-            className="absolute left-8 top-0 bottom-0 w-1 bg-linear-to-b from-primary via-primary/60 to-primary/20 hidden sm:block rounded-full"
+            className="absolute left-8 lg:left-1/2 top-0 bottom-0 w-1 bg-linear-to-b from-primary via-primary/60 to-primary/20 hidden sm:block rounded-full -translate-x-1/2"
             initial={{ scaleY: 0 }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
@@ -303,90 +303,101 @@ const Features: React.FC = () => {
           />
 
           <FeatureList role="list" aria-label="Platform features">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.id}
-                initial={{ opacity: 0, x: -50 }}
-                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-                transition={{ duration: 0.6, delay: feature.delay }}
-                role="listitem"
-                className="relative flex gap-4 sm:gap-6"
-              >
-                {/* Timeline Node */}
-                <div className="flex-shrink-0 relative">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={isInView ? { scale: 1 } : { scale: 0 }}
-                    transition={{ duration: 0.4, delay: feature.delay + 0.2, type: "spring" }}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary border-2 border-primary flex items-center justify-center"
-                  >
-                    <feature.icon
-                      className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground"
-                      aria-hidden="true"
-                    />
-                  </motion.div>
-                  
-                </div>
-
-                {/* Content Card */}
+            {features.map((feature, index) => {
+              const isEven = index % 2 === 0;
+              return (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ duration: 0.6, delay: feature.delay + 0.3 }}
-                  className="flex-1 pb-8"
+                  key={feature.id}
+                  initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isEven ? -50 : 50 }}
+                  transition={{ duration: 0.6, delay: feature.delay }}
+                  role="listitem"
+                  className={cn(
+                    "relative flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-0",
+                    isEven ? "lg:flex-row" : "lg:flex-row-reverse"
+                  )}
                 >
-                  <FeatureCard
-                    onClick={() => handleFeatureClick(feature)}
-                    aria-label={`${feature.title}: ${feature.description}`}
-                    aria-describedby={`feature-stats-${feature.id}`}
-                    className="h-auto min-h-[200px] sm:min-h-[220px]"
-                    glowColor={feature.glowColor}
-                  >
-                    {feature.background}
-                    <div className="z-10 p-4 sm:p-6 space-y-4">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                          {feature.accentIcon && <feature.accentIcon className="h-4 w-4" />}
-                          {feature.stats}
+                  {/* Timeline Node - Mobile: Left, Desktop: Center */}
+                  <div className="absolute left-8 lg:left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={isInView ? { scale: 1 } : { scale: 0 }}
+                      transition={{ duration: 0.4, delay: feature.delay + 0.2, type: "spring" }}
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary border-4 border-background dark:border-background shadow-xl shadow-primary/20 flex items-center justify-center"
+                    >
+                      <feature.icon
+                        className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground"
+                        aria-hidden="true"
+                      />
+                    </motion.div>
+                  </div>
+
+                  {/* Content Card Side */}
+                  <div className={cn(
+                    "w-full lg:w-1/2 relative",
+                    "pl-24 sm:pl-32 lg:pl-0", // Mobile indentation
+                    isEven ? "lg:pr-16" : "lg:pl-16" // Desktop spacing
+                  )}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                      transition={{ duration: 0.6, delay: feature.delay + 0.3 }}
+                      className="w-full"
+                    >
+                      <FeatureCard
+                        onClick={() => handleFeatureClick(feature)}
+                        aria-label={`${feature.title}: ${feature.description}`}
+                        aria-describedby={`feature-stats-${feature.id}`}
+                        className="h-auto min-h-[200px] sm:min-h-[220px]"
+                        glowColor={feature.glowColor}
+                      >
+                        {feature.background}
+                        <div className="z-10 p-4 sm:p-6 space-y-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary backdrop-blur-md">
+                              {feature.accentIcon && <feature.accentIcon className="h-4 w-4" />}
+                              {feature.stats}
+                            </div>
+                            <Badge
+                              id={`feature-stats-${feature.id}`}
+                              variant="secondary"
+                              className="text-xs font-semibold backdrop-blur-md bg-secondary/80"
+                            >
+                              {feature.cta}
+                            </Badge>
+                          </div>
+
+                          <div className="space-y-3">
+                            <h3 className="text-xl sm:text-2xl font-bold text-neutral-700 dark:text-neutral-300 leading-tight">
+                              {feature.title}
+                            </h3>
+                            <p className="text-base sm:text-lg text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                              {feature.description}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-3 pt-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="px-0 text-primary hover:text-primary hover:bg-transparent p-0"
+                              onClick={() => handleFeatureClick(feature)}
+                              aria-label={`Go to ${feature.title}`}
+                            >
+                              {feature.cta}
+                              <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <Badge
-                          id={`feature-stats-${feature.id}`}
-                          variant="secondary"
-                          className="text-xs font-semibold"
-                        >
-                          {feature.cta}
-                        </Badge>
-                      </div>
+                      </FeatureCard>
+                    </motion.div>
+                  </div>
 
-                      <div className="space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-bold text-neutral-700 dark:text-neutral-300 leading-tight">
-                          {feature.title}
-                        </h3>
-                        <p className="text-base sm:text-lg text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                          {feature.description}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-3 pt-1">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="px-0 text-primary hover:text-primary"
-                          onClick={() => handleFeatureClick(feature)}
-                          aria-label={`Go to ${feature.title}`}
-                        >
-                          {feature.cta}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                        <span className="text-xs text-muted-foreground">
-                          Tailored for fast onboarding and daily use.
-                        </span>
-                      </div>
-                    </div>
-                  </FeatureCard>
+                  {/* Empty Spacer Side for Desktop Balance */}
+                  <div className="hidden lg:block lg:w-1/2" />
                 </motion.div>
-              </motion.div>
-            ))}
+              );
+            })}
           </FeatureList>
         </div>
       </div>
