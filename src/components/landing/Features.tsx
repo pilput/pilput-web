@@ -240,7 +240,7 @@ const Features: React.FC = () => {
             </motion.div>
             <Badge
               variant="outline"
-              className="text-sm sm:text-base px-4 py-2 bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 text-primary font-medium"
+              className="text-sm sm:text-base px-4 py-2 bg-linear-to-r from-primary/10 to-primary/5 border-primary/20 text-primary font-medium"
             >
               Why Choose PILPUT
             </Badge>
@@ -265,7 +265,7 @@ const Features: React.FC = () => {
           >
             Powerful Features for{" "}
             <motion.span
-              className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent relative inline-block"
+              className="bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent relative inline-block"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
@@ -365,7 +365,7 @@ const Features: React.FC = () => {
                         onClick={() => handleFeatureClick(feature)}
                         aria-label={`${feature.title}: ${feature.description}`}
                         aria-describedby={`feature-stats-${feature.id}`}
-                        className="h-auto min-h-[200px] sm:min-h-[220px]"
+                        className="h-auto min-h-50 sm:min-h-55"
                         glowColor={feature.glowColor}
                       >
                         {feature.background}
