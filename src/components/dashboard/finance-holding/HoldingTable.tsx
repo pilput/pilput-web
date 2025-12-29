@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Holding } from "@/types/holding";
 import HoldingTableRow from "./HoldingTableRow";
 import HoldingTotalRow from "./HoldingTotalRow";
+import { useHoldingsStore } from "@/stores/holdingsStore";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 interface HoldingTableProps {
   holdings: Holding[];
@@ -26,14 +28,57 @@ export default function HoldingTable({
   toggleExpand,
   onEdit,
 }: HoldingTableProps) {
+  const { orderBy, orderDir, fetchHoldings } = useHoldingsStore();
+
+  const handleSort = (column: string) => {
+    const isAsc = orderBy === column && orderDir === "asc";
+    fetchHoldings({
+      orderBy: column,
+      orderDir: isAsc ? "desc" : "asc",
+    });
+  };
+
+  const SortIcon = ({ column }: { column: string }) => {
+    if (orderBy !== column) return <ArrowUpDown className="ml-2 h-4 w-4" />;
+    return orderDir === "asc" ? (
+      <ArrowUp className="ml-2 h-4 w-4" />
+    ) : (
+      <ArrowDown className="ml-2 h-4 w-4" />
+    );
+  };
+
   return (
     <div className="rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/60">
-            <TableHead className="font-semibold">Name</TableHead>
-            <TableHead className="font-semibold">Platform</TableHead>
-            <TableHead className="font-semibold">Type</TableHead>
+            <TableHead
+              className="font-semibold cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("name")}
+            >
+              <div className="flex items-center">
+                Name
+                <SortIcon column="name" />
+              </div>
+            </TableHead>
+            <TableHead
+              className="font-semibold cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("platform")}
+            >
+              <div className="flex items-center">
+                Platform
+                <SortIcon column="platform" />
+              </div>
+            </TableHead>
+            <TableHead
+              className="font-semibold cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("holding_type")}
+            >
+              <div className="flex items-center">
+                Type
+                <SortIcon column="holding_type" />
+              </div>
+            </TableHead>
             <TableHead className="font-semibold">Currency</TableHead>
             <TableHead className="font-semibold">Invested Amount</TableHead>
             <TableHead className="font-semibold">Current Value</TableHead>

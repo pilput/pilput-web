@@ -16,9 +16,16 @@ interface HoldingsState {
   expandedRows: Set<bigint>;
   selectedMonth: number;
   selectedYear: number;
+  orderBy: string;
+  orderDir: "asc" | "desc";
 
   // Actions
-  fetchHoldings: (params?: { month?: number; year?: number }) => Promise<void>;
+  fetchHoldings: (params?: {
+    month?: number;
+    year?: number;
+    orderBy?: string;
+    orderDir?: "asc" | "desc";
+  }) => Promise<void>;
   fetchHoldingTypes: () => Promise<void>;
   addHolding: (payload: any) => Promise<void>;
   updateHolding: (id: bigint, payload: any) => Promise<void>;
@@ -35,15 +42,24 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   expandedRows: new Set(),
   selectedMonth: new Date().getMonth() + 1,
   selectedYear: new Date().getFullYear(),
+  orderBy: "created_at",
+  orderDir: "desc",
 
   fetchHoldings: async (params) => {
     const now = new Date();
     const month = params?.month ?? get().selectedMonth ?? now.getMonth() + 1;
     const year = params?.year ?? get().selectedYear ?? now.getFullYear();
+    const orderBy = params?.orderBy ?? get().orderBy;
+    const orderDir = params?.orderDir ?? get().orderDir;
 
     set({ isLoading: true });
     try {
-      set({ selectedMonth: month, selectedYear: year });
+      set({
+        selectedMonth: month,
+        selectedYear: year,
+        orderBy,
+        orderDir,
+      });
 
       const { data } = await axiosInstence3.get("/v1/holdings", {
         headers: {
@@ -52,6 +68,8 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         params: {
           month,
           year,
+          sortBy: orderBy,
+          order: orderDir,
         },
       });
       const response = data as {
