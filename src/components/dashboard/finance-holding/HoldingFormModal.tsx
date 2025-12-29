@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,6 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Holding, HoldingType } from "@/types/holding";
 
 interface HoldingFormModalProps {
@@ -64,6 +67,7 @@ export default function HoldingFormModal({
   holdingTypes,
   onSubmit,
 }: HoldingFormModalProps) {
+  const [showFinancialDetails, setShowFinancialDetails] = useState(false);
   const platformOptions = [
     "Stockbit",
     "Bank Jago",
@@ -180,90 +184,124 @@ export default function HoldingFormModal({
 
           {/* Section 2: Financial Details */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Financial Details</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="invested_amount">Invested Amount <span className="text-red-500">*</span></Label>
-                <Input
-                  id="invested_amount"
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={formData.invested_amount}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      invested_amount: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="current_value">Current Value <span className="text-red-500">*</span></Label>
-                <Input
-                  id="current_value"
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={formData.current_value}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      current_value: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="units">Units</Label>
-                <Input
-                  id="units"
-                  type="number"
-                  step="0.00000001"
-                  placeholder="0"
-                  value={formData.units}
-                  onChange={(e) =>
-                    setFormData({ ...formData, units: e.target.value })
-                  }
-                />
-              </div>
-               <div className="grid grid-cols-2 gap-2">
-                 <div className="space-y-2">
-                  <Label htmlFor="avg_buy_price" className="text-xs">Avg Buy Price</Label>
-                  <Input
-                    id="avg_buy_price"
-                    type="number"
-                    step="0.00000001"
-                    placeholder="0.00"
-                    value={formData.avg_buy_price}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        avg_buy_price: e.target.value,
-                      })
-                    }
-                  />
-                 </div>
-                 <div className="space-y-2">
-                  <Label htmlFor="current_price" className="text-xs">Current Price</Label>
-                  <Input
-                    id="current_price"
-                    type="number"
-                    step="0.00000001"
-                    placeholder="0.00"
-                    value={formData.current_price}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        current_price: e.target.value,
-                      })
-                    }
-                  />
-                 </div>
-               </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowFinancialDetails(!showFinancialDetails)}
+              className="flex items-center justify-between w-full text-left group transition-all"
+            >
+              <h3 className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                Financial Details
+              </h3>
+              {showFinancialDetails ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </button>
+
+            <AnimatePresence>
+              {showFinancialDetails && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="invested_amount">
+                        Invested Amount <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="invested_amount"
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={formData.invested_amount}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            invested_amount: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="current_value">
+                        Current Value <span className="text-red-500">*</span>
+                      </Label>
+                      <Input
+                        id="current_value"
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={formData.current_value}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            current_value: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="units">Units</Label>
+                      <Input
+                        id="units"
+                        type="number"
+                        step="0.00000001"
+                        placeholder="0"
+                        value={formData.units}
+                        onChange={(e) =>
+                          setFormData({ ...formData, units: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="avg_buy_price" className="text-xs">
+                          Avg Buy Price
+                        </Label>
+                        <Input
+                          id="avg_buy_price"
+                          type="number"
+                          step="0.00000001"
+                          placeholder="0.00"
+                          value={formData.avg_buy_price}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              avg_buy_price: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="current_price" className="text-xs">
+                          Current Price
+                        </Label>
+                        <Input
+                          id="current_price"
+                          type="number"
+                          step="0.00000001"
+                          placeholder="0.00"
+                          value={formData.current_price}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              current_price: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <Separator />
