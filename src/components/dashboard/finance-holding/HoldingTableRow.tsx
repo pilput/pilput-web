@@ -45,8 +45,8 @@ export default function HoldingTableRow({
       <TableCell className="font-medium">{holding.name}</TableCell>
       <TableCell>{holding.platform}</TableCell>
       <TableCell>
-        <Badge className={getHoldingTypeColor(holding.holding_types.name)}>
-          {holding.holding_types.name}
+        <Badge className={getHoldingTypeColor(holding.holding_type.name)}>
+          {holding.holding_type.name}
         </Badge>
       </TableCell>
       <TableCell>{holding.currency}</TableCell>

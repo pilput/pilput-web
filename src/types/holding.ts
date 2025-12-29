@@ -24,6 +24,6 @@ export interface Holding {
   notes?: string;
   created_at: string;
   updated_at: string;
-  holding_types: HoldingType;
+  holding_type: HoldingType;
   users: any; // Assuming User type, but for now any
 }

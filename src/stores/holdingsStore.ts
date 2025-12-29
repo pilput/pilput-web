@@ -1,13 +1,13 @@
-import { create } from 'zustand';
-import { getToken, RemoveToken } from '@/utils/Auth';
-import { axiosInstence2 } from '@/utils/fetch';
-import { AxiosError } from 'axios';
-import toast from 'react-hot-toast';
-import type { Holding, HoldingType } from '@/types/holding';
+import { create } from "zustand";
+import { getToken, RemoveToken } from "@/utils/Auth";
+import { axiosInstence3 } from "@/utils/fetch";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import type { Holding, HoldingType } from "@/types/holding";
 import {
   duplicateHoldingSchema,
   type DuplicateHoldingPayload,
-} from '@/lib/validation';
+} from "@/lib/validation";
 
 interface HoldingsState {
   holdings: Holding[];
@@ -45,7 +45,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     try {
       set({ selectedMonth: month, selectedYear: year });
 
-      const { data } = await axiosInstence2.get('/v1/holdings', {
+      const { data } = await axiosInstence3.get("/v1/holdings", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -63,16 +63,16 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         set({ holdings: response.data });
       } else {
         console.log(response);
-        toast.error('Cannot connect to server');
+        toast.error("Cannot connect to server");
       }
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           RemoveToken();
-          window.location.href = '/login';
+          window.location.href = "/login";
         }
       }
-      toast.error('Cannot connect to server');
+      toast.error("Cannot connect to server");
     } finally {
       set({ isLoading: false });
     }
@@ -80,7 +80,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
   fetchHoldingTypes: async () => {
     try {
-      const { data } = await axiosInstence2.get('/v1/holdings/types', {
+      const { data } = await axiosInstence3.get("/v1/holdings/types", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -94,80 +94,79 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         set({ holdingTypes: response.data });
       }
     } catch (error) {
-      console.error('Failed to fetch holding types', error);
+      console.error("Failed to fetch holding types", error);
     }
   },
 
   addHolding: async (payload) => {
-    const toastId = toast.loading('Creating...');
+    const toastId = toast.loading("Creating...");
     try {
-      await axiosInstence2.post('/v1/holdings', payload, {
+      await axiosInstence3.post("/v1/holdings", payload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      toast.success('Holding created', { id: toastId });
-      
+      toast.success("Holding created", { id: toastId });
+
       // Refetch holdings after successful creation
       await get().fetchHoldings();
     } catch (error) {
-      toast.error('Failed to save holding', { id: toastId });
+      toast.error("Failed to save holding", { id: toastId });
       throw error;
     }
   },
 
   updateHolding: async (id, payload) => {
-    const toastId = toast.loading('Updating...');
+    const toastId = toast.loading("Updating...");
     try {
-      await axiosInstence2.put(`/v1/holdings/${id}`, payload, {
+      await axiosInstence3.put(`/v1/holdings/${id}`, payload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      toast.success('Holding updated', { id: toastId });
-      
+      toast.success("Holding updated", { id: toastId });
+
       // Refetch holdings after successful update
       await get().fetchHoldings();
     } catch (error) {
-      toast.error('Failed to save holding', { id: toastId });
+      toast.error("Failed to save holding", { id: toastId });
       throw error;
     }
   },
 
   deleteHolding: async (id) => {
-    const toastId = toast.loading('Deleting...');
+    const toastId = toast.loading("Deleting...");
     try {
-      await axiosInstence2.delete(`/v1/holdings/${id}`, {
+      await axiosInstence3.delete(`/v1/holdings/${id}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      toast.success('Holding deleted', { id: toastId });
-      
+      toast.success("Holding deleted", { id: toastId });
+
       // Refetch holdings after successful deletion
       await get().fetchHoldings();
     } catch (error) {
-      toast.error('Failed to delete holding', { id: toastId });
+      toast.error("Failed to delete holding", { id: toastId });
       throw error;
     }
   },
 
   duplicateHoldings: async (payload) => {
-    const toastId = toast.loading('Duplicating...');
+    const toastId = toast.loading("Duplicating...");
     try {
       const validatedPayload = duplicateHoldingSchema.parse(payload);
-      // Backend endpoint uses the plural `/holdings` namespace
-      await axiosInstence2.post('/v1/holdings/duplicate', validatedPayload, {
+      await axiosInstence3.post("/v1/holdings/duplicate", validatedPayload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      toast.success('Holdings duplicated', { id: toastId });
+      toast.success("Holdings duplicated", { id: toastId });
 
       // Refresh holdings to reflect the duplicated data
       await get().fetchHoldings();
     } catch (error) {
-      toast.error('Failed to duplicate holdings', { id: toastId });
+      toast.error("Failed to duplicate holdings", { id: toastId });
       throw error;
     }
   },
