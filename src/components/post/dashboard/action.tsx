@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { MoreHorizontal, Eye, Trash, Send, Edit } from "lucide-react";
 import {
