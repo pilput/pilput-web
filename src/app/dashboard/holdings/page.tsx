@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import HoldingHeader from "@/components/dashboard/finance-holding/HoldingHeader";
-import HoldingFormModal from "@/components/dashboard/finance-holding/HoldingFormModal";
-import HoldingTable from "@/components/dashboard/finance-holding/HoldingTable";
-import HoldingDuplicateModal from "@/components/dashboard/finance-holding/HoldingDuplicateModal";
-import HoldingFilter from "@/components/dashboard/finance-holding/HoldingFilter";
-import HoldingSummaryCards from "@/components/dashboard/finance-holding/HoldingSummaryCards";
+import HoldingHeader from "@/components/dashboard/holdings/HoldingHeader";
+import HoldingFormModal from "@/components/dashboard/holdings/HoldingFormModal";
+import HoldingTable from "@/components/dashboard/holdings/HoldingTable";
+import HoldingDuplicateModal from "@/components/dashboard/holdings/HoldingDuplicateModal";
+import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
+import HoldingSummaryCards from "@/components/dashboard/holdings/HoldingSummaryCards";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { PlusCircle, Copy } from "lucide-react";
 
-export default function FinanceHolding() {
+export default function HoldingsPage() {
   const {
     holdings,
     holdingTypes,

@@ -6,7 +6,7 @@ export default function HoldingHeader() {
     <div className="flex items-center justify-between">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-          Finance Holding
+          Finance Holdings
         </h1>
         <p className="text-muted-foreground">
           Manage your financial holdings and assets.

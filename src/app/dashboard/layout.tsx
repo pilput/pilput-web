@@ -72,8 +72,8 @@ const data = {
       title: "Finance",
       items: [
         {
-          title: "Holding",
-          url: "/dashboard/finance-holding",
+          title: "Holdings",
+          url: "/dashboard/holdings",
           icon: DollarSign,
         },
       ],
@@ -159,7 +159,7 @@ function dashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="min-h-[100vh] flex-1 rounded-xl border border-border/60 bg-card/70 md:min-h-min shadow-[0_24px_60px_-40px_rgba(0,0,0,0.45)]">
+          <div className="min-h-screen flex-1 rounded-xl border border-border/60 bg-card/70 md:min-h-min shadow-[0_24px_60px_-40px_rgba(0,0,0,0.45)]">
             <Card className="border-0 shadow-none bg-transparent">
               <CardContent className="p-6">
                 {children}
