@@ -15,12 +15,18 @@ import toast from "react-hot-toast";
 import { getToken } from "@/utils/Auth";
 import type { Post } from "@/types/post";
 
-const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () => void }) => {
+const ActionComponent = ({
+  post,
+  refetchPosts,
+}: {
+  post: Post;
+  refetchPosts: () => void;
+}) => {
   const onPublish = async () => {
     const id = toast.loading("Updating publish...");
     try {
       const response = await axiosInstence2.patch(
-        `/v1/posts/${post.id}/published`,
+        `/v1/posts/${post.id}`,
         {
           published: !post.published,
         },
@@ -37,7 +43,9 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await axiosInstence2.delete(`/v1/posts/${post.id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
+      const response = await axiosInstence2.delete(`/v1/posts/${post.id}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
       toast.success("Delete post", { id });
     } catch (error) {
       console.log(error);
@@ -65,7 +73,10 @@ const ActionComponent = ({ post, refetchPosts }: { post: Post, refetchPosts: () 
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href={`/dashboard/posts/edit/${post.id}`} className="flex items-center">
+          <Link
+            href={`/dashboard/posts/edit/${post.id}`}
+            className="flex items-center"
+          >
             <Edit className="mr-2 h-4 w-4" />
             <span>Edit</span>
           </Link>
