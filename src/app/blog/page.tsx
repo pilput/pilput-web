@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import { ArrowUp } from "lucide-react";
@@ -24,8 +23,6 @@ const Blog = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const { scrollY } = useScroll();
-
   const handleTagClick = useCallback((tag: string) => {
     setSearchQuery(tag);
     setCurrentPage(0);
@@ -43,11 +40,12 @@ const Blog = () => {
 
   // Track scroll position for scroll-to-top button
   useEffect(() => {
-    const unsubscribe = scrollY.on("change", (latest) => {
-      setShowScrollTop(latest > 400);
-    });
-    return unsubscribe;
-  }, [scrollY]);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Debounce search query
   useEffect(() => {
@@ -147,22 +145,15 @@ const Blog = () => {
         </div>
 
         {/* Scroll to Top Button */}
-        <AnimatePresence>
-          {showScrollTop && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={scrollToTop}
-              className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl border border-primary/60 backdrop-blur-md"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Scroll to top"
-            >
-              <ArrowUp className="w-5 h-5" />
-            </motion.button>
-          )}
-        </AnimatePresence>
+        {showScrollTop && (
+          <button
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl border border-primary/60 backdrop-blur-md"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </>
   );
