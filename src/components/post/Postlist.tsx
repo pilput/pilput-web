@@ -21,7 +21,7 @@ const Postlist = ({ post }: { post: Post }) => {
 
   return (
     <motion.article 
-      className="group relative bg-card dark:bg-gray-950 border border-border dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200"
+      className="group relative bg-card border border-border/70 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-primary/20 transition-all duration-300"
       whileHover={{ y: -2 }}
       layout
     >
@@ -49,7 +49,7 @@ const Postlist = ({ post }: { post: Post }) => {
             <Link href={`/${post.creator.username}`}>
               {post.creator?.image && (
                 <Image
-                  className="rounded-full object-cover border-2 border-border dark:border-gray-800"
+                  className="rounded-full object-cover border-2 border-border"
                   src={getProfilePicture(post.creator?.image)}
                   width={36}
                   height={36}
