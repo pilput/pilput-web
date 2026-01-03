@@ -8,16 +8,23 @@ import {
   Bookmark,
   Clock,
   Eye,
+  MessageCircle,
+  Share2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import type { Post } from "@/types/post";
 
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
-  const readTime = Math.ceil(plaintext.length / 800) || 1; // Better estimate
+  const readTime = Math.ceil(plaintext.length / 800) || 1;
 
   return (
-    <article className="group relative bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200">
+    <motion.article 
+      className="group relative bg-card dark:bg-gray-950 border border-border dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200"
+      whileHover={{ y: -2 }}
+      layout
+    >
       {/* Cover Image */}
       {post.photo_url && (
         <div className="relative overflow-hidden aspect-[16/9]">
@@ -32,63 +39,87 @@ const Postlist = ({ post }: { post: Post }) => {
         </div>
       )}
 
-      <div className="p-6">
+      <div className="p-6 space-y-5">
         {/* Author Info */}
-        <div className="flex items-center gap-3 mb-4">
-          <Link href={`/${post.creator.username}`} className="shrink-0 relative">
-            {post.creator?.image && (
-              <Image
-                className="rounded-full object-cover border border-gray-100 dark:border-gray-800"
-                src={getProfilePicture(post.creator?.image)}
-                width={32}
-                height={32}
-                alt={post.creator?.first_name || "Author"}
-              />
-            )}
-          </Link>
+        <div className="flex items-center gap-3">
+          <motion.div 
+            className="shrink-0 relative"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Link href={`/${post.creator.username}`}>
+              {post.creator?.image && (
+                <Image
+                  className="rounded-full object-cover border-2 border-border dark:border-gray-800"
+                  src={getProfilePicture(post.creator?.image)}
+                  width={36}
+                  height={36}
+                  alt={post.creator?.first_name || "Author"}
+                />
+              )}
+            </Link>
+          </motion.div>
           <div className="min-w-0 flex-1">
             <Link
               href={`/${post.creator.username}`}
-              className="block font-medium text-sm text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              className="block font-semibold text-sm text-foreground hover:text-primary transition-colors"
             >
               {post.creator?.first_name} {post.creator?.last_name}
             </Link>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {format(post.created_at, "MMM d, yyyy")} · {readTime} min read
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Clock className="w-3 h-3" />
+              {format(post.created_at, "MMM d, yyyy")}
+              <span className="w-1 h-1 bg-muted-foreground/40 rounded-full" />
+              <span>{readTime} min read</span>
             </div>
           </div>
+          <motion.button
+            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Bookmark className="w-4 h-4 text-muted-foreground" />
+          </motion.button>
         </div>
 
         {/* Title & Content */}
-        <div className="space-y-3 mb-4">
+        <div className="space-y-3">
           <Link
             href={`/${post.creator.username}/${post.slug}`}
-            className="block group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors"
+            className="block group"
           >
-            <h2 className="font-bold text-xl md:text-2xl text-gray-900 dark:text-white leading-tight line-clamp-3">
+            <motion.h2 
+              className="font-bold text-xl md:text-2xl text-foreground leading-tight line-clamp-3 group-hover:text-primary transition-colors"
+              whileHover={{ x: 2 }}
+            >
               {post.title}
-            </h2>
+            </motion.h2>
           </Link>
 
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3">
+          <p className="text-muted-foreground leading-relaxed line-clamp-3">
             {plaintext.slice(0, 150)}{plaintext.length > 150 ? '...' : ''}
           </p>
         </div>
 
         {/* Tags */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tags.slice(0, 3).map((tag) => (
-              <Link
+          <div className="flex flex-wrap gap-2">
+            {tags.slice(0, 3).map((tag, index) => (
+              <motion.div
                 key={tag.id}
-                href={`/tags/${tag.name}`}
-                className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.05, duration: 0.2 }}
+                whileHover={{ scale: 1.02 }}
               >
-                #{tag.name}
-              </Link>
+                <Link
+                  href={`/tags/${tag.name}`}
+                  className="inline-flex items-center px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full border border-primary/20 hover:bg-primary/20 transition-colors"
+                >
+                  #{tag.name}
+                </Link>
+              </motion.div>
             ))}
             {tags.length > 3 && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-muted-foreground px-2 py-1">
                 +{tags.length - 3} more
               </span>
             )}
@@ -96,23 +127,36 @@ const Postlist = ({ post }: { post: Post }) => {
         )}
 
         {/* Engagement */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-3 border-t border-border/50">
           <div className="flex items-center gap-4">
-            <button className="flex items-center gap-1.5 text-gray-500 hover:text-red-500 transition-colors text-sm">
+            <motion.button 
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-red-500 transition-colors text-sm"
+              whileHover={{ scale: 1.02 }}
+            >
               <Heart className="w-4 h-4" />
               {(post.likes_count ?? 0) > 0 && post.likes_count}
-            </button>
-            <button className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors text-sm">
-              <Bookmark className="w-4 h-4" />
-            </button>
+            </motion.button>
+            <motion.button 
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm"
+              whileHover={{ scale: 1.02 }}
+            >
+              <MessageCircle className="w-4 h-4" />
+              {post.comments_count || 0}
+            </motion.button>
+            <motion.button 
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm"
+              whileHover={{ scale: 1.02 }}
+            >
+              <Share2 className="w-4 h-4" />
+            </motion.button>
           </div>
-          <div className="flex items-center gap-1.5 text-gray-500 text-sm">
+          <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
             <Eye className="w-4 h-4" />
             {(post.view_count ?? 0) > 0 && post.view_count}
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };
 
