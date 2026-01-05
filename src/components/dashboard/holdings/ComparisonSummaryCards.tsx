@@ -1,4 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown, Wallet, DollarSign } from "lucide-react";
 import type { ComparisonSummary } from "@/types/holding-comparison";
 
@@ -7,13 +10,13 @@ interface ComparisonSummaryCardsProps {
 }
 
 export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsProps) {
-  const { summary, toMonth, fromMonth } = data;
+  const { summary, typeComparison, toMonth, fromMonth } = data;
 
   if (!summary || !toMonth || !fromMonth) {
     return null;
   }
 
-  const formatNumber = (num: number) => num.toLocaleString();
+  const formatNumber = (num: number) => num.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   const formatPercentage = (num: number) => `${num > 0 ? "+" : ""}${num.toFixed(2)}%`;
 
   const getChangeIcon = (value: number) => {
@@ -29,7 +32,7 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -127,6 +130,54 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
           </CardContent>
         </Card>
       </div>
+
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="type-breakdown" className="border rounded-lg bg-card px-4">
+          <AccordionTrigger className="hover:no-underline">
+            <span className="font-semibold text-sm">Performance by Asset Type</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="pt-2 pb-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="text-right">Current Value</TableHead>
+                    <TableHead className="text-right">Previous Value</TableHead>
+                    <TableHead className="text-right">Change</TableHead>
+                    <TableHead className="text-right">Change %</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {typeComparison && typeComparison.length > 0 ? (
+                    typeComparison.map((item) => (
+                      <TableRow key={item.name}>
+                        <TableCell className="font-medium">{item.name}</TableCell>
+                        <TableCell className="text-right">{formatNumber(item.to.current)}</TableCell>
+                        <TableCell className="text-right text-muted-foreground">{formatNumber(item.from.current)}</TableCell>
+                        <TableCell className={`text-right ${getChangeColor(item.currentValueDiff)}`}>
+                          {item.currentValueDiff > 0 ? "+" : ""}{formatNumber(item.currentValueDiff)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge variant="outline" className={getChangeColor(item.currentValueDiff)}>
+                            {formatPercentage(item.currentValueDiffPercentage)}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        No type breakdown available.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }
