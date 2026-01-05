@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown, Wallet, DollarSign } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown, Wallet, DollarSign, Layers } from "lucide-react";
 import type { ComparisonSummary } from "@/types/holding-comparison";
 
 interface ComparisonSummaryCardsProps {
@@ -33,7 +33,7 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Invested</CardTitle>
@@ -129,12 +129,36 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
             </p>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Holdings</CardTitle>
+            <Layers className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {summary.to.holdingsCount}
+            </div>
+             <div className="flex items-center gap-1 mt-1">
+              {getChangeIcon(summary.holdingsCountDiff)}
+              <span className={`text-xs font-medium ${getChangeColor(summary.holdingsCountDiff)}`}>
+                {summary.holdingsCountDiff > 0 ? "+" : ""}{summary.holdingsCountDiff}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Previous: {summary.from.holdingsCount}
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion type="multiple" defaultValue={["type-breakdown", "platform-breakdown"]} className="w-full space-y-4">
         <AccordionItem value="type-breakdown" className="border rounded-lg bg-card px-4">
           <AccordionTrigger className="hover:no-underline">
-            <span className="font-semibold text-sm">Performance by Asset Type</span>
+            <div className="flex items-center gap-2">
+              <Wallet className="w-4 h-4 text-primary" />
+              <span className="font-semibold text-sm">Performance by Asset Type</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="pt-2 pb-4">
@@ -142,7 +166,9 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
                 <TableHeader>
                   <TableRow>
                     <TableHead>Type</TableHead>
+                    <TableHead className="text-right">Invested</TableHead>
                     <TableHead className="text-right">Current Value</TableHead>
+                    <TableHead className="text-right">Profit/Loss</TableHead>
                     <TableHead className="text-right">Previous Value</TableHead>
                     <TableHead className="text-right">Change</TableHead>
                     <TableHead className="text-right">Change %</TableHead>
@@ -153,7 +179,11 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
                     typeComparison.map((item) => (
                       <TableRow key={item.name}>
                         <TableCell className="font-medium">{item.name}</TableCell>
-                        <TableCell className="text-right">{formatNumber(item.to.current)}</TableCell>
+                        <TableCell className="text-right">{formatNumber(item.to.invested)}</TableCell>
+                        <TableCell className="text-right font-bold">{formatNumber(item.to.current)}</TableCell>
+                        <TableCell className={`text-right ${getChangeColor(item.to.profitLoss)}`}>
+                          {item.to.profitLoss > 0 ? "+" : ""}{formatNumber(item.to.profitLoss)}
+                        </TableCell>
                         <TableCell className="text-right text-muted-foreground">{formatNumber(item.from.current)}</TableCell>
                         <TableCell className={`text-right ${getChangeColor(item.currentValueDiff)}`}>
                           {item.currentValueDiff > 0 ? "+" : ""}{formatNumber(item.currentValueDiff)}
@@ -167,8 +197,63 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground">
+                      <TableCell colSpan={7} className="text-center text-muted-foreground">
                         No type breakdown available.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="platform-breakdown" className="border rounded-lg bg-card px-4">
+          <AccordionTrigger className="hover:no-underline">
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-primary" />
+              <span className="font-semibold text-sm">Performance by Platform</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="pt-2 pb-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Platform</TableHead>
+                    <TableHead className="text-right">Invested</TableHead>
+                    <TableHead className="text-right">Current Value</TableHead>
+                     <TableHead className="text-right">Profit/Loss</TableHead>
+                    <TableHead className="text-right">Previous Value</TableHead>
+                    <TableHead className="text-right">Change</TableHead>
+                    <TableHead className="text-right">Change %</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.platformComparison && data.platformComparison.length > 0 ? (
+                    data.platformComparison.map((item) => (
+                      <TableRow key={item.name}>
+                        <TableCell className="font-medium">{item.name}</TableCell>
+                        <TableCell className="text-right">{formatNumber(item.to.invested)}</TableCell>
+                         <TableCell className="text-right font-bold">{formatNumber(item.to.current)}</TableCell>
+                         <TableCell className={`text-right ${getChangeColor(item.to.profitLoss)}`}>
+                          {item.to.profitLoss > 0 ? "+" : ""}{formatNumber(item.to.profitLoss)}
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground">{formatNumber(item.from.current)}</TableCell>
+                        <TableCell className={`text-right ${getChangeColor(item.currentValueDiff)}`}>
+                          {item.currentValueDiff > 0 ? "+" : ""}{formatNumber(item.currentValueDiff)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge variant="outline" className={getChangeColor(item.currentValueDiff)}>
+                            {formatPercentage(item.currentValueDiffPercentage)}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center text-muted-foreground">
+                        No platform breakdown available.
                       </TableCell>
                     </TableRow>
                   )}

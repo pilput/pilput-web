@@ -7,7 +7,6 @@ import HoldingTable from "@/components/dashboard/holdings/HoldingTable";
 import HoldingDuplicateModal from "@/components/dashboard/holdings/HoldingDuplicateModal";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
 import HoldingSummaryCards from "@/components/dashboard/holdings/HoldingSummaryCards";
-import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Copy } from "lucide-react";
+import { PlusCircle, Copy, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export default function HoldingsPage() {
   const {
@@ -166,6 +166,16 @@ export default function HoldingsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <HoldingHeader />
         <div className="flex flex-wrap items-center gap-2">
+           <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            asChild
+          >
+            <Link href="/dashboard/holdings/performance">
+                <TrendingUp className="w-4 h-4" />
+                Performance
+            </Link>
+          </Button>
           <Button
             variant="outline"
             className="flex items-center gap-2"
@@ -183,12 +193,6 @@ export default function HoldingsPage() {
           </Button>
         </div>
       </div>
-
-      <HoldingComparison
-        isOpen={true}
-        targetMonth={parseInt(filterMonth)}
-        targetYear={parseInt(filterYear)}
-      />
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-muted/30 p-4 rounded-lg border">
         <HoldingFilter

@@ -29,6 +29,7 @@ import {
   User,
   Menu,
   DollarSign,
+  TrendingUp,
 } from "lucide-react";
 
 const data = {
@@ -75,6 +76,11 @@ const data = {
           title: "Holdings",
           url: "/dashboard/holdings",
           icon: DollarSign,
+        },
+        {
+          title: "Performance",
+          url: "/dashboard/holdings/performance",
+          icon: TrendingUp,
         },
       ],
     },
