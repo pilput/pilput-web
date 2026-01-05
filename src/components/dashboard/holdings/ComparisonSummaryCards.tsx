@@ -29,16 +29,7 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-semibold">Monthly Comparison</h3>
-          <p className="text-sm text-muted-foreground">
-            Comparing {fromMonth.month}/{fromMonth.year} → {toMonth.month}/{toMonth.year}
-          </p>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -56,14 +47,14 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              From: {formatNumber(summary.from.totalInvested)}
+              Previous: {formatNumber(summary.from.totalInvested)}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current Value</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Current Value</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -77,44 +68,41 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              From: {formatNumber(summary.from.totalCurrentValue)}
+              Previous: {formatNumber(summary.from.totalCurrentValue)}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">P/L Change</CardTitle>
-            {summary.profitLossDiff > 0 ? (
+            <CardTitle className="text-sm font-medium">Total Profit/Loss</CardTitle>
+            {summary.to.totalProfitLoss > 0 ? (
               <ArrowUpRight className="h-4 w-4 text-green-500" />
-            ) : summary.profitLossDiff < 0 ? (
+            ) : summary.to.totalProfitLoss < 0 ? (
               <ArrowDownRight className="h-4 w-4 text-red-500" />
             ) : (
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             )}
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${getChangeColor(summary.profitLossDiff)}`}>
-              {summary.profitLossDiff > 0 ? "+" : ""}{formatNumber(summary.profitLossDiff)}
+            <div className={`text-2xl font-bold ${getChangeColor(summary.to.totalProfitLoss)}`}>
+              {summary.to.totalProfitLoss > 0 ? "+" : ""}{formatNumber(summary.to.totalProfitLoss)}
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs text-muted-foreground">
-                To: {formatNumber(summary.to.totalProfitLoss)}
-              </span>
-              <span className="text-xs text-muted-foreground">•</span>
-              <span className="text-xs text-muted-foreground">
-                From: {formatNumber(summary.from.totalProfitLoss)}
+            <div className="flex items-center gap-1 mt-1">
+              {getChangeIcon(summary.profitLossDiff)}
+              <span className={`text-xs font-medium ${getChangeColor(summary.profitLossDiff)}`}>
+                 {summary.profitLossDiff > 0 ? "+" : ""}{formatNumber(summary.profitLossDiff)} (Diff)
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Month-over-month profit/loss change
+              Previous: {formatNumber(summary.from.totalProfitLoss)}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current P/L %</CardTitle>
+            <CardTitle className="text-sm font-medium">Return on Investment</CardTitle>
             {summary.to.totalProfitLossPercentage >= 0 ? (
               <TrendingUp className="h-4 w-4 text-green-500" />
             ) : (
@@ -130,11 +118,11 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
                 {summary.to.totalProfitLossPercentage >= summary.from.totalProfitLossPercentage ? "↑" : "↓"}
               </span>
               <span className="text-xs text-muted-foreground">
-                From: {summary.from.totalProfitLossPercentage > 0 ? "+" : ""}{summary.from.totalProfitLossPercentage.toFixed(2)}%
+                Previous: {summary.from.totalProfitLossPercentage > 0 ? "+" : ""}{summary.from.totalProfitLossPercentage.toFixed(2)}%
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Current month return percentage
+              Current ROI vs Last Month
             </p>
           </CardContent>
         </Card>

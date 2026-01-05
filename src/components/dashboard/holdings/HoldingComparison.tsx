@@ -1,67 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { axiosInstence3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import ComparisonSummaryCards from "./ComparisonSummaryCards";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, RefreshCw, X, ArrowRight, CalendarDays } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2, TrendingUp, AlertCircle } from "lucide-react";
 import type { ComparisonSummary, CompareMonthsRequest } from "@/types/holding-comparison";
 
 interface HoldingComparisonProps {
   isOpen: boolean;
-  onClose: () => void;
+  targetMonth: number;
+  targetYear: number;
 }
 
-const months = [
-  { value: "1", label: "Jan" },
-  { value: "2", label: "Feb" },
-  { value: "3", label: "Mar" },
-  { value: "4", label: "Apr" },
-  { value: "5", label: "May" },
-  { value: "6", label: "Jun" },
-  { value: "7", label: "Jul" },
-  { value: "8", label: "Aug" },
-  { value: "9", label: "Sep" },
-  { value: "10", label: "Oct" },
-  { value: "11", label: "Nov" },
-  { value: "12", label: "Dec" },
-];
-
-const currentYear = new Date().getFullYear();
-const currentMonth = new Date().getMonth() + 1;
-
-const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
-
-export default function HoldingComparison({ isOpen, onClose }: HoldingComparisonProps) {
+export default function HoldingComparison({ isOpen, targetMonth, targetYear }: HoldingComparisonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<ComparisonSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
-  const [fromMonth, setFromMonth] = useState((currentMonth === 1 ? 12 : (currentMonth - 1)).toString());
-  const [fromYear, setFromYear] = useState((currentMonth === 1 ? (currentYear - 1) : currentYear).toString());
-  const [toMonth, setToMonth] = useState(currentMonth.toString());
-  const [toYear, setToYear] = useState(currentYear.toString());
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchComparison();
-    }
-  }, [isOpen]);
-
-  async function fetchComparison() {
+  const fetchComparison = useCallback(async () => {
+    if (!isOpen) return;
+    
     setIsLoading(true);
     setError(null);
 
     try {
+      // Calculate previous month
+      let fromMonth = targetMonth - 1;
+      let fromYear = targetYear;
+      
+      if (fromMonth === 0) {
+        fromMonth = 12;
+        fromYear = targetYear - 1;
+      }
+
       const params: CompareMonthsRequest = {
-        fromMonth: parseInt(fromMonth),
-        fromYear: parseInt(fromYear),
-        toMonth: parseInt(toMonth),
-        toYear: parseInt(toYear),
+        fromMonth,
+        fromYear,
+        toMonth: targetMonth,
+        toYear: targetYear,
       };
 
       const token = getToken();
@@ -76,143 +54,54 @@ export default function HoldingComparison({ isOpen, onClose }: HoldingComparison
       if (response.data.success) {
         setData(response.data.data);
       } else {
-        setError(response.data.message || "Failed to fetch comparison data");
+        setError(response.data.message || "Failed to fetch progress data");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [isOpen, targetMonth, targetYear]);
+
+  useEffect(() => {
+    fetchComparison();
+  }, [fetchComparison]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="space-y-6">
-      <Card className="border-muted-foreground/20 shadow-sm">
-        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-6 border-b bg-muted/5">
-          <div className="space-y-1">
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-primary" />
-              Performance Comparison
-            </CardTitle>
-            <CardDescription>
-              Analyze your portfolio performance between two time periods.
-            </CardDescription>
-          </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="-mt-1">
-            <X className="h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 bg-muted/10 p-4 rounded-xl border border-muted/20">
-            
-            {/* From Group */}
-            <div className="flex-1 w-full space-y-2">
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Base Period (From)</Label>
-              <div className="flex gap-2">
-                <Select value={fromMonth} onValueChange={setFromMonth}>
-                  <SelectTrigger className="w-full bg-background">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((month) => (
-                      <SelectItem key={month.value} value={month.value}>
-                        {month.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={fromYear} onValueChange={setFromYear}>
-                  <SelectTrigger className="w-[100px] bg-background">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {years.map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+    <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+      <div className="flex items-center gap-2 px-1">
+        <TrendingUp className="w-5 h-5 text-primary" />
+        <h2 className="text-lg font-semibold tracking-tight">Monthly Progress</h2>
+        <span className="text-sm text-muted-foreground ml-2">
+          (vs. previous month)
+        </span>
+      </div>
 
-            {/* Separator */}
-            <div className="flex items-center justify-center pt-6 lg:pt-4">
-              <div className="bg-primary/10 p-2 rounded-full">
-                 <ArrowRight className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-
-            {/* To Group */}
-            <div className="flex-1 w-full space-y-2">
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Comparison Period (To)</Label>
-               <div className="flex gap-2">
-                <Select value={toMonth} onValueChange={setToMonth}>
-                  <SelectTrigger className="w-full bg-background">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map((month) => (
-                      <SelectItem key={month.value} value={month.value}>
-                        {month.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={toYear} onValueChange={setToYear}>
-                  <SelectTrigger className="w-[100px] bg-background">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {years.map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Action */}
-            <div className="w-full lg:w-auto pt-6 lg:pt-4">
-              <Button onClick={fetchComparison} disabled={isLoading} className="w-full lg:w-auto min-w-[120px]">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Compare
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 text-red-600 rounded-md text-sm text-center">
-              {error}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {isLoading && !data && (
-        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary/50" />
-          <p className="text-muted-foreground animate-pulse">Gathering financial data...</p>
+      {isLoading ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} className="bg-muted/5 animate-pulse border-dashed">
+              <div className="h-32" />
+            </Card>
+          ))}
         </div>
-      )}
-
-      {!isLoading && data && data.summary && (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-           <ComparisonSummaryCards data={data} />
-        </div>
+      ) : error ? (
+        <Card className="border-red-200 bg-red-50/50">
+          <CardContent className="flex items-center justify-center py-6 gap-2 text-red-600 text-sm">
+            <AlertCircle className="w-4 h-4" />
+            {error}
+          </CardContent>
+        </Card>
+      ) : data && data.summary ? (
+        <ComparisonSummaryCards data={data} />
+      ) : (
+        <Card className="border-dashed bg-muted/5">
+          <CardContent className="flex items-center justify-center py-10 text-muted-foreground text-sm">
+            No comparison data available for this period.
+          </CardContent>
+        </Card>
       )}
     </div>
   );

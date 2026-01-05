@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Copy, BarChart2 } from "lucide-react";
+import { PlusCircle, Copy } from "lucide-react";
 
 export default function HoldingsPage() {
   const {
@@ -50,7 +50,6 @@ export default function HoldingsPage() {
   });
   
   const [duplicateOpen, setDuplicateOpen] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
   const [filterMonth, setFilterMonth] = useState(
     (new Date().getMonth() + 1).toString()
   );
@@ -168,14 +167,6 @@ export default function HoldingsPage() {
         <HoldingHeader />
         <div className="flex flex-wrap items-center gap-2">
           <Button
-            variant={showComparison ? "secondary" : "outline"}
-            className="flex items-center gap-2"
-            onClick={() => setShowComparison(!showComparison)}
-          >
-            <BarChart2 className="w-4 h-4" />
-            {showComparison ? "Hide Comparison" : "Compare"}
-          </Button>
-          <Button
             variant="outline"
             className="flex items-center gap-2"
             onClick={openDuplicateModal}
@@ -203,16 +194,17 @@ export default function HoldingsPage() {
         />
       </div>
 
-      <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
-
-      {showComparison && (
-        <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+      <div className="space-y-8">
+        <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
+        
+        <div className="border-t pt-8">
           <HoldingComparison
             isOpen={true}
-            onClose={() => setShowComparison(false)}
+            targetMonth={parseInt(filterMonth)}
+            targetYear={parseInt(filterYear)}
           />
         </div>
-      )}
+      </div>
 
       <Card className="shadow-sm">
         <CardHeader className="border-b bg-muted/10 pb-4">
