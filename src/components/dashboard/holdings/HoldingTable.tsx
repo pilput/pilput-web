@@ -80,8 +80,24 @@ export default function HoldingTable({
               </div>
             </TableHead>
             <TableHead className="font-semibold">Currency</TableHead>
-            <TableHead className="font-semibold">Invested Amount</TableHead>
-            <TableHead className="font-semibold">Current Value</TableHead>
+            <TableHead
+              className="font-semibold cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("invested_amount")}
+            >
+              <div className="flex items-center">
+                Invested Amount
+                <SortIcon column="invested_amount" />
+              </div>
+            </TableHead>
+            <TableHead
+              className="font-semibold cursor-pointer hover:text-foreground transition-colors"
+              onClick={() => handleSort("current_value")}
+            >
+              <div className="flex items-center">
+                Current Value
+                <SortIcon column="current_value" />
+              </div>
+            </TableHead>
             <TableHead className="font-semibold">Realized Value</TableHead>
             <TableHead className="font-semibold">Realized %</TableHead>
             <TableHead className="font-semibold">Month</TableHead>

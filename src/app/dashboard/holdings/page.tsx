@@ -7,6 +7,7 @@ import HoldingTable from "@/components/dashboard/holdings/HoldingTable";
 import HoldingDuplicateModal from "@/components/dashboard/holdings/HoldingDuplicateModal";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
 import HoldingSummaryCards from "@/components/dashboard/holdings/HoldingSummaryCards";
+import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import type { Holding } from "@/types/holding";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Copy } from "lucide-react";
+import { PlusCircle, Copy, BarChart2 } from "lucide-react";
 
 export default function HoldingsPage() {
   const {
@@ -49,6 +50,7 @@ export default function HoldingsPage() {
   });
   
   const [duplicateOpen, setDuplicateOpen] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
   const [filterMonth, setFilterMonth] = useState(
     (new Date().getMonth() + 1).toString()
   );
@@ -161,28 +163,28 @@ export default function HoldingsPage() {
   }
 
   return (
-    <div className="p-8 space-y-8">
-      <HoldingHeader />
-
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <HoldingFilter
-          month={filterMonth}
-          year={filterYear}
-          onMonthChange={setFilterMonth}
-          onYearChange={setFilterYear}
-          onFilter={handleFilter}
-        />
-        <div className="flex items-center gap-2">
+    <div className="container mx-auto p-4 md:p-8 space-y-8 max-w-7xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <HoldingHeader />
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant={showComparison ? "secondary" : "outline"}
+            className="flex items-center gap-2"
+            onClick={() => setShowComparison(!showComparison)}
+          >
+            <BarChart2 className="w-4 h-4" />
+            {showComparison ? "Hide Comparison" : "Compare"}
+          </Button>
           <Button
             variant="outline"
-            className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+            className="flex items-center gap-2"
             onClick={openDuplicateModal}
           >
             <Copy className="w-4 h-4" />
-            Duplicate Month
+            Duplicate
           </Button>
           <Button
-            className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+            className="flex items-center gap-2"
             onClick={openAddModal}
           >
             <PlusCircle className="w-4 h-4" />
@@ -191,16 +193,39 @@ export default function HoldingsPage() {
         </div>
       </div>
 
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-muted/30 p-4 rounded-lg border">
+        <HoldingFilter
+          month={filterMonth}
+          year={filterYear}
+          onMonthChange={setFilterMonth}
+          onYearChange={setFilterYear}
+          onFilter={handleFilter}
+        />
+      </div>
+
       <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
 
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle>Holdings Overview</CardTitle>
-          <CardDescription>
-            Review your investment performance for the selected period.
-          </CardDescription>
+      {showComparison && (
+        <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+          <HoldingComparison
+            isOpen={true}
+            onClose={() => setShowComparison(false)}
+          />
+        </div>
+      )}
+
+      <Card className="shadow-sm">
+        <CardHeader className="border-b bg-muted/10 pb-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Holdings Overview</CardTitle>
+              <CardDescription className="mt-1">
+                Review your investment performance for the selected period.
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <HoldingTable
             holdings={holdings}
             isLoading={isLoading}
