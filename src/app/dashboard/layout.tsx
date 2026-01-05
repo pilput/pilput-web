@@ -60,16 +60,6 @@ const data = {
       ],
     },
     {
-      title: "Workspace",
-      items: [
-        {
-          title: "My Workspace",
-          url: "/dashboard/workspace",
-          icon: FolderOpen,
-        },
-      ],
-    },
-    {
       title: "Finance",
       items: [
         {
