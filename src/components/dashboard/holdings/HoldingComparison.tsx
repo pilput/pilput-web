@@ -73,7 +73,7 @@ export default function HoldingComparison({ isOpen, targetMonth, targetYear }: H
     <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
       <div className="flex items-center gap-2 px-1">
         <TrendingUp className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold tracking-tight">Monthly Progress</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Monthly Performance</h2>
         <span className="text-sm text-muted-foreground ml-2">
           (vs. previous month)
         </span>

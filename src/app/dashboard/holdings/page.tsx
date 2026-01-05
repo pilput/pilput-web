@@ -184,6 +184,12 @@ export default function HoldingsPage() {
         </div>
       </div>
 
+      <HoldingComparison
+        isOpen={true}
+        targetMonth={parseInt(filterMonth)}
+        targetYear={parseInt(filterYear)}
+      />
+
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-muted/30 p-4 rounded-lg border">
         <HoldingFilter
           month={filterMonth}
@@ -195,14 +201,9 @@ export default function HoldingsPage() {
       </div>
 
       <div className="space-y-8">
-        <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
-        
-        <div className="border-t pt-8">
-          <HoldingComparison
-            isOpen={true}
-            targetMonth={parseInt(filterMonth)}
-            targetYear={parseInt(filterYear)}
-          />
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight mb-4 px-1">Portfolio Summary</h2>
+          <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
         </div>
       </div>
 
@@ -210,7 +211,7 @@ export default function HoldingsPage() {
         <CardHeader className="border-b bg-muted/10 pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Holdings Overview</CardTitle>
+              <CardTitle>Holdings Inventory</CardTitle>
               <CardDescription className="mt-1">
                 Review your investment performance for the selected period.
               </CardDescription>
