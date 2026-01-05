@@ -164,6 +164,44 @@ export default function HoldingFormModal({
                   className="uppercase"
                 />
               </div>
+              <div className="space-y-2 col-span-2 md:col-span-1">
+                <Label htmlFor="invested_amount">
+                  Invested Amount <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="invested_amount"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.invested_amount}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      invested_amount: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
+              <div className="space-y-2 col-span-2 md:col-span-1">
+                <Label htmlFor="current_value">
+                  Current Value <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="current_value"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.current_value}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      current_value: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </div>
               <div className="space-y-2 col-span-2">
                 <Label htmlFor="notes">Notes</Label>
                 <Textarea
@@ -209,44 +247,6 @@ export default function HoldingFormModal({
                   className="overflow-hidden"
                 >
                   <div className="grid grid-cols-2 gap-4 pt-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="invested_amount">
-                        Invested Amount <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        id="invested_amount"
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        value={formData.invested_amount}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            invested_amount: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="current_value">
-                        Current Value <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        id="current_value"
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        value={formData.current_value}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            current_value: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="units">Units</Label>
                       <Input
