@@ -16,6 +16,7 @@ export interface MonthlySummary {
   totalCurrentValue: number;
   totalProfitLoss: number;
   totalProfitLossPercentage: number;
+  holdingsCount: number;
   typeBreakdown: BreakdownItem[];
   platformBreakdown: BreakdownItem[];
 }
@@ -39,6 +40,7 @@ export interface ComparisonSummary {
     investedDiff: number;
     currentValueDiff: number;
     profitLossDiff: number;
+    holdingsCountDiff: number;
     investedDiffPercentage: number;
     currentValueDiffPercentage: number;
   };
