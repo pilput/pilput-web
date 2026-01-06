@@ -26,7 +26,7 @@ export default function PerformancePage() {
   }, [hideValues]);
 
   return (
-    <div className="container mx-auto p-4 md:p-8 space-y-8 max-w-7xl">
+    <div className="container mx-auto p-4 md:p-8 space-y-8">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>

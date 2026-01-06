@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -10,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Filter } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
 
 interface HoldingFilterProps {
   month: string;
@@ -47,44 +47,95 @@ export default function HoldingFilter({
     onFilter();
   };
 
+  const currentMonthIndex = useMemo(() => parseInt(month) - 1, [month]);
+  const currentYear = useMemo(() => parseInt(year), [year]);
+
+  const handlePreviousMonth = () => {
+    let newMonth = currentMonthIndex - 1;
+    let newYear = currentYear;
+
+    if (newMonth < 0) {
+      newMonth = 11;
+      newYear -= 1;
+    }
+
+    onMonthChange((newMonth + 1).toString());
+    onYearChange(newYear.toString());
+    setTimeout(() => onFilter(), 0);
+  };
+
+  const handleNextMonth = () => {
+    let newMonth = currentMonthIndex + 1;
+    let newYear = currentYear;
+
+    if (newMonth > 11) {
+      newMonth = 0;
+      newYear += 1;
+    }
+
+    onMonthChange((newMonth + 1).toString());
+    onYearChange(newYear.toString());
+    setTimeout(() => onFilter(), 0);
+  };
+
+  const handleMonthChange = (value: string) => {
+    onMonthChange(value);
+  };
+
+  const handleYearChange = (value: string) => {
+    onYearChange(value);
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex items-center gap-3"
-    >
-      <div className="flex items-center gap-2">
-        <Label htmlFor="filterMonth" className="text-sm font-medium whitespace-nowrap">
-          Period:
-        </Label>
-        <div className="w-[140px]">
-          <Select value={month} onValueChange={onMonthChange}>
-            <SelectTrigger id="filterMonth" className="h-9 bg-background">
-              <SelectValue placeholder="Month" />
-            </SelectTrigger>
-            <SelectContent>
-              {months.map((m) => (
-                <SelectItem key={m.value} value={m.value}>
-                  {m.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div className="w-[100px]">
-        <Input
-          id="filterYear"
-          type="number"
-          min="1900"
-          max="2100"
-          value={year}
-          onChange={(e) => onYearChange(e.target.value)}
-          className="h-9 bg-background"
-        />
-      </div>
-      <Button type="submit" size="sm" variant="secondary" className="h-9 px-4 gap-2">
-        <Filter className="w-3.5 h-3.5" />
-        Apply Filter
+    <form onSubmit={handleSubmit} className="flex items-center gap-2 w-full">
+      <Button
+        type="button"
+        variant="outline"
+        size="icon-sm"
+        onClick={handlePreviousMonth}
+        className="h-9 w-9 shrink-0"
+        title="Previous month"
+      >
+        <ChevronLeft className="w-4 h-4" />
+      </Button>
+
+      <Select value={month} onValueChange={handleMonthChange}>
+        <SelectTrigger id="filterMonth" className="w-[160px] h-9">
+          <SelectValue placeholder="Month" />
+        </SelectTrigger>
+        <SelectContent>
+          {months.map((m) => (
+            <SelectItem key={m.value} value={m.value}>
+              {m.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Input
+        id="filterYear"
+        type="number"
+        min="1900"
+        max="2100"
+        value={year}
+        onChange={(e) => handleYearChange(e.target.value)}
+        className="w-[100px] h-9 text-center"
+        placeholder="Year"
+      />
+
+      <Button
+        type="button"
+        variant="outline"
+        size="icon-sm"
+        onClick={handleNextMonth}
+        className="h-9 w-9 shrink-0"
+        title="Next month"
+      >
+        <ChevronRight className="w-4 h-4" />
+      </Button>
+
+      <Button type="submit" size="sm" variant="default" className="h-9 px-4">
+        Apply
       </Button>
     </form>
   );

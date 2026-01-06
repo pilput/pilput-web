@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 import type { ComparisonItem } from "@/types/holding-comparison";
+import { formatCurrency } from "@/lib/utils";
 
 interface ComparisonTableProps {
   data: ComparisonItem[];
@@ -9,7 +10,9 @@ interface ComparisonTableProps {
 }
 
 export default function ComparisonTable({ data, title }: ComparisonTableProps) {
-  const formatNumber = (num: number) => num.toLocaleString();
+  // Default to IDR, but could be made configurable
+  const defaultCurrency = "IDR";
+  const formatNumber = (num: number) => formatCurrency(num, defaultCurrency, { showSymbol: false });
   const formatPercentage = (num: number) => `${num > 0 ? "+" : ""}${num.toFixed(2)}%`;
 
   const getChangeIcon = (value: number) => {
@@ -48,22 +51,30 @@ export default function ComparisonTable({ data, title }: ComparisonTableProps) {
             {data.map((item) => (
               <TableRow key={item.name}>
                 <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="text-right">{formatNumber(item.to.invested)}</TableCell>
-                <TableCell className="text-right">{formatNumber(item.to.current)}</TableCell>
-                <TableCell className={`text-right ${getChangeColor(item.to.profitLoss)}`}>
-                  {item.to.profitLoss > 0 ? "+" : ""}{formatNumber(item.to.profitLoss)}
+                <TableCell className="text-right font-mono">
+                  {formatCurrency(item.to.invested, defaultCurrency, { showSymbol: false })}
+                </TableCell>
+                <TableCell className="text-right font-mono">
+                  {formatCurrency(item.to.current, defaultCurrency, { showSymbol: false })}
+                </TableCell>
+                <TableCell className={`text-right font-mono ${getChangeColor(item.to.profitLoss)}`}>
+                  {item.to.profitLoss > 0 ? "+" : ""}{formatCurrency(Math.abs(item.to.profitLoss), defaultCurrency, { showSymbol: false })}
                   <span className="ml-1">({formatPercentage(item.to.profitLossPercentage)})</span>
                 </TableCell>
-                <TableCell className="text-right text-muted-foreground">{formatNumber(item.from.invested)}</TableCell>
-                <TableCell className="text-right text-muted-foreground">{formatNumber(item.from.current)}</TableCell>
-                <TableCell className={`text-right text-muted-foreground ${getChangeColor(item.from.profitLoss)}`}>
-                  {item.from.profitLoss > 0 ? "+" : ""}{formatNumber(item.from.profitLoss)}
+                <TableCell className="text-right text-muted-foreground font-mono">
+                  {formatCurrency(item.from.invested, defaultCurrency, { showSymbol: false })}
+                </TableCell>
+                <TableCell className="text-right text-muted-foreground font-mono">
+                  {formatCurrency(item.from.current, defaultCurrency, { showSymbol: false })}
+                </TableCell>
+                <TableCell className={`text-right text-muted-foreground font-mono ${getChangeColor(item.from.profitLoss)}`}>
+                  {item.from.profitLoss > 0 ? "+" : ""}{formatCurrency(Math.abs(item.from.profitLoss), defaultCurrency, { showSymbol: false })}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
                     {getChangeIcon(item.investedDiff)}
-                    <span className={`font-medium ${getChangeColor(item.investedDiff)}`}>
-                      {formatNumber(item.investedDiff)}
+                    <span className={`font-medium font-mono ${getChangeColor(item.investedDiff)}`}>
+                      {item.investedDiff > 0 ? "+" : ""}{formatCurrency(Math.abs(item.investedDiff), defaultCurrency, { showSymbol: false })}
                     </span>
                   </div>
                   <span className={`text-xs ${getChangeColor(item.investedDiffPercentage)}`}>
@@ -73,8 +84,8 @@ export default function ComparisonTable({ data, title }: ComparisonTableProps) {
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
                     {getChangeIcon(item.currentValueDiff)}
-                    <span className={`font-medium ${getChangeColor(item.currentValueDiff)}`}>
-                      {formatNumber(item.currentValueDiff)}
+                    <span className={`font-medium font-mono ${getChangeColor(item.currentValueDiff)}`}>
+                      {item.currentValueDiff > 0 ? "+" : ""}{formatCurrency(Math.abs(item.currentValueDiff), defaultCurrency, { showSymbol: false })}
                     </span>
                   </div>
                   <span className={`text-xs ${getChangeColor(item.currentValueDiffPercentage)}`}>

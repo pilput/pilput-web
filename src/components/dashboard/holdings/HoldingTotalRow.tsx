@@ -1,5 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { Holding } from "@/types/holding";
+import { formatCurrency } from "@/lib/utils";
 
 interface HoldingTotalRowProps {
   holdings: Holding[];
@@ -19,6 +20,19 @@ export default function HoldingTotalRow({ holdings, hideValues = false }: Holdin
   const totalPercent =
     totalInvested > 0 ? ((totalCurrent - totalInvested) / totalInvested) * 100 : 0;
 
+  // Get the most common currency from holdings, default to IDR
+  const mostCommonCurrency =
+    holdings.length > 0
+      ? holdings.reduce((acc, holding) => {
+          acc[holding.currency] = (acc[holding.currency] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>)
+      : {};
+  const primaryCurrency =
+    Object.keys(mostCommonCurrency).length > 0
+      ? Object.entries(mostCommonCurrency).sort((a, b) => b[1] - a[1])[0][0]
+      : "IDR";
+
   const maskValue = () => "••••••";
 
   return (
@@ -26,10 +40,14 @@ export default function HoldingTotalRow({ holdings, hideValues = false }: Holdin
       <TableCell colSpan={4} className="text-right font-bold">
         Total
       </TableCell>
-      <TableCell className="font-bold">{hideValues ? maskValue() : totalInvested.toLocaleString()}</TableCell>
-      <TableCell className="font-bold">{hideValues ? maskValue() : totalCurrent.toLocaleString()}</TableCell>
+      <TableCell className="font-bold font-mono">
+        {hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency, { showSymbol: false })}
+      </TableCell>
+      <TableCell className="font-bold font-mono">
+        {hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency, { showSymbol: false })}
+      </TableCell>
       <TableCell
-        className={`font-bold ${
+        className={`font-bold font-mono ${
           hideValues
             ? ""
             : totalRealized > 0
@@ -39,7 +57,9 @@ export default function HoldingTotalRow({ holdings, hideValues = false }: Holdin
             : "text-gray-600"
         }`}
       >
-        {hideValues ? maskValue() : totalRealized.toLocaleString()}
+        {hideValues
+          ? maskValue()
+          : `${totalRealized > 0 ? "+" : ""}${formatCurrency(Math.abs(totalRealized), primaryCurrency, { showSymbol: false })}`}
       </TableCell>
       <TableCell
         className={`font-bold ${

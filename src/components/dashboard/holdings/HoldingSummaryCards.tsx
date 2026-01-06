@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDownRight, ArrowUpRight, DollarSign, Wallet, TrendingUp } from "lucide-react";
 import type { Holding } from "@/types/holding";
+import { formatCurrency } from "@/lib/utils";
 
 interface HoldingSummaryCardsProps {
   holdings: Holding[];
@@ -24,6 +25,19 @@ export default function HoldingSummaryCards({
   const totalRealized = totalCurrent - totalInvested;
   const totalPercent =
     totalInvested > 0 ? ((totalCurrent - totalInvested) / totalInvested) * 100 : 0;
+
+  // Get the most common currency from holdings, default to IDR
+  const mostCommonCurrency =
+    holdings.length > 0
+      ? holdings.reduce((acc, holding) => {
+          acc[holding.currency] = (acc[holding.currency] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>)
+      : {};
+  const primaryCurrency =
+    Object.keys(mostCommonCurrency).length > 0
+      ? Object.entries(mostCommonCurrency).sort((a, b) => b[1] - a[1])[0][0]
+      : "IDR";
 
   const maskValue = () => "••••••";
 
@@ -54,8 +68,8 @@ export default function HoldingSummaryCards({
           <Wallet className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {hideValues ? maskValue() : totalInvested.toLocaleString()}
+          <div className="text-2xl font-bold font-mono">
+            {hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency)}
           </div>
           <p className="text-xs text-muted-foreground">
             Initial capital deployed
@@ -68,8 +82,8 @@ export default function HoldingSummaryCards({
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {hideValues ? maskValue() : totalCurrent.toLocaleString()}
+          <div className="text-2xl font-bold font-mono">
+            {hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency)}
           </div>
           <p className="text-xs text-muted-foreground">
             Market value of holdings
@@ -87,11 +101,13 @@ export default function HoldingSummaryCards({
         </CardHeader>
         <CardContent>
           <div
-            className={`text-2xl font-bold ${
+            className={`text-2xl font-bold font-mono ${
               hideValues ? "" : totalRealized >= 0 ? "text-green-600" : "text-red-600"
             }`}
           >
-            {hideValues ? maskValue() : `${totalRealized > 0 ? "+" : ""}${totalRealized.toLocaleString()}`}
+            {hideValues
+              ? maskValue()
+              : `${totalRealized > 0 ? "+" : ""}${formatCurrency(Math.abs(totalRealized), primaryCurrency)}`}
           </div>
           <p className="text-xs text-muted-foreground">
             Unrealized profit/loss

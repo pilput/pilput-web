@@ -177,7 +177,7 @@ export default function HoldingsPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8 space-y-8 max-w-7xl">
+    <div className="container mx-auto p-4 md:p-8 space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <HoldingHeader />
         <div className="flex flex-wrap items-center gap-2">

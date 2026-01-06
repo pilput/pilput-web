@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Holding } from "@/types/holding";
 import HoldingActionComponent from "./action";
 import HoldingExpandedRow from "./HoldingExpandedRow";
+import { formatCurrency } from "@/lib/utils";
 
 function getHoldingTypeColor(typeName: string) {
   const colors: Record<string, string> = {
@@ -53,11 +54,15 @@ export default function HoldingTableRow({
           {holding.holding_type.name}
         </Badge>
       </TableCell>
-      <TableCell>{holding.currency}</TableCell>
-      <TableCell>{hideValues ? maskValue() : invested.toLocaleString()}</TableCell>
-      <TableCell>{hideValues ? maskValue() : current.toLocaleString()}</TableCell>
+      <TableCell className="font-medium">{holding.currency}</TableCell>
+      <TableCell className="font-mono">
+        {hideValues ? maskValue() : formatCurrency(invested, holding.currency, { showSymbol: false })}
+      </TableCell>
+      <TableCell className="font-mono">
+        {hideValues ? maskValue() : formatCurrency(current, holding.currency, { showSymbol: false })}
+      </TableCell>
       <TableCell
-        className={
+        className={`font-mono ${
           hideValues
             ? ""
             : realized > 0
@@ -65,9 +70,11 @@ export default function HoldingTableRow({
             : realized < 0
             ? "text-red-600 font-medium"
             : "text-gray-600"
-        }
+        }`}
       >
-        {hideValues ? maskValue() : realized.toLocaleString()}
+        {hideValues
+          ? maskValue()
+          : `${realized > 0 ? "+" : ""}${formatCurrency(Math.abs(realized), holding.currency, { showSymbol: false })}`}
       </TableCell>
       <TableCell
         className={
@@ -82,7 +89,11 @@ export default function HoldingTableRow({
       >
         {hideValues ? maskValue() : `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`}
       </TableCell>
-      <TableCell>{holding.month}</TableCell>
+      <TableCell>
+        {new Date(holding.year, holding.month - 1).toLocaleString("en-US", {
+          month: "short",
+        })}
+      </TableCell>
       <TableCell>{holding.year}</TableCell>
       <TableCell>
         <Button
