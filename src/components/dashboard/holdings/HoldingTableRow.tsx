@@ -27,6 +27,7 @@ interface HoldingTableRowProps {
   expandedRows: Set<bigint>;
   toggleExpand: (id: bigint) => void;
   onEdit: (holding: Holding) => void;
+  hideValues?: boolean;
 }
 
 export default function HoldingTableRow({
@@ -34,11 +35,14 @@ export default function HoldingTableRow({
   expandedRows,
   toggleExpand,
   onEdit,
+  hideValues = false,
 }: HoldingTableRowProps) {
   const invested = parseFloat(holding.invested_amount);
   const current = parseFloat(holding.current_value);
   const realized = current - invested;
   const percent = invested > 0 ? ((current - invested) / invested) * 100 : 0;
+
+  const maskValue = () => "••••••";
 
   const mainRow = (
     <TableRow key={holding.id.toString()} className="hover:bg-muted/50">
@@ -50,29 +54,33 @@ export default function HoldingTableRow({
         </Badge>
       </TableCell>
       <TableCell>{holding.currency}</TableCell>
-      <TableCell>{invested.toLocaleString()}</TableCell>
-      <TableCell>{current.toLocaleString()}</TableCell>
+      <TableCell>{hideValues ? maskValue() : invested.toLocaleString()}</TableCell>
+      <TableCell>{hideValues ? maskValue() : current.toLocaleString()}</TableCell>
       <TableCell
         className={
-          realized > 0
+          hideValues
+            ? ""
+            : realized > 0
             ? "text-green-600 font-medium"
             : realized < 0
             ? "text-red-600 font-medium"
             : "text-gray-600"
         }
       >
-        {realized.toLocaleString()}
+        {hideValues ? maskValue() : realized.toLocaleString()}
       </TableCell>
       <TableCell
         className={
-          percent > 0
+          hideValues
+            ? ""
+            : percent > 0
             ? "text-green-600 font-medium"
             : percent < 0
             ? "text-red-600 font-medium"
             : "text-gray-600"
         }
       >
-        {`${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`}
+        {hideValues ? maskValue() : `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`}
       </TableCell>
       <TableCell>{holding.month}</TableCell>
       <TableCell>{holding.year}</TableCell>
@@ -96,7 +104,7 @@ export default function HoldingTableRow({
   );
 
   const expandedRow = expandedRows.has(holding.id) ? (
-    <HoldingExpandedRow holding={holding} />
+    <HoldingExpandedRow holding={holding} hideValues={hideValues} />
   ) : null;
 
   return (

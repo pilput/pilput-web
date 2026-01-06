@@ -7,17 +7,19 @@ import type { ComparisonSummary } from "@/types/holding-comparison";
 
 interface ComparisonSummaryCardsProps {
   data: ComparisonSummary;
+  hideValues?: boolean;
 }
 
-export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsProps) {
+export default function ComparisonSummaryCards({ data, hideValues = false }: ComparisonSummaryCardsProps) {
   const { summary, typeComparison, toMonth, fromMonth } = data;
 
   if (!summary || !toMonth || !fromMonth) {
     return null;
   }
 
-  const formatNumber = (num: number) => num.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-  const formatPercentage = (num: number) => `${num > 0 ? "+" : ""}${num.toFixed(2)}%`;
+  const maskValue = () => "••••••";
+  const formatNumber = (num: number) => hideValues ? maskValue() : num.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const formatPercentage = (num: number) => hideValues ? maskValue() : `${num > 0 ? "+" : ""}${num.toFixed(2)}%`;
 
   const getChangeIcon = (value: number) => {
     if (value > 0) return <ArrowUpRight className="h-4 w-4 text-green-500" />;
@@ -26,6 +28,7 @@ export default function ComparisonSummaryCards({ data }: ComparisonSummaryCardsP
   };
 
   const getChangeColor = (value: number) => {
+    if (hideValues) return "";
     if (value > 0) return "text-green-600";
     if (value < 0) return "text-red-600";
     return "text-muted-foreground";

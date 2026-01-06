@@ -12,9 +12,10 @@ interface HoldingComparisonProps {
   isOpen: boolean;
   targetMonth: number;
   targetYear: number;
+  hideValues?: boolean;
 }
 
-export default function HoldingComparison({ isOpen, targetMonth, targetYear }: HoldingComparisonProps) {
+export default function HoldingComparison({ isOpen, targetMonth, targetYear, hideValues = false }: HoldingComparisonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<ComparisonSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -95,7 +96,7 @@ export default function HoldingComparison({ isOpen, targetMonth, targetYear }: H
           </CardContent>
         </Card>
       ) : data && data.summary ? (
-        <ComparisonSummaryCards data={data} />
+        <ComparisonSummaryCards data={data} hideValues={hideValues} />
       ) : (
         <Card className="border-dashed bg-muted/5">
           <CardContent className="flex items-center justify-center py-10 text-muted-foreground text-sm">

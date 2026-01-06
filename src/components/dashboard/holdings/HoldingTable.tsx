@@ -19,6 +19,7 @@ interface HoldingTableProps {
   expandedRows: Set<bigint>;
   toggleExpand: (id: bigint) => void;
   onEdit: (holding: Holding) => void;
+  hideValues?: boolean;
 }
 
 export default function HoldingTable({
@@ -27,6 +28,7 @@ export default function HoldingTable({
   expandedRows,
   toggleExpand,
   onEdit,
+  hideValues = false,
 }: HoldingTableProps) {
   const { orderBy, orderDir, fetchHoldings } = useHoldingsStore();
 
@@ -163,9 +165,10 @@ export default function HoldingTable({
                   expandedRows={expandedRows}
                   toggleExpand={toggleExpand}
                   onEdit={onEdit}
+                  hideValues={hideValues}
                 />
               ))}
-              <HoldingTotalRow holdings={holdings} />
+              <HoldingTotalRow holdings={holdings} hideValues={hideValues} />
             </>
           )}
         </TableBody>

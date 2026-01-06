@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Copy, TrendingUp } from "lucide-react";
+import { PlusCircle, Copy, TrendingUp, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 export default function HoldingsPage() {
@@ -56,11 +56,26 @@ export default function HoldingsPage() {
   const [filterYear, setFilterYear] = useState(
     new Date().getFullYear().toString()
   );
+  const [hideValues, setHideValues] = useState(() => {
+    // Load preference from localStorage
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("hideHoldingValues");
+      return saved === "true";
+    }
+    return false;
+  });
 
   useEffect(() => {
     fetchHoldings();
     fetchHoldingTypes();
   }, [fetchHoldings, fetchHoldingTypes]);
+
+  useEffect(() => {
+    // Save preference to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("hideHoldingValues", hideValues.toString());
+    }
+  }, [hideValues]);
 
   function openAddModal() {
     setEditingHolding(null);
@@ -166,6 +181,19 @@ export default function HoldingsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <HoldingHeader />
         <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            className="flex items-center gap-2"
+            onClick={() => setHideValues(!hideValues)}
+            title={hideValues ? "Show values" : "Hide values"}
+          >
+            {hideValues ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </Button>
            <Button
             variant="outline"
             className="flex items-center gap-2"
@@ -207,7 +235,7 @@ export default function HoldingsPage() {
       <div className="space-y-8">
         <div>
           <h2 className="text-lg font-semibold tracking-tight mb-4 px-1">Portfolio Summary</h2>
-          <HoldingSummaryCards holdings={holdings} isLoading={isLoading} />
+          <HoldingSummaryCards holdings={holdings} isLoading={isLoading} hideValues={hideValues} />
         </div>
       </div>
 
@@ -229,6 +257,7 @@ export default function HoldingsPage() {
             expandedRows={expandedRows}
             toggleExpand={toggleExpand}
             onEdit={openEditModal}
+            hideValues={hideValues}
           />
         </CardContent>
       </Card>

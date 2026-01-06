@@ -5,11 +5,13 @@ import type { Holding } from "@/types/holding";
 interface HoldingSummaryCardsProps {
   holdings: Holding[];
   isLoading: boolean;
+  hideValues?: boolean;
 }
 
 export default function HoldingSummaryCards({
   holdings,
   isLoading,
+  hideValues = false,
 }: HoldingSummaryCardsProps) {
   const totalInvested = holdings.reduce(
     (sum, holding) => sum + parseFloat(holding.invested_amount),
@@ -22,6 +24,8 @@ export default function HoldingSummaryCards({
   const totalRealized = totalCurrent - totalInvested;
   const totalPercent =
     totalInvested > 0 ? ((totalCurrent - totalInvested) / totalInvested) * 100 : 0;
+
+  const maskValue = () => "••••••";
 
   if (isLoading) {
     return (
@@ -51,7 +55,7 @@ export default function HoldingSummaryCards({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {totalInvested.toLocaleString()}
+            {hideValues ? maskValue() : totalInvested.toLocaleString()}
           </div>
           <p className="text-xs text-muted-foreground">
             Initial capital deployed
@@ -65,7 +69,7 @@ export default function HoldingSummaryCards({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {totalCurrent.toLocaleString()}
+            {hideValues ? maskValue() : totalCurrent.toLocaleString()}
           </div>
           <p className="text-xs text-muted-foreground">
             Market value of holdings
@@ -84,11 +88,10 @@ export default function HoldingSummaryCards({
         <CardContent>
           <div
             className={`text-2xl font-bold ${
-              totalRealized >= 0 ? "text-green-600" : "text-red-600"
+              hideValues ? "" : totalRealized >= 0 ? "text-green-600" : "text-red-600"
             }`}
           >
-            {totalRealized > 0 ? "+" : ""}
-            {totalRealized.toLocaleString()}
+            {hideValues ? maskValue() : `${totalRealized > 0 ? "+" : ""}${totalRealized.toLocaleString()}`}
           </div>
           <p className="text-xs text-muted-foreground">
             Unrealized profit/loss
@@ -103,11 +106,10 @@ export default function HoldingSummaryCards({
         <CardContent>
           <div
             className={`text-2xl font-bold ${
-              totalPercent >= 0 ? "text-green-600" : "text-red-600"
+              hideValues ? "" : totalPercent >= 0 ? "text-green-600" : "text-red-600"
             }`}
           >
-            {totalPercent > 0 ? "+" : ""}
-            {totalPercent.toFixed(2)}%
+            {hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
           </div>
           <p className="text-xs text-muted-foreground">
             Return on investment

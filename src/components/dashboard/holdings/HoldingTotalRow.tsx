@@ -3,9 +3,10 @@ import type { Holding } from "@/types/holding";
 
 interface HoldingTotalRowProps {
   holdings: Holding[];
+  hideValues?: boolean;
 }
 
-export default function HoldingTotalRow({ holdings }: HoldingTotalRowProps) {
+export default function HoldingTotalRow({ holdings, hideValues = false }: HoldingTotalRowProps) {
   const totalInvested = holdings.reduce(
     (sum, holding) => sum + parseFloat(holding.invested_amount),
     0
@@ -18,34 +19,40 @@ export default function HoldingTotalRow({ holdings }: HoldingTotalRowProps) {
   const totalPercent =
     totalInvested > 0 ? ((totalCurrent - totalInvested) / totalInvested) * 100 : 0;
 
+  const maskValue = () => "••••••";
+
   return (
     <TableRow className="bg-muted/30 border-t-2 font-semibold">
       <TableCell colSpan={4} className="text-right font-bold">
         Total
       </TableCell>
-      <TableCell className="font-bold">{totalInvested.toLocaleString()}</TableCell>
-      <TableCell className="font-bold">{totalCurrent.toLocaleString()}</TableCell>
+      <TableCell className="font-bold">{hideValues ? maskValue() : totalInvested.toLocaleString()}</TableCell>
+      <TableCell className="font-bold">{hideValues ? maskValue() : totalCurrent.toLocaleString()}</TableCell>
       <TableCell
         className={`font-bold ${
-          totalRealized > 0
+          hideValues
+            ? ""
+            : totalRealized > 0
             ? "text-green-600"
             : totalRealized < 0
             ? "text-red-600"
             : "text-gray-600"
         }`}
       >
-        {totalRealized.toLocaleString()}
+        {hideValues ? maskValue() : totalRealized.toLocaleString()}
       </TableCell>
       <TableCell
         className={`font-bold ${
-          totalPercent > 0
+          hideValues
+            ? ""
+            : totalPercent > 0
             ? "text-green-600"
             : totalPercent < 0
             ? "text-red-600"
             : "text-gray-600"
         }`}
       >
-        {`${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
+        {hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
       </TableCell>
       <TableCell colSpan={4}></TableCell>
     </TableRow>
