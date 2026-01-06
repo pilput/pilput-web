@@ -17,7 +17,7 @@ interface HoldingFilterProps {
   year: string;
   onMonthChange: (value: string) => void;
   onYearChange: (value: string) => void;
-  onFilter: () => void;
+  onFilter: (month?: number, year?: number) => void;
 }
 
 const months = [
@@ -61,7 +61,7 @@ export default function HoldingFilter({
 
     onMonthChange((newMonth + 1).toString());
     onYearChange(newYear.toString());
-    setTimeout(() => onFilter(), 0);
+    onFilter(newMonth + 1, newYear);
   };
 
   const handleNextMonth = () => {
@@ -75,7 +75,7 @@ export default function HoldingFilter({
 
     onMonthChange((newMonth + 1).toString());
     onYearChange(newYear.toString());
-    setTimeout(() => onFilter(), 0);
+    onFilter(newMonth + 1, newYear);
   };
 
   const handleMonthChange = (value: string) => {

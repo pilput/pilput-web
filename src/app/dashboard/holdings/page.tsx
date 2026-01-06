@@ -170,9 +170,9 @@ export default function HoldingsPage() {
     }
   }
 
-  async function handleFilter() {
-    const month = parseInt(filterMonth, 10);
-    const year = parseInt(filterYear, 10);
+  async function handleFilter(monthOverride?: number, yearOverride?: number) {
+    const month = monthOverride ?? parseInt(filterMonth, 10);
+    const year = yearOverride ?? parseInt(filterYear, 10);
     await fetchHoldings({ month, year });
   }
 
