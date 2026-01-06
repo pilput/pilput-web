@@ -79,6 +79,19 @@ export default function HoldingFormModal({
     "Others",
   ];
 
+  const currencyOptions = [
+    "IDR",
+    "USD",
+    "EUR",
+    "GBP",
+    "JPY",
+    "AUD",
+    "CAD",
+    "CHF",
+    "CNY",
+    "HKD",
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
@@ -152,17 +165,23 @@ export default function HoldingFormModal({
               </div>
               <div className="space-y-2 col-span-2 md:col-span-1">
                 <Label htmlFor="currency">Currency <span className="text-red-500">*</span></Label>
-                <Input
-                  id="currency"
-                  placeholder="USD"
+                <Select
                   value={formData.currency}
-                  onChange={(e) =>
-                    setFormData({ ...formData, currency: e.target.value })
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, currency: value })
                   }
-                  required
-                  maxLength={3}
-                  className="uppercase"
-                />
+                >
+                  <SelectTrigger id="currency">
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencyOptions.map((currency) => (
+                      <SelectItem key={currency} value={currency}>
+                        {currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2 col-span-2 md:col-span-1">
                 <Label htmlFor="invested_amount">
