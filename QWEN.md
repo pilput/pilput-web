@@ -165,7 +165,7 @@ Comprehensive Zod-based validation schemas for:
 ### Key Utilities
 - `src/lib/validation.ts` - Centralized Zod validation schemas
 - `src/utils/ErrorHandler.ts` - API error handling with user feedback
-- `src/utils/performance.ts` - Performance monitoring utilities
+- `src/utils/performance.ts` - Performance monitoring utilities (mentioned in documentation)
 - `src/components/post/Editor.tsx` - Rich text editor implementation
 
 ### Environment Variables
