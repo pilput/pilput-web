@@ -90,12 +90,6 @@ export default function HoldingTableRow({
         {hideValues ? maskValue() : `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`}
       </TableCell>
       <TableCell>
-        {new Date(holding.year, holding.month - 1).toLocaleString("en-US", {
-          month: "short",
-        })}
-      </TableCell>
-      <TableCell>{holding.year}</TableCell>
-      <TableCell>
         <Button
           variant="ghost"
           size="sm"
