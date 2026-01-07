@@ -40,20 +40,22 @@ interface HoldingFormModalProps {
     year: string;
     notes: string;
   };
-  setFormData: React.Dispatch<React.SetStateAction<{
-    name: string;
-    platform: string;
-    holding_type_id: string;
-    currency: string;
-    invested_amount: string;
-    current_value: string;
-    units: string;
-    avg_buy_price: string;
-    current_price: string;
-    month: string;
-    year: string;
-    notes: string;
-  }>>;
+  setFormData: React.Dispatch<
+    React.SetStateAction<{
+      name: string;
+      platform: string;
+      holding_type_id: string;
+      currency: string;
+      invested_amount: string;
+      current_value: string;
+      units: string;
+      avg_buy_price: string;
+      current_price: string;
+      month: string;
+      year: string;
+      notes: string;
+    }>
+  >;
   holdingTypes: HoldingType[];
   onSubmit: (e: React.FormEvent) => void;
 }
@@ -69,6 +71,7 @@ export default function HoldingFormModal({
 }: HoldingFormModalProps) {
   const [showFinancialDetails, setShowFinancialDetails] = useState(false);
   const platformOptions = [
+    "Ajaib",
     "Stockbit",
     "Bank Jago",
     "Bank BSI",
@@ -106,13 +109,16 @@ export default function HoldingFormModal({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-6">
-          
           {/* Section 1: Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Basic Information</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Basic Information
+            </h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2 col-span-2 md:col-span-1">
-                <Label htmlFor="name">Name <span className="text-red-500">*</span></Label>
+                <Label htmlFor="name">
+                  Name <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="name"
                   placeholder="e.g., Apple Inc., Bitcoin"
@@ -164,7 +170,9 @@ export default function HoldingFormModal({
                 </Select>
               </div>
               <div className="space-y-2 col-span-2 md:col-span-1">
-                <Label htmlFor="currency">Currency <span className="text-red-500">*</span></Label>
+                <Label htmlFor="currency">
+                  Currency <span className="text-red-500">*</span>
+                </Label>
                 <Select
                   value={formData.currency}
                   onValueChange={(value) =>
@@ -327,10 +335,14 @@ export default function HoldingFormModal({
 
           {/* Section 3: Period */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Reporting Period</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Reporting Period
+            </h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="month">Month <span className="text-red-500">*</span></Label>
+                <Label htmlFor="month">
+                  Month <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="month"
                   type="number"
@@ -344,7 +356,9 @@ export default function HoldingFormModal({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="year">Year <span className="text-red-500">*</span></Label>
+                <Label htmlFor="year">
+                  Year <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   id="year"
                   type="number"

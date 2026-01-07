@@ -125,7 +125,7 @@ export default function OverviewChart({
           <CardDescription>Distribution by Asset Type</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 pb-0">
-          <div className="h-[300px] w-full mt-4">
+          <div className="h-75 w-full mt-4">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -163,7 +163,7 @@ export default function OverviewChart({
           <CardDescription>Value by Platform</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 pb-0">
-          <div className="h-[300px] w-full mt-4">
+          <div className="h-75 w-full mt-4">
             {platformDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart

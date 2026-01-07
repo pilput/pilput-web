@@ -138,8 +138,8 @@ export default function HoldingTable({
             <HeaderCell label="Current Value" columnKey="current_value" />
             <HeaderCell label="Realized Value" columnKey="realized_value" />
             <HeaderCell label="Realized %" columnKey="realized_percent" />
-            <TableHead className="w-[50px]"></TableHead>
-            <TableHead className="w-[120px] font-semibold">Actions</TableHead>
+            <TableHead className="w-12.5"></TableHead>
+            <TableHead className="w-30 font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -150,31 +150,31 @@ export default function HoldingTable({
                   <Skeleton className="h-4 w-37.5" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[100px]" />
+                  <Skeleton className="h-4 w-25" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[100px]" />
+                  <Skeleton className="h-4 w-25" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[50px]" />
+                  <Skeleton className="h-4 w-12.5" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[100px]" />
+                  <Skeleton className="h-4 w-25" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[100px]" />
+                  <Skeleton className="h-4 w-25" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[100px]" />
+                  <Skeleton className="h-4 w-25" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[80px]" />
+                  <Skeleton className="h-4 w-20" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-[20px]" />
+                  <Skeleton className="h-4 w-5" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-8 w-[80px]" />
+                  <Skeleton className="h-8 w-20" />
                 </TableCell>
               </TableRow>
             ))
