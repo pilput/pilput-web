@@ -64,8 +64,10 @@ export default function HoldingTable({
       } else if (key === "realized_percent") {
         const aInv = parseFloat(a.invested_amount);
         const bInv = parseFloat(b.invested_amount);
-        aValue = aInv > 0 ? ((parseFloat(a.current_value) - aInv) / aInv) * 100 : 0;
-        bValue = bInv > 0 ? ((parseFloat(b.current_value) - bInv) / bInv) * 100 : 0;
+        aValue =
+          aInv > 0 ? ((parseFloat(a.current_value) - aInv) / aInv) * 100 : 0;
+        bValue =
+          bInv > 0 ? ((parseFloat(b.current_value) - bInv) / bInv) * 100 : 0;
       } else {
         aValue = a[key as keyof Holding];
         bValue = b[key as keyof Holding];
@@ -103,7 +105,15 @@ export default function HoldingTable({
     );
   };
 
-  const HeaderCell = ({ label, columnKey, className = "" }: { label: string; columnKey: string; className?: string }) => (
+  const HeaderCell = ({
+    label,
+    columnKey,
+    className = "",
+  }: {
+    label: string;
+    columnKey: string;
+    className?: string;
+  }) => (
     <TableHead
       className={`font-semibold cursor-pointer hover:text-foreground transition-colors ${className}`}
       onClick={() => handleSort(columnKey)}
@@ -137,7 +147,7 @@ export default function HoldingTable({
             Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i} className="hover:bg-muted/50">
                 <TableCell>
-                  <Skeleton className="h-4 w-[150px]" />
+                  <Skeleton className="h-4 w-37.5" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-[100px]" />
@@ -170,8 +180,12 @@ export default function HoldingTable({
             ))
           ) : sortedHoldings.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={10} className="text-center text-muted-foreground py-10">
-                No holdings found for this period. Try another month/year or add a holding.
+              <TableCell
+                colSpan={10}
+                className="text-center text-muted-foreground py-10"
+              >
+                No holdings found for this period. Try another month/year or add
+                a holding.
               </TableCell>
             </TableRow>
           ) : (
@@ -186,7 +200,10 @@ export default function HoldingTable({
                   hideValues={hideValues}
                 />
               ))}
-              <HoldingTotalRow holdings={sortedHoldings} hideValues={hideValues} />
+              <HoldingTotalRow
+                holdings={sortedHoldings}
+                hideValues={hideValues}
+              />
             </>
           )}
         </TableBody>
