@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Copy, TrendingUp, Eye, EyeOff } from "lucide-react";
+import { PlusCircle, Copy, TrendingUp, Eye, EyeOff, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 
 export default function HoldingsPage() {
@@ -193,6 +193,16 @@ export default function HoldingsPage() {
             ) : (
               <Eye className="w-4 h-4" />
             )}
+          </Button>
+           <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            asChild
+          >
+            <Link href="/dashboard/holdings/overview">
+                <LayoutDashboard className="w-4 h-4" />
+                Overview
+            </Link>
           </Button>
            <Button
             variant="outline"

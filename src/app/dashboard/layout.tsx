@@ -30,6 +30,7 @@ import {
   Menu,
   DollarSign,
   TrendingUp,
+  LayoutDashboard,
 } from "lucide-react";
 
 const data = {
@@ -62,6 +63,11 @@ const data = {
     {
       title: "Finance",
       items: [
+        {
+          title: "Overview",
+          url: "/dashboard/holdings/overview",
+          icon: LayoutDashboard,
+        },
         {
           title: "Holdings",
           url: "/dashboard/holdings",
