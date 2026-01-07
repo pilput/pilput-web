@@ -61,8 +61,12 @@ export default function OverviewChart({
 
   // Chart colors
   const CHART_COLORS = [
-    "var(--chart-1)", "var(--chart-2)", "var(--chart-3)",
-    "var(--chart-4)", "var(--chart-5)", "var(--primary)",
+    "#3b82f6", // Blue
+    "#8b5cf6", // Purple
+    "#ec4899", // Pink
+    "#f59e0b", // Amber
+    "#10b981", // Emerald
+    "#6366f1", // Indigo
   ]
 
   const handleTypeToggle = (typeName: string) => {
@@ -118,14 +122,14 @@ export default function OverviewChart({
   )
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <Card className="flex flex-col">
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Asset Allocation</CardTitle>
+    <div className="grid gap-6">
+      <Card className="flex flex-col border-none shadow-none bg-muted/30">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg font-semibold">Asset Allocation</CardTitle>
           <CardDescription>Distribution by Asset Type</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1 pb-0">
-          <div className="h-75 w-full mt-4">
+        <CardContent className="flex-1">
+          <div className="h-[300px] w-full">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -133,23 +137,26 @@ export default function OverviewChart({
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={90}
+                    innerRadius={70}
+                    outerRadius={130}
                     paddingAngle={2}
-                    cornerRadius={4}
                     dataKey="value"
                     strokeWidth={0}
                   >
                     {chartData.map((_, index) => (
-                      <Cell key={index} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      <Cell
+                        key={index}
+                        fill={CHART_COLORS[index % CHART_COLORS.length]}
+                        className="hover:opacity-80 transition-opacity cursor-pointer"
+                      />
                     ))}
                   </Pie>
                   <RechartsTooltip content={<CustomTooltip />} cursor={false} />
-                  <Legend content={renderLegend} />
+                  <Legend content={renderLegend} verticalAlign="bottom" />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
+              <div className="flex h-full items-center justify-center text-muted-foreground text-sm italic">
                 No data available
               </div>
             )}
@@ -157,41 +164,48 @@ export default function OverviewChart({
         </CardContent>
       </Card>
 
-      <Card className="flex flex-col">
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Platform Distribution</CardTitle>
-          <CardDescription>Value by Platform</CardDescription>
+      <Card className="flex flex-col border-none shadow-none bg-muted/30">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg font-semibold">Platform Distribution</CardTitle>
+          <CardDescription>Value across platforms</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1 pb-0">
-          <div className="h-75 w-full mt-4">
+        <CardContent className="flex-1">
+          <div className="h-[250px] w-full">
             {platformDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={platformDistribution}
                   layout="vertical"
-                  margin={{ top: 0, right: 30, left: 10, bottom: 0 }}
-                  barCategoryGap="20%"
+                  margin={{ top: 5, right: 40, left: 0, bottom: 5 }}
+                  barCategoryGap="30%"
                 >
                   <XAxis type="number" hide />
                   <YAxis
                     dataKey="name"
                     type="category"
-                    width={100}
-                    tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                    width={120}
+                    tick={{ fontSize: 12, fill: "currentColor", fontWeight: 600 }}
+                    className="text-foreground"
                     axisLine={false}
                     tickLine={false}
                   />
-                  <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: "var(--muted)", opacity: 0.1 }} />
-                  <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                  <RechartsTooltip
+                    content={<CustomTooltip />}
+                    cursor={{ fill: "hsl(var(--primary))", opacity: 0.05 }}
+                  />
+                  <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
                     {platformDistribution.map((_, index) => (
-                      <Cell key={index} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                      <Cell
+                        key={index}
+                        fill={CHART_COLORS[index % CHART_COLORS.length]}
+                      />
                     ))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
-                No data available
+              <div className="flex h-full items-center justify-center text-muted-foreground text-sm italic">
+                No platform data available
               </div>
             )}
           </div>

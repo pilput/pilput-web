@@ -62,74 +62,65 @@ export default function HoldingSummaryCards({
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
+      <Card className="border-none shadow-none bg-muted/30 hover:bg-muted/40 transition-colors">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Invested</CardTitle>
-          <Wallet className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-xs font-semibold text-blue-600/80 dark:text-blue-400/80 uppercase tracking-wider">Total Invested</CardTitle>
+          <Wallet className="h-4 w-4 text-blue-500/40" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold font-mono">
+          <div className="text-2xl font-bold tracking-tight">
             {hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency)}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Initial capital deployed
-          </p>
         </CardContent>
       </Card>
-      <Card>
+
+      <Card className="border-none shadow-none bg-muted/30 hover:bg-muted/40 transition-colors">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Current Value</CardTitle>
-          <DollarSign className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-xs font-semibold text-purple-600/80 dark:text-purple-400/80 uppercase tracking-wider">Current Value</CardTitle>
+          <DollarSign className="h-4 w-4 text-purple-500/40" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold font-mono">
+          <div className="text-2xl font-bold tracking-tight">
             {hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency)}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Market value of holdings
-          </p>
         </CardContent>
       </Card>
-      <Card>
+
+      <Card className="border-none shadow-none bg-muted/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">P/L (Amount)</CardTitle>
+          <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">P/L (Amount)</CardTitle>
           {totalRealized >= 0 ? (
-            <ArrowUpRight className="h-4 w-4 text-green-500" />
+            <ArrowUpRight className="h-4 w-4 text-emerald-500/70" />
           ) : (
-            <ArrowDownRight className="h-4 w-4 text-red-500" />
+            <ArrowDownRight className="h-4 w-4 text-rose-500/70" />
           )}
         </CardHeader>
         <CardContent>
           <div
-            className={`text-2xl font-bold font-mono ${
-              hideValues ? "" : totalRealized >= 0 ? "text-green-600" : "text-red-600"
+            className={`text-2xl font-bold tracking-tight ${
+              hideValues ? "" : totalRealized >= 0 ? "text-emerald-600" : "text-rose-600"
             }`}
           >
             {hideValues
               ? maskValue()
               : `${totalRealized > 0 ? "+" : ""}${formatCurrency(Math.abs(totalRealized), primaryCurrency)}`}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Unrealized profit/loss
-          </p>
         </CardContent>
       </Card>
-      <Card>
+
+      <Card className="border-none shadow-none bg-muted/30">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">P/L (%)</CardTitle>
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">P/L (%)</CardTitle>
+          <TrendingUp className="h-4 w-4 text-muted-foreground/50" />
         </CardHeader>
         <CardContent>
           <div
-            className={`text-2xl font-bold ${
-              hideValues ? "" : totalPercent >= 0 ? "text-green-600" : "text-red-600"
+            className={`text-2xl font-bold tracking-tight ${
+              hideValues ? "" : totalPercent >= 0 ? "text-emerald-600" : "text-rose-600"
             }`}
           >
             {hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Return on investment
-          </p>
         </CardContent>
       </Card>
     </div>

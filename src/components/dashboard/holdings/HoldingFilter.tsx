@@ -87,20 +87,20 @@ export default function HoldingFilter({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2 w-full">
+    <form onSubmit={handleSubmit} className="flex items-center gap-1.5 bg-muted/30 p-1 rounded-lg border border-border/50">
       <Button
         type="button"
-        variant="outline"
-        size="icon-sm"
+        variant="ghost"
+        size="icon"
         onClick={handlePreviousMonth}
-        className="h-9 w-9 shrink-0"
+        className="h-8 w-8 shrink-0 hover:bg-background"
         title="Previous month"
       >
         <ChevronLeft className="w-4 h-4" />
       </Button>
 
       <Select value={month} onValueChange={handleMonthChange}>
-        <SelectTrigger id="filterMonth" className="w-[160px] h-9">
+        <SelectTrigger id="filterMonth" className="w-[130px] h-8 border-none bg-transparent hover:bg-background focus:ring-0">
           <SelectValue placeholder="Month" />
         </SelectTrigger>
         <SelectContent>
@@ -112,6 +112,8 @@ export default function HoldingFilter({
         </SelectContent>
       </Select>
 
+      <div className="h-4 w-[1px] bg-border/60 mx-0.5" />
+
       <Input
         id="filterYear"
         type="number"
@@ -119,22 +121,22 @@ export default function HoldingFilter({
         max="2100"
         value={year}
         onChange={(e) => handleYearChange(e.target.value)}
-        className="w-[100px] h-9 text-center"
+        className="w-[70px] h-8 border-none bg-transparent hover:bg-background text-center focus-visible:ring-0"
         placeholder="Year"
       />
 
       <Button
         type="button"
-        variant="outline"
-        size="icon-sm"
+        variant="ghost"
+        size="icon"
         onClick={handleNextMonth}
-        className="h-9 w-9 shrink-0"
+        className="h-8 w-8 shrink-0 hover:bg-background"
         title="Next month"
       >
         <ChevronRight className="w-4 h-4" />
       </Button>
 
-      <Button type="submit" size="sm" variant="default" className="h-9 px-4">
+      <Button type="submit" size="sm" variant="secondary" className="h-8 px-3 text-xs font-semibold ml-1">
         Apply
       </Button>
     </form>
