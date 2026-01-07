@@ -6,8 +6,11 @@ import { getToken } from "@/utils/Auth";
 import ComparisonSummaryCards from "./ComparisonSummaryCards";
 import ComparisonChart from "./ComparisonChart";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, TrendingUp, AlertCircle } from "lucide-react";
-import type { ComparisonSummary, CompareMonthsRequest } from "@/types/holding-comparison";
+import { TrendingUp, AlertCircle } from "lucide-react";
+import type {
+  ComparisonSummary,
+  CompareMonthsRequest,
+} from "@/types/holding-comparison";
 
 interface HoldingComparisonProps {
   isOpen: boolean;
@@ -16,14 +19,19 @@ interface HoldingComparisonProps {
   hideValues?: boolean;
 }
 
-export default function HoldingComparison({ isOpen, targetMonth, targetYear, hideValues = false }: HoldingComparisonProps) {
+export default function HoldingComparison({
+  isOpen,
+  targetMonth,
+  targetYear,
+  hideValues = false,
+}: HoldingComparisonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<ComparisonSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchComparison = useCallback(async () => {
     if (!isOpen) return;
-    
+
     setIsLoading(true);
     setError(null);
 
@@ -31,7 +39,7 @@ export default function HoldingComparison({ isOpen, targetMonth, targetYear, hid
       // Calculate previous month
       let fromMonth = targetMonth - 1;
       let fromYear = targetYear;
-      
+
       if (fromMonth === 0) {
         fromMonth = 12;
         fromYear = targetYear - 1;
@@ -46,13 +54,17 @@ export default function HoldingComparison({ isOpen, targetMonth, targetYear, hid
 
       const token = getToken();
 
-      const response = await axiosInstence3.get<{ success: boolean; data: ComparisonSummary; message: string }>("/v1/holdings/compare", { 
+      const response = await axiosInstence3.get<{
+        success: boolean;
+        data: ComparisonSummary;
+        message: string;
+      }>("/v1/holdings/compare", {
         params,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (response.data.success) {
         setData(response.data.data);
       } else {
@@ -75,7 +87,9 @@ export default function HoldingComparison({ isOpen, targetMonth, targetYear, hid
     <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
       <div className="flex items-center gap-2 px-1">
         <TrendingUp className="w-5 h-5 text-primary" />
-        <h2 className="text-lg font-semibold tracking-tight">Monthly Performance</h2>
+        <h2 className="text-lg font-semibold tracking-tight">
+          Monthly Performance
+        </h2>
         <span className="text-sm text-muted-foreground ml-2">
           (vs. previous month)
         </span>
