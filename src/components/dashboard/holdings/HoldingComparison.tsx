@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { axiosInstence3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import ComparisonSummaryCards from "./ComparisonSummaryCards";
+import ComparisonChart from "./ComparisonChart";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, TrendingUp, AlertCircle } from "lucide-react";
 import type { ComparisonSummary, CompareMonthsRequest } from "@/types/holding-comparison";
@@ -96,7 +97,10 @@ export default function HoldingComparison({ isOpen, targetMonth, targetYear, hid
           </CardContent>
         </Card>
       ) : data && data.summary ? (
-        <ComparisonSummaryCards data={data} hideValues={hideValues} />
+        <>
+          <ComparisonSummaryCards data={data} hideValues={hideValues} />
+          <ComparisonChart data={data} hideValues={hideValues} />
+        </>
       ) : (
         <Card className="border-dashed bg-muted/5">
           <CardContent className="flex items-center justify-center py-10 text-muted-foreground text-sm">
