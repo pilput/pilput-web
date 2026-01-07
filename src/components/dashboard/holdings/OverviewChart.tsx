@@ -9,19 +9,50 @@ import { formatCurrency } from "@/lib/utils"
 interface OverviewChartProps {
   holdings: Holding[]
   hideValues?: boolean
+  hiddenTypes?: string[]
+  onToggleType?: (typeName: string, isHidden: boolean) => void
 }
 
-export default function OverviewChart({ holdings, hideValues = false }: OverviewChartProps) {
+export default function OverviewChart({ 
+  holdings, 
+  hideValues = false, 
+  hiddenTypes: externalHiddenTypes = [], 
+  onToggleType 
+}: OverviewChartProps) {
+  // Use internal state if no external callback provided
+  const [internalHiddenTypes, setInternalHiddenTypes] = React.useState<string[]>([])
+  const hiddenTypes = onToggleType ? externalHiddenTypes : internalHiddenTypes
+
   // Aggregate data for Allocation by Type
+  // Get all types first
+  const allTypes = React.useMemo(() => {
+    const types = new Set<string>()
+    holdings.forEach(h => {
+      const typeName = h.holding_type?.name || "Unknown"
+      types.add(typeName)
+    })
+    return Array.from(types)
+  }, [holdings])
+
   const allocationByType = React.useMemo(() => {
     const map = new Map<string, number>()
+    // Initialize all types with 0
+    allTypes.forEach(typeName => map.set(typeName, 0))
+    
     holdings.forEach(h => {
         const typeName = h.holding_type?.name || "Unknown"
         const value = parseFloat(h.current_value)
         map.set(typeName, (map.get(typeName) || 0) + value)
     })
-    return Array.from(map.entries()).map(([name, value]) => ({ name, value }))
-  }, [holdings])
+    
+    // Filter out hidden types (set to 0)
+    const result = Array.from(map.entries()).map(([name, value]) => ({
+      name,
+      value: hiddenTypes.includes(name) ? 0 : value
+    }))
+    
+    return result
+  }, [holdings, hiddenTypes, allTypes])
 
   // Aggregate data for Platform Distribution
   const platformDistribution = React.useMemo(() => {
@@ -66,6 +97,48 @@ export default function OverviewChart({ holdings, hideValues = false }: Overview
     return null
   }
 
+  const handleTypeToggle = (typeName: string) => {
+    const isHidden = hiddenTypes.includes(typeName)
+    if (onToggleType) {
+      onToggleType(typeName, !isHidden)
+    } else {
+      // Use internal state
+      setInternalHiddenTypes(prev => 
+        isHidden 
+          ? prev.filter(t => t !== typeName) 
+          : [...prev, typeName]
+      )
+    }
+  }
+
+  // Custom legend content with click support
+  const renderCustomLegend = () => {
+    return (
+      <div className="flex flex-wrap justify-center gap-4 mt-4">
+        {allocationByType.map((entry, index) => {
+          const isHidden = hiddenTypes.includes(entry.name)
+          return (
+            <div 
+              key={`legend-${index}`}
+              className={`flex items-center gap-2 cursor-pointer transition-opacity ${
+                isHidden ? 'opacity-40 line-through' : 'opacity-100'
+              }`}
+              onClick={() => handleTypeToggle(entry.name)}
+            >
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+              />
+              <span className="text-sm text-muted-foreground">
+                {entry.name}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card className="flex flex-col">
@@ -95,10 +168,7 @@ export default function OverviewChart({ holdings, hideValues = false }: Overview
                     </Pie>
                     <RechartsTooltip content={<CustomTooltip />} cursor={false} />
                     <Legend 
-                        verticalAlign="bottom" 
-                        height={36} 
-                        iconType="circle"
-                        formatter={(value) => <span className="text-sm text-muted-foreground ml-1">{value}</span>}
+                        content={renderCustomLegend}
                     />
                 </PieChart>
                 </ResponsiveContainer>
