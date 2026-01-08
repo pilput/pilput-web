@@ -3,30 +3,27 @@ import React, { useEffect, useState } from "react";
 import { getToken } from "@/utils/Auth";
 import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
-import {
-  MessageCircle,
-  User,
-  Edit3,
-  LogIn,
-  Wifi,
-  WifiOff,
-  RotateCcw,
-} from "lucide-react";
+import { MessageCircle, User, Edit3, LogIn, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { axiosInstence } from "@/utils/fetch";
-import { useSocket } from "@/utils/socketio";
-import { Config } from "@/utils/getConfig";
+import { axiosInstence3 } from "@/utils/fetch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "react-hot-toast";
 
 interface CommentData {
   id: string;
   text: string;
-  replies: CommentData[];
+  post_id: string;
+  parent_comment_id: number | null;
+  created_by: string;
   created_at: string;
-  creator: {
+  updated_at: string;
+  deleted_at: string | null;
+  user: {
+    id: string;
+    username: string;
     first_name: string;
     last_name: string;
     image: string;
@@ -38,11 +35,35 @@ const Comment = ({ postId }: { postId: string }) => {
   const [comments, setcomments] = useState<CommentData[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const { socket, isConnected, isReconnecting } = useSocket({
-    token: token || undefined,
-    postId,
-  });
+  // Fetch comments from API
+  const fetchComments = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstence3.get(`/v1/comments/post/${postId}`);
+      console.log("Response data:", response.data);
+
+      if (response.data.success) {
+        // Ensure data is an array
+        const commentsData = Array.isArray(response.data.data)
+          ? response.data.data
+          : [];
+        console.log("Comments array:", commentsData);
+        setcomments(commentsData);
+      } else {
+        setcomments([]);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      toast.error("Failed to load comments");
+      setcomments([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchTokenAndComments = async () => {
@@ -57,164 +78,116 @@ const Comment = ({ postId }: { postId: string }) => {
         setIsLoggedIn(false);
       }
 
-      // Fetch comments from API on component mount
-      try {
-        const response = await axiosInstence.get(
-          `/v1/posts/${postId}/comments`
-        );
-        console.log("Response data:", response.data);
-
-        if (response.data.success) {
-          setcomments(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
+      // Fetch comments on component mount
+      await fetchComments();
     };
 
     fetchTokenAndComments();
   }, [postId]);
 
-  // Set up socket event listeners when socket is available and connected
-  useEffect(() => {
-    if (!socket || !isConnected) return;
+  // Manual refresh handler
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchComments();
+    setIsRefreshing(false);
+    toast.success("Comments refreshed");
+  };
 
-    console.log("Setting up socket event listeners for postId:", postId);
-
-    // Listen for new comments
-    const handleNewComment = (data: any) => {
-      console.log("Received new comment event:", data);
-      // Add the new comment to the comments state
-      setcomments(data);
-    };
-
-    // Listen for new replies
-    const handleNewReply = (data: any) => {
-      console.log("Received new reply event:", data);
-      // not handle yet
-    };
-
-    // Listen for comment errors
-    const handleCommentError = (error: any) => {
-      console.error("Comment error:", error);
-    };
-
-    // Listen for successful comment send confirmation
-    const handleCommentSent = (data: any) => {
-      console.log("Comment sent successfully:", data);
-      // Clear the comment input
-      setcomment("");
-      // Refresh comments to show the new comment
-      fetchComments();
-    };
-
-    // Helper function to fetch comments
-    const fetchComments = async () => {
-      try {
-        const response = await axiosInstence.get(
-          `/v1/posts/${postId}/comments`
-        );
-        if (response.data.success) {
-          setcomments(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
-
-    // Remove any existing listeners first to prevent duplicates
-    socket.off("newComment");
-    socket.off("newReply");
-    socket.off("commentUpdated");
-    socket.off("commentError");
-    socket.off("commentSent");
-
-    // Add new listeners
-    socket.on("newComment", handleNewComment);
-    socket.on("newReply", handleNewReply);
-    socket.on("commentError", handleCommentError);
-    socket.on("commentSent", handleCommentSent);
-
-    console.log("Socket event listeners attached successfully");
-
-    // Cleanup function
-    return () => {
-      console.log("Cleaning up socket event listeners");
-      socket.off("newComment", handleNewComment);
-      socket.off("newReply", handleNewReply);
-      socket.off("commentError", handleCommentError);
-      socket.off("commentSent", handleCommentSent);
-    };
-  }, [socket, isConnected, postId]);
-
-  function sendComment(e: React.FormEvent<HTMLFormElement>) {
+  async function sendComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!isLoggedIn) {
-      console.warn("User not logged in, cannot send comment");
+      toast.error("Please log in to comment");
       return;
     }
 
     if (!comment.trim()) {
-      console.warn("Comment is empty");
+      toast.error("Comment cannot be empty");
       return;
     }
 
-    // Check if socket is connected
-    if (socket && socket.connected) {
-      try {
-        console.log("Sending comment:", {
+    setIsSubmitting(true);
+
+    try {
+      const response = await axiosInstence3.post(
+        `/v1/comments`,
+        {
           text: comment.trim(),
           post_id: postId,
-        });
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        socket.emit("sendComment", {
-          text: comment.trim(),
-          post_id: postId,
-        });
-
-        console.log("Comment emit sent to server");
-
+      if (response.data.success) {
+        toast.success("Comment posted successfully");
         setcomment("");
-        // Don't clear comment here - let the socket event handler do it
-      } catch (error) {
-        console.error("Error sending comment:", error);
-        alert("Failed to send comment. Please try again.");
+        // Refresh comments to show the new comment
+        await fetchComments();
+      } else {
+        toast.error(response.data.message || "Failed to post comment");
       }
-    } else {
-      console.warn("Socket not connected. Current status:", {
-        socket: !!socket,
-        connected: socket?.connected,
-        isConnected,
-        isReconnecting,
-      });
-      alert("Connection lost. Please refresh the page and try again.");
+    } catch (error: any) {
+      console.error("Error sending comment:", error);
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Failed to post comment. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   }
+
   return (
     <div>
       {/* Header */}
       <Card className="mb-6">
         <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
-              <MessageCircle className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
+                <MessageCircle className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">Discussion</CardTitle>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Share your thoughts and join the conversation
+                </p>
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-xl">
-                Discussion
-              </CardTitle>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Share your thoughts and join the conversation
-              </p>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing || isLoading}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw
+                className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
+              />
+              Refresh
+            </Button>
           </div>
         </CardHeader>
       </Card>
 
       {/* Comments List */}
       <div className="space-y-4 mb-6">
-        {comments.length === 0 ? (
+        {isLoading ? (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <MessageCircle className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground text-sm">
+                Loading comments...
+              </p>
+            </CardContent>
+          </Card>
+        ) : comments.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center">
               {/* Add a comment button for logged-in users */}
@@ -233,9 +206,7 @@ const Comment = ({ postId }: { postId: string }) => {
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-8 h-8 text-muted-foreground" />
               </div>
-              <CardTitle className="mb-2">
-                No comments yet
-              </CardTitle>
+              <CardTitle className="mb-2">No comments yet</CardTitle>
               <p className="text-muted-foreground text-sm">
                 Be the first to share your thoughts about this article.
               </p>
@@ -247,10 +218,10 @@ const Comment = ({ postId }: { postId: string }) => {
               <CardContent className="p-6">
                 <div className="flex gap-4">
                   {/* Avatar */}
-                  <Avatar className="flex-shrink-0">
+                  <Avatar className="shrink-0">
                     <AvatarImage
-                      src={getProfilePicture(data.creator?.image)}
-                      alt={`${data.creator?.first_name} ${data.creator?.last_name}`}
+                      src={getProfilePicture(data.user?.image)}
+                      alt={`${data.user?.first_name} ${data.user?.last_name}`}
                     />
                     <AvatarFallback>
                       <User className="w-5 h-5" />
@@ -259,83 +230,31 @@ const Comment = ({ postId }: { postId: string }) => {
 
                   {/* Comment Content */}
                   <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {data.creator?.first_name
-                        ? `${data.creator.first_name} ${data.creator.last_name}`
-                        : "Anonymous User"}
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {formatDistanceToNow(data.created_at, {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
-                    {data.text}
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        {data.user?.first_name
+                          ? `${data.user.first_name} ${data.user.last_name}`
+                          : "Anonymous User"}
+                      </span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {formatDistanceToNow(new Date(data.created_at), {
+                          addSuffix: true,
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+                      {data.text}
+                    </p>
 
-                    {data.replies && data.replies.length > 0 && (
-                      <div className="ml-8 mt-4 space-y-4">
-                        {data.replies.map((reply) => (
-                          <Card key={reply.id} className="ml-8 mt-4 bg-muted">
-                            <CardContent className="p-4">
-                              <div className="flex gap-4">
-                                {/* Avatar */}
-                                <Avatar className="flex-shrink-0 w-8 h-8">
-                                  <AvatarImage
-                                    src={getProfilePicture(reply.creator?.image)}
-                                    alt={`${reply.creator?.first_name} ${reply.creator?.last_name}`}
-                                  />
-                                  <AvatarFallback>
-                                    <User className="w-4 h-4" />
-                                  </AvatarFallback>
-                                </Avatar>
-
-                                {/* Reply Content */}
-                                <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="font-semibold text-gray-900 dark:text-white text-sm">
-                                    {reply.creator?.first_name
-                                      ? `${reply.creator.first_name} ${reply.creator.last_name}`
-                                      : "Anonymous User"}
-                                  </span>
-                                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    {formatDistanceToNow(reply.created_at, {
-                                      addSuffix: true,
-                                    })}
-                                  </span>
-                                </div>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-2">
-                                  {reply.text}
-                                </p>
-
-                                {/* Reply Actions */}
-                                {isLoggedIn && (
-                                  <div className="flex items-center gap-3">
-                                    <Button variant="ghost" size="sm">
-                                      <span>👏</span>
-                                      <span className="ml-1">0</span>
-                                    </Button>
-                                  </div>
-                                )}
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
+                    {/* Actions */}
+                    {isLoggedIn && (
+                      <div className="flex items-center gap-3">
+                        <Button variant="ghost" size="sm">
+                          <MessageCircle className="w-4 h-4 mr-1" />
+                          Reply
+                        </Button>
                       </div>
                     )}
-                  </p>
-
-                  {/* Actions */}
-                  {isLoggedIn && (
-                    <div className="flex items-center gap-3">
-                      <Button variant="ghost" size="sm">
-                        <MessageCircle className="w-4 h-4 mr-1" />
-                        Reply
-                      </Button>
-                    </div>
-                  )}
                   </div>
                 </div>
               </CardContent>
@@ -344,100 +263,26 @@ const Comment = ({ postId }: { postId: string }) => {
         )}
       </div>
 
-      {/* Socket Debug Info - Remove this in production */}
-      {process.env.NODE_ENV === "development" && (
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle className="text-sm">🔍 Socket Debug Info</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm">
-            <div className="space-y-1 text-muted-foreground">
-              <div>
-                Status:{" "}
-                <span className={isConnected ? "text-green-600" : "text-red-600"}>
-                  {isConnected ? "Connected" : "Disconnected"}
-                </span>
-              </div>
-              <div>
-                Reconnecting:{" "}
-                <span
-                  className={isReconnecting ? "text-yellow-600" : "text-gray-500"}
-                >
-                  {isReconnecting ? "Yes" : "No"}
-                </span>
-              </div>
-              <div>
-                Token:{" "}
-                <span className={token ? "text-green-600" : "text-red-600"}>
-                  {token ? "Present" : "Missing"}
-                </span>
-              </div>
-              <div>Post ID: {postId}</div>
-              <div>WS URL: {Config.wsbaseurl}</div>
-              <div>Socket ID: {socket?.id || "None"}</div>
-            </div>
-            <Button
-              onClick={() => {
-                console.log("🔍 Manual socket debug:");
-                console.log("Socket object:", socket);
-                console.log("Socket connected:", socket?.connected);
-                console.log("Socket ID:", socket?.id);
-                if (socket?.connected) {
-                  socket.emit("ping", { timestamp: Date.now() });
-                  console.log("Sent ping to server");
-                }
-              }}
-              className="mt-2"
-              size="sm"
-            >
-              Debug Socket
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Comment Input Form or Login Prompt */}
       {isLoggedIn ? (
-        <Card>
+        <Card id="comment-input">
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
                 <Edit3 className="w-4 h-4 text-white" />
               </div>
               <div className="flex-1">
-                <CardTitle className="text-lg">
-                  Add Comment
-                </CardTitle>
+                <CardTitle className="text-lg">Add Comment</CardTitle>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Share your thoughts
                 </p>
-              </div>
-
-              {/* Connection Status Indicator */}
-              <div className="flex items-center gap-2">
-                {isReconnecting ? (
-                  <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
-                    <RotateCcw className="w-4 h-4 animate-spin" />
-                    <span className="text-xs font-medium">Reconnecting...</span>
-                  </div>
-                ) : isConnected ? (
-                  <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                    <Wifi className="w-4 h-4" />
-                    <span className="text-xs font-medium">Connected</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
-                    <WifiOff className="w-4 h-4" />
-                    <span className="text-xs font-medium">Disconnected</span>
-                  </div>
-                )}
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={sendComment} className="space-y-3">
               <div className="flex gap-3">
-                <Avatar className="flex-shrink-0">
+                <Avatar className="shrink-0">
                   <AvatarFallback>
                     <User className="w-5 h-5" />
                   </AvatarFallback>
@@ -449,6 +294,7 @@ const Comment = ({ postId }: { postId: string }) => {
                     onChange={(e) => setcomment(e.target.value)}
                     placeholder="Write your comment..."
                     rows={3}
+                    disabled={isSubmitting}
                   />
                   <div className="flex justify-between items-center mt-3">
                     <span className="text-sm text-muted-foreground">
@@ -456,16 +302,9 @@ const Comment = ({ postId }: { postId: string }) => {
                     </span>
                     <Button
                       type="submit"
-                      disabled={!comment.trim() || !isConnected || isReconnecting}
-                      title={
-                        !isConnected
-                          ? "Cannot post comment while disconnected"
-                          : isReconnecting
-                          ? "Reconnecting..."
-                          : "Post your comment"
-                      }
+                      disabled={!comment.trim() || isSubmitting}
                     >
-                      {isReconnecting ? "Reconnecting..." : "Post Comment"}
+                      {isSubmitting ? "Posting..." : "Post Comment"}
                     </Button>
                   </div>
                 </div>
@@ -479,22 +318,17 @@ const Comment = ({ postId }: { postId: string }) => {
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
               <LogIn className="w-8 h-8 text-muted-foreground" />
             </div>
-            <CardTitle className="mb-2">
-              Join the Discussion
-            </CardTitle>
+            <CardTitle className="mb-2">Join the Discussion</CardTitle>
             <p className="text-muted-foreground text-sm mb-6">
-              Please log in to share your thoughts and engage with the community.
+              Please log in to share your thoughts and engage with the
+              community.
             </p>
             <div className="flex gap-3 justify-center">
               <Button asChild>
-                <Link href="/login">
-                  Log In
-                </Link>
+                <Link href="/login">Log In</Link>
               </Button>
               <Button variant="outline" asChild>
-                <Link href="/register">
-                  Sign Up
-                </Link>
+                <Link href="/register">Sign Up</Link>
               </Button>
             </div>
           </CardContent>
