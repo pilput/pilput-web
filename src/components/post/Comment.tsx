@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getToken } from "@/utils/Auth";
 import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
-import { MessageCircle, User, Edit3, LogIn, RefreshCw } from "lucide-react";
+import { MessageCircle, User, Edit3, LogIn, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { axiosInstence3 } from "@/utils/fetch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +30,13 @@ interface CommentData {
   };
 }
 
+interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 const Comment = ({ postId }: { postId: string }) => {
   const [comment, setcomment] = useState<string>("");
   const [comments, setcomments] = useState<CommentData[]>([]);
@@ -38,12 +45,17 @@ const Comment = ({ postId }: { postId: string }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pagination, setPagination] = useState<PaginationMeta | null>(null);
+  const COMMENTS_PER_PAGE = 20;
 
-  // Fetch comments from API
-  const fetchComments = async () => {
+  // Fetch comments from API with pagination
+  const fetchComments = async (page: number = currentPage) => {
     try {
       setIsLoading(true);
-      const response = await axiosInstence3.get(`/v1/comments/post/${postId}`);
+      const response = await axiosInstence3.get(
+        `/v1/comments/post/${postId}?page=${page}&limit=${COMMENTS_PER_PAGE}`
+      );
       console.log("Response data:", response.data);
 
       if (response.data.success) {
@@ -53,13 +65,20 @@ const Comment = ({ postId }: { postId: string }) => {
           : [];
         console.log("Comments array:", commentsData);
         setcomments(commentsData);
+        
+        // Set pagination metadata
+        if (response.data.meta) {
+          setPagination(response.data.meta);
+        }
       } else {
         setcomments([]);
+        setPagination(null);
       }
     } catch (error) {
       console.error("Error fetching comments:", error);
       toast.error("Failed to load comments");
       setcomments([]);
+      setPagination(null);
     } finally {
       setIsLoading(false);
     }
@@ -78,19 +97,36 @@ const Comment = ({ postId }: { postId: string }) => {
         setIsLoggedIn(false);
       }
 
-      // Fetch comments on component mount
-      await fetchComments();
+      // Fetch comments on component mount or page change
+      await fetchComments(currentPage);
     };
 
     fetchTokenAndComments();
-  }, [postId]);
+  }, [postId, currentPage]);
 
   // Manual refresh handler
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await fetchComments();
+    await fetchComments(currentPage);
     setIsRefreshing(false);
     toast.success("Comments refreshed");
+  };
+
+  // Pagination handlers
+  const handleNextPage = () => {
+    if (pagination && currentPage < pagination.totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   async function sendComment(e: React.FormEvent<HTMLFormElement>) {
@@ -125,8 +161,9 @@ const Comment = ({ postId }: { postId: string }) => {
       if (response.data.success) {
         toast.success("Comment posted successfully");
         setcomment("");
-        // Refresh comments to show the new comment
-        await fetchComments();
+        // Reset to page 1 and refresh comments to show the new comment
+        setCurrentPage(1);
+        await fetchComments(1);
       } else {
         toast.error(response.data.message || "Failed to post comment");
       }
@@ -262,6 +299,69 @@ const Comment = ({ postId }: { postId: string }) => {
           ))
         )}
       </div>
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <Card className="mb-6">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                Showing page {pagination.page} of {pagination.totalPages} ({pagination.total} total comments)
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1 || isLoading}
+                >
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  Previous
+                </Button>
+                
+                {/* Page numbers */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (pagination.totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= pagination.totalPages - 2) {
+                      pageNum = pagination.totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePageChange(pageNum)}
+                        disabled={isLoading}
+                        className="w-9 h-9 p-0"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleNextPage}
+                  disabled={currentPage === pagination.totalPages || isLoading}
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Comment Input Form or Login Prompt */}
       {isLoggedIn ? (
