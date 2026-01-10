@@ -57,8 +57,8 @@ const AboutMe = () => {
                     />
                  </div>
               </div>
-              <div className="absolute -top-4 -left-4 w-full h-full bg-primary/10 rounded-2xl -z-0 transition-transform duration-300 group-hover:-translate-x-2 group-hover:-translate-y-2" />
-              <div className="absolute -bottom-4 -right-4 w-full h-full bg-purple-500/10 rounded-2xl -z-0 transition-transform duration-300 group-hover:translate-x-2 group-hover:translate-y-2" />
+              <div className="absolute -top-4 -left-4 w-full h-full bg-primary/10 rounded-2xl z-0 transition-transform duration-300 group-hover:-translate-x-2 group-hover:-translate-y-2" />
+              <div className="absolute -bottom-4 -right-4 w-full h-full bg-purple-500/10 rounded-2xl z-0 transition-transform duration-300 group-hover:translate-x-2 group-hover:translate-y-2" />
             </motion.div>
 
             <motion.div variants={itemVariants} className="space-y-6">
