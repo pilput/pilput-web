@@ -16,20 +16,20 @@ This is a Next.js 16 blog platform called "pilput" with TypeScript, featuring:
 ## Development Commands
 
 ```bash
-# Start development server with Turbopack (fast builds)
-next dev --turbopack
+# Install dependencies (uses Bun)
+bun install
 
-# Build for production with Turbopack
-next build --turbopack
+# Start development server
+next dev
+
+# Build for production
+next build
 
 # Start production server
 next start
 
 # Run linter
 next lint
-
-# Install dependencies
-npm install
 
 # Run type checking
 npx tsc --noEmit
@@ -73,6 +73,7 @@ src/
 - **Recharts** for data visualization
 - **Framer Motion** for animations
 - **Axios** for API calls with dual endpoints
+- **Bun** as the package manager
 
 ### Environment Variables and Configuration
 
