@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 
 interface HoldingFilterProps {
@@ -49,6 +49,13 @@ export default function HoldingFilter({
 
   const currentMonthIndex = useMemo(() => parseInt(month) - 1, [month]);
   const currentYear = useMemo(() => parseInt(year), [year]);
+  const now = useMemo(() => new Date(), []);
+  const isCurrentPeriod = useMemo(
+    () =>
+      currentMonthIndex === now.getMonth() &&
+      currentYear === now.getFullYear(),
+    [currentMonthIndex, currentYear, now]
+  );
 
   const handlePreviousMonth = () => {
     let newMonth = currentMonthIndex - 1;
@@ -86,59 +93,93 @@ export default function HoldingFilter({
     onYearChange(value);
   };
 
+  const handleCurrentMonth = () => {
+    const newMonth = now.getMonth() + 1;
+    const newYear = now.getFullYear();
+    onMonthChange(newMonth.toString());
+    onYearChange(newYear.toString());
+    onFilter(newMonth, newYear);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-1.5 bg-muted/30 p-1 rounded-lg border border-border/50">
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        onClick={handlePreviousMonth}
-        className="h-8 w-8 shrink-0 hover:bg-background"
-        title="Previous month"
-      >
-        <ChevronLeft className="w-4 h-4" />
-      </Button>
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-wrap items-center gap-2 bg-muted/30 p-2 rounded-lg border border-border/50"
+    >
+      <div className="flex flex-wrap items-center gap-1.5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={handlePreviousMonth}
+          className="h-8 w-8 shrink-0 hover:bg-background"
+          title="Previous month"
+          aria-label="Previous month"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
 
-      <Select value={month} onValueChange={handleMonthChange}>
-        <SelectTrigger id="filterMonth" className="w-[130px] h-8 border-none bg-transparent hover:bg-background focus:ring-0">
-          <SelectValue placeholder="Month" />
-        </SelectTrigger>
-        <SelectContent>
-          {months.map((m) => (
-            <SelectItem key={m.value} value={m.value}>
-              {m.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        <Select value={month} onValueChange={handleMonthChange}>
+          <SelectTrigger
+            id="filterMonth"
+            className="min-w-[140px] h-8 border-none bg-transparent hover:bg-background focus:ring-0"
+            aria-label="Filter month"
+          >
+            <SelectValue placeholder="Month" />
+          </SelectTrigger>
+          <SelectContent>
+            {months.map((m) => (
+              <SelectItem key={m.value} value={m.value}>
+                {m.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-      <div className="h-4 w-[1px] bg-border/60 mx-0.5" />
+        <div className="h-4 w-px bg-border/60 mx-0.5" />
 
-      <Input
-        id="filterYear"
-        type="number"
-        min="1900"
-        max="2100"
-        value={year}
-        onChange={(e) => handleYearChange(e.target.value)}
-        className="w-[70px] h-8 border-none bg-transparent hover:bg-background text-center focus-visible:ring-0"
-        placeholder="Year"
-      />
+        <Input
+          id="filterYear"
+          type="number"
+          min="1900"
+          max="2100"
+          inputMode="numeric"
+          value={year}
+          onChange={(e) => handleYearChange(e.target.value)}
+          className="w-[80px] h-8 border-none bg-transparent hover:bg-background text-center focus-visible:ring-0"
+          placeholder="Year"
+          aria-label="Filter year"
+        />
 
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        onClick={handleNextMonth}
-        className="h-8 w-8 shrink-0 hover:bg-background"
-        title="Next month"
-      >
-        <ChevronRight className="w-4 h-4" />
-      </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={handleNextMonth}
+          className="h-8 w-8 shrink-0 hover:bg-background"
+          title="Next month"
+          aria-label="Next month"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
 
-      <Button type="submit" size="sm" variant="secondary" className="h-8 px-3 text-xs font-semibold ml-1">
-        Apply
-      </Button>
+      <div className="flex items-center gap-2 ml-auto">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="h-8 px-2.5 text-xs"
+          onClick={handleCurrentMonth}
+          disabled={isCurrentPeriod}
+        >
+          <CalendarDays className="w-3.5 h-3.5 mr-1.5" />
+          This month
+        </Button>
+        <Button type="submit" size="sm" variant="secondary" className="h-8 px-3 text-xs font-semibold">
+          Apply
+        </Button>
+      </div>
     </form>
   );
 }

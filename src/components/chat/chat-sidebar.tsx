@@ -85,7 +85,7 @@ export function ChatSidebar() {
               className="w-full justify-start gap-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:px-3 rounded-xl border-border/70 bg-card hover:bg-primary/10 hover:text-primary"
             >
               <Link href="/chat" title="New Chat">
-                <Plus className="w-5 h-5 flex-shrink-0" />
+                <Plus className="w-5 h-5 shrink-0" />
                 <span className="group-data-[collapsible=icon]:hidden">
                   New Chat
                 </span>
@@ -125,7 +125,7 @@ export function ChatSidebar() {
                         >
                           <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-3 py-2 pr-8">
                             <MessageSquare className={cn(
-                              "h-4 w-4 flex-shrink-0 transition-all duration-200",
+                              "h-4 w-4 shrink-0 transition-all duration-200",
                               chat.id === currentConversationId
                                 ? "opacity-100 text-primary scale-110"
                                 : "opacity-70 group-hover:opacity-100 group-hover:scale-105"
