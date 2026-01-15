@@ -21,7 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FeatureCard, FeatureList } from "./FeatureCard";
+import { FeatureCard, FeatureList, type GlowColor } from "./FeatureCard";
 
 interface Feature {
   id: string;
@@ -36,8 +36,6 @@ interface Feature {
   glowColor?: "primary" | "blue" | "purple" | "green" | "yellow";
   accentIcon?: LucideIcon;
 }
-
-type GlowColor = "primary" | "blue" | "purple" | "green" | "yellow";
 
 const Features: React.FC = () => {
   const router = useRouter();
