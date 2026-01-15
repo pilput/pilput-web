@@ -60,7 +60,7 @@ npm run start
 The application is Docker-ready with a multi-stage build process:
 ```bash
 # Build and run with Docker
-docker build -t pilput .
+docker build -t pilput -f Dockerfile-bun .
 docker run -p 3000:3000 pilput
 ```
 
@@ -160,7 +160,7 @@ Comprehensive Zod-based validation schemas for:
 - `next.config.ts` - Next.js configuration with security headers and image optimization
 - `tsconfig.json` - TypeScript configuration with path aliases
 - `package.json` - Dependencies and scripts
-- `Dockerfile` - Multi-stage Docker build configuration
+- `Dockerfile-bun` - Multi-stage Docker build configuration
 
 ### Key Utilities
 - `src/lib/validation.ts` - Centralized Zod validation schemas
