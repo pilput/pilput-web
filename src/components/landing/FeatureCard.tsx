@@ -164,7 +164,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = memo(
           "hover:scale-105 hover:shadow-2xl",
           "hover:shadow-primary/20 dark:hover:shadow-primary/30",
           // 3D perspective
-          "hover:[transform:perspective(1000px)_rotateX(var(--rotate-x,0))_rotateY(var(--rotate-y,0))_translateZ(20px)]",
+          "hover:transform-[perspective(1000px)_rotateX(var(--rotate-x,0))_rotateY(var(--rotate-y,0))_translateZ(20px)]",
           className
         )}
         {...props}
