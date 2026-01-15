@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import HoldingHeader from "@/components/dashboard/holdings/HoldingHeader";
 import HoldingFormModal from "@/components/dashboard/holdings/HoldingFormModal";
 import HoldingTable from "@/components/dashboard/holdings/HoldingTable";
@@ -17,8 +17,65 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, Copy, TrendingUp, Eye, EyeOff, LayoutDashboard } from "lucide-react";
+import {
+  PlusCircle,
+  Copy,
+  TrendingUp,
+  Eye,
+  EyeOff,
+  LayoutDashboard,
+} from "lucide-react";
 import Link from "next/link";
+
+const DEFAULT_CURRENCY = "IDR";
+
+type HeaderActionsProps = {
+  hideValues: boolean;
+  onToggleHide: () => void;
+  onOpenDuplicate: () => void;
+  onOpenAdd: () => void;
+};
+
+const HeaderActions = ({
+  hideValues,
+  onToggleHide,
+  onOpenDuplicate,
+  onOpenAdd,
+}: HeaderActionsProps) => {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Button
+        variant="outline"
+        size="icon"
+        className="flex items-center gap-2"
+        onClick={onToggleHide}
+        title={hideValues ? "Show values" : "Hide values"}
+      >
+        {hideValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+      </Button>
+      <Button variant="outline" className="flex items-center gap-2" asChild>
+        <Link href="/dashboard/holdings/overview">
+          <LayoutDashboard className="w-4 h-4" />
+          Overview
+        </Link>
+      </Button>
+      <Button variant="outline" className="flex items-center gap-2" asChild>
+        <Link href="/dashboard/holdings/performance">
+          <TrendingUp className="w-4 h-4" />
+          Performance
+        </Link>
+      </Button>
+      <Button variant="outline" className="flex items-center gap-2" onClick={onOpenDuplicate}>
+        <Copy className="w-4 h-4" />
+        Duplicate
+      </Button>
+      <Button className="flex items-center gap-2" onClick={onOpenAdd}>
+        <PlusCircle className="w-4 h-4" />
+        Add Holding
+      </Button>
+    </div>
+  );
+};
 
 export default function HoldingsPage() {
   const {
@@ -34,20 +91,6 @@ export default function HoldingsPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingHolding, setEditingHolding] = useState<Holding | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    platform: "",
-    holding_type_id: "",
-    currency: "",
-    invested_amount: "",
-    current_value: "",
-    units: "",
-    avg_buy_price: "",
-    current_price: "",
-    month: "",
-    year: "",
-    notes: "",
-  });
   
   const [duplicateOpen, setDuplicateOpen] = useState(false);
   const [filterMonth, setFilterMonth] = useState(
@@ -57,7 +100,6 @@ export default function HoldingsPage() {
     new Date().getFullYear().toString()
   );
   const [hideValues, setHideValues] = useState(() => {
-    // Load preference from localStorage
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("hideHoldingValues");
       return saved === "true";
@@ -65,25 +107,39 @@ export default function HoldingsPage() {
     return false;
   });
 
+  const [formData, setFormData] = useState(() => ({
+    name: "",
+    platform: "",
+    holding_type_id: "",
+    currency: DEFAULT_CURRENCY,
+    invested_amount: "",
+    current_value: "",
+    units: "",
+    avg_buy_price: "",
+    current_price: "",
+    month: filterMonth,
+    year: filterYear,
+    notes: "",
+  }));
+
   useEffect(() => {
     fetchHoldings();
     fetchHoldingTypes();
   }, [fetchHoldings, fetchHoldingTypes]);
 
   useEffect(() => {
-    // Save preference to localStorage
     if (typeof window !== "undefined") {
       localStorage.setItem("hideHoldingValues", hideValues.toString());
     }
   }, [hideValues]);
 
-  function openAddModal() {
+  const openAddModal = useCallback(() => {
     setEditingHolding(null);
     setFormData({
       name: "",
       platform: "",
       holding_type_id: "",
-      currency: "IDR",
+      currency: DEFAULT_CURRENCY,
       invested_amount: "",
       current_value: "",
       units: "",
@@ -94,13 +150,13 @@ export default function HoldingsPage() {
       notes: "",
     });
     setModalOpen(true);
-  }
+  }, [filterMonth, filterYear]);
 
-  function openDuplicateModal() {
+  const openDuplicateModal = useCallback(() => {
     setDuplicateOpen(true);
-  }
+  }, []);
 
-  function openEditModal(holding: Holding) {
+  const openEditModal = useCallback((holding: Holding) => {
     // Check if this is a duplicate (id = 0) - treat as new holding
     const isDuplicate = holding.id === BigInt(0);
     setEditingHolding(isDuplicate ? null : holding);
@@ -119,7 +175,7 @@ export default function HoldingsPage() {
       notes: holding.notes || "",
     });
     setModalOpen(true);
-  }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -127,18 +183,14 @@ export default function HoldingsPage() {
     try {
       const payload = {
         ...formData,
-        holding_type_id: parseInt(formData.holding_type_id),
+        holding_type_id: parseInt(formData.holding_type_id, 10),
         invested_amount: parseFloat(formData.invested_amount),
         current_value: parseFloat(formData.current_value),
         units: formData.units ? parseFloat(formData.units) : null,
-        avg_buy_price: formData.avg_buy_price
-          ? parseFloat(formData.avg_buy_price)
-          : null,
-        current_price: formData.current_price
-          ? parseFloat(formData.current_price)
-          : null,
-        month: parseInt(formData.month),
-        year: parseInt(formData.year),
+        avg_buy_price: formData.avg_buy_price ? parseFloat(formData.avg_buy_price) : null,
+        current_price: formData.current_price ? parseFloat(formData.current_price) : null,
+        month: parseInt(formData.month, 10),
+        year: parseInt(formData.year, 10),
       };
 
       if (editingHolding) {
@@ -170,66 +222,25 @@ export default function HoldingsPage() {
     }
   }
 
-  async function handleFilter(monthOverride?: number, yearOverride?: number) {
-    const month = monthOverride ?? parseInt(filterMonth, 10);
-    const year = yearOverride ?? parseInt(filterYear, 10);
-    await fetchHoldings({ month, year });
-  }
+  const handleFilter = useCallback(
+    async (monthOverride?: number, yearOverride?: number) => {
+      const month = monthOverride ?? parseInt(filterMonth, 10);
+      const year = yearOverride ?? parseInt(filterYear, 10);
+      await fetchHoldings({ month, year });
+    },
+    [fetchHoldings, filterMonth, filterYear]
+  );
 
   return (
     <div className="container mx-auto p-4 md:p-8 space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <HoldingHeader />
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            className="flex items-center gap-2"
-            onClick={() => setHideValues(!hideValues)}
-            title={hideValues ? "Show values" : "Hide values"}
-          >
-            {hideValues ? (
-              <EyeOff className="w-4 h-4" />
-            ) : (
-              <Eye className="w-4 h-4" />
-            )}
-          </Button>
-           <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            asChild
-          >
-            <Link href="/dashboard/holdings/overview">
-                <LayoutDashboard className="w-4 h-4" />
-                Overview
-            </Link>
-          </Button>
-           <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            asChild
-          >
-            <Link href="/dashboard/holdings/performance">
-                <TrendingUp className="w-4 h-4" />
-                Performance
-            </Link>
-          </Button>
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={openDuplicateModal}
-          >
-            <Copy className="w-4 h-4" />
-            Duplicate
-          </Button>
-          <Button
-            className="flex items-center gap-2"
-            onClick={openAddModal}
-          >
-            <PlusCircle className="w-4 h-4" />
-            Add Holding
-          </Button>
-        </div>
+        <HeaderActions
+          hideValues={hideValues}
+          onToggleHide={() => setHideValues(!hideValues)}
+          onOpenDuplicate={openDuplicateModal}
+          onOpenAdd={openAddModal}
+        />
       </div>
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-muted/30 p-4 rounded-lg border">
