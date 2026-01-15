@@ -163,7 +163,7 @@ Configured in `src/utils/getConfig.ts`:
 // Add to src/utils/fetch.ts
 export async function newEndpoint(data: any) {
   try {
-    const response = await axiosInstence.post('/endpoint', data);
+    const response = await axiosInstance.post('/endpoint', data);
     return response.data;
   } catch (error) {
     return ErrorHandlerAPI(error);
@@ -241,7 +241,7 @@ export function Button({ className, variant, size, asChild, ...props }) {
 ### Zustand Store Example
 ```typescript
 import { create } from "zustand"
-import { axiosInstence2 } from "@/utils/fetch"
+import { axiosInstance2 } from "@/utils/fetch"
 import { getToken, RemoveToken } from "@/utils/Auth"
 
 interface authDataState {
@@ -254,7 +254,7 @@ export const authStore = create<authDataState>()((set) => ({
   data: { username: "loading...", email: "Loading..." },
   fetch: async () => {
     try {
-      const { data } = await axiosInstence2.get("/v1/users/me", {
+      const { data } = await axiosInstance2.get("/v1/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
       set({ data: response.data, error: false })

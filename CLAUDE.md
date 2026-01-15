@@ -110,11 +110,11 @@ const fetchUser = authStore(state => state.fetch);
 
 **Dual API Endpoints** in `src/utils/fetch.ts`:
 ```typescript
-export const axiosInstence = axios.create({
+export const axiosInstance = axios.create({
   baseURL: Config.apibaseurl,    // Main API
 });
 
-export const axiosInstence2 = axios.create({
+export const axiosInstance2 = axios.create({
   baseURL: Config.apibaseurl2,   // Secondary API
 });
 ```
@@ -256,7 +256,7 @@ Located in `src/types/`:
 // Add to src/utils/fetch.ts
 export async function newEndpoint(data: any) {
   try {
-    const response = await axiosInstence.post('/endpoint', data);
+    const response = await axiosInstance.post('/endpoint', data);
     return response.data;
   } catch (error) {
     return ErrorHandlerAPI(error);

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { axiosInstence, axiosInstence2 } from '@/utils/fetch'
+import { axiosInstance, axiosInstance2 } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
 import type { Post } from '@/types/post'
 
@@ -15,7 +15,7 @@ export const postsStore = create<PostsState>()((set) => ({
     posts: [],
     fetch: async (limit = 10, offset = 0) => {
         try {
-            const { data } = await axiosInstence2.get("/v1/posts/me", {
+            const { data } = await axiosInstance2.get("/v1/posts/me", {
                 params: { limit: limit, offset: offset },
                 headers: { "Authorization": `Bearer ${getToken()}` }
             })
@@ -32,7 +32,7 @@ export const postsStore = create<PostsState>()((set) => ({
     },
     fetchPublic: async (limit = 10, offset = 0) => {
         try {
-            const { data } = await axiosInstence.get("/v1/posts", {
+            const { data } = await axiosInstance.get("/v1/posts", {
                 params: { limit: limit, offset: offset }
             })
             const response = data

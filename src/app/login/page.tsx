@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance2 } from "@/utils/fetch";
 import { Config } from "@/utils/getConfig";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<LoginFormData> = async (form) => {
     setLoginWait(true);
     try {
-      const { data } = await axiosInstence2.post("/v1/auth/login", form);
+      const { data } = await axiosInstance2.post("/v1/auth/login", form);
       const result = data as AuthResponse;
 
       if (!result.success) {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { getToken, RemoveToken } from "@/utils/Auth";
-import { axiosInstence3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import type { Holding, HoldingType } from "@/types/holding";
@@ -61,7 +61,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         orderDir,
       });
 
-      const { data } = await axiosInstence3.get("/v1/holdings", {
+      const { data } = await axiosInstance3.get("/v1/holdings", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -98,7 +98,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
   fetchHoldingTypes: async () => {
     try {
-      const { data } = await axiosInstence3.get("/v1/holdings/types", {
+      const { data } = await axiosInstance3.get("/v1/holdings/types", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -119,7 +119,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   addHolding: async (payload) => {
     const toastId = toast.loading("Creating...");
     try {
-      await axiosInstence3.post("/v1/holdings", payload, {
+      await axiosInstance3.post("/v1/holdings", payload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -137,7 +137,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   updateHolding: async (id, payload) => {
     const toastId = toast.loading("Updating...");
     try {
-      await axiosInstence3.put(`/v1/holdings/${id}`, payload, {
+      await axiosInstance3.put(`/v1/holdings/${id}`, payload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -155,7 +155,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   deleteHolding: async (id) => {
     const toastId = toast.loading("Deleting...");
     try {
-      await axiosInstence3.delete(`/v1/holdings/${id}`, {
+      await axiosInstance3.delete(`/v1/holdings/${id}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -174,7 +174,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading("Duplicating...");
     try {
       const validatedPayload = duplicateHoldingSchema.parse(payload);
-      await axiosInstence3.post("/v1/holdings/duplicate", validatedPayload, {
+      await axiosInstance3.post("/v1/holdings/duplicate", validatedPayload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

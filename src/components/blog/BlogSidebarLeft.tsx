@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import TrendingPosts from "@/components/post/TrendingPosts";
-import { axiosInstence3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import type { Post } from "@/types/post";
 
@@ -16,7 +16,7 @@ const BlogSidebarLeft = () => {
     async function fetchTrendingPosts() {
       setIsTrendingLoading(true);
       try {
-        const { data } = await axiosInstence3.get("/v1/posts/trending", {
+        const { data } = await axiosInstance3.get("/v1/posts/trending", {
           params: { limit: 5 },
         });
         const response = data;

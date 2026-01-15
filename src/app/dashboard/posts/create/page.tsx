@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { postsStore } from "@/stores/createPostStore";
 import { getToken } from "@/utils/Auth";
-import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import axios, { AxiosError } from "axios";
@@ -32,7 +32,7 @@ export default function PostCreate() {
         const formData = new FormData();
         formData.append("image", file);
 
-        const response = await axiosInstence.post(
+        const response = await axiosInstance.post(
           "/api/v1/posts/image",
           formData,
           {
@@ -51,7 +51,7 @@ export default function PostCreate() {
   async function pulishHandler() {
     const toastid = toast.loading("Loading...");
     try {
-      await axiosInstence2.post("/v1/posts", post, {
+      await axiosInstance2.post("/v1/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       seterrortitle("");

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 import toast from "react-hot-toast";
 import type { User } from "@/types/user";
 
@@ -25,7 +25,7 @@ const UserActionComponent = ({
 }) => {
   const onDelete = async () => {
     const toastid = toast.loading("Loading...");
-    const response = await axiosInstence.delete("/v1/users/" + user.id);
+    const response = await axiosInstance.delete("/v1/users/" + user.id);
     if (response.status === 200) {
       toast.success("User Deleted", { id: toastid });
       refetchUsers();

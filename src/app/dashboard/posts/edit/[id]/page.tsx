@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { updatePostStore } from "@/stores/updatePostStore";
 import { getToken } from "@/utils/Auth";
-import { axiosInstence, axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import axios, { AxiosError } from "axios";
@@ -32,7 +32,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axiosInstence2.get(`/v1/posts/${id}`, {
+        const response = await axiosInstance2.get(`/v1/posts/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const postData = response.data;
@@ -65,7 +65,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
         const formData = new FormData();
         formData.append("image", file);
 
-        const response = await axiosInstence.post(
+        const response = await axiosInstance.post(
           "/api/v1/posts/image",
           formData,
           {
@@ -94,7 +94,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
 
     const toastid = toast.loading("Updating...");
     try {
-      await axiosInstence2.patch(`/v1/posts/${postId}`, post, {
+      await axiosInstance2.patch(`/v1/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       seterrortitle("");

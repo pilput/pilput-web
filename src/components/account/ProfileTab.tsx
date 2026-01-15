@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance2 } from "@/utils/fetch";
 
 interface ProfileFormData {
   username: string;

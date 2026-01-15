@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import {
@@ -29,7 +29,7 @@ interface succesResponse {
 
 const getWriter = async (username: string): Promise<Writer> => {
   try {
-    const { data } = await axiosInstence2(`/v1/writers/${username}`);
+    const { data } = await axiosInstance2(`/v1/writers/${username}`);
     const result = data as succesResponse;
     return result.data;
   } catch {

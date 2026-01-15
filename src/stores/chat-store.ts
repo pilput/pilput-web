@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { type Message } from "@/components/chat/chat-message";
-import { axiosInstence2, axiosInstence3 } from "@/utils/fetch";
+import { axiosInstance2, axiosInstance3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 
@@ -291,7 +291,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await axiosInstence3.get<ConversationsResponse>(
+      const response = await axiosInstance3.get<ConversationsResponse>(
         "/v1/chat/conversations",
         {
           headers: {
@@ -390,7 +390,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await axiosInstence2.get<MessagesResponse>(
+      const response = await axiosInstance2.get<MessagesResponse>(
         `/v1/chat/conversations/${conversationId}`,
         {
           headers: {
@@ -454,7 +454,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         : sanitizedMessage.slice(0, 50) +
           (sanitizedMessage.length > 50 ? "..." : "");
 
-      const response = await axiosInstence2.post<CreateConversationResponse>(
+      const response = await axiosInstance2.post<CreateConversationResponse>(
         "/v1/chat/conversations",
         {
           title: conversationTitle,
@@ -604,7 +604,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await axiosInstence2.delete(
+      const response = await axiosInstance2.delete(
         `/v1/chat/conversations/${conversationId}`,
         {
           headers: {

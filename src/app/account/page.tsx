@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, User, Shield, Bell, AlertTriangle, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance2 } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { toast } from "react-hot-toast";
 
@@ -66,7 +66,7 @@ export default function AccountPage() {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axiosInstence2.get("/v1/auth/profile", {
+      const response = await axiosInstance2.get("/v1/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data);
@@ -94,7 +94,7 @@ export default function AccountPage() {
   const handleProfileUpdate = async (data: any) => {
     setProfileLoading(true);
     try {
-      const response = await axiosInstence2.put("/v1/auth/profile", data, {
+      const response = await axiosInstance2.put("/v1/auth/profile", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -117,7 +117,7 @@ export default function AccountPage() {
 
     setPasswordLoading(true);
     try {
-      await axiosInstence2.put("/v1/auth/password", {
+      await axiosInstance2.put("/v1/auth/password", {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       }, {
@@ -144,7 +144,7 @@ export default function AccountPage() {
     }
 
     try {
-      await axiosInstence2.delete("/v1/auth/account", {
+      await axiosInstance2.delete("/v1/auth/account", {
         headers: { Authorization: `Bearer ${token}` },
       });
       

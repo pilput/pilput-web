@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 
 interface ViewRecorderProps {
@@ -16,7 +16,7 @@ const ViewRecorder = ({ postId }: ViewRecorderProps) => {
         const token = await getToken();
         
         if (token) {
-          await axiosInstence.post(`/v1/posts/${postId}/view`, null, {
+          await axiosInstance.post(`/v1/posts/${postId}/view`, null, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { axiosInstence2 } from "@/utils/fetch";
+import { axiosInstance2 } from "@/utils/fetch";
 import toast from "react-hot-toast";
 import { getToken } from "@/utils/Auth";
 import type { Post } from "@/types/post";
@@ -24,7 +24,7 @@ const ActionComponent = ({
   const onPublish = async () => {
     const id = toast.loading("Updating publish...");
     try {
-      const response = await axiosInstence2.patch(
+      const response = await axiosInstance2.patch(
         `/v1/posts/${post.id}`,
         {
           published: !post.published,
@@ -42,7 +42,7 @@ const ActionComponent = ({
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await axiosInstence2.delete(`/v1/posts/${post.id}`, {
+      const response = await axiosInstance2.delete(`/v1/posts/${post.id}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       toast.success("Delete post", { id });

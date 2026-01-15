@@ -5,7 +5,7 @@ import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
 import { MessageCircle, User, Edit3, LogIn, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { axiosInstence3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -53,7 +53,7 @@ const Comment = ({ postId }: { postId: string }) => {
   const fetchComments = async (page: number = currentPage) => {
     try {
       setIsLoading(true);
-      const response = await axiosInstence3.get(
+      const response = await axiosInstance3.get(
         `/v1/comments/post/${postId}?page=${page}&limit=${COMMENTS_PER_PAGE}`
       );
       console.log("Response data:", response.data);
@@ -145,7 +145,7 @@ const Comment = ({ postId }: { postId: string }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await axiosInstence3.post(
+      const response = await axiosInstance3.post(
         `/v1/comments`,
         {
           text: comment.trim(),

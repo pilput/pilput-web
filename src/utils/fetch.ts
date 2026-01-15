@@ -2,13 +2,13 @@ import axios from "axios";
 import { ErrorHandlerAPI } from "./ErrorHandler";
 import { Config } from "./getConfig";
 
-export const axiosInstence = axios.create({
+export const axiosInstance = axios.create({
   baseURL: Config.apibaseurl,
 });
-export const axiosInstence2 = axios.create({
+export const axiosInstance2 = axios.create({
   baseURL: Config.apibaseurl2,
 });
-export const axiosInstence3 = axios.create({
+export const axiosInstance3 = axios.create({
   baseURL: Config.apibaseurl3,
 });
 

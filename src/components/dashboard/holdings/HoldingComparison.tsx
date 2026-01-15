@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { axiosInstence3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import ComparisonSummaryCards from "./ComparisonSummaryCards";
 import ComparisonChart from "./ComparisonChart";
@@ -54,7 +54,7 @@ export default function HoldingComparison({
 
       const token = getToken();
 
-      const response = await axiosInstence3.get<{
+      const response = await axiosInstance3.get<{
         success: boolean;
         data: ComparisonSummary;
         message: string;

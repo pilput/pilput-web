@@ -1,6 +1,6 @@
 "use client";
 
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 import { useEffect, useState } from "react";
 import Postlist from "../post/Postlist";
 import type { Post } from "@/types/post";
@@ -13,7 +13,7 @@ function Posts(props: { username: string }) {
     async function getPosts() {
       try {
         setLoading(true);
-        const { data } = await axiosInstence.get(
+        const { data } = await axiosInstance.get(
           `/v1/posts/username/${props.username}`
         );
         setposts(data.data);

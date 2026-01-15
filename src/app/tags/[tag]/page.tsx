@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Hash, TrendingUp, Grid, List, Eye } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
-import { axiosInstence } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 
 import type { Post } from "@/types/post";
 
@@ -30,7 +30,7 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
 
       setIsLoading(true);
       try {
-        const { data } = await axiosInstence.get(`/v1/posts/tag/${tag}`, {
+        const { data } = await axiosInstance.get(`/v1/posts/tag/${tag}`, {
           params: { limit: postsPerPage, offset: currentPage * postsPerPage },
         });
         const response = data;
@@ -56,7 +56,7 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
   useEffect(() => {
     async function fetchRelatedTags() {
       try {
-        const response = await axiosInstence.get("/v1/tags");
+        const response = await axiosInstance.get("/v1/tags");
         const allTags = response.data.data.map((tagItem: any) => tagItem.name);
         // Filter out current tag and show related ones
         const filtered = allTags.filter((t: string) => t !== tag).slice(0, 10);
