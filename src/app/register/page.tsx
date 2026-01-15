@@ -43,7 +43,7 @@ export default function Signup() {
   } = useForm<Inputs>({
     resolver: zodResolver(UserSchema),
   });
-  const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     try {
       const response = await axiosInstence2.post("/v1/auth/register", data);
@@ -54,9 +54,9 @@ export default function Signup() {
 
       setCookie("token", response.data.access_token, {
         expires: expire,
-        domain: `.${Config.maindoman}`,
-        sameSite: "none",
         secure: true,
+        domain: `.${Config.maindomain}`,
+        sameSite: "none",
       });
       router.push("/");
     } catch (error) {

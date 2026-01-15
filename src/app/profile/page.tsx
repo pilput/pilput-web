@@ -10,11 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getProfilePicture } from "@/utils/getImage";
 
 const Profile = () => {
   const router = useRouter();
   const { profile, refresh } = profileStore();
-  const ASSET_UPLOAD = process.env.NEXT_PUBLIC_STORAGE;
 
   if (!profile.id) {
     refresh();
@@ -59,7 +59,7 @@ const Profile = () => {
             <div className="relative group">
               <Avatar className="h-32 w-32">
                 <AvatarImage
-                  src={profile.image ? ASSET_UPLOAD + profile.image : "https://placeimg.com/640/480/any"}
+                  src={profile.image ? getProfilePicture(profile.image) : "https://placeimg.com/640/480/any"}
                   alt={profile.fullName || "Profile picture"}
                   className="object-cover"
                 />
