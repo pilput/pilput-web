@@ -169,7 +169,7 @@ export default function AccountPage() {
     <ErrorBoundary>
       <main className="min-h-screen">
         {/* Background gradient matching hero section */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
+        <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
         
         {/* Mesh gradient overlay */}
         <div className="absolute inset-0 opacity-30">

@@ -46,12 +46,12 @@ export default async function page(props: {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20">
         <div className="max-w-5xl mx-auto p-6 space-y-6">
           {/* Profile Header with Cover */}
-          <Card className="overflow-hidden shadow-lg border-0 bg-gradient-to-r from-card to-card/95">
+          <Card className="overflow-hidden shadow-lg border-0 bg-linear-to-r from-card to-card/95">
             {/* Cover Banner */}
-            <div className="h-32 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 relative">
+            <div className="h-32 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 relative">
               <div className="absolute inset-0 bg-black/10" />
             </div>
 
@@ -62,7 +62,7 @@ export default async function page(props: {
                   <div className="relative">
                     <Avatar className="h-24 w-24 border-4 border-background shadow-xl ring-2 ring-white/20">
                       <AvatarImage src={getUrlImage(writer.image)} />
-                      <AvatarFallback className="text-xl font-semibold bg-gradient-to-br from-blue-500 to-purple-500 text-white">
+                      <AvatarFallback className="text-xl font-semibold bg-linear-to-br from-blue-500 to-purple-500 text-white">
                         {writer.first_name?.[0]}
                         {writer.last_name?.[0]}
                       </AvatarFallback>
