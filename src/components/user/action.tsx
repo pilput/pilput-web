@@ -55,7 +55,7 @@ const UserActionComponent = ({
             <span>View Profile</span>
           </Link>
         </DropdownMenuItem>
-        {auth?.issuperadmin && (
+        {auth?.is_super_admin && (
           <>
             <DropdownMenuItem>
               <Link href={`/dashboard/users/edit/${user.id}`} className="flex items-center">

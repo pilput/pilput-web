@@ -99,7 +99,7 @@ export default function ManageUser() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">User Management</h1>
-        {auth?.issuperadmin && (
+        {auth?.is_super_admin && (
           <Dialog open={modaluser} onOpenChange={setmodaluser}>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-2 shadow-sm hover:shadow-md transition-shadow">
@@ -217,11 +217,11 @@ export default function ManageUser() {
                   <TableCell className="text-gray-700 dark:text-gray-300">{user.email}</TableCell>
                   <TableCell>
                     <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium shadow-sm ${
-                      user.issuperadmin
+                      user.is_super_admin
                         ? "bg-primary/10 text-primary ring-1 ring-primary/20"
                         : "bg-muted text-muted-foreground ring-1 ring-muted-foreground/20"
                     }`}>
-                      {user.issuperadmin ? "Admin" : "User"}
+                      {user.is_super_admin ? "Admin" : "User"}
                     </span>
                   </TableCell>
                   <TableCell>

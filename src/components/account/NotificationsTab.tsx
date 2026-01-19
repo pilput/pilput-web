@@ -77,7 +77,7 @@ export default function NotificationsTab({
 
         <Button
           onClick={onSave}
-          className="mt-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105"
+          className="mt-4 w-full sm:w-auto"
         >
           Save Preferences
         </Button>

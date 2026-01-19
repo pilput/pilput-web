@@ -7,23 +7,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { axiosInstance2 } from "@/utils/fetch";
+import { User } from "@/types/user";
 
 interface ProfileFormData {
   username: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
 }
 
-interface UserProfile {
-  id: string;
-  email: string;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+interface UserProfile extends User {}
 
 interface ProfileTabProps {
   user: UserProfile | null;
@@ -40,8 +32,8 @@ export default function ProfileTab({ user, onSubmit, loading }: ProfileTabProps)
     mode: "onBlur",
     defaultValues: {
       username: user?.username || "",
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
     },
   });
 
@@ -94,19 +86,19 @@ export default function ProfileTab({ user, onSubmit, loading }: ProfileTabProps)
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="first_name">First Name</Label>
               <Input
-                id="firstName"
+                id="first_name"
                 placeholder="First name"
-                {...register("firstName")}
+                {...register("first_name")}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="last_name">Last Name</Label>
               <Input
-                id="lastName"
+                id="last_name"
                 placeholder="Last name"
-                {...register("lastName")}
+                {...register("last_name")}
               />
             </div>
           </div>
@@ -114,7 +106,7 @@ export default function ProfileTab({ user, onSubmit, loading }: ProfileTabProps)
           <Button 
             type="submit" 
             disabled={loading}
-            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105"
+            className="w-full sm:w-auto"
           >
             {loading ? (
               <>

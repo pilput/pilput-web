@@ -139,7 +139,7 @@ export default function SecurityTab({ onSubmit, loading }: SecurityTabProps) {
           <Button 
             type="submit" 
             disabled={loading}
-            className="bg-linear-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105"
+            className="w-full sm:w-auto"
           >
             {loading ? (
               <>
