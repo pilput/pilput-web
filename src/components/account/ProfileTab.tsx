@@ -58,9 +58,9 @@ export default function ProfileTab({ user, onSubmit, loading }: ProfileTabProps)
               type="email"
               value={user?.email || ""}
               disabled
-              className="bg-gray-50 dark:bg-gray-800"
+              className="bg-muted/50"
             />
-            <p className="text-sm text-gray-500">Email cannot be changed</p>
+            <p className="text-sm text-muted-foreground">Email cannot be changed</p>
           </div>
 
           <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function ProfileTab({ user, onSubmit, loading }: ProfileTabProps)
               })}
             />
             {errors.username && (
-              <p className="text-sm text-red-500">{errors.username.message}</p>
+              <p className="text-sm text-destructive">{errors.username.message}</p>
             )}
           </div>
 

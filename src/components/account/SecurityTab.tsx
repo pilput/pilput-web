@@ -56,7 +56,7 @@ export default function SecurityTab({ onSubmit, loading }: SecurityTabProps) {
           <div className="space-y-2">
             <Label htmlFor="currentPassword">Current Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="currentPassword"
                 type={showCurrentPassword ? "text" : "password"}
@@ -68,21 +68,21 @@ export default function SecurityTab({ onSubmit, loading }: SecurityTabProps) {
               />
               <button
                 type="button"
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
               >
                 {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {errors.currentPassword && (
-              <p className="text-sm text-red-500">{errors.currentPassword.message}</p>
+              <p className="text-sm text-destructive">{errors.currentPassword.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="newPassword">New Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="newPassword"
                 type={showNewPassword ? "text" : "password"}
@@ -98,21 +98,21 @@ export default function SecurityTab({ onSubmit, loading }: SecurityTabProps) {
               />
               <button
                 type="button"
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
                 {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {errors.newPassword && (
-              <p className="text-sm text-red-500">{errors.newPassword.message}</p>
+              <p className="text-sm text-destructive">{errors.newPassword.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm New Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
@@ -125,14 +125,14 @@ export default function SecurityTab({ onSubmit, loading }: SecurityTabProps) {
               />
               <button
                 type="button"
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
+              <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
           </div>
 
