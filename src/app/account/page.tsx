@@ -102,8 +102,9 @@ export default function AccountPage() {
       await axiosInstance3.patch(
         "/v1/auth/password",
         {
-          currentPassword: data.old_password,
-          newPassword: data.new_password,
+          old_password: data.old_password,
+          new_password: data.new_password,
+          confirm_password: data.confirm_password,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
