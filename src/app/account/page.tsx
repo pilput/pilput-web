@@ -92,7 +92,7 @@ export default function AccountPage() {
   };
 
   const handlePasswordUpdate = async (data: any) => {
-    if (data.newPassword !== data.confirmPassword) {
+    if (data.new_password !== data.confirm_password) {
       toast.error("New passwords do not match");
       return;
     }
@@ -102,8 +102,8 @@ export default function AccountPage() {
       await axiosInstance3.patch(
         "/v1/auth/password",
         {
-          currentPassword: data.currentPassword,
-          newPassword: data.newPassword,
+          currentPassword: data.old_password,
+          newPassword: data.new_password,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
