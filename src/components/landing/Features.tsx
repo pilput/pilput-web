@@ -123,7 +123,7 @@ const Features: React.FC = () => {
       icon: Zap,
       title: "Lightning Fast",
       description:
-        "Built with Next.js and optimized for performance. Experience blazing fast load times and seamless interactions across all devices.",
+        "Optimized for performance. Experience blazing fast load times and seamless interactions across all devices.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-yellow-500/10 via-transparent to-transparent" />
@@ -288,9 +288,8 @@ const Features: React.FC = () => {
             }}
             className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light"
           >
-            Everything you need to create, share, and connect. Built with
-            cutting-edge technology and designed for the ultimate creative
-            experience.
+            Everything you need to create, share, and connect. Designed for the
+            ultimate creative experience.
           </motion.p>
         </motion.header>
 
