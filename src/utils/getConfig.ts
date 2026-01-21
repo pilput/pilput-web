@@ -9,7 +9,7 @@ export interface AppConfig {
 }
 
 export const Config: AppConfig = {
-  apibaseurl: process.env.NEXT_PUBLIC_API_URL || "https://echo.pilput.me",
+  apibaseurl: process.env.NEXT_PUBLIC_API_URL || "https://axum-pilput.up.railway.app",
   apibaseurl2: process.env.NEXT_PUBLIC_API_URL_2 || "https://api.pilput.me",
   apibaseurl3: process.env.NEXT_PUBLIC_API_URL_3 || "https://hono.pilput.me",
   wsbaseurl: process.env.NEXT_PUBLIC_WS_URL || "https://api.pilput.me",

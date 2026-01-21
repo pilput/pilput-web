@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import PostItem from "./PostItem";
-import { axiosInstance3 } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import PostItemPulse from "./PostItemPulse";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const PostsRandomList = () => {
   const fetchRandomPosts = async () => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance3.get("/v1/posts/random?limit=6");
+      const response = await axiosInstance.get("/v1/posts/random?limit=6");
       const result = response.data as succesResponse;
       setposts(result.data);
     } catch {
@@ -86,7 +86,7 @@ const PostsRandomList = () => {
       >
         {isLoading
           ? tempposts.map((post) => <PostItemPulse key={post} />)
-          : posts.map((post) => <PostItem key={post.id} post={post} />)}
+          : posts.map((post) => <PostItem key={post.id} post={post} showStats={false} />)}
       </div>
 
       {/* Empty State */}

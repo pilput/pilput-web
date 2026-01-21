@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProfilePicture } from "@/utils/getImage";
 
-const PostItem = ({ post }: { post: Post }) => {
+const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
   const formattedDate = new Date(post.created_at).toLocaleDateString(undefined, {
     year: 'numeric',
@@ -54,16 +54,18 @@ const PostItem = ({ post }: { post: Post }) => {
             </span>
           </div>
           
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-1" title="Views">
-              <Eye className="h-3.5 w-3.5" />
-              <span>{post.view_count}</span>
+          {showStats && (
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-1" title="Views">
+                <Eye className="h-3.5 w-3.5" />
+                <span>{post.view_count}</span>
+              </div>
+              <div className="flex items-center space-x-1 group-hover:text-red-500/70 transition-colors" title="Likes">
+                <Heart className="h-3.5 w-3.5" />
+                <span>{post.likes_count || 0}</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-1 group-hover:text-red-500/70 transition-colors" title="Likes">
-              <Heart className="h-3.5 w-3.5" />
-              <span>{post.likes_count || 0}</span>
-            </div>
-          </div>
+          )}
         </CardFooter>
       </Card>
     </Link>
