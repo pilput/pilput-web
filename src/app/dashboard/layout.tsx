@@ -3,7 +3,7 @@
 import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import Link from "next/link";
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
@@ -25,9 +25,7 @@ import {
   Home,
   Users,
   FileText,
-  FolderOpen,
-  User,
-  Menu,
+  ArrowLeft,
   DollarSign,
   TrendingUp,
   LayoutDashboard,
@@ -129,14 +127,11 @@ function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-accent text-sidebar-accent-foreground">
-                <User className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Admin User</span>
-                <span className="truncate text-xs">admin@pilput.me</span>
-              </div>
+            <SidebarMenuButton asChild>
+              <Link href="/" className="w-full">
+                <ArrowLeft className="size-4" />
+                <span>Back to Home</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -163,9 +158,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="flex-1 rounded-xl border border-border/60 bg-card/70 shadow-[0_24px_60px_-40px_rgba(0,0,0,0.45)]">
             <Card className="border-0 shadow-none bg-transparent">
-              <CardContent className="p-6">
-                {children}
-              </CardContent>
+              <CardContent className="p-6">{children}</CardContent>
             </Card>
           </div>
         </div>
