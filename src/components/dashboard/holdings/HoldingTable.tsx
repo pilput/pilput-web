@@ -151,7 +151,7 @@ export default function HoldingTable({
       className={`font-semibold cursor-pointer hover:text-foreground transition-colors ${className}`}
       onClick={() => handleSort(columnKey)}
     >
-      <div className="flex items-center">
+      <div className="flex items-center whitespace-nowrap">
         {label}
         <SortIcon column={columnKey} />
       </div>
@@ -170,23 +170,23 @@ export default function HoldingTable({
   return (
     <div>
       {/* Filter Tabs */}
-      <div className="p-4 border-b bg-muted/20 space-y-3">
+      <div className="p-3 sm:p-4 border-b bg-muted/20 space-y-2 sm:space-y-3">
         {/* Main Filter Tabs: ALL, Platform, Type */}
         <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="platform">By Platform</TabsTrigger>
-            <TabsTrigger value="type">By Type</TabsTrigger>
+          <TabsList className="w-full sm:w-auto flex-wrap h-auto">
+            <TabsTrigger value="all" className="text-xs sm:text-sm">All</TabsTrigger>
+            <TabsTrigger value="platform" className="text-xs sm:text-sm">By Platform</TabsTrigger>
+            <TabsTrigger value="type" className="text-xs sm:text-sm">By Type</TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Sub-filters based on selected main filter */}
         {filterType === "platform" && uniquePlatforms.length > 0 && (
           <Tabs value={selectedPlatform} onValueChange={setSelectedPlatform}>
-            <TabsList className="flex-wrap h-auto gap-1">
-              <TabsTrigger value="all">All Platforms</TabsTrigger>
+            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto">
+              <TabsTrigger value="all" className="text-xs sm:text-sm">All Platforms</TabsTrigger>
               {uniquePlatforms.map((platform) => (
-                <TabsTrigger key={platform} value={platform}>
+                <TabsTrigger key={platform} value={platform} className="text-xs sm:text-sm">
                   {platform}
                 </TabsTrigger>
               ))}
@@ -196,10 +196,10 @@ export default function HoldingTable({
 
         {filterType === "type" && uniqueTypes.length > 0 && (
           <Tabs value={selectedType} onValueChange={setSelectedType}>
-            <TabsList className="flex-wrap h-auto gap-1">
-              <TabsTrigger value="all">All Types</TabsTrigger>
+            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto">
+              <TabsTrigger value="all" className="text-xs sm:text-sm">All Types</TabsTrigger>
               {uniqueTypes.map((type) => (
-                <TabsTrigger key={type.id} value={type.id.toString()}>
+                <TabsTrigger key={type.id} value={type.id.toString()} className="text-xs sm:text-sm">
                   {type.name}
                 </TabsTrigger>
               ))}
@@ -209,25 +209,26 @@ export default function HoldingTable({
 
         {/* Filter Summary */}
         {(filterType !== "all" || sortedHoldings.length !== holdings.length) && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Showing {sortedHoldings.length} of {holdings.length} holdings
           </p>
         )}
       </div>
 
-      <Table>
+      <div className="overflow-x-auto -mx-0 sm:mx-0">
+        <Table className="min-w-[800px] sm:min-w-0">
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/60">
-            <TableHead className="w-16 font-semibold">#</TableHead>
-            <HeaderCell label="Name" columnKey="name" />
-            <HeaderCell label="Platform" columnKey="platform" />
-            <HeaderCell label="Type" columnKey="holding_type" />
-            <HeaderCell label="Invested Amount" columnKey="invested_amount" />
-            <HeaderCell label="Current Value" columnKey="current_value" />
-            <HeaderCell label="Realized Value" columnKey="realized_value" />
-            <HeaderCell label="Realized %" columnKey="realized_percent" />
-            <TableHead className="w-12.5"></TableHead>
-            <TableHead className="w-30 font-semibold">Actions</TableHead>
+            <TableHead className="w-12 sm:w-16 font-semibold text-xs sm:text-sm">#</TableHead>
+            <HeaderCell label="Name" columnKey="name" className="text-xs sm:text-sm" />
+            <HeaderCell label="Platform" columnKey="platform" className="text-xs sm:text-sm" />
+            <HeaderCell label="Type" columnKey="holding_type" className="text-xs sm:text-sm" />
+            <HeaderCell label="Invested Amount" columnKey="invested_amount" className="text-xs sm:text-sm" />
+            <HeaderCell label="Current Value" columnKey="current_value" className="text-xs sm:text-sm" />
+            <HeaderCell label="Realized Value" columnKey="realized_value" className="text-xs sm:text-sm" />
+            <HeaderCell label="Realized %" columnKey="realized_percent" className="text-xs sm:text-sm" />
+            <TableHead className="w-8 sm:w-12"></TableHead>
+            <TableHead className="w-24 sm:w-30 font-semibold text-xs sm:text-sm">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -297,6 +298,7 @@ export default function HoldingTable({
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }

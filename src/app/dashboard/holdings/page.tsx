@@ -47,31 +47,52 @@ const HeaderActions = ({
       <Button
         variant="outline"
         size="icon"
-        className="flex items-center gap-2"
+        className="shrink-0"
         onClick={onToggleHide}
         title={hideValues ? "Show values" : "Hide values"}
+        aria-label={hideValues ? "Show values" : "Hide values"}
       >
         {hideValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
       </Button>
-      <Button variant="outline" className="flex items-center gap-2" asChild>
+      <Button 
+        variant="outline" 
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
+        asChild
+      >
         <Link href="/dashboard/holdings/overview">
-          <LayoutDashboard className="w-4 h-4" />
-          Overview
+          <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Overview</span>
         </Link>
       </Button>
-      <Button variant="outline" className="flex items-center gap-2" asChild>
+      <Button 
+        variant="outline" 
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
+        asChild
+      >
         <Link href="/dashboard/holdings/performance">
-          <TrendingUp className="w-4 h-4" />
-          Performance
+          <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Performance</span>
         </Link>
       </Button>
-      <Button variant="outline" className="flex items-center gap-2" onClick={onOpenDuplicate}>
-        <Copy className="w-4 h-4" />
-        Duplicate
+      <Button 
+        variant="outline" 
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
+        onClick={onOpenDuplicate}
+      >
+        <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <span className="hidden sm:inline">Duplicate</span>
       </Button>
-      <Button className="flex items-center gap-2" onClick={onOpenAdd}>
-        <PlusCircle className="w-4 h-4" />
-        Add Holding
+      <Button 
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold" 
+        onClick={onOpenAdd}
+      >
+        <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <span className="hidden xs:inline sm:inline">Add Holding</span>
+        <span className="xs:hidden">Add</span>
       </Button>
     </div>
   );
@@ -232,54 +253,64 @@ export default function HoldingsPage() {
   );
 
   return (
-    <div className="container mx-auto p-4 md:p-8 space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <HoldingHeader />
-        <HeaderActions
-          hideValues={hideValues}
-          onToggleHide={() => setHideValues(!hideValues)}
-          onOpenDuplicate={openDuplicateModal}
-          onOpenAdd={openAddModal}
-        />
+    <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+          <HoldingHeader />
+          <HeaderActions
+            hideValues={hideValues}
+            onToggleHide={() => setHideValues(!hideValues)}
+            onOpenDuplicate={openDuplicateModal}
+            onOpenAdd={openAddModal}
+          />
+        </div>
+
+        {/* Filter Section */}
+        <div className="bg-muted/30 p-3 sm:p-4 rounded-lg border">
+          <HoldingFilter
+            month={filterMonth}
+            year={filterYear}
+            onMonthChange={setFilterMonth}
+            onYearChange={setFilterYear}
+            onFilter={handleFilter}
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-muted/30 p-4 rounded-lg border">
-        <HoldingFilter
-          month={filterMonth}
-          year={filterYear}
-          onMonthChange={setFilterMonth}
-          onYearChange={setFilterYear}
-          onFilter={handleFilter}
-        />
-      </div>
-
-      <div className="space-y-8">
+      {/* Portfolio Summary */}
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight mb-4 px-1">Portfolio Summary</h2>
+          <h2 className="text-base sm:text-lg font-semibold tracking-tight mb-3 sm:mb-4 px-1">
+            Portfolio Summary
+          </h2>
           <HoldingSummaryCards holdings={holdings} isLoading={isLoading} hideValues={hideValues} />
         </div>
       </div>
 
+      {/* Holdings Table Card */}
       <Card className="shadow-sm">
-        <CardHeader className="border-b bg-muted/10 pb-4">
+        <CardHeader className="border-b bg-muted/10 pb-3 sm:pb-4 px-3 sm:px-6">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Holdings Inventory</CardTitle>
-              <CardDescription className="mt-1">
+            <div className="min-w-0">
+              <CardTitle className="text-base sm:text-lg">Holdings Inventory</CardTitle>
+              <CardDescription className="mt-1 text-xs sm:text-sm">
                 Review your investment performance for the selected period.
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <HoldingTable
-            holdings={holdings}
-            isLoading={isLoading}
-            expandedRows={expandedRows}
-            toggleExpand={toggleExpand}
-            onEdit={openEditModal}
-            hideValues={hideValues}
-          />
+          <div className="overflow-x-auto">
+            <HoldingTable
+              holdings={holdings}
+              isLoading={isLoading}
+              expandedRows={expandedRows}
+              toggleExpand={toggleExpand}
+              onEdit={openEditModal}
+              hideValues={hideValues}
+            />
+          </div>
         </CardContent>
       </Card>
 
