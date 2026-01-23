@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Holding } from "@/types/holding";
 import HoldingTableRow from "./HoldingTableRow";
 import HoldingTotalRow from "./HoldingTotalRow";
@@ -27,6 +28,8 @@ type SortConfig = {
   direction: "asc" | "desc";
 };
 
+type FilterType = "all" | "platform" | "type";
+
 export default function HoldingTable({
   holdings,
   isLoading,
@@ -39,6 +42,25 @@ export default function HoldingTable({
     key: "name",
     direction: "asc",
   });
+  const [filterType, setFilterType] = useState<FilterType>("all");
+  const [selectedPlatform, setSelectedPlatform] = useState<string>("all");
+  const [selectedType, setSelectedType] = useState<string>("all");
+
+  // Get unique platforms and types from holdings
+  const uniquePlatforms = useMemo(() => {
+    const platforms = [...new Set(holdings.map((h) => h.platform))];
+    return platforms.sort((a, b) => a.localeCompare(b));
+  }, [holdings]);
+
+  const uniqueTypes = useMemo(() => {
+    const types = holdings.reduce((acc, h) => {
+      if (!acc.find((t) => t.id === h.holding_type.id)) {
+        acc.push({ id: h.holding_type.id, name: h.holding_type.name });
+      }
+      return acc;
+    }, [] as { id: number; name: string }[]);
+    return types.sort((a, b) => a.name.localeCompare(b.name));
+  }, [holdings]);
 
   const handleSort = (column: string) => {
     setSortConfig((current) => ({
@@ -48,8 +70,19 @@ export default function HoldingTable({
     }));
   };
 
+  // Filter holdings based on selected filter
+  const filteredHoldings = useMemo(() => {
+    if (filterType === "platform" && selectedPlatform !== "all") {
+      return holdings.filter((h) => h.platform === selectedPlatform);
+    }
+    if (filterType === "type" && selectedType !== "all") {
+      return holdings.filter((h) => h.holding_type.id.toString() === selectedType);
+    }
+    return holdings;
+  }, [holdings, filterType, selectedPlatform, selectedType]);
+
   const sortedHoldings = useMemo(() => {
-    const sorted = [...holdings];
+    const sorted = [...filteredHoldings];
     return sorted.sort((a, b) => {
       const { key, direction } = sortConfig;
       let aValue: any;
@@ -93,7 +126,7 @@ export default function HoldingTable({
 
       return 0;
     });
-  }, [holdings, sortConfig]);
+  }, [filteredHoldings, sortConfig]);
 
   const SortIcon = ({ column }: { column: string }) => {
     if (sortConfig.key !== column)
@@ -125,8 +158,63 @@ export default function HoldingTable({
     </TableHead>
   );
 
+  const handleFilterTypeChange = (value: string) => {
+    setFilterType(value as FilterType);
+    // Reset sub-filters when changing main filter type
+    if (value === "all") {
+      setSelectedPlatform("all");
+      setSelectedType("all");
+    }
+  };
+
   return (
-    <div className="rounded-lg border">
+    <div>
+      {/* Filter Tabs */}
+      <div className="p-4 border-b bg-muted/20 space-y-3">
+        {/* Main Filter Tabs: ALL, Platform, Type */}
+        <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="platform">By Platform</TabsTrigger>
+            <TabsTrigger value="type">By Type</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* Sub-filters based on selected main filter */}
+        {filterType === "platform" && uniquePlatforms.length > 0 && (
+          <Tabs value={selectedPlatform} onValueChange={setSelectedPlatform}>
+            <TabsList className="flex-wrap h-auto gap-1">
+              <TabsTrigger value="all">All Platforms</TabsTrigger>
+              {uniquePlatforms.map((platform) => (
+                <TabsTrigger key={platform} value={platform}>
+                  {platform}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        )}
+
+        {filterType === "type" && uniqueTypes.length > 0 && (
+          <Tabs value={selectedType} onValueChange={setSelectedType}>
+            <TabsList className="flex-wrap h-auto gap-1">
+              <TabsTrigger value="all">All Types</TabsTrigger>
+              {uniqueTypes.map((type) => (
+                <TabsTrigger key={type.id} value={type.id.toString()}>
+                  {type.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        )}
+
+        {/* Filter Summary */}
+        {(filterType !== "all" || sortedHoldings.length !== holdings.length) && (
+          <p className="text-sm text-muted-foreground">
+            Showing {sortedHoldings.length} of {holdings.length} holdings
+          </p>
+        )}
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/60">
