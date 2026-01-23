@@ -26,17 +26,22 @@ export default function PerformancePage() {
   }, [hideValues]);
 
   return (
-    <div className="container mx-auto p-4 md:p-8 space-y-8">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-              <Link href="/dashboard/holdings">
-                  <ArrowLeft className="w-4 h-4" />
-              </Link>
+    <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+          <Button variant="ghost" size="icon" className="shrink-0" asChild>
+            <Link href="/dashboard/holdings">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
           </Button>
-          <div>
-              <h1 className="text-2xl font-bold tracking-tight">Monthly Performance</h1>
-              <p className="text-muted-foreground">Compare your portfolio performance month over month.</p>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+              Monthly Performance
+            </h1>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+              Compare your portfolio performance month over month.
+            </p>
           </div>
         </div>
         <Button
@@ -44,6 +49,8 @@ export default function PerformancePage() {
           size="icon"
           onClick={() => setHideValues(!hideValues)}
           title={hideValues ? "Show values" : "Hide values"}
+          className="shrink-0 self-start sm:self-center"
+          aria-label={hideValues ? "Show values" : "Hide values"}
         >
           {hideValues ? (
             <EyeOff className="w-4 h-4" />

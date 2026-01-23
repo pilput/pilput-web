@@ -23,7 +23,12 @@ export default function OverviewChart({
   const [internalHiddenTypes, setInternalHiddenTypes] = React.useState<string[]>([])
   const hiddenTypes = onToggleType ? externalHiddenTypes : internalHiddenTypes
 
-  // Aggregate and compute chart data in one pass
+  // Calculate total for percentage calculations
+  const totalValue = React.useMemo(() => {
+    return holdings.reduce((sum, h) => sum + parseFloat(h.current_value), 0)
+  }, [holdings])
+
+  // Aggregate and compute chart data in one pass with percentages
   const { chartData, typeNames } = React.useMemo(() => {
     const typeMap = new Map<string, number>()
     const typeSet = new Set<string>()
@@ -38,15 +43,20 @@ export default function OverviewChart({
     })
     
     const names = Array.from(typeSet)
-    const data = names.map(name => ({ 
-      name, 
-      value: typeMap.get(name) || 0 
-    }))
+    const data = names.map(name => {
+      const value = typeMap.get(name) || 0
+      const percent = totalValue > 0 ? (value / totalValue) * 100 : 0
+      return { 
+        name, 
+        value,
+        percent: parseFloat(percent.toFixed(1))
+      }
+    }).sort((a, b) => b.value - a.value)
     
     return { chartData: data, typeNames: names }
-  }, [holdings, hiddenTypes])
+  }, [holdings, hiddenTypes, totalValue])
 
-  // Platform distribution
+  // Platform distribution with percentages
   const platformDistribution = React.useMemo(() => {
     const map = new Map<string, number>()
     holdings.forEach(h => {
@@ -55,9 +65,16 @@ export default function OverviewChart({
       map.set(platform, (map.get(platform) || 0) + value)
     })
     return Array.from(map.entries())
-      .map(([name, value]) => ({ name, value }))
+      .map(([name, value]) => {
+        const percent = totalValue > 0 ? (value / totalValue) * 100 : 0
+        return { 
+          name, 
+          value,
+          percent: parseFloat(percent.toFixed(1))
+        }
+      })
       .sort((a, b) => b.value - a.value)
-  }, [holdings])
+  }, [holdings, totalValue])
 
   // Chart colors
   const CHART_COLORS = [
@@ -82,14 +99,18 @@ export default function OverviewChart({
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
+      const data = payload[0].payload
       return (
         <div className="rounded-lg border bg-popover p-2 shadow-md text-popover-foreground">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              {payload[0].name}
+              {data.name}
             </span>
             <span className="text-sm font-bold font-mono">
-              {hideValues ? "••••••" : formatCurrency(payload[0].value, "IDR")}
+              {hideValues ? "••••••" : formatCurrency(data.value, "IDR")}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {hideValues ? "•••" : `${data.percent}%`} of portfolio
             </span>
           </div>
         </div>
@@ -115,6 +136,11 @@ export default function OverviewChart({
               style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
             />
             <span className="text-sm text-muted-foreground">{entry.name}</span>
+            {!hideValues && (
+              <span className="text-xs font-semibold text-foreground">
+                {entry.percent}%
+              </span>
+            )}
           </div>
         )
       })}
@@ -167,7 +193,7 @@ export default function OverviewChart({
       <Card className="flex flex-col border-none shadow-none bg-muted/30">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-semibold">Platform Distribution</CardTitle>
-          <CardDescription>Value across platforms</CardDescription>
+          <CardDescription>Value and percentage across platforms</CardDescription>
         </CardHeader>
         <CardContent className="flex-1">
           <div className="h-62.5 w-full">
@@ -176,7 +202,7 @@ export default function OverviewChart({
                 <BarChart
                   data={platformDistribution}
                   layout="vertical"
-                  margin={{ top: 5, right: 40, left: 0, bottom: 5 }}
+                  margin={{ top: 5, right: 60, left: 0, bottom: 5 }}
                   barCategoryGap="30%"
                 >
                   <XAxis type="number" hide />
@@ -209,6 +235,25 @@ export default function OverviewChart({
               </div>
             )}
           </div>
+          {/* Percentage labels for platforms */}
+          {platformDistribution.length > 0 && (
+            <div className="mt-4 space-y-2">
+              {platformDistribution.map((item, index) => (
+                <div key={index} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+                    />
+                    <span className="text-muted-foreground">{item.name}</span>
+                  </div>
+                  <span className="font-semibold">
+                    {hideValues ? "•••" : `${item.percent}%`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
