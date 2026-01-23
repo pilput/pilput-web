@@ -123,14 +123,6 @@ export default function LoginPage() {
     }
   };
 
-  function oauthGithub() {
-    // For GitHub OAuth, we could theoretically store the redirect URL,
-    // but this depends on how your backend handles OAuth state.
-    // For now, we'll keep it simple - the backend should handle redirect
-    // after OAuth completion if it's set up to do so.
-    window.location.href = `${Config.apibaseurl2}/v1/auth/github`;
-  }
-
   return (
     <ErrorBoundary>
       <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary/5 to-background p-4" role="main">
@@ -254,16 +246,14 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={oauthGithub}
+          <Link
+            href={`${Config.apibaseurl3}/v1/auth/oauth/github`}
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
             aria-label="Sign in with GitHub"
           >
             <GithubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
             Github
-          </Button>
+          </Link>
 
           <div className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
