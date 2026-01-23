@@ -14,7 +14,7 @@ const Footer = () => {
               href="/"
               className="text-lg font-semibold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
             >
-              pilput.me
+              pilput.net
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               A calm, fast publishing home for people who want to write and ship without friction.
@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border/60 pt-6 text-sm text-muted-foreground lg:flex-row lg:items-center lg:justify-between">
-          <p className="order-2 lg:order-1">(c) {currentYear} pilput.me. All rights reserved.</p>
+          <p className="order-2 lg:order-1">(c) {currentYear} pilput.net. All rights reserved.</p>
           <p className="order-1 lg:order-2 text-xs uppercase tracking-[0.08em] text-muted-foreground/80">
             Built for focus, performance, and creators.
           </p>

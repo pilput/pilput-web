@@ -108,7 +108,7 @@ const AboutMe = () => {
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" asChild className="hover:text-purple-500 hover:border-purple-500/50 transition-colors">
-                  <Link href="https://pilput.me" target="_blank" aria-label="Personal Website">
+                  <Link href="https://pilput.net" target="_blank" aria-label="Personal Website">
                     <Globe className="h-5 w-5" />
                   </Link>
                 </Button>
