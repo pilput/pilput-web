@@ -45,6 +45,7 @@ function getHoldingTypeColor(typeName: string) {
 
 interface HoldingTableRowProps {
   holding: Holding;
+  index: number;
   expandedRows: Set<bigint>;
   toggleExpand: (id: bigint) => void;
   onEdit: (holding: Holding) => void;
@@ -53,6 +54,7 @@ interface HoldingTableRowProps {
 
 export default function HoldingTableRow({
   holding,
+  index,
   expandedRows,
   toggleExpand,
   onEdit,
@@ -67,6 +69,7 @@ export default function HoldingTableRow({
 
   const mainRow = (
     <TableRow key={holding.id.toString()} className="hover:bg-muted/50">
+      <TableCell className="text-muted-foreground font-medium">{index}</TableCell>
       <TableCell className="font-medium">{holding.name}</TableCell>
       <TableCell>{holding.platform}</TableCell>
       <TableCell>
@@ -74,7 +77,6 @@ export default function HoldingTableRow({
           {holding.holding_type.name}
         </Badge>
       </TableCell>
-      <TableCell className="font-medium">{holding.currency}</TableCell>
       <TableCell className="font-mono">
         {hideValues ? maskValue() : formatCurrency(invested, holding.currency, { showSymbol: false })}
       </TableCell>

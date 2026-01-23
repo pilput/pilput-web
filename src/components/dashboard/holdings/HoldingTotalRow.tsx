@@ -74,7 +74,7 @@ export default function HoldingTotalRow({ holdings, hideValues = false }: Holdin
       >
         {hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
       </TableCell>
-      <TableCell colSpan={4}></TableCell>
+      <TableCell colSpan={2}></TableCell>
     </TableRow>
   );
 }

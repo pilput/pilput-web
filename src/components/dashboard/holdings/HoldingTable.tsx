@@ -218,10 +218,10 @@ export default function HoldingTable({
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/60">
+            <TableHead className="w-16 font-semibold">#</TableHead>
             <HeaderCell label="Name" columnKey="name" />
             <HeaderCell label="Platform" columnKey="platform" />
             <HeaderCell label="Type" columnKey="holding_type" />
-            <HeaderCell label="Currency" columnKey="currency" />
             <HeaderCell label="Invested Amount" columnKey="invested_amount" />
             <HeaderCell label="Current Value" columnKey="current_value" />
             <HeaderCell label="Realized Value" columnKey="realized_value" />
@@ -235,6 +235,9 @@ export default function HoldingTable({
             Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i} className="hover:bg-muted/50">
                 <TableCell>
+                  <Skeleton className="h-4 w-8" />
+                </TableCell>
+                <TableCell>
                   <Skeleton className="h-4 w-37.5" />
                 </TableCell>
                 <TableCell>
@@ -242,9 +245,6 @@ export default function HoldingTable({
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-25" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-12.5" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-25" />
@@ -278,10 +278,11 @@ export default function HoldingTable({
             </TableRow>
           ) : (
             <>
-              {sortedHoldings.map((holding) => (
+              {sortedHoldings.map((holding, index) => (
                 <HoldingTableRow
                   key={holding.id.toString()}
                   holding={holding}
+                  index={index + 1}
                   expandedRows={expandedRows}
                   toggleExpand={toggleExpand}
                   onEdit={onEdit}

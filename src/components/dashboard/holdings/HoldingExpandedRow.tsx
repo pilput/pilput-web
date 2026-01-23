@@ -12,8 +12,14 @@ export default function HoldingExpandedRow({ holding, hideValues = false }: Hold
 
   return (
     <TableRow key={`${holding.id}-expanded`}>
-      <TableCell colSpan={12} className="bg-muted/20 p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <TableCell colSpan={10} className="bg-muted/20 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+          <div className="space-y-1">
+            <strong className="text-muted-foreground">Currency:</strong>
+            <div className="font-medium text-base">
+              {holding.currency}
+            </div>
+          </div>
           <div className="space-y-1">
             <strong className="text-muted-foreground">Units:</strong>
             <div className="font-mono text-base">
@@ -45,7 +51,7 @@ export default function HoldingExpandedRow({ holding, hideValues = false }: Hold
             </div>
           </div>
           {holding.notes && (
-            <div className="md:col-span-3 space-y-1">
+            <div className="md:col-span-4 space-y-1">
               <strong className="text-muted-foreground">Notes:</strong>
               <div className="text-base">{holding.notes}</div>
             </div>
