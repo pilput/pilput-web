@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlusCircle, UserPlus } from "lucide-react";
 import { getAuth, getToken, RemoveToken } from "@/utils/Auth";
-import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
@@ -53,7 +53,7 @@ export default function ManageUser() {
   async function refetchUsers() {
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance2.get("/v1/users", {
+      const { data } = await axiosInstance3.get("/v1/users", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
