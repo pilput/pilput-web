@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { getAuth, getToken, RemoveToken } from "@/utils/Auth";
 import { axiosInstance3 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
