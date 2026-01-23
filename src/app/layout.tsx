@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://pilput.me",
+    canonical: "https://pilput.net",
   },
 };
 
