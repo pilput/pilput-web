@@ -3,6 +3,7 @@ import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
 import { axiosInstance } from "@/utils/fetch";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,7 +17,7 @@ import {
 import type { Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
 
-interface succesResponse {
+interface SuccessResponse {
   data: Post;
   message: string;
   success: boolean;
@@ -24,10 +25,11 @@ interface succesResponse {
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const response = await axiosInstance(`/v1/posts/u/${username}/${postSlug}`);
-    const result = response.data as succesResponse;
+    const response = await axiosInstance.get(`/v1/posts/u/${username}/${postSlug}`);
+    const result = response.data as SuccessResponse;
     return result.data;
   } catch (error) {
+    console.error("Error fetching post:", error);
     throw notFound();
   }
 };
@@ -54,7 +56,7 @@ export default async function Page(props: {
               {/* Author and Meta Information */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 py-6 border-y border-gray-100 dark:border-gray-800">
                 <div className="flex items-center gap-3">
-                  <a href={`/${post.creator.username}`} className="shrink-0">
+                  <Link href={`/${post.creator.username}`} className="shrink-0">
                     <Avatar className="w-12 h-12 ring-2 ring-gray-100 dark:ring-gray-800">
                       <AvatarImage
                         src={getProfilePicture(post.creator.image)}
@@ -64,14 +66,14 @@ export default async function Page(props: {
                         {post.creator.username[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                  </a>
+                  </Link>
                   <div>
-                    <a
+                    <Link
                       href={`/${post.creator.username}`}
                       className="block font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     >
                       {post.creator.first_name} {post.creator.last_name}
-                    </a>
+                    </Link>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       @{post.creator.username}
                     </p>
@@ -96,7 +98,7 @@ export default async function Page(props: {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                            }
+                            },
                           )}
                         </p>
                       </TooltipContent>
@@ -158,14 +160,14 @@ export default async function Page(props: {
             </div>
 
             {/* Tags Section */}
-            {post.tags != null && post.tags.length > 0 && (
+            {post.tags && post.tags.length > 0 && (
               <div className="pt-8 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Tags
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {post.tags.map((tag) => (
-                    <a
+                    <Link
                       href={`/tags/${tag.name}`}
                       key={tag.id}
                       className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-sm"
@@ -174,7 +176,7 @@ export default async function Page(props: {
                         #
                       </span>
                       {tag.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
