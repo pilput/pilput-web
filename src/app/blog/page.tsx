@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
 import { ArrowUp } from "lucide-react";
-import { axiosInstance3 } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 
 import BlogHero from "@/components/blog/BlogHero";
@@ -70,7 +70,7 @@ const Blog = () => {
           params.search = debouncedSearchQuery.trim();
         }
 
-        const { data } = await axiosInstance3.get("/v1/posts", { params });
+        const { data } = await axiosInstance.get("/v1/posts", { params });
         const response = data;
         if (response.data) {
           setPosts(response.data);
@@ -93,7 +93,7 @@ const Blog = () => {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await axiosInstance3.get("/v1/tags");
+        const response = await axiosInstance.get("/v1/tags");
         setTrendingTags(response.data.data.map((tag: any) => tag.name));
       } catch (error) {
         console.error("Error fetching tags:", error);
