@@ -26,7 +26,7 @@ export default function PerformancePage() {
   }, [hideValues]);
 
   return (
-    <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+    <div className="container mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-start gap-3 sm:gap-4 min-w-0">

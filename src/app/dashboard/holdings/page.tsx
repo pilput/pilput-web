@@ -309,7 +309,7 @@ export default function HoldingsPage() {
   }, [filterMonth, filterYear, filteredHoldings]);
 
   return (
-    <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+    <div className="container mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header Section */}
       <div className="flex flex-col gap-3 sm:gap-4">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
@@ -325,7 +325,7 @@ export default function HoldingsPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="bg-muted/30 p-3 sm:p-4 rounded-lg border">
+        <div className="bg-muted/30 p-3 sm:p-4 rounded-lg border border-border/50">
           <HoldingFilter
             month={filterMonth}
             year={filterYear}
