@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import HoldingHeader from "@/components/dashboard/holdings/HoldingHeader";
 import HoldingFormModal from "@/components/dashboard/holdings/HoldingFormModal";
 import HoldingTable from "@/components/dashboard/holdings/HoldingTable";
@@ -20,12 +20,10 @@ import {
 import {
   PlusCircle,
   Copy,
-  TrendingUp,
   Eye,
   EyeOff,
-  LayoutDashboard,
+  Download,
 } from "lucide-react";
-import Link from "next/link";
 
 const DEFAULT_CURRENCY = "IDR";
 
@@ -34,6 +32,8 @@ type HeaderActionsProps = {
   onToggleHide: () => void;
   onOpenDuplicate: () => void;
   onOpenAdd: () => void;
+  onExportCsv: () => void;
+  canExport: boolean;
 };
 
 const HeaderActions = ({
@@ -41,6 +41,8 @@ const HeaderActions = ({
   onToggleHide,
   onOpenDuplicate,
   onOpenAdd,
+  onExportCsv,
+  canExport,
 }: HeaderActionsProps) => {
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -58,32 +60,20 @@ const HeaderActions = ({
         variant="outline" 
         size="sm"
         className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
-        asChild
-      >
-        <Link href="/dashboard/holdings/overview">
-          <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <span className="hidden sm:inline">Overview</span>
-        </Link>
-      </Button>
-      <Button 
-        variant="outline" 
-        size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
-        asChild
-      >
-        <Link href="/dashboard/holdings/performance">
-          <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <span className="hidden sm:inline">Performance</span>
-        </Link>
-      </Button>
-      <Button 
-        variant="outline" 
-        size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
         onClick={onOpenDuplicate}
       >
         <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         <span className="hidden sm:inline">Duplicate</span>
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
+        onClick={onExportCsv}
+        disabled={!canExport}
+      >
+        <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <span className="hidden sm:inline">Export CSV</span>
       </Button>
       <Button 
         size="sm"
@@ -252,6 +242,72 @@ export default function HoldingsPage() {
     [fetchHoldings, filterMonth, filterYear]
   );
 
+  const filteredHoldings = useMemo(() => {
+    const month = parseInt(filterMonth, 10);
+    const year = parseInt(filterYear, 10);
+    return holdings.filter((holding) => holding.month === month && holding.year === year);
+  }, [filterMonth, filterYear, holdings]);
+
+  const handleExportCsv = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const escapeCsv = (value: string) => {
+      if (value.includes('"') || value.includes(",") || value.includes("\n")) {
+        return `"${value.replace(/"/g, '""')}"`;
+      }
+      return value;
+    };
+
+    const rows = [
+      [
+        "id",
+        "name",
+        "platform",
+        "holding_type",
+        "currency",
+        "invested_amount",
+        "current_value",
+        "units",
+        "avg_buy_price",
+        "current_price",
+        "month",
+        "year",
+        "notes",
+        "last_updated",
+      ],
+      ...filteredHoldings.map((holding) => [
+        holding.id.toString(),
+        holding.name,
+        holding.platform,
+        holding.holding_type?.name ?? "",
+        holding.currency,
+        holding.invested_amount,
+        holding.current_value,
+        holding.units ?? "",
+        holding.avg_buy_price ?? "",
+        holding.current_price ?? "",
+        holding.month.toString(),
+        holding.year.toString(),
+        holding.notes ?? "",
+        holding.last_updated ?? "",
+      ]),
+    ];
+
+    const csv = rows.map((row) => row.map((cell) => escapeCsv(String(cell))).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    const paddedMonth = filterMonth.padStart(2, "0");
+    link.href = url;
+    link.download = `holdings-${filterYear}-${paddedMonth}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [filterMonth, filterYear, filteredHoldings]);
+
   return (
     <div className="container mx-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header Section */}
@@ -263,6 +319,8 @@ export default function HoldingsPage() {
             onToggleHide={() => setHideValues(!hideValues)}
             onOpenDuplicate={openDuplicateModal}
             onOpenAdd={openAddModal}
+            onExportCsv={handleExportCsv}
+            canExport={!isLoading && filteredHoldings.length > 0}
           />
         </div>
 
