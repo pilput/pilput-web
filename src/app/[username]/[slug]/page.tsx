@@ -56,26 +56,26 @@ export default async function Page(props: {
               {/* Author and Meta Information */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 py-6 border-y border-gray-100 dark:border-gray-800">
                 <div className="flex items-center gap-3">
-                  <Link href={`/${post.creator.username}`} className="shrink-0">
+                  <Link href={`/${post.user.username}`} className="shrink-0">
                     <Avatar className="w-12 h-12 ring-2 ring-gray-100 dark:ring-gray-800">
                       <AvatarImage
-                        src={getProfilePicture(post.creator.image)}
-                        alt={`@${post.creator.username}`}
+                        src={getProfilePicture(post.user.image)}
+                        alt={`@${post.user.username}`}
                       />
                       <AvatarFallback className="bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
-                        {post.creator.username[0].toUpperCase()}
+                        {post.user.username[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </Link>
                   <div>
                     <Link
-                      href={`/${post.creator.username}`}
+                      href={`/${post.user.username}`}
                       className="block font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     >
-                      {post.creator.first_name} {post.creator.last_name}
+                      {post.user.first_name} {post.user.last_name}
                     </Link>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      @{post.creator.username}
+                      @{post.user.username}
                     </p>
                   </div>
                 </div>

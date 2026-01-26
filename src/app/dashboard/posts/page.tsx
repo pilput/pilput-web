@@ -120,19 +120,19 @@ export default function Posts() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarImage
-                          src={getProfilePicture(post.creator.image)}
-                          alt={`@${post.creator.username}`}
+                          src={getProfilePicture(post.user.image)}
+                          alt={`@${post.user.username}`}
                         />
                         <AvatarFallback>
-                          {post.creator.username[0].toUpperCase()}
+                          {post.user.username[0].toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="font-medium">
-                          {post.creator?.first_name} {post.creator?.last_name}
+                          {post.user?.first_name} {post.user?.last_name}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          @{post.creator.username}
+                          @{post.user.username}
                         </div>
                       </div>
                     </div>

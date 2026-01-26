@@ -60,9 +60,9 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
       {posts.filter(Boolean).map((post, index) => {
         const plaintext = post.body?.replace(/(<([^>]+)>)/gi, "").trim() || "";
         const readTime = Math.ceil(plaintext.length / 800) || 1;
-        const creator = post.creator;
-        const creatorUsername = creator?.username || "anonymous";
-        const creatorName = creator ? `${creator.first_name} ${creator.last_name}`.trim() : creatorUsername;
+        const user = post.user;
+        const userUsername = user?.username || "anonymous";
+        const userName = user ? `${user.first_name} ${user.last_name}`.trim() : userUsername;
 
         if (layout === "grid") {
           return (
@@ -73,7 +73,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
               transition={{ delay: index * 0.1 }}
               className="group relative bg-card hover:bg-card/80 border border-border hover:border-primary/20 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg"
             >
-              <Link href={`/${creatorUsername}/${post.slug}`} className="block h-full flex flex-col">
+              <Link href={`/${userUsername}/${post.slug}`} className="block h-full flex flex-col">
                 <div className="relative aspect-[16/9] overflow-hidden">
                    <Image
                     src={getUrlImage(post.photo_url)}
@@ -92,10 +92,10 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                 <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
                      <div className="relative w-6 h-6 rounded-full overflow-hidden border border-border">
-                        {creator?.image ? (
+                        {user?.image ? (
                           <Image
-                            src={getProfilePicture(creator.image)}
-                            alt={creatorName}
+                            src={getProfilePicture(user.image)}
+                            alt={userName}
                             fill
                             className="object-cover"
                           />
@@ -106,7 +106,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                         )}
                      </div>
                      <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                       {creatorName}
+                       {userName}
                      </span>
                   </div>
 
@@ -143,16 +143,16 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
             transition={{ delay: index * 0.05 }}
           >
             <Link
-              href={`/${creatorUsername}/${post.slug}`}
+              href={`/${userUsername}/${post.slug}`}
               className="group flex gap-3 p-3 rounded-xl bg-card border border-border/40 hover:border-primary/30 hover:shadow-md transition-all duration-200"
             >
               {/* Author Avatar */}
               <div className="shrink-0">
                  <div className="w-10 h-10 rounded-full overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
-                    {creator?.image ? (
+                    {user?.image ? (
                         <Image
-                          src={getProfilePicture(creator.image)}
-                          alt={creatorName}
+                          src={getProfilePicture(user.image)}
+                          alt={userName}
                           width={40}
                           height={40}
                           className="w-full h-full object-cover"

@@ -15,7 +15,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
   });
 
   return (
-    <Link href={`/${post.creator.username}/${post.slug}`} className="block h-full">
+    <Link href={`/${post.user.username}/${post.slug}`} className="block h-full">
       <Card className="h-full border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group flex flex-col overflow-hidden">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
@@ -44,13 +44,13 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
         <CardFooter className="pt-3 border-t border-border/30 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center space-x-2">
             <Avatar className="h-5 w-5 border border-border/50">
-              <AvatarImage src={getProfilePicture(post.creator?.image)} alt={post.creator.username} />
+              <AvatarImage src={getProfilePicture(post.user?.image)} alt={post.user.username} />
               <AvatarFallback className="text-[10px]">
-                {post.creator.first_name?.[0] || post.creator.username[0]}
+                {post.user.first_name?.[0] || post.user.username[0]}
               </AvatarFallback>
             </Avatar>
             <span className="font-medium hover:text-foreground transition-colors">
-              {post.creator.username}
+              {post.user.username}
             </span>
           </div>
           

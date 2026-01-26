@@ -46,24 +46,24 @@ const Postlist = ({ post }: { post: Post }) => {
             className="shrink-0 relative"
             whileHover={{ scale: 1.05 }}
           >
-            <Link href={`/${post.creator.username}`}>
-              {post.creator?.image && (
+            <Link href={`/${post.user.username}`}>
+              {post.user?.image && (
                 <Image
                   className="rounded-full object-cover border-2 border-border"
-                  src={getProfilePicture(post.creator?.image)}
+                  src={getProfilePicture(post.user?.image)}
                   width={36}
                   height={36}
-                  alt={post.creator?.first_name || "Author"}
+                  alt={post.user?.first_name || "Author"}
                 />
               )}
             </Link>
           </motion.div>
           <div className="min-w-0 flex-1">
             <Link
-              href={`/${post.creator.username}`}
+              href={`/${post.user.username}`}
               className="block font-semibold text-sm text-foreground hover:text-primary transition-colors"
             >
-              {post.creator?.first_name} {post.creator?.last_name}
+              {post.user?.first_name} {post.user?.last_name}
             </Link>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Clock className="w-3 h-3" />
@@ -83,7 +83,7 @@ const Postlist = ({ post }: { post: Post }) => {
         {/* Title & Content */}
         <div className="space-y-3">
           <Link
-            href={`/${post.creator.username}/${post.slug}`}
+            href={`/${post.user.username}/${post.slug}`}
             className="block group"
           >
             <motion.h2 

@@ -3,7 +3,7 @@ export interface Post {
   title: string;
   body: string;
   slug: string;
-  creator: Creator;
+  user: User;
   photo_url: string;
   created_at: string;
   updated_at: string;
@@ -32,7 +32,7 @@ export interface ErrorCreatePost {
   };
 }
 
-export interface Creator {
+export interface User {
   id: string;
   username: string;
   email: string;
@@ -51,5 +51,5 @@ interface Comment {
   text: string;
   repies: Comment[];
   created_at: string;
-  creator: any;
+  user: any;
 }

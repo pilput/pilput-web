@@ -3,7 +3,7 @@ import { User } from 'lucide-react';
 import { getProfilePicture } from '@/utils/getImage';
 
 interface AvatarProps {
-  creator?: {
+  user?: {
     first_name?: string;
     last_name?: string;
     image?: string;
@@ -13,7 +13,7 @@ interface AvatarProps {
 }
 
 export const Avatar: React.FC<AvatarProps> = ({ 
-  creator, 
+  user, 
   size = 'md', 
   className = '' 
 }) => {
@@ -29,12 +29,12 @@ export const Avatar: React.FC<AvatarProps> = ({
     lg: 'w-6 h-6'
   };
 
-  if (creator?.first_name) {
+  if (user?.first_name) {
     return (
       <img
         className={`${sizeClasses[size]} rounded-full object-cover ${className}`}
-        src={getProfilePicture(creator.image || '')}
-        alt={`${creator.first_name} ${creator.last_name || ''}`}
+        src={getProfilePicture(user.image || '')}
+        alt={`${user.first_name} ${user.last_name || ''}`}
         width={size === 'sm' ? 32 : size === 'md' ? 40 : 48}
         height={size === 'sm' ? 32 : size === 'md' ? 40 : 48}
       />
