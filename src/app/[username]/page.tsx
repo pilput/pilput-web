@@ -29,7 +29,7 @@ interface succesResponse {
 
 const getWriter = async (username: string): Promise<Writer> => {
   try {
-    const { data } = await axiosInstance2(`/v1/posts/author/${username}`);
+    const { data } = await axiosInstance2(`/v1/writers/${username}`);
     const result = data as succesResponse;
     return result.data;
   } catch {

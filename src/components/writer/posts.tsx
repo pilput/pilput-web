@@ -1,6 +1,6 @@
 "use client";
 
-import { axiosInstance } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { useEffect, useState } from "react";
 import Postlist from "../post/Postlist";
 import type { Post } from "@/types/post";
@@ -13,8 +13,8 @@ function Posts(props: { username: string }) {
     async function getPosts() {
       try {
         setLoading(true);
-        const { data } = await axiosInstance.get(
-          `/v1/posts/username/${props.username}`
+        const { data } = await axiosInstance3.get(
+          `/v1/posts/author/${props.username}`,
         );
         setposts(data.data);
       } catch (error) {
@@ -31,9 +31,7 @@ function Posts(props: { username: string }) {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-foreground">Posts</h2>
-          <div className="text-sm text-muted-foreground">
-            Loading posts...
-          </div>
+          <div className="text-sm text-muted-foreground">Loading posts...</div>
         </div>
         <div className="grid gap-6">
           {[...Array(3)].map((_, i) => (
@@ -62,12 +60,26 @@ function Posts(props: { username: string }) {
       {posts.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-muted-foreground mb-2">
-            <svg className="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              className="w-12 h-12 mx-auto mb-4 opacity-50"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-foreground mb-2">No posts yet</h3>
-          <p className="text-muted-foreground">This writer hasn&apos;t published any posts yet.</p>
+          <h3 className="text-lg font-medium text-foreground mb-2">
+            No posts yet
+          </h3>
+          <p className="text-muted-foreground">
+            This writer hasn&apos;t published any posts yet.
+          </p>
         </div>
       ) : (
         <div className="grid gap-6">
