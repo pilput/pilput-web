@@ -4,19 +4,15 @@ import { useRouter } from "next/navigation";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import {
   ArrowRight,
-  Award,
   BookOpen,
   Bot,
-  Globe,
-  Heart,
   LucideIcon,
   MessageCircle,
   PenTool,
+  PieChart,
   Sparkles,
   Star,
   TrendingUp,
-  Users,
-  Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -98,45 +94,25 @@ const Features: React.FC = () => {
       accentIcon: TrendingUp,
     },
     {
-      id: "community",
-      icon: Users,
-      title: "Thriving Community",
+      id: "holdings",
+      icon: PieChart,
+      title: "Portfolio Holdings",
       description:
-        "Join a vibrant community of writers, developers, and creators. Share knowledge, collaborate on projects, and build meaningful connections.",
+        "Track and manage your investment portfolio with ease. Monitor holdings across different platforms, analyze performance, and export data for comprehensive financial insights.",
       background: (
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-green-500/10 via-transparent to-transparent" />
-          <div className="absolute top-4 left-4 opacity-20">
-            <Heart className="w-12 h-12 text-green-500" />
+          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-indigo-500/10 via-transparent to-transparent" />
+          <div className="absolute top-4 right-4 opacity-20">
+            <TrendingUp className="w-12 h-12 text-indigo-500" />
           </div>
         </div>
       ),
-      stats: "50K+ Active Users",
-      cta: "Join Community",
+      stats: "Track Investments",
+      cta: "View Holdings",
       delay: 0.3,
-      href: "/forum",
-      glowColor: "green",
-      accentIcon: Globe,
-    },
-    {
-      id: "performance",
-      icon: Zap,
-      title: "Lightning Fast",
-      description:
-        "Optimized for performance. Experience blazing fast load times and seamless interactions across all devices.",
-      background: (
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-yellow-500/10 via-transparent to-transparent" />
-          <div className="absolute bottom-4 right-4 opacity-20">
-            <Award className="w-12 h-12 text-yellow-500" />
-          </div>
-        </div>
-      ),
-      stats: "< 100ms Load Time",
-      cta: "Experience Speed",
-      delay: 0.4,
-      glowColor: "yellow",
-      accentIcon: Zap,
+      href: "/dashboard/holdings",
+      glowColor: "primary",
+      accentIcon: PieChart,
     },
   ];
 
