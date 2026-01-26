@@ -61,8 +61,8 @@ export default function WriterProfileClient({
       </div>
 
       {/* Content Card */}
-      <Card className="shadow-lg border-0 bg-gradient-to-br from-card to-card/95">
-        <CardContent className="p-8">
+      <Card className="shadow-sm">
+        <CardContent className="p-6 sm:p-8">
           {activeTab === "posts" ? (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -71,7 +71,7 @@ export default function WriterProfileClient({
                     <FileText className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-foreground">
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
                       Latest Posts
                     </h2>
                     <p className="text-sm text-muted-foreground">
@@ -89,7 +89,7 @@ export default function WriterProfileClient({
                   <User className="w-5 h-5 text-purple-500" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-foreground">
+                  <h3 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
                     About {writer.first_name}
                   </h3>
                   <p className="text-sm text-muted-foreground">
@@ -121,9 +121,9 @@ export default function WriterProfileClient({
                 {/* Info Cards */}
                 <div className="space-y-4">
                   {/* Personal Info Card */}
-                  <Card className="border-border/50">
+                  <Card className="border-border/50 shadow-sm">
                     <CardContent className="p-4">
-                      <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                      <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
                         <User className="w-4 h-4" />
                         Personal Info
                       </h4>
@@ -161,9 +161,9 @@ export default function WriterProfileClient({
                   </Card>
 
                   {/* Contact Card */}
-                  <Card className="border-border/50">
+                  <Card className="border-border/50 shadow-sm">
                     <CardContent className="p-4">
-                      <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                      <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
                         <LinkIcon className="w-4 h-4" />
                         Contact & Links
                       </h4>

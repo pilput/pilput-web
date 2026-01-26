@@ -29,7 +29,7 @@ interface succesResponse {
 
 const getWriter = async (username: string): Promise<Writer> => {
   try {
-    const { data } = await axiosInstance2(`/v1/writers/${username}`);
+    const { data } = await axiosInstance2(`/v1/posts/author/${username}`);
     const result = data as succesResponse;
     return result.data;
   } catch {
@@ -46,142 +46,126 @@ export default async function page(props: {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-linear-to-br from-background via-background to-muted/20">
-        <div className="max-w-5xl mx-auto p-6 space-y-6">
-          {/* Profile Header with Cover */}
-          <Card className="overflow-hidden shadow-lg border-0 bg-linear-to-r from-card to-card/95">
-            {/* Cover Banner */}
-            <div className="h-32 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 relative">
-              <div className="absolute inset-0 bg-black/10" />
-            </div>
-
-            <CardContent className="relative pt-0 pb-6">
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between -mt-12 px-6">
-                <div className="flex flex-col md:flex-row md:items-end space-y-4 md:space-y-0 md:space-x-6">
-                  {/* Avatar */}
-                  <div className="relative">
-                    <Avatar className="h-24 w-24 border-4 border-background shadow-xl ring-2 ring-white/20">
+      <div className="min-h-screen bg-linear-to-br from-background via-primary/5 to-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="max-w-5xl mx-auto space-y-6">
+            {/* Profile Header Card */}
+            <Card className="shadow-sm">
+              <CardHeader className="border-b bg-muted/10 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-16 w-16 ring-2 ring-background">
                       <AvatarImage src={getUrlImage(writer.image)} />
-                      <AvatarFallback className="text-xl font-semibold bg-linear-to-br from-blue-500 to-purple-500 text-white">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                         {writer.first_name?.[0]}
                         {writer.last_name?.[0]}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-2 border-background rounded-full"></div>
-                  </div>
-
-                  {/* Profile Info */}
-                  <div className="flex-1 space-y-2">
                     <div>
-                      <h1 className="text-3xl font-bold text-foreground">
+                      <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
                         {writer.first_name} {writer.last_name}
                       </h1>
-                      <p className="text-muted-foreground font-medium">
-                        @ {writer.username}
+                      <p className="text-sm text-muted-foreground">
+                        @{writer.username}
                       </p>
-                    </div>
-
-                    {writer.profile?.bio && (
-                      <p className="text-muted-foreground max-w-md leading-relaxed">
-                        {writer.profile.bio}
-                      </p>
-                    )}
-
-                    {/* Additional Info */}
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <CalendarDays className="w-4 h-4 mr-1" />
-                        <span>
-                          Joined{" "}
-                          {new Date(writer.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                            }
-                          )}
-                        </span>
-                      </div>
-
-                      {writer.profile?.website && (
-                        <div className="flex items-center">
-                          <LinkIcon className="w-4 h-4 mr-1" />
-                          <a
-                            href={writer.profile.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline transition-colors"
-                          >
-                            Website
-                          </a>
-                        </div>
-                      )}
                     </div>
                   </div>
-                </div>
 
-                {/* Action Buttons */}
-                <div className="flex space-x-2 mt-4 md:mt-0">
-                  <Button className="shadow-md hover:shadow-lg transition-shadow">
-                    <Edit2 className="w-4 h-4 mr-2" />
-                    Edit Profile
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="shadow-md hover:shadow-lg transition-shadow"
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm">
+                      <Edit2 className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem className="cursor-pointer">
+                          <Users className="w-4 h-4 mr-2" />
+                          Share Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer text-red-600">
+                          Report
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="pt-6">
+                {writer.profile?.bio && (
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {writer.profile.bio}
+                  </p>
+                )}
+
+                {/* Additional Info */}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
+                  <div className="flex items-center gap-1.5">
+                    <CalendarDays className="w-4 h-4" />
+                    <span>
+                      Joined{" "}
+                      {new Date(writer.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                      })}
+                    </span>
+                  </div>
+
+                  {writer.profile?.website && (
+                    <div className="flex items-center gap-1.5">
+                      <LinkIcon className="w-4 h-4" />
+                      <a
+                        href={writer.profile.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline transition-colors"
                       >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem className="cursor-pointer">
-                        <Users className="w-4 h-4 mr-2" />
-                        Share Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer text-red-600">
-                        Report
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        Website
+                      </a>
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              <Separator className="my-6" />
+                <Separator className="my-6" />
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 px-6">
-                <div className="text-center group cursor-pointer">
-                  <div className="text-2xl font-bold text-foreground group-hover:text-blue-500 transition-colors">
-                    {/* {profile.followers?.toLocaleString() || '0'} */}0
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {/* {profile.followers?.toLocaleString() || '0'} */}0
+                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">
+                      Followers
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">
-                    Followers
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {/* {profile.following?.toLocaleString() || '0'} */}0
+                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">
+                      Following
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {/* {profile.posts?.toLocaleString() || '0'} */}0
+                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">
+                      Posts
+                    </div>
                   </div>
                 </div>
-                <div className="text-center group cursor-pointer">
-                  <div className="text-2xl font-bold text-foreground group-hover:text-blue-500 transition-colors">
-                    {/* {profile.following?.toLocaleString() || '0'} */}0
-                  </div>
-                  <div className="text-sm text-muted-foreground font-medium">
-                    Following
-                  </div>
-                </div>
-                <div className="text-center group cursor-pointer">
-                  <div className="text-2xl font-bold text-foreground group-hover:text-blue-500 transition-colors">
-                    {/* {profile.posts?.toLocaleString() || '0'} */}0
-                  </div>
-                  <div className="text-sm text-muted-foreground font-medium">
-                    Posts
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <WriterProfileClient writer={writer} username={params.username} />
+            <WriterProfileClient writer={writer} username={params.username} />
+          </div>
         </div>
       </div>
     </>
