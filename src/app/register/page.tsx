@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -46,7 +46,7 @@ export default function Signup() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     try {
-      const response = await axiosInstance2.post("/v1/auth/register", data);
+      const response = await axiosInstance3.post("/v1/auth/register", data);
       toast.success("Success Create Account", { id });
       const expire = new Date();
 
@@ -89,7 +89,7 @@ export default function Signup() {
     const currentRequestId = ++requestIdRef.current;
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await axiosInstance.post("/v1/auth/check-username", {
+        const res = await axiosInstance3.post("/v1/auth/check-username", {
           username: username.trim(),
         });
         if (currentRequestId !== requestIdRef.current) return; // stale

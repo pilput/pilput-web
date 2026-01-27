@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, User, Shield, AlertTriangle, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
-import { axiosInstance2, axiosInstance3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { toast } from "react-hot-toast";
 import Navigation from "@/components/header/Navbar";
@@ -139,7 +139,7 @@ export default function AccountPage() {
     }
 
     try {
-      await axiosInstance2.delete("/v1/auth/account", {
+      await axiosInstance3.delete("/v1/auth/account", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
