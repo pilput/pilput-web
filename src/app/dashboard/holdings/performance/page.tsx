@@ -33,8 +33,8 @@ export default function PerformancePage() {
   }, [hideValues]);
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-      <Card>
+    <div className="container mx-auto space-y-4 sm:space-y-6">
+      <Card className="p-4 sm:p-6 lg:p-8">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
