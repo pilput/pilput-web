@@ -325,7 +325,7 @@ export default function HoldingsPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="bg-card p-3 sm:p-4 rounded-lg border shadow-sm">
+        <div className="rounded-2xl border border-border/80 bg-card/80 p-4 sm:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none dark:bg-muted/20 backdrop-blur-sm">
           <HoldingFilter
             month={filterMonth}
             year={filterYear}
@@ -347,12 +347,12 @@ export default function HoldingsPage() {
       </div>
 
       {/* Holdings Table Card */}
-      <Card className="shadow-sm">
-        <CardHeader className="border-b bg-muted/10 pb-3 sm:pb-4 px-3 sm:px-6">
+      <Card className="overflow-hidden rounded-2xl border-border/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none dark:border-border">
+        <CardHeader className="border-b border-border/60 bg-muted/5 py-4 sm:py-5 px-4 sm:px-6">
           <div className="flex items-center justify-between">
             <div className="min-w-0">
-              <CardTitle className="text-base sm:text-lg">Holdings Inventory</CardTitle>
-              <CardDescription className="mt-1 text-xs sm:text-sm">
+              <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Holdings Inventory</CardTitle>
+              <CardDescription className="mt-1.5 text-xs sm:text-sm text-muted-foreground/90">
                 Review your investment performance for the selected period.
               </CardDescription>
             </div>
