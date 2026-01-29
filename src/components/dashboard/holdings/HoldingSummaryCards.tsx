@@ -1,13 +1,36 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDownRight, ArrowUpRight, DollarSign, Wallet, TrendingUp } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, DollarSign, Wallet, TrendingUp, PiggyBank, Scale } from "lucide-react";
 import type { Holding } from "@/types/holding";
 import { formatCurrency } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface HoldingSummaryCardsProps {
   holdings: Holding[];
   isLoading: boolean;
   hideValues?: boolean;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut" as const,
+    },
+  },
+};
 
 export default function HoldingSummaryCards({
   holdings,
@@ -45,7 +68,7 @@ export default function HoldingSummaryCards({
     return (
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="animate-pulse">
+          <Card key={i} className="animate-pulse border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
               <div className="h-3 sm:h-4 w-16 sm:w-24 bg-muted rounded" />
               <div className="h-3 sm:h-4 w-3 sm:w-4 bg-muted rounded" />
@@ -60,77 +83,94 @@ export default function HoldingSummaryCards({
     );
   }
 
+  const cards = [
+    {
+      title: "Total Invested",
+      value: hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency),
+      icon: Wallet,
+      color: "blue",
+      textColor: "text-blue-600 dark:text-blue-400",
+      bgColor: "bg-blue-50/50 dark:bg-blue-950/20",
+      borderColor: "border-blue-100 dark:border-blue-900/30",
+      iconBg: "bg-blue-100 dark:bg-blue-900/30",
+    },
+    {
+      title: "Current Value",
+      value: hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency),
+      icon: DollarSign,
+      color: "purple",
+      textColor: "text-purple-600 dark:text-purple-400",
+      bgColor: "bg-purple-50/50 dark:bg-purple-950/20",
+      borderColor: "border-purple-100 dark:border-purple-900/30",
+      iconBg: "bg-purple-100 dark:bg-purple-900/30",
+    },
+    {
+      title: "Profit / Loss",
+      value: hideValues
+        ? maskValue()
+        : `${totalRealized > 0 ? "+" : ""}${formatCurrency(Math.abs(totalRealized), primaryCurrency)}`,
+      icon: totalRealized >= 0 ? ArrowUpRight : ArrowDownRight,
+      color: totalRealized >= 0 ? "emerald" : "rose",
+      textColor: totalRealized >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400",
+      bgColor: totalRealized >= 0 ? "bg-emerald-50/50 dark:bg-emerald-950/20" : "bg-rose-50/50 dark:bg-rose-950/20",
+      borderColor: totalRealized >= 0 ? "border-emerald-100 dark:border-emerald-900/30" : "border-rose-100 dark:border-rose-900/30",
+      iconBg: totalRealized >= 0 ? "bg-emerald-100 dark:bg-emerald-900/30" : "bg-rose-100 dark:bg-rose-900/30",
+    },
+    {
+      title: "Return Rate",
+      value: hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`,
+      icon: TrendingUp,
+      color: totalPercent >= 0 ? "emerald" : "rose",
+      textColor: totalPercent >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400",
+      bgColor: totalPercent >= 0 ? "bg-emerald-50/50 dark:bg-emerald-950/20" : "bg-rose-50/50 dark:bg-rose-950/20",
+      borderColor: totalPercent >= 0 ? "border-emerald-100 dark:border-emerald-900/30" : "border-rose-100 dark:border-rose-900/30",
+      iconBg: totalPercent >= 0 ? "bg-emerald-100 dark:bg-emerald-900/30" : "bg-rose-100 dark:bg-rose-900/30",
+    },
+  ];
+
   return (
-    <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
-      <Card className="border-none shadow-none bg-muted/30 hover:bg-muted/40 transition-colors">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
-          <CardTitle className="text-[10px] sm:text-xs font-semibold text-blue-600/80 dark:text-blue-400/80 uppercase tracking-wider truncate pr-1">
-            Total Invested
-          </CardTitle>
-          <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500/40 shrink-0" />
-        </CardHeader>
-        <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight break-words">
-            {hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency)}
-          </div>
-        </CardContent>
-      </Card>
+    <motion.div
+      className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {cards.map((card, index) => {
+        const Icon = card.icon;
+        return (
+          <motion.div key={card.title} variants={cardVariants}>
+            <Card
+              className={`relative overflow-hidden border ${card.borderColor} ${card.bgColor} shadow-sm hover:shadow-md transition-all duration-300 group h-full`}
+            >
+              {/* Gradient overlay */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-br from-${card.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+              />
 
-      <Card className="border-none shadow-none bg-muted/30 hover:bg-muted/40 transition-colors">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
-          <CardTitle className="text-[10px] sm:text-xs font-semibold text-purple-600/80 dark:text-purple-400/80 uppercase tracking-wider truncate pr-1">
-            Current Value
-          </CardTitle>
-          <DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-purple-500/40 shrink-0" />
-        </CardHeader>
-        <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight break-words">
-            {hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency)}
-          </div>
-        </CardContent>
-      </Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6 relative">
+                <CardTitle
+                  className={`text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate pr-1 ${card.textColor}`}
+                >
+                  {card.title}
+                </CardTitle>
+                <div className={`p-1.5 rounded-lg ${card.iconBg} transition-transform duration-300 group-hover:scale-110`}>
+                  <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${card.textColor} shrink-0`} />
+                </div>
+              </CardHeader>
 
-      <Card className="border-none shadow-none bg-muted/30 hover:bg-muted/40 transition-colors">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
-          <CardTitle className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider truncate pr-1">
-            P/L (Amount)
-          </CardTitle>
-          {totalRealized >= 0 ? (
-            <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500/70 shrink-0" />
-          ) : (
-            <ArrowDownRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-rose-500/70 shrink-0" />
-          )}
-        </CardHeader>
-        <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
-          <div
-            className={`text-lg sm:text-xl lg:text-2xl font-bold tracking-tight break-words ${
-              hideValues ? "" : totalRealized >= 0 ? "text-emerald-600" : "text-rose-600"
-            }`}
-          >
-            {hideValues
-              ? maskValue()
-              : `${totalRealized > 0 ? "+" : ""}${formatCurrency(Math.abs(totalRealized), primaryCurrency)}`}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border-none shadow-none bg-muted/30 hover:bg-muted/40 transition-colors">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
-          <CardTitle className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider truncate pr-1">
-            P/L (%)
-          </CardTitle>
-          <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground/50 shrink-0" />
-        </CardHeader>
-        <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
-          <div
-            className={`text-lg sm:text-xl lg:text-2xl font-bold tracking-tight break-words ${
-              hideValues ? "" : totalPercent >= 0 ? "text-emerald-600" : "text-rose-600"
-            }`}
-          >
-            {hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6 relative">
+                <div
+                  className={`text-lg sm:text-xl lg:text-2xl font-bold tracking-tight break-words ${
+                    hideValues ? "" : card.textColor
+                  }`}
+                >
+                  {card.value}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        );
+      })}
+    </motion.div>
   );
 }

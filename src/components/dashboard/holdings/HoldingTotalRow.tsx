@@ -36,25 +36,30 @@ export default function HoldingTotalRow({ holdings, hideValues = false }: Holdin
   const maskValue = () => "••••••";
 
   return (
-    <TableRow className="bg-muted/30 border-t-2 font-semibold">
-      <TableCell colSpan={4} className="text-right font-bold">
-        Total
+    <TableRow className="bg-muted/50 border-t-2 border-border font-semibold">
+      <TableCell colSpan={4} className="text-right font-bold text-foreground">
+        <span className="flex items-center justify-end gap-2">
+          <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          Total
+        </span>
       </TableCell>
-      <TableCell className="font-bold font-mono">
+      <TableCell className="font-bold font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency, { showSymbol: false })}
       </TableCell>
-      <TableCell className="font-bold font-mono">
+      <TableCell className="font-bold font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency, { showSymbol: false })}
       </TableCell>
       <TableCell
-        className={`font-bold font-mono ${
+        className={`font-bold font-mono text-right text-sm ${
           hideValues
             ? ""
             : totalRealized > 0
-            ? "text-green-600"
+            ? "text-emerald-600 dark:text-emerald-400"
             : totalRealized < 0
-            ? "text-red-600"
-            : "text-gray-600"
+            ? "text-rose-600 dark:text-rose-400"
+            : "text-muted-foreground"
         }`}
       >
         {hideValues
@@ -62,17 +67,30 @@ export default function HoldingTotalRow({ holdings, hideValues = false }: Holdin
           : `${totalRealized > 0 ? "+" : ""}${formatCurrency(Math.abs(totalRealized), primaryCurrency, { showSymbol: false })}`}
       </TableCell>
       <TableCell
-        className={`font-bold ${
+        className={`font-bold text-right text-sm ${
           hideValues
             ? ""
             : totalPercent > 0
-            ? "text-green-600"
+            ? "text-emerald-600 dark:text-emerald-400"
             : totalPercent < 0
-            ? "text-red-600"
-            : "text-gray-600"
+            ? "text-rose-600 dark:text-rose-400"
+            : "text-muted-foreground"
         }`}
       >
-        {hideValues ? maskValue() : `${totalPercent > 0 ? "+" : ""}${totalPercent.toFixed(2)}%`}
+        {hideValues ? maskValue() : (
+          <span className="inline-flex items-center gap-1">
+            {totalPercent > 0 ? (
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+            ) : totalPercent < 0 ? (
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            ) : null}
+            {Math.abs(totalPercent).toFixed(2)}%
+          </span>
+        )}
       </TableCell>
       <TableCell colSpan={2}></TableCell>
     </TableRow>

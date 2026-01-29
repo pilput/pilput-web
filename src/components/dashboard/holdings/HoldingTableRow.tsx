@@ -68,30 +68,47 @@ export default function HoldingTableRow({
   const maskValue = () => "••••••";
 
   const mainRow = (
-    <TableRow key={holding.id.toString()} className="hover:bg-muted/50">
-      <TableCell className="text-muted-foreground font-medium">{index}</TableCell>
-      <TableCell className="font-medium">{holding.name}</TableCell>
-      <TableCell>{holding.platform}</TableCell>
+    <TableRow 
+      key={holding.id.toString()} 
+      className="group hover:bg-muted/40 transition-colors border-b border-border/50"
+    >
+      <TableCell className="text-muted-foreground font-medium text-center w-10">{index}</TableCell>
+      <TableCell className="font-medium min-w-[140px]">
+        <div className="flex flex-col">
+          <span className="font-semibold text-foreground">{holding.name}</span>
+          {holding.notes && (
+            <span className="text-[10px] text-muted-foreground truncate max-w-[200px]">
+              {holding.notes}
+            </span>
+          )}
+        </div>
+      </TableCell>
       <TableCell>
-        <Badge className={getHoldingTypeColor(holding.holding_type.name)}>
+        <span className="text-sm text-muted-foreground">{holding.platform}</span>
+      </TableCell>
+      <TableCell>
+        <Badge 
+          variant="secondary"
+          className={`${getHoldingTypeColor(holding.holding_type.name)} font-medium text-[10px] sm:text-xs px-2 py-0.5`}
+        >
           {holding.holding_type.name}
         </Badge>
       </TableCell>
-      <TableCell className="font-mono">
+      <TableCell className="font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(invested, holding.currency, { showSymbol: false })}
       </TableCell>
-      <TableCell className="font-mono">
+      <TableCell className="font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(current, holding.currency, { showSymbol: false })}
       </TableCell>
       <TableCell
-        className={`font-mono ${
+        className={`font-mono text-right text-sm ${
           hideValues
             ? ""
             : realized > 0
-            ? "text-green-600 font-medium"
+            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
             : realized < 0
-            ? "text-red-600 font-medium"
-            : "text-gray-600"
+            ? "text-rose-600 dark:text-rose-400 font-semibold"
+            : "text-muted-foreground"
         }`}
       >
         {hideValues
@@ -99,32 +116,46 @@ export default function HoldingTableRow({
           : `${realized > 0 ? "+" : ""}${formatCurrency(Math.abs(realized), holding.currency, { showSymbol: false })}`}
       </TableCell>
       <TableCell
-        className={
+        className={`text-right text-sm font-medium ${
           hideValues
             ? ""
             : percent > 0
-            ? "text-green-600 font-medium"
+            ? "text-emerald-600 dark:text-emerald-400"
             : percent < 0
-            ? "text-red-600 font-medium"
-            : "text-gray-600"
-        }
+            ? "text-rose-600 dark:text-rose-400"
+            : "text-muted-foreground"
+        }`}
       >
-        {hideValues ? maskValue() : `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`}
+        {hideValues ? maskValue() : (
+          <span className="inline-flex items-center gap-1">
+            {percent > 0 ? (
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+            ) : percent < 0 ? (
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            ) : null}
+            {Math.abs(percent).toFixed(2)}%
+          </span>
+        )}
       </TableCell>
-      <TableCell>
+      <TableCell className="text-center">
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
+          className="h-8 w-8 hover:bg-muted"
           onClick={() => toggleExpand(holding.id)}
         >
           {expandedRows.has(holding.id) ? (
-            <ChevronUp className="w-4 h-4" />
+            <ChevronUp className="w-4 h-4 text-muted-foreground" />
           ) : (
-            <ChevronDown className="w-4 h-4" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           )}
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell className="text-center">
         <HoldingActionComponent holding={holding} onEdit={onEdit} />
       </TableCell>
     </TableRow>

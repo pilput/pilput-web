@@ -168,25 +168,49 @@ export default function HoldingTable({
   };
 
   return (
-    <div>
+    <div className="rounded-lg border bg-card overflow-hidden">
       {/* Filter Tabs */}
-      <div className="p-3 sm:p-4 border-b bg-muted/20 space-y-2 sm:space-y-3">
+      <div className="p-3 sm:p-4 border-b bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 space-y-3">
         {/* Main Filter Tabs: ALL, Platform, Type */}
         <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
-          <TabsList className="w-full sm:w-auto flex-wrap h-auto">
-            <TabsTrigger value="all" className="text-xs sm:text-sm">All</TabsTrigger>
-            <TabsTrigger value="platform" className="text-xs sm:text-sm">By Platform</TabsTrigger>
-            <TabsTrigger value="type" className="text-xs sm:text-sm">By Type</TabsTrigger>
+          <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-muted/50 p-1">
+            <TabsTrigger 
+              value="all" 
+              className="text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              All Holdings
+            </TabsTrigger>
+            <TabsTrigger 
+              value="platform" 
+              className="text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              By Platform
+            </TabsTrigger>
+            <TabsTrigger 
+              value="type" 
+              className="text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              By Type
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Sub-filters based on selected main filter */}
         {filterType === "platform" && uniquePlatforms.length > 0 && (
           <Tabs value={selectedPlatform} onValueChange={setSelectedPlatform}>
-            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto">
-              <TabsTrigger value="all" className="text-xs sm:text-sm">All Platforms</TabsTrigger>
+            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto bg-transparent p-0">
+              <TabsTrigger 
+                value="all" 
+                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                All Platforms
+              </TabsTrigger>
               {uniquePlatforms.map((platform) => (
-                <TabsTrigger key={platform} value={platform} className="text-xs sm:text-sm">
+                <TabsTrigger 
+                  key={platform} 
+                  value={platform} 
+                  className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
                   {platform}
                 </TabsTrigger>
               ))}
@@ -196,10 +220,19 @@ export default function HoldingTable({
 
         {filterType === "type" && uniqueTypes.length > 0 && (
           <Tabs value={selectedType} onValueChange={setSelectedType}>
-            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto">
-              <TabsTrigger value="all" className="text-xs sm:text-sm">All Types</TabsTrigger>
+            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto bg-transparent p-0">
+              <TabsTrigger 
+                value="all" 
+                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                All Types
+              </TabsTrigger>
               {uniqueTypes.map((type) => (
-                <TabsTrigger key={type.id} value={type.id.toString()} className="text-xs sm:text-sm">
+                <TabsTrigger 
+                  key={type.id} 
+                  value={type.id.toString()} 
+                  className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
                   {type.name}
                 </TabsTrigger>
               ))}
@@ -208,96 +241,95 @@ export default function HoldingTable({
         )}
 
         {/* Filter Summary */}
-        {(filterType !== "all" || sortedHoldings.length !== holdings.length) && (
+        <div className="flex items-center justify-between">
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Showing {sortedHoldings.length} of {holdings.length} holdings
+            <span className="font-medium text-foreground">{sortedHoldings.length}</span>
+            {" "}of{" "}
+            <span className="font-medium text-foreground">{holdings.length}</span>
+            {" "}holdings
+            {filterType !== "all" && (
+              <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                Filtered
+              </span>
+            )}
           </p>
-        )}
+        </div>
       </div>
 
-      <div className="overflow-x-auto -mx-0 sm:mx-0">
-        <Table className="min-w-[800px] sm:min-w-0">
-        <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/60">
-            <TableHead className="w-12 sm:w-16 font-semibold text-xs sm:text-sm">#</TableHead>
-            <HeaderCell label="Name" columnKey="name" className="text-xs sm:text-sm" />
-            <HeaderCell label="Platform" columnKey="platform" className="text-xs sm:text-sm" />
-            <HeaderCell label="Type" columnKey="holding_type" className="text-xs sm:text-sm" />
-            <HeaderCell label="Invested Amount" columnKey="invested_amount" className="text-xs sm:text-sm" />
-            <HeaderCell label="Current Value" columnKey="current_value" className="text-xs sm:text-sm" />
-            <HeaderCell label="Realized Value" columnKey="realized_value" className="text-xs sm:text-sm" />
-            <HeaderCell label="Realized %" columnKey="realized_percent" className="text-xs sm:text-sm" />
-            <TableHead className="w-8 sm:w-12"></TableHead>
-            <TableHead className="w-24 sm:w-30 font-semibold text-xs sm:text-sm">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i} className="hover:bg-muted/50">
-                <TableCell>
-                  <Skeleton className="h-4 w-8" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-37.5" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-25" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-25" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-25" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-25" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-25" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-20" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-5" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-8 w-20" />
+      <div className="overflow-x-auto">
+        <Table className="min-w-[900px]">
+          <TableHeader>
+            <TableRow className="bg-muted/40 hover:bg-muted/50 border-b-2">
+              <TableHead className="w-10 sm:w-12 font-semibold text-xs sm:text-sm text-center">#</TableHead>
+              <HeaderCell label="Name" columnKey="name" className="text-xs sm:text-sm min-w-[140px]" />
+              <HeaderCell label="Platform" columnKey="platform" className="text-xs sm:text-sm" />
+              <HeaderCell label="Type" columnKey="holding_type" className="text-xs sm:text-sm" />
+              <HeaderCell label="Invested" columnKey="invested_amount" className="text-xs sm:text-sm text-right" />
+              <HeaderCell label="Current" columnKey="current_value" className="text-xs sm:text-sm text-right" />
+              <HeaderCell label="P/L" columnKey="realized_value" className="text-xs sm:text-sm text-right" />
+              <HeaderCell label="Return" columnKey="realized_percent" className="text-xs sm:text-sm text-right" />
+              <TableHead className="w-10 text-center"></TableHead>
+              <TableHead className="w-20 sm:w-24 font-semibold text-xs sm:text-sm text-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i} className="hover:bg-muted/30">
+                  <TableCell><Skeleton className="h-4 w-6 mx-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-12 ml-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-4 mx-auto" /></TableCell>
+                  <TableCell><Skeleton className="h-8 w-16 mx-auto" /></TableCell>
+                </TableRow>
+              ))
+            ) : sortedHoldings.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={10}
+                  className="text-center py-12"
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                      <svg className="w-6 h-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">No holdings found</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Try another month/year or add a new holding
+                      </p>
+                    </div>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))
-          ) : sortedHoldings.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={10}
-                className="text-center text-muted-foreground py-10"
-              >
-                No holdings found for this period. Try another month/year or add
-                a holding.
-              </TableCell>
-            </TableRow>
-          ) : (
-            <>
-              {sortedHoldings.map((holding, index) => (
-                <HoldingTableRow
-                  key={holding.id.toString()}
-                  holding={holding}
-                  index={index + 1}
-                  expandedRows={expandedRows}
-                  toggleExpand={toggleExpand}
-                  onEdit={onEdit}
+            ) : (
+              <>
+                {sortedHoldings.map((holding, index) => (
+                  <HoldingTableRow
+                    key={holding.id.toString()}
+                    holding={holding}
+                    index={index + 1}
+                    expandedRows={expandedRows}
+                    toggleExpand={toggleExpand}
+                    onEdit={onEdit}
+                    hideValues={hideValues}
+                  />
+                ))}
+                <HoldingTotalRow
+                  holdings={sortedHoldings}
                   hideValues={hideValues}
                 />
-              ))}
-              <HoldingTotalRow
-                holdings={sortedHoldings}
-                hideValues={hideValues}
-              />
-            </>
-          )}
-        </TableBody>
-      </Table>
+              </>
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

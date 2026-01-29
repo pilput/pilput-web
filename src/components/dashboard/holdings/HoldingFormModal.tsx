@@ -98,15 +98,34 @@ export default function HoldingFormModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
-            {editingHolding ? "Edit Holding" : "Add New Holding"}
-          </DialogTitle>
-          <DialogDescription>
-            {editingHolding
-              ? "Update the holding details."
-              : "Create a new holding with the following details."}
-          </DialogDescription>
+        <DialogHeader className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              editingHolding 
+                ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" 
+                : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+            }`}>
+              {editingHolding ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              )}
+            </div>
+            <div>
+              <DialogTitle className="text-xl">
+                {editingHolding ? "Edit Holding" : "Add New Holding"}
+              </DialogTitle>
+              <DialogDescription className="text-sm mt-0.5">
+                {editingHolding
+                  ? "Update the holding details below."
+                  : "Create a new holding with the following details."}
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-6">
           {/* Section 1: Basic Information */}
@@ -374,16 +393,34 @@ export default function HoldingFormModal({
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-3 pt-4 border-t">
             <Button
               variant="outline"
               type="button"
               onClick={() => onOpenChange(false)}
+              className="min-w-[100px]"
             >
               Cancel
             </Button>
-            <Button type="submit">
-              {editingHolding ? "Update Holding" : "Add Holding"}
+            <Button 
+              type="submit"
+              className="min-w-[140px] gap-2"
+            >
+              {editingHolding ? (
+                <>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Update Holding
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Add Holding
+                </>
+              )}
             </Button>
           </div>
         </form>

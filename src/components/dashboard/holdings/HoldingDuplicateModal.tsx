@@ -89,12 +89,20 @@ export default function HoldingDuplicateModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Duplicate holdings by month</DialogTitle>
-          <DialogDescription>
-            Copy holdings from one month/year to another. Existing data in the
-            target month can be overwritten.
-          </DialogDescription>
+        <DialogHeader className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400 flex items-center justify-center">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+            </div>
+            <div>
+              <DialogTitle className="text-xl">Duplicate Holdings</DialogTitle>
+              <DialogDescription className="text-sm mt-0.5">
+                Copy holdings from one period to another
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
@@ -181,11 +189,18 @@ export default function HoldingDuplicateModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border p-4 bg-muted/50">
-            <div className="space-y-0.5">
-              <Label htmlFor="overwrite-mode" className="text-base">Overwrite target</Label>
-              <p className="text-xs text-muted-foreground">
-                Replace any existing holdings in the destination month/year.
+          <div className="flex items-center justify-between rounded-lg border p-4 bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/30">
+            <div className="space-y-0.5 flex-1">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <Label htmlFor="overwrite-mode" className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+                  Overwrite target period
+                </Label>
+              </div>
+              <p className="text-xs text-amber-700/70 dark:text-amber-300/70 ml-6">
+                Replace any existing holdings in the destination month/year
               </p>
             </div>
             <Switch
@@ -194,18 +209,28 @@ export default function HoldingDuplicateModal({
               onCheckedChange={(checked) =>
                 setFormData({ ...formData, overwrite: checked })
               }
+              className="data-[state=checked]:bg-amber-600"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-3 pt-2 border-t">
             <Button
               variant="outline"
               type="button"
               onClick={() => onOpenChange(false)}
+              className="min-w-[100px]"
             >
               Cancel
             </Button>
-            <Button type="submit">Duplicate Holdings</Button>
+            <Button 
+              type="submit"
+              className="min-w-[160px] gap-2 bg-violet-600 hover:bg-violet-700"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+              Duplicate Holdings
+            </Button>
           </div>
         </form>
       </DialogContent>

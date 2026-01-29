@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { useMemo } from "react";
 
 interface HoldingFilterProps {
@@ -104,59 +104,63 @@ export default function HoldingFilter({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-3"
+      className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3"
     >
-      <div className="flex items-center gap-2 flex-1 min-w-0">
+      {/* Period Selector */}
+      <div className="flex items-center gap-1.5">
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           size="icon"
           onClick={handlePreviousMonth}
-          className="h-9 w-9 shrink-0 hover:bg-background/80"
+          className="h-9 w-9 shrink-0 hover:bg-muted"
           title="Previous month"
           aria-label="Previous month"
         >
           <ChevronLeft className="w-4 h-4" />
         </Button>
 
-        <Select value={month} onValueChange={handleMonthChange}>
-          <SelectTrigger
-            id="filterMonth"
-            className="min-w-[130px] sm:min-w-[150px] h-9 border border-border/50 bg-background hover:bg-background/80 focus:ring-2 focus:ring-primary/20 flex-1"
-            aria-label="Filter month"
-          >
-            <SelectValue placeholder="Month" />
-          </SelectTrigger>
-          <SelectContent>
-            {months.map((m) => (
-              <SelectItem key={m.value} value={m.value}>
-                {m.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-1 bg-background rounded-md border border-input px-2 h-9">
+          <CalendarDays className="w-4 h-4 text-muted-foreground shrink-0 ml-1" />
+          <Select value={month} onValueChange={handleMonthChange}>
+            <SelectTrigger
+              id="filterMonth"
+              className="h-8 border-0 bg-transparent focus:ring-0 text-sm font-medium w-[110px] sm:w-[130px]"
+              aria-label="Filter month"
+            >
+              <SelectValue placeholder="Month" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((m) => (
+                <SelectItem key={m.value} value={m.value}>
+                  {m.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        <div className="h-5 w-px bg-border/60 shrink-0" />
+          <div className="h-4 w-px bg-border shrink-0" />
 
-        <Input
-          id="filterYear"
-          type="number"
-          min="1900"
-          max="2100"
-          inputMode="numeric"
-          value={year}
-          onChange={(e) => handleYearChange(e.target.value)}
-          className="w-[85px] sm:w-[95px] h-9 border border-border/50 bg-background hover:bg-background/80 text-center focus-visible:ring-2 focus-visible:ring-primary/20 shrink-0"
-          placeholder="Year"
-          aria-label="Filter year"
-        />
+          <Input
+            id="filterYear"
+            type="number"
+            min="1900"
+            max="2100"
+            inputMode="numeric"
+            value={year}
+            onChange={(e) => handleYearChange(e.target.value)}
+            className="w-14 h-8 border-0 bg-transparent text-center focus-visible:ring-0 text-sm font-medium shrink-0 px-1"
+            placeholder="Year"
+            aria-label="Filter year"
+          />
+        </div>
 
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           size="icon"
           onClick={handleNextMonth}
-          className="h-9 w-9 shrink-0 hover:bg-background/80"
+          className="h-9 w-9 shrink-0 hover:bg-muted"
           title="Next month"
           aria-label="Next month"
         >
@@ -164,25 +168,25 @@ export default function HoldingFilter({
         </Button>
       </div>
 
+      {/* Action Buttons */}
       <div className="flex items-center gap-2 sm:ml-auto w-full sm:w-auto">
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className="h-9 px-3 text-xs sm:text-sm flex-1 sm:flex-initial"
+          className="h-9 px-3 text-xs sm:text-sm flex-1 sm:flex-initial gap-1.5 text-muted-foreground hover:text-foreground"
           onClick={handleCurrentMonth}
           disabled={isCurrentPeriod}
         >
-          <CalendarDays className="w-3.5 h-3.5 mr-1.5 shrink-0" />
-          <span className="hidden xs:inline">This month</span>
-          <span className="xs:hidden">Current</span>
+          <span className="hidden sm:inline">Current Period</span>
+          <span className="sm:hidden">Current</span>
         </Button>
         <Button 
           type="submit" 
           size="sm" 
-          variant="secondary" 
-          className="h-9 px-4 text-xs sm:text-sm font-semibold flex-1 sm:flex-initial"
+          className="h-9 px-4 text-xs sm:text-sm font-medium flex-1 sm:flex-initial gap-1.5"
         >
+          <Filter className="w-3.5 h-3.5" />
           Apply
         </Button>
       </div>
