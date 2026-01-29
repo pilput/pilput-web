@@ -5,6 +5,13 @@ import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function PerformancePage() {
   const [activeMonth] = useState((new Date().getMonth() + 1).toString());
@@ -26,46 +33,49 @@ export default function PerformancePage() {
   }, [hideValues]);
 
   return (
-    <div className="container mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-        <div className="flex items-start gap-3 sm:gap-4 min-w-0">
-          <Button variant="ghost" size="icon" className="shrink-0" asChild>
-            <Link href="/dashboard/holdings">
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-          </Button>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-              Monthly Performance
-            </h1>
-            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-              Compare your portfolio performance month over month.
-            </p>
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/dashboard/holdings">
+                  <ArrowLeft className="w-4 h-4" />
+                </Link>
+              </Button>
+              <div>
+                <CardTitle className="text-xl sm:text-2xl">
+                  Monthly Performance
+                </CardTitle>
+                <CardDescription className="text-xs sm:text-sm mt-1">
+                  Compare your portfolio performance month over month.
+                </CardDescription>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setHideValues(!hideValues)}
+              title={hideValues ? "Show values" : "Hide values"}
+              aria-label={hideValues ? "Show values" : "Hide values"}
+            >
+              {hideValues ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </Button>
           </div>
-        </div>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setHideValues(!hideValues)}
-          title={hideValues ? "Show values" : "Hide values"}
-          className="shrink-0 self-start sm:self-center"
-          aria-label={hideValues ? "Show values" : "Hide values"}
-        >
-          {hideValues ? (
-            <EyeOff className="w-4 h-4" />
-          ) : (
-            <Eye className="w-4 h-4" />
-          )}
-        </Button>
-      </div>
-
-      <HoldingComparison
-        isOpen={true}
-        targetMonth={parseInt(activeMonth)}
-        targetYear={parseInt(activeYear)}
-        hideValues={hideValues}
-      />
+        </CardHeader>
+        <CardContent>
+          <HoldingComparison
+            isOpen={true}
+            targetMonth={parseInt(activeMonth)}
+            targetYear={parseInt(activeYear)}
+            hideValues={hideValues}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

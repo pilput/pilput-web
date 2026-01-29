@@ -5,6 +5,7 @@ import { axiosInstance3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import ComparisonSummaryCards from "./ComparisonSummaryCards";
 import ComparisonChart from "./ComparisonChart";
+import ComparisonTables from "./ComparisonTables"; // New import
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, AlertCircle } from "lucide-react";
 import type {
@@ -113,7 +114,14 @@ export default function HoldingComparison({
       ) : data && data.summary ? (
         <>
           <ComparisonSummaryCards data={data} hideValues={hideValues} />
-          <ComparisonChart data={data} hideValues={hideValues} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6"> {/* Added margin top */}
+            <div className="lg:col-span-2">
+              <ComparisonTables data={data} hideValues={hideValues} />
+            </div>
+            <div className="lg:col-span-1">
+              <ComparisonChart data={data} hideValues={hideValues} />
+            </div>
+          </div>
         </>
       ) : (
         <Card className="border-dashed bg-muted/5">
