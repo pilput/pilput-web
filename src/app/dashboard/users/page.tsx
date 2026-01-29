@@ -234,6 +234,7 @@ export default function ManageUser() {
             </TableCaption>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">#</TableHead>
                 <TableHead className="min-w-[200px]">User</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
@@ -246,6 +247,9 @@ export default function ManageUser() {
               {isLoading
                 ? Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
+                      <TableCell className="text-muted-foreground">
+                        <Skeleton className="h-4 w-6" />
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Skeleton className="h-10 w-10 rounded-full shrink-0" />
@@ -273,7 +277,7 @@ export default function ManageUser() {
                   ? (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={7}
                         className="h-24 text-center text-muted-foreground"
                       >
                         {users.length === 0
@@ -282,8 +286,11 @@ export default function ManageUser() {
                       </TableCell>
                     </TableRow>
                     )
-                  : filteredUsers.map((user) => (
+                  : filteredUsers.map((user, index) => (
                       <TableRow key={user.id}>
+                        <TableCell className="text-muted-foreground tabular-nums">
+                          {index + 1}
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <Avatar className="h-9 w-9 shrink-0">
