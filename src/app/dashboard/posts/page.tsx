@@ -1,5 +1,4 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -11,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { postsStore } from "@/stores/postsStorage";
-import { getProfilePicture } from "@/utils/getImage";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
@@ -30,7 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Paginate } from "@/components/common/Paginate";
 
 export default function Posts() {
-  const limit = 10;
+  const limit = 15;
   const [Offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
@@ -103,10 +101,12 @@ export default function Posts() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
-                <TableHead>Author</TableHead>
-                <TableHead className="w-[40%]">Title</TableHead>
+                <TableHead className="min-w-[200px]">Title</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Slug</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead>Updated</TableHead>
+                <TableHead className="text-center">Views</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -117,40 +117,38 @@ export default function Posts() {
                     {poststore.posts.indexOf(post) + 1 + Offset}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={getProfilePicture(post.user.image)}
-                          alt={`@${post.user.username}`}
-                        />
-                        <AvatarFallback>
-                          {post.user.username[0].toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">
-                          {post.user?.first_name} {post.user?.last_name}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          @{post.user.username}
-                        </div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
                     <div className="font-medium line-clamp-2">{post.title}</div>
                   </TableCell>
                   <TableCell>
                     {post.published ? (
-                      <Badge variant="default" className="bg-green-500">
+                      <Badge
+                        variant="default"
+                        className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
+                      >
                         Published
                       </Badge>
                     ) : (
-                      <Badge variant="secondary">Draft</Badge>
+                      <Badge
+                        variant="outline"
+                        className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
+                      >
+                        Draft
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
+                      /{post.slug}
+                    </code>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground whitespace-nowrap text-sm">
                     {format(post.created_at, "MMM dd, yyyy")}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground whitespace-nowrap text-sm">
+                    {format(post.updated_at, "MMM dd, yyyy")}
+                  </TableCell>
+                  <TableCell className="text-center tabular-nums">
+                    {post.view_count ?? 0}
                   </TableCell>
                   <TableCell className="text-right">
                     <ActionComponent post={post} refetchPosts={refetchPosts} />
