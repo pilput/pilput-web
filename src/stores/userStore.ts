@@ -23,6 +23,7 @@ export const authStore = create<authDataState>()((set) => ({
     image: "placeholder/spinner.gif",
     first_name: "",
     last_name: "",
+    is_super_admin: false,
   },
   fetch: async () => {
     try {

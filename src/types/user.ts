@@ -12,16 +12,17 @@ export interface Profile {
 export interface User {
   id: string;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
   deleted_at: string | null;
   first_name: string;
   last_name: string;
   email: string;
-  image: string;
+  image: string | null;
   is_super_admin: boolean;
   username: string;
-  github_id: number;
+  github_id: string | null;
   followers_count: number;
   following_count: number;
-  profiles: Profile[];
+  last_logged_at: string | null;
+  profiles?: Profile[];
 }

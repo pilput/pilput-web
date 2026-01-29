@@ -30,58 +30,67 @@ import {
   TrendingUp,
   LayoutDashboard,
 } from "lucide-react";
+import { authStore } from "@/stores/userStore";
 
-const data = {
-  navMain: [
-    {
-      title: "Main",
-      items: [
-        {
-          title: "Dashboard",
-          url: "/dashboard",
-          icon: Home,
-        },
-        {
-          title: "Users",
-          url: "/dashboard/users",
-          icon: Users,
-        },
-      ],
-    },
-    {
-      title: "Content",
-      items: [
-        {
-          title: "Posts",
-          url: "/dashboard/posts",
-          icon: FileText,
-        },
-      ],
-    },
-    {
-      title: "Finance",
-      items: [
-        {
-          title: "Overview",
-          url: "/dashboard/holdings/overview",
-          icon: LayoutDashboard,
-        },
-        {
-          title: "Holdings",
-          url: "/dashboard/holdings",
-          icon: DollarSign,
-        },
-        {
-          title: "Performance",
-          url: "/dashboard/holdings/performance",
-          icon: TrendingUp,
-        },
-      ],
-    },
-  ],
-};
+const navMain = [
+  {
+    title: "Main",
+    items: [
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: Home,
+      },
+      {
+        title: "Users",
+        url: "/dashboard/users",
+        icon: Users,
+        superAdminOnly: true,
+      },
+    ],
+  },
+  {
+    title: "Content",
+    items: [
+      {
+        title: "Posts",
+        url: "/dashboard/posts",
+        icon: FileText,
+      },
+    ],
+  },
+  {
+    title: "Finance",
+    items: [
+      {
+        title: "Overview",
+        url: "/dashboard/holdings/overview",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "Holdings",
+        url: "/dashboard/holdings",
+        icon: DollarSign,
+      },
+      {
+        title: "Performance",
+        url: "/dashboard/holdings/performance",
+        icon: TrendingUp,
+      },
+    ],
+  },
+];
 
 function AppSidebar() {
+  const isSuperAdmin = authStore((state) => state.data.is_super_admin);
+
+  const filteredNavMain = navMain.map((group) => ({
+    ...group,
+    items: group.items.filter(
+      (item) => !("superAdminOnly" in item && item.superAdminOnly) || isSuperAdmin
+    ),
+  })).filter((group) => group.items.length > 0);
+
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
@@ -103,7 +112,7 @@ function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {data.navMain.map((group) => (
+        {filteredNavMain.map((group) => (
           <SidebarGroup key={group.title}>
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>

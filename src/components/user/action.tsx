@@ -20,7 +20,7 @@ const UserActionComponent = ({
   refetchUsers
 }: {
   user: User;
-  auth: User | undefined;
+  auth?: User;
   refetchUsers: () => void;
 }) => {
   const onDelete = async () => {
@@ -55,25 +55,21 @@ const UserActionComponent = ({
             <span>View Profile</span>
           </Link>
         </DropdownMenuItem>
-        {auth?.is_super_admin && (
-          <>
-            <DropdownMenuItem>
-              <Link href={`/dashboard/users/edit/${user.id}`} className="flex items-center">
-                <Edit className="mr-2 h-4 w-4" />
-                <span>Edit</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="cursor-pointer text-red-600"
-              onClick={onDelete}
-              disabled={user.id === auth.id}
-            >
-              <Trash className="mr-2 h-4 w-4" />
-              <span>Delete</span>
-            </DropdownMenuItem>
-          </>
-        )}
+        <DropdownMenuItem>
+          <Link href={`/dashboard/users/edit/${user.id}`} className="flex items-center">
+            <Edit className="mr-2 h-4 w-4" />
+            <span>Edit</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="cursor-pointer text-red-600"
+          onClick={onDelete}
+          disabled={user.id === auth?.id}
+        >
+          <Trash className="mr-2 h-4 w-4" />
+          <span>Delete</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
