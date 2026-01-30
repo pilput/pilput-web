@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import { holdingFormSchema } from "@/lib/validation";
 import HoldingHeader from "@/components/dashboard/holdings/HoldingHeader";
 import HoldingFormModal from "@/components/dashboard/holdings/HoldingFormModal";
 import HoldingTable from "@/components/dashboard/holdings/HoldingTable";
@@ -190,6 +192,13 @@ export default function HoldingsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    const result = holdingFormSchema.safeParse(formData);
+    if (!result.success) {
+      const firstError = result.error.issues[0];
+      toast.error(firstError?.message ?? "Please fill in all required fields");
+      return;
+    }
 
     try {
       const payload = {

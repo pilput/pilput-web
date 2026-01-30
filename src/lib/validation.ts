@@ -74,6 +74,28 @@ export const duplicateHoldingSchema = z.object({
   overwrite: z.boolean().optional().default(false),
 });
 
+// Add/update holding form validation schema
+export const holdingFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  platform: z.string().min(1, "Platform is required"),
+  holding_type_id: z.union([z.string().min(1), z.number()]),
+  currency: z.string().min(1, "Currency is required"),
+  invested_amount: z.union([
+    z.string().min(1, "Invested amount is required"),
+    z.number(),
+  ]),
+  current_value: z.union([
+    z.string().min(1, "Current value is required"),
+    z.number(),
+  ]),
+  month: z.union([z.string().min(1, "Month is required"), z.number()]),
+  year: z.union([z.string().min(1, "Year is required"), z.number()]),
+  units: z.string().optional(),
+  avg_buy_price: z.string().optional(),
+  current_price: z.string().optional(),
+  notes: z.string().optional(),
+});
+
 // Export types
 export type PostFormData = z.infer<typeof postSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
@@ -81,3 +103,4 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export type ChatMessageFormData = z.infer<typeof chatMessageSchema>;
 export type CommentFormData = z.infer<typeof commentSchema>;
 export type DuplicateHoldingPayload = z.infer<typeof duplicateHoldingSchema>;
+export type HoldingFormData = z.infer<typeof holdingFormSchema>;

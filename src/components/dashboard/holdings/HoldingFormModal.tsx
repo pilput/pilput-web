@@ -149,7 +149,9 @@ export default function HoldingFormModal({
                 />
               </div>
               <div className="space-y-2 col-span-2 md:col-span-1">
-                <Label htmlFor="platform">Platform</Label>
+                <Label htmlFor="platform">
+                  Platform <span className="text-red-500">*</span>
+                </Label>
                 <Select
                   value={formData.platform}
                   onValueChange={(value) =>
