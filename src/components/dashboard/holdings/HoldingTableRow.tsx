@@ -43,6 +43,22 @@ function getHoldingTypeColor(typeName: string) {
   return colors[normalizedTypeName] || "bg-secondary text-secondary-foreground";
 }
 
+function getPlatformColor(platformName: string) {
+  const colors: Record<string, string> = {
+    Ajaib: "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800",
+    Stockbit: "bg-black text-green-500 border-green-600 dark:bg-black dark:text-green-400 dark:border-green-600",
+    "Bank Jago": "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-300 dark:border-yellow-800",
+    "Bank BSI": "bg-blue-600 text-emerald-400 border-blue-700 dark:bg-blue-700 dark:text-emerald-300 dark:border-blue-800",
+    Bareksa: "bg-green-600 text-white border-green-700 dark:bg-green-700 dark:text-white dark:border-green-800",
+    Bibit: "bg-white text-green-600 border-green-200 dark:bg-white dark:text-green-600 dark:border-green-300",
+    Growin: "bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-800",
+    Pluang: "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 dark:border-orange-800",
+    Others: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
+  };
+  const normalized = platformName.trim();
+  return colors[normalized] || "bg-muted text-muted-foreground border-border";
+}
+
 interface HoldingTableRowProps {
   holding: Holding;
   index: number;
@@ -84,7 +100,12 @@ export default function HoldingTableRow({
         </div>
       </TableCell>
       <TableCell>
-        <span className="text-sm text-muted-foreground">{holding.platform}</span>
+        <Badge
+          variant="secondary"
+          className={`${getPlatformColor(holding.platform)} font-medium text-[10px] sm:text-xs px-2 py-0.5`}
+        >
+          {holding.platform}
+        </Badge>
       </TableCell>
       <TableCell>
         <Badge 
