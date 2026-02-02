@@ -70,11 +70,19 @@ docker run -p 3000:3000 pilput
 src/
 ├── app/                    # Next.js App Router pages
 │   ├── [username]/         # User profile routes
+│   ├── about/              # About page
+│   ├── account/            # Account management
 │   ├── blog/               # Blog related pages
 │   ├── chat/               # Chat interface
+│   ├── contact/            # Contact page
 │   ├── dashboard/          # User dashboard
+│   ├── forbidden/          # Forbidden access page
 │   ├── forum/              # Discussion forum
+│   ├── login/              # Login page
+│   ├── privacy/            # Privacy policy
 │   ├── profile/            # User profile
+│   ├── register/           # Registration page
+│   ├── tags/               # Tag management
 │   └── ...                 # Other pages
 ├── components/            # React UI components
 ├── hooks/                 # Custom React hooks
@@ -165,11 +173,35 @@ Comprehensive Zod-based validation schemas for:
 ### Key Utilities
 - `src/lib/validation.ts` - Centralized Zod validation schemas
 - `src/utils/ErrorHandler.ts` - API error handling with user feedback
-- `src/utils/performance.ts` - Performance monitoring utilities (mentioned in documentation)
+- `src/utils/Auth.ts` - Authentication utilities (token management)
+- `src/utils/fetch.ts` - Axios instance configuration for API calls
+- `src/utils/getConfig.ts` - Application configuration management
+- `src/utils/slug.ts` - URL slug generation utilities
 - `src/components/post/Editor.tsx` - Rich text editor implementation
 
 ### Environment Variables
 - `.env.local` for local development (example in `.env.local.example`)
+
+## State Management
+
+The application uses Zustand for state management with dedicated stores for:
+- `chat-store.ts` - Chat functionality
+- `createPostStore.ts` - Post creation state
+- `holdingsStore.ts` - Holdings management
+- `postsStorage.ts` - Posts storage
+- `profilestorage.ts` - Profile data
+- `updatePostStore.ts` - Post updates
+- `userStore.ts` - User authentication state
+
+## Type Definitions
+
+TypeScript interfaces are defined in the `src/types/` directory:
+- `holding-comparison.ts` - Holding comparison types
+- `holding.ts` - Holding-related types
+- `post.ts` - Post-related types
+- `user.ts` - User-related types
+- `writer.ts` - Writer-related types
+- `you.ts` - User profile types
 
 ## Deployment
 
