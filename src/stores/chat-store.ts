@@ -55,7 +55,7 @@ const validateConversationId = (id: string): boolean => {
 };
 
 const validateMessage = (
-  message: string
+  message: string,
 ): { isValid: boolean; error?: string } => {
   const trimmed = message.trim();
   if (!trimmed) {
@@ -103,7 +103,7 @@ interface ChatState {
   createConversation: (
     title: string,
     message: string,
-    router: any
+    router: any,
   ) => Promise<string | null>;
   resetPagination: () => void;
   sendMessage: (content: string, conversationId: string) => Promise<void>;
@@ -116,7 +116,7 @@ interface ChatState {
   streamMessage: (
     conversationId: string,
     content: string,
-    assistantMessageId: string
+    assistantMessageId: string,
   ) => Promise<void>;
 }
 
@@ -132,11 +132,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   availableModels: [
     { id: "openrouter/free", name: "OpenRouter Free" },
     { id: "z-ai/glm-4.5-air:free", name: "GLM 4.5 Air" },
-    { id: "qwen/qwen3-14b:free", name: "Qwen 3 14B" },
-    { id: "deepseek/deepseek-chat-v3.1:free", name: "DeepSeek V3.1" },
     { id: "tngtech/deepseek-r1t2-chimera:free", name: "DeepSeek R1T2 Chimera" },
-    { id: "anthropic/claude-3-haiku:free", name: "Claude 3 Haiku" },
-    { id: "meta-llama/llama-3-8b-instruct:free", name: "Meta Llama 3 8B" },
     {
       id: "mistralai/mistral-small-3.1-24b-instruct:free",
       name: "Mistral Small 3.1 24B",
@@ -168,7 +164,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   streamMessage: async (
     conversationId: string,
     content: string,
-    assistantMessageId: string
+    assistantMessageId: string,
   ) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000);
@@ -188,7 +184,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             model: get().selectedModel,
           }),
           signal: controller.signal,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -209,7 +205,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           messages: state.messages.map((msg) =>
             msg.id === assistantMessageId
               ? { ...msg, content: accumulatedContent }
-              : msg
+              : msg,
           ),
         }));
       };
@@ -236,7 +232,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 messages: state.messages.map((msg) =>
                   msg.id === assistantMessageId
                     ? { ...msg, isStreaming: false }
-                    : msg
+                    : msg,
                 ),
               }));
               break;
@@ -276,7 +272,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   editMessage: (id, content) => {
     set((state) => ({
       messages: state.messages.map((msg) =>
-        msg.id === id ? { ...msg, content } : msg
+        msg.id === id ? { ...msg, content } : msg,
       ),
     }));
   },
@@ -302,7 +298,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             offset: page * limit,
             limit,
           },
-        }
+        },
       );
 
       const { data, meta } = response.data;
@@ -321,7 +317,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const conversationMap = new Map<string, Conversation>();
         if (!isReset) {
           state.conversations.forEach((conv) =>
-            conversationMap.set(conv.id, conv)
+            conversationMap.set(conv.id, conv),
           );
         }
         data.forEach((conv) => conversationMap.set(conv.id, conv));
@@ -398,7 +394,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             "Content-Type": "application/json",
             Authorization: `Bearer ${getToken()}`,
           },
-        }
+        },
       );
 
       const messages = response.data.data.messages.map((message) => ({
@@ -467,7 +463,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             Authorization: `Bearer ${getToken()}`,
           },
           signal: controller.signal,
-        }
+        },
       );
 
       const conversationId = response.data.data.id;
@@ -562,7 +558,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       await get().streamMessage(
         conversationId,
         sanitizedContent,
-        assistantMessage.id
+        assistantMessage.id,
       );
     } catch (err: any) {
       const error: ChatError = {
@@ -573,7 +569,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       console.error("Error sending message:", error);
       set((state) => {
         const filtered = state.messages.filter(
-          (msg) => msg.id !== userMessage.id && msg.id !== assistantMessage.id
+          (msg) => msg.id !== userMessage.id && msg.id !== assistantMessage.id,
         );
         const errorMessage: Message = {
           id: `error-${Date.now()}`,
@@ -611,14 +607,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
-        }
+        },
       );
 
       if (response.status === 200) {
         // Remove the conversation from conversations
         set((state) => ({
           conversations: state.conversations.filter(
-            (conv) => conv.id !== conversationId
+            (conv) => conv.id !== conversationId,
           ),
           loadingStates: {
             ...state.loadingStates,
