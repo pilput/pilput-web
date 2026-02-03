@@ -131,6 +131,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   selectedModel: "openrouter/free",
   availableModels: [
     { id: "openrouter/free", name: "OpenRouter Free" },
+    { id: "stepfun/step-3.5-flash:free", name: "StepFun 3.5 Flash" },
     { id: "z-ai/glm-4.5-air:free", name: "GLM 4.5 Air" },
     { id: "tngtech/deepseek-r1t2-chimera:free", name: "DeepSeek R1T2 Chimera" },
     {
