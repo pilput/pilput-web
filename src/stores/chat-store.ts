@@ -128,8 +128,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
   // Initial state
   messages: [],
   conversations: [],
-  selectedModel: "z-ai/glm-4.5-air:free",
+  selectedModel: "openrouter/free",
   availableModels: [
+    { id: "openrouter/free", name: "OpenRouter Free" },
     { id: "z-ai/glm-4.5-air:free", name: "GLM 4.5 Air" },
     { id: "qwen/qwen3-14b:free", name: "Qwen 3 14B" },
     { id: "deepseek/deepseek-chat-v3.1:free", name: "DeepSeek V3.1" },
