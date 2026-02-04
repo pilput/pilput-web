@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { formatThousandsForInput, parseThousandsFromInput } from "@/lib/utils";
 import type { Holding, HoldingType } from "@/types/holding";
 
 interface HoldingFormModalProps {
@@ -218,14 +219,14 @@ export default function HoldingFormModal({
                 </Label>
                 <Input
                   id="invested_amount"
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   placeholder="0.00"
-                  value={formData.invested_amount}
+                  value={formatThousandsForInput(formData.invested_amount)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      invested_amount: e.target.value,
+                      invested_amount: parseThousandsFromInput(e.target.value),
                     })
                   }
                   required
@@ -237,14 +238,14 @@ export default function HoldingFormModal({
                 </Label>
                 <Input
                   id="current_value"
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   placeholder="0.00"
-                  value={formData.current_value}
+                  value={formatThousandsForInput(formData.current_value)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      current_value: e.target.value,
+                      current_value: parseThousandsFromInput(e.target.value),
                     })
                   }
                   required

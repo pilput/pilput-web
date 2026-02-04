@@ -89,3 +89,28 @@ export function formatNumber(
     maximumFractionDigits: decimals,
   });
 }
+
+/**
+ * Format raw number string with thousand separators for input display (e.g. "1000000" -> "1,000,000").
+ * Preserves trailing dot and decimal part for typing.
+ */
+export function formatThousandsForInput(raw: string): string {
+  if (raw === "" || raw === ".") return raw;
+  const stripped = raw.replace(/,/g, "");
+  const dotIdx = stripped.indexOf(".");
+  const hasTrailingDot = stripped.endsWith(".");
+  const intPart = dotIdx === -1 ? stripped : stripped.slice(0, dotIdx);
+  const decPart = dotIdx === -1 ? "" : stripped.slice(dotIdx + 1);
+  const intNum = parseInt(intPart || "0", 10);
+  if (isNaN(intNum) && intPart !== "" && intPart !== "-") return raw;
+  const formattedInt = intNum.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  const decimal = decPart ? "." + decPart : hasTrailingDot ? "." : "";
+  return formattedInt + decimal;
+}
+
+/**
+ * Parse displayed input (with thousand separators) back to raw number string for storage.
+ */
+export function parseThousandsFromInput(display: string): string {
+  return display.replace(/,/g, "");
+}
