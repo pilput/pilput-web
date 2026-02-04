@@ -17,7 +17,6 @@ import type { Post } from "@/types/post";
 const Postlist = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
-  const readTime = Math.ceil(plaintext.length / 800) || 1;
 
   return (
     <motion.article 
@@ -68,8 +67,6 @@ const Postlist = ({ post }: { post: Post }) => {
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Clock className="w-3 h-3" />
               {format(post.created_at, "MMM d, yyyy")}
-              <span className="w-1 h-1 bg-muted-foreground/40 rounded-full" />
-              <span>{readTime} min read</span>
             </div>
           </div>
           <motion.button

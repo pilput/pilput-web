@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { TrendingUp, Clock, Eye, Heart, User, Sparkles } from "lucide-react";
+import { TrendingUp, Eye, Heart, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
@@ -58,8 +58,6 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
   return (
     <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
       {posts.filter(Boolean).map((post, index) => {
-        const plaintext = post.body?.replace(/(<([^>]+)>)/gi, "").trim() || "";
-        const readTime = Math.ceil(plaintext.length / 800) || 1;
         const user = post.user;
         const userUsername = user?.username || "anonymous";
         const userName = user ? `${user.first_name} ${user.last_name}`.trim() : userUsername;
@@ -119,10 +117,6 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                       <Eye className="w-3.5 h-3.5" />
                       {post.view_count?.toLocaleString() || 0}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {readTime} min
-                    </div>
                     <div className="ml-auto flex items-center gap-1 text-primary/80">
                        <Heart className="w-3.5 h-3.5" />
                        {post.likes_count || 0}
@@ -170,11 +164,6 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                   {post.title}
                 </h4>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                  <span className="flex items-center gap-0.5">
-                    <Clock className="w-3 h-3" />
-                    {readTime}m
-                  </span>
-                  <span className="w-0.5 h-0.5 bg-muted-foreground/50 rounded-full" />
                   <span className="flex items-center gap-0.5">
                      <Eye className="w-3 h-3" />
                      {post.view_count?.toLocaleString()}
