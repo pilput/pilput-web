@@ -18,8 +18,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { axiosInstance3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
+
+/** "YYYY-MM" from input type="month" -> { month, year } */
+function parseMonthValue(value: string): { month: number; year: number } | null {
+  if (!value || value.length < 7) return null;
+  const [y, m] = value.split("-").map(Number);
+  if (!m || !y) return null;
+  return { month: m, year: y };
+}
 
 type MonthlyHoldingApiItem = {
   month: number;
@@ -36,16 +47,71 @@ type MonthlyHoldingResponse = {
 
 interface MonthlyHoldingsChartProps {
   hideValues?: boolean;
+  /** Filter: start of date range (inclusive) */
+  startMonth?: number;
+  startYear?: number;
+  /** Filter: end of date range (inclusive) */
+  endMonth?: number;
+  endYear?: number;
 }
 
 const maskValue = () => "••••••";
 
+const MONTH_LABELS = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/** "YYYY-MM" -> "Jan 2025" */
+function formatMonthLabel(value: string): string {
+  const s = String(value);
+  const match = s.match(/^(\d{4})-(\d{2})$/);
+  if (match) {
+    const year = match[1];
+    const monthIndex = parseInt(match[2], 10) - 1;
+    if (monthIndex >= 0 && monthIndex < 12) {
+      return `${MONTH_LABELS[monthIndex]} ${year}`;
+    }
+  }
+  return s;
+}
+
+type DateFilter = {
+  startMonth?: number;
+  startYear?: number;
+  endMonth?: number;
+  endYear?: number;
+};
+
 export default function MonthlyHoldingsChart({
   hideValues = false,
+  startMonth: startMonthProp,
+  startYear: startYearProp,
+  endMonth: endMonthProp,
+  endYear: endYearProp,
 }: MonthlyHoldingsChartProps) {
   const [data, setData] = React.useState<MonthlyHoldingApiItem[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  const propsFilter = React.useMemo(
+    (): DateFilter => ({
+      ...(startMonthProp != null && { startMonth: startMonthProp }),
+      ...(startYearProp != null && { startYear: startYearProp }),
+      ...(endMonthProp != null && { endMonth: endMonthProp }),
+      ...(endYearProp != null && { endYear: endYearProp }),
+    }),
+    [startMonthProp, startYearProp, endMonthProp, endYearProp]
+  );
+
+  const [appliedFilter, setAppliedFilter] = React.useState<DateFilter>(() => propsFilter);
+  const [draft, setDraft] = React.useState({ startDate: "", endDate: "" });
+
+  const filter = Object.keys(propsFilter).length > 0 ? propsFilter : appliedFilter;
+
+  React.useEffect(() => {
+    setAppliedFilter((prev) => (Object.keys(propsFilter).length > 0 ? propsFilter : prev));
+  }, [propsFilter]);
 
   React.useEffect(() => {
     let isCancelled = false;
@@ -55,13 +121,18 @@ export default function MonthlyHoldingsChart({
         setIsLoading(true);
         setError(null);
         const token = getToken();
+        const params: Record<string, number> = {};
+        if (filter.startMonth != null) params.startMonth = filter.startMonth;
+        if (filter.startYear != null) params.startYear = filter.startYear;
+        if (filter.endMonth != null) params.endMonth = filter.endMonth;
+        if (filter.endYear != null) params.endYear = filter.endYear;
+
         const response = await axiosInstance3.get<MonthlyHoldingResponse>(
           "/v1/holdings/monthly",
-          token
-            ? {
-                headers: { Authorization: `Bearer ${token}` },
-              }
-            : undefined
+          {
+            ...(Object.keys(params).length > 0 && { params }),
+            ...(token && { headers: { Authorization: `Bearer ${token}` } }),
+          }
         );
         if (!isCancelled) {
           setData(response.data?.data ?? []);
@@ -82,7 +153,28 @@ export default function MonthlyHoldingsChart({
     return () => {
       isCancelled = true;
     };
-  }, []);
+  }, [filter.startMonth, filter.startYear, filter.endMonth, filter.endYear]);
+
+  const handleApplyFilter = () => {
+    const start = parseMonthValue(draft.startDate);
+    const end = parseMonthValue(draft.endDate);
+    setAppliedFilter({
+      ...(start && { startMonth: start.month, startYear: start.year }),
+      ...(end && { endMonth: end.month, endYear: end.year }),
+    });
+  };
+
+  const handleClearFilter = () => {
+    setDraft({ startDate: "", endDate: "" });
+    setAppliedFilter({});
+  };
+
+  const hasFilter =
+    filter.startMonth != null ||
+    filter.startYear != null ||
+    filter.endMonth != null ||
+    filter.endYear != null;
+  const canUseFilterUI = Object.keys(propsFilter).length === 0;
 
   const chartData = React.useMemo(
     () =>
@@ -104,7 +196,9 @@ export default function MonthlyHoldingsChart({
       return (
         <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
           <div className="space-y-1">
-            <div className="font-medium text-foreground">{label}</div>
+            <div className="font-medium text-foreground">
+                {formatMonthLabel(label)}
+              </div>
             <div className="flex items-center justify-between gap-4">
               <span className="text-muted-foreground text-[0.7rem] uppercase">
                 Current Value
@@ -143,12 +237,62 @@ export default function MonthlyHoldingsChart({
   return (
     <Card className="border-none shadow-none bg-muted/30">
       <CardHeader className="pb-3 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg font-semibold">
-          Monthly Holdings Performance
-        </CardTitle>
-        <CardDescription className="text-xs sm:text-sm">
-          Total invested vs current value per month
-        </CardDescription>
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div>
+            <CardTitle className="text-base sm:text-lg font-semibold">
+              Monthly Holdings Performance
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
+              Total invested vs current value per month
+            </CardDescription>
+          </div>
+          {canUseFilterUI && (
+            <div className="flex flex-wrap items-end gap-2 sm:gap-3">
+              <div className="flex flex-col gap-1">
+                <Label className="text-xs text-muted-foreground">From</Label>
+                <Input
+                  type="month"
+                  className="h-8 w-[140px] sm:w-[160px] text-xs"
+                  value={draft.startDate}
+                  onChange={(e) =>
+                    setDraft((p) => ({ ...p, startDate: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label className="text-xs text-muted-foreground">To</Label>
+                <Input
+                  type="month"
+                  className="h-8 w-[140px] sm:w-[160px] text-xs"
+                  value={draft.endDate}
+                  onChange={(e) =>
+                    setDraft((p) => ({ ...p, endDate: e.target.value }))
+                  }
+                />
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="h-8 text-xs"
+                onClick={handleApplyFilter}
+              >
+                Apply
+              </Button>
+              {hasFilter && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={handleClearFilter}
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -168,7 +312,7 @@ export default function MonthlyHoldingsChart({
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={chartData}
-                margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+                margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
@@ -176,27 +320,10 @@ export default function MonthlyHoldingsChart({
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tickFormatter={(value) => String(value).slice(5)}
+                  tickFormatter={formatMonthLabel}
                 />
-                <YAxis
-                  yAxisId="value"
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) =>
-                    hideValues ? "•••" : `${(value as number).toFixed(0)}`
-                  }
-                  width={50}
-                />
-                <YAxis
-                  yAxisId="count"
-                  orientation="right"
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) =>
-                    hideValues ? "•••" : `${(value as number).toFixed(0)}`
-                  }
-                  width={40}
-                />
+                <YAxis yAxisId="value" domain={[0, "auto"]} hide />
+                <YAxis yAxisId="count" domain={[0, "auto"]} orientation="right" hide />
                 <RechartsTooltip content={<CustomTooltip />} />
                 <Legend
                   wrapperStyle={{ paddingTop: 8, fontSize: 12 }}
