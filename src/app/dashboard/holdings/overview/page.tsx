@@ -29,6 +29,7 @@ import Link from "next/link";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import HoldingSummaryCards from "@/components/dashboard/holdings/HoldingSummaryCards";
 import OverviewChart from "@/components/dashboard/holdings/OverviewChart";
+import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHoldingsChart";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
 import { formatCurrency } from "@/lib/utils";
 import type { Holding } from "@/types/holding";
@@ -501,6 +502,9 @@ export default function HoldingOverviewPage() {
             )}
           </div>
         </div>
+
+        {/* Monthly Holdings Trend */}
+        <MonthlyHoldingsChart />
 
         {/* Currency Breakdown */}
         {statistics &&
