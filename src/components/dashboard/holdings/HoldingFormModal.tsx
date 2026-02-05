@@ -172,14 +172,16 @@ export default function HoldingFormModal({
                 </Select>
               </div>
               <div className="space-y-2 col-span-2 md:col-span-1">
-                <Label htmlFor="holding_type_id">Type</Label>
+                <Label htmlFor="holding_type_id">
+                  Type <span className="text-red-500">*</span>
+                </Label>
                 <Select
                   value={formData.holding_type_id}
                   onValueChange={(value) =>
                     setFormData({ ...formData, holding_type_id: value })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="holding_type_id">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
