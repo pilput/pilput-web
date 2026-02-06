@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles, ChevronDown, ShieldCheck, Zap, Globe2 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
+import HeroBackground from "./HeroBackground";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,6 +66,7 @@ const Hero = () => {
     >
       <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 bg-grid-slate-100/[0.06] dark:bg-grid-slate-800/[0.1] bg-[length:28px_28px]" />
+      <HeroBackground />
       <motion.div className="absolute inset-0" style={{ y, opacity, background: "transparent" }} />
 
       <motion.div
@@ -187,8 +189,8 @@ const Hero = () => {
           prefersReducedMotion
             ? {}
             : {
-                y: [0, 8, 0],
-              }
+              y: [0, 8, 0],
+            }
         }
         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
