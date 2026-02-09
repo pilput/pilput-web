@@ -92,15 +92,26 @@ export default function HoldingTable({
         aValue = a.holding_type.name;
         bValue = b.holding_type.name;
       } else if (key === "realized_value") {
-        aValue = parseFloat(a.current_value) - parseFloat(a.invested_amount);
-        bValue = parseFloat(b.current_value) - parseFloat(b.invested_amount);
-      } else if (key === "realized_percent") {
-        const aInv = parseFloat(a.invested_amount);
-        const bInv = parseFloat(b.invested_amount);
         aValue =
-          aInv > 0 ? ((parseFloat(a.current_value) - aInv) / aInv) * 100 : 0;
+          a.gain_amount != null && a.gain_amount !== ""
+            ? parseFloat(a.gain_amount)
+            : parseFloat(a.current_value) - parseFloat(a.invested_amount);
         bValue =
-          bInv > 0 ? ((parseFloat(b.current_value) - bInv) / bInv) * 100 : 0;
+          b.gain_amount != null && b.gain_amount !== ""
+            ? parseFloat(b.gain_amount)
+            : parseFloat(b.current_value) - parseFloat(b.invested_amount);
+      } else if (key === "realized_percent") {
+        if (a.gain_percent != null && a.gain_percent !== "" && b.gain_percent != null && b.gain_percent !== "") {
+          aValue = parseFloat(a.gain_percent);
+          bValue = parseFloat(b.gain_percent);
+        } else {
+          const aInv = parseFloat(a.invested_amount);
+          const bInv = parseFloat(b.invested_amount);
+          aValue =
+            aInv > 0 ? ((parseFloat(a.current_value) - aInv) / aInv) * 100 : 0;
+          bValue =
+            bInv > 0 ? ((parseFloat(b.current_value) - bInv) / bInv) * 100 : 0;
+        }
       } else {
         aValue = a[key as keyof Holding];
         bValue = b[key as keyof Holding];

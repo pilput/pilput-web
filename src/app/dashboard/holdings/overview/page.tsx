@@ -86,30 +86,45 @@ export default function HoldingOverviewPage() {
       (sum, h) => sum + parseFloat(h.current_value),
       0
     );
-    const totalReturn = totalCurrent - totalInvested;
+    const hasGainAmounts = holdings.every(
+      (h) => h.gain_amount != null && h.gain_amount !== ""
+    );
+    const totalReturn = hasGainAmounts
+      ? holdings.reduce(
+          (sum, h) => sum + parseFloat(h.gain_amount ?? "0"),
+          0
+        )
+      : totalCurrent - totalInvested;
     const totalReturnPercent = totalInvested > 0 ? (totalReturn / totalInvested) * 100 : 0;
 
-    // Currency breakdown
+    // Currency breakdown (use gain_amount from holdings when present)
     const currencyBreakdown = holdings.reduce((acc, h) => {
       const currency = h.currency || "Unknown";
       const invested = parseFloat(h.invested_amount);
       const current = parseFloat(h.current_value);
+      const returnAmount =
+        h.gain_amount != null && h.gain_amount !== ""
+          ? parseFloat(h.gain_amount)
+          : current - invested;
       if (!acc[currency]) {
-        acc[currency] = { invested: 0, current: 0, count: 0 };
+        acc[currency] = { invested: 0, current: 0, returnAmount: 0, count: 0 };
       }
       acc[currency].invested += invested;
       acc[currency].current += current;
+      acc[currency].returnAmount += returnAmount;
       acc[currency].count += 1;
       return acc;
-    }, {} as Record<string, { invested: number; current: number; count: number }>);
+    }, {} as Record<string, { invested: number; current: number; returnAmount: number; count: number }>);
 
-    // Asset type performance
+    // Asset type performance (use gain_amount from holdings when present)
     const assetTypePerformance = holdings.reduce((acc, h) => {
       const typeName = h.holding_type?.name || "Unknown";
       const invested = parseFloat(h.invested_amount);
       const current = parseFloat(h.current_value);
-      const returnAmount = current - invested;
-      const returnPercent = invested > 0 ? (returnAmount / invested) * 100 : 0;
+      const returnAmount =
+        h.gain_amount != null && h.gain_amount !== ""
+          ? parseFloat(h.gain_amount)
+          : current - invested;
 
       if (!acc[typeName]) {
         acc[typeName] = {
@@ -136,13 +151,21 @@ export default function HoldingOverviewPage() {
       avgReturnPercent: number;
     }>);
 
-    // Top performing holdings (by return %)
+    // Top performing holdings (by return %); use gain_amount/gain_percent from holdings when present
     const holdingsWithReturn = holdings
       .map((h) => {
         const invested = parseFloat(h.invested_amount);
         const current = parseFloat(h.current_value);
-        const returnAmount = current - invested;
-        const returnPercent = invested > 0 ? (returnAmount / invested) * 100 : 0;
+        const returnAmount =
+          h.gain_amount != null && h.gain_amount !== ""
+            ? parseFloat(h.gain_amount)
+            : current - invested;
+        const returnPercent =
+          h.gain_percent != null && h.gain_percent !== ""
+            ? parseFloat(h.gain_percent)
+            : invested > 0
+              ? (returnAmount / invested) * 100
+              : 0;
         return { ...h, returnAmount, returnPercent };
       })
       .sort((a, b) => b.returnPercent - a.returnPercent);
@@ -352,10 +375,7 @@ export default function HoldingOverviewPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  {statistics.topPerformers.map((holding, idx) => {
-                    const invested = parseFloat(holding.invested_amount);
-                    const current = parseFloat(holding.current_value);
-                    return (
+                  {statistics.topPerformers.map((holding, idx) => (
                       <div
                         key={idx}
                         className="flex items-center justify-between p-2.5 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors"
@@ -390,8 +410,7 @@ export default function HoldingOverviewPage() {
                           )}
                         </div>
                       </div>
-                    );
-                  })}
+                    ))}
                 </CardContent>
               </Card>
             )}
@@ -528,7 +547,7 @@ export default function HoldingOverviewPage() {
                         statistics.totalCurrent > 0
                           ? (data.current / statistics.totalCurrent) * 100
                           : 0;
-                      const currencyReturn = data.current - data.invested;
+                      const currencyReturn = data.returnAmount;
                       const currencyReturnPercent =
                         data.invested > 0
                           ? (currencyReturn / data.invested) * 100

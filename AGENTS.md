@@ -4,23 +4,23 @@
 
 ### Development Commands
 ```bash
-# Start development server with Turbopack
-next dev --turbopack
+# Start development server
+bun run dev
 
-# Build for production with Turbopack
-next build --turbopack
+# Build for production
+bun run build
 
 # Start production server
-next start
+bun run start
 
-# Run linter (primary code quality check)
-next lint
+# Run linter
+bun run lint
+
+# Type checking
+bunx tsc --noEmit
 
 # Install dependencies
-npm install
-
-# Run type checking
-npx tsc --noEmit
+bun install
 ```
 
 ### Testing

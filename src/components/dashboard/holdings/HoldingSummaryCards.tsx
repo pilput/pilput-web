@@ -45,9 +45,21 @@ export default function HoldingSummaryCards({
     (sum, holding) => sum + parseFloat(holding.current_value),
     0
   );
-  const totalRealized = totalCurrent - totalInvested;
+  const hasGainAmounts = holdings.every(
+    (h) => h.gain_amount != null && h.gain_amount !== ""
+  );
+  const totalRealized = hasGainAmounts
+    ? holdings.reduce(
+        (sum, holding) => sum + parseFloat(holding.gain_amount ?? "0"),
+        0
+      )
+    : totalCurrent - totalInvested;
   const totalPercent =
-    totalInvested > 0 ? ((totalCurrent - totalInvested) / totalInvested) * 100 : 0;
+    totalInvested > 0
+      ? hasGainAmounts
+        ? (totalRealized / totalInvested) * 100
+        : ((totalCurrent - totalInvested) / totalInvested) * 100
+      : 0;
 
   // Get the most common currency from holdings, default to IDR
   const mostCommonCurrency =

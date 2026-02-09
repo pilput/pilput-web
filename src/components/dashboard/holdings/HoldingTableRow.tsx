@@ -78,8 +78,16 @@ export default function HoldingTableRow({
 }: HoldingTableRowProps) {
   const invested = parseFloat(holding.invested_amount);
   const current = parseFloat(holding.current_value);
-  const realized = current - invested;
-  const percent = invested > 0 ? ((current - invested) / invested) * 100 : 0;
+  const realized =
+    holding.gain_amount != null && holding.gain_amount !== ""
+      ? parseFloat(holding.gain_amount)
+      : current - invested;
+  const percent =
+    holding.gain_percent != null && holding.gain_percent !== ""
+      ? parseFloat(holding.gain_percent)
+      : invested > 0
+        ? ((current - invested) / invested) * 100
+        : 0;
 
   const maskValue = () => "••••••";
 

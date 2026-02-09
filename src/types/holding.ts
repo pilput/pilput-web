@@ -22,6 +22,10 @@ export interface Holding {
   year: number;
   last_updated?: string;
   notes?: string;
+  /** Gain/loss amount (from API, decimal string) */
+  gain_amount?: string;
+  /** Gain/loss percentage (from API, decimal string) */
+  gain_percent?: string;
   created_at: string;
   updated_at: string;
   holding_type: HoldingType;
