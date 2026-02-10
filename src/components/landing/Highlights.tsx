@@ -4,48 +4,49 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
-  Gauge,
-  ShieldCheck,
+  Bot,
+  BookOpen,
+  MessageCircle,
+  PieChart,
   Sparkles,
-  Globe2,
-  Users,
-  Zap,
-  Lock,
-  Search
 } from "lucide-react";
 
 const highlights = [
   {
-    title: "Zero Paywalls",
-    description: "Publish freely forever with no hidden tiers. We believe in democratizing content for everyone, everywhere.",
-    icon: ShieldCheck,
+    title: "Rich Writing Experience",
+    description:
+      "Create long-form posts with an editor built for focus, clarity, and consistent publishing flow.",
+    icon: BookOpen,
     className: "md:col-span-2",
-    gradient: "from-emerald-500/10 via-emerald-500/5 to-transparent",
-    iconColor: "text-emerald-500",
-  },
-  {
-    title: "Edge Performance",
-    description: "Next.js + Vercel Edge. Instant loads globally.",
-    icon: Zap,
-    className: "md:col-span-1",
-    gradient: "from-amber-500/10 via-amber-500/5 to-transparent",
-    iconColor: "text-amber-500",
-  },
-  {
-    title: "SEO Optimized",
-    description: "Automatic sitemaps, meta tags, and structured data.",
-    icon: Search,
-    className: "md:col-span-1",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     iconColor: "text-blue-500",
   },
   {
-    title: "Global Community",
-    description: "Connect with thousands of creators. Comment, like, and share ideas in real-time.",
-    icon: Users,
-    className: "md:col-span-2",
+    title: "AI Chat Assistant",
+    description:
+      "Get help for brainstorming, drafting, and refining content from a built-in AI conversation workspace.",
+    icon: Bot,
+    className: "md:col-span-1",
     gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
     iconColor: "text-purple-500",
+  },
+  {
+    title: "Portfolio Tracking",
+    description:
+      "Monitor holdings and view portfolio performance in one dashboard for clearer financial visibility.",
+    icon: PieChart,
+    className: "md:col-span-1",
+    gradient: "from-indigo-500/10 via-indigo-500/5 to-transparent",
+    iconColor: "text-indigo-500",
+  },
+  {
+    title: "Community Interaction",
+    description:
+      "Engage through comments and discussions so ideas can grow with feedback from other readers.",
+    icon: MessageCircle,
+    className: "md:col-span-2",
+    gradient: "from-emerald-500/10 via-emerald-500/5 to-transparent",
+    iconColor: "text-emerald-500",
   },
 ];
 
@@ -78,8 +79,8 @@ const Highlights = () => {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground"
           >
-            Built for modern <br className="hidden sm:block" />
-            <span className="text-muted-foreground">publishing excellence.</span>
+            Built for creators who write, <br className="hidden sm:block" />
+            <span className="text-muted-foreground">analyze, and collaborate.</span>
           </motion.h2>
           
           <motion.p 
@@ -89,8 +90,19 @@ const Highlights = () => {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            Everything you need to grow your audience and ship content faster, 
-            packaged in a beautiful, high-performance interface.
+            PILPUT combines writing tools, AI assistance, and portfolio insights
+            into one focused platform.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-sm md:text-base text-muted-foreground/90 max-w-3xl mx-auto"
+          >
+            Designed for everyday creators who need speed, clarity, and reliable
+            workflows from idea to publication.
           </motion.p>
         </div>
 
