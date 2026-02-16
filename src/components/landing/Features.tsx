@@ -322,7 +322,7 @@ const Features: React.FC = () => {
                   <div
                     className={cn(
                       "w-full lg:w-1/2 relative",
-                      "pl-24 sm:pl-32 lg:pl-0", // Mobile indentation
+                      "pl-16 sm:pl-32 lg:pl-0", // Mobile indentation
                       isEven ? "lg:pr-16" : "lg:pl-16" // Desktop spacing
                     )}
                   >
@@ -338,46 +338,46 @@ const Features: React.FC = () => {
                         onClick={() => handleFeatureClick(feature)}
                         aria-label={`${feature.title}: ${feature.description}`}
                         aria-describedby={`feature-stats-${feature.id}`}
-                        className="h-auto min-h-50 sm:min-h-55"
+                        className="h-auto min-h-40 sm:min-h-50"
                         glowColor={feature.glowColor}
                       >
                         {feature.background}
-                        <div className="z-10 p-4 sm:p-6 space-y-4">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary backdrop-blur-md">
+                        <div className="z-10 p-3 sm:p-6 space-y-3 sm:space-y-4">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+                            <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-primary/10 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-medium text-primary backdrop-blur-md">
                               {feature.accentIcon && (
-                                <feature.accentIcon className="h-4 w-4" />
+                                <feature.accentIcon className="h-3 sm:h-4 w-3 sm:w-4" />
                               )}
                               {feature.stats}
                             </div>
                             <Badge
                               id={`feature-stats-${feature.id}`}
                               variant="secondary"
-                              className="text-xs font-semibold backdrop-blur-md bg-secondary/80"
+                              className="text-[0.6rem] sm:text-xs font-semibold backdrop-blur-md bg-secondary/80 px-2 py-1"
                             >
                               {feature.cta}
                             </Badge>
                           </div>
 
-                          <div className="space-y-3">
-                            <h3 className="text-xl sm:text-2xl font-bold text-neutral-700 dark:text-neutral-300 leading-tight">
+                          <div className="space-y-2 sm:space-y-3">
+                            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-700 dark:text-neutral-300 leading-tight">
                               {feature.title}
                             </h3>
-                            <p className="text-base sm:text-lg text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                            <p className="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 leading-relaxed">
                               {feature.description}
                             </p>
                           </div>
 
-                          <div className="flex flex-wrap items-center gap-3 pt-1">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-0.5 sm:pt-1">
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="px-0 text-primary hover:text-primary hover:bg-transparent p-0"
+                              className="px-0 text-primary hover:text-primary hover:bg-transparent p-0 text-sm"
                               onClick={() => handleFeatureClick(feature)}
                               aria-label={`Go to ${feature.title}`}
                             >
                               {feature.cta}
-                              <ArrowRight className="ml-2 h-4 w-4" />
+                              <ArrowRight className="ml-1.5 sm:ml-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
                             </Button>
                           </div>
                         </div>

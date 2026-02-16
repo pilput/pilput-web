@@ -13,7 +13,7 @@ export default function Home() {
       <Navigation />
       <main
         id="main-content"
-        className="space-y-20 sm:space-y-24 lg:space-y-28"
+        className="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-28"
       >
         <Hero />
         <Highlights />

@@ -73,7 +73,7 @@ const Hero = () => {
         className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
         variants={itemVariants}
       >
-        <div className="text-center space-y-6 sm:space-y-8 lg:space-y-10">
+        <div className="text-center space-y-4 sm:space-y-6 lg:space-y-10">
           <AnimatePresence>
             {!isLoaded && (
               <motion.div
@@ -90,17 +90,17 @@ const Hero = () => {
           <motion.div variants={itemVariants}>
             <Badge
               variant="secondary"
-              className="px-4 py-2 text-sm font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-all duration-200 rounded-full shadow-sm"
+              className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-all duration-200 rounded-full shadow-sm"
               role="status"
               aria-label="Platform feature highlight"
             >
-              <Sparkles className="h-4 w-4 mr-2" aria-hidden="true" />
+              <Sparkles className="h-3.5 w-3.5 mr-1.5 sm:mr-2" aria-hidden="true" />
               Free publishing platform with no limits
             </Badge>
           </motion.div>
 
           <motion.div variants={itemVariants} className="space-y-2 relative">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight">
               <span className="block">Write, publish, and</span>
               <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/70 bg-clip-text text-transparent relative">
                 ship ideas without friction
@@ -116,7 +116,7 @@ const Hero = () => {
 
           <motion.p
             variants={itemVariants}
-            className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl sm:max-w-3xl mx-auto leading-relaxed px-2"
           >
             PILPUT is a free publishing platform where anyone can write and share without restrictions.
             No paywalls, no subscriptions, no hidden limits—just a clean place to focus on your words.
@@ -124,25 +124,25 @@ const Hero = () => {
 
           <motion.nav
             variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center pt-1 sm:pt-2"
             role="navigation"
             aria-label="Primary actions"
           >
             <Link href="/register" className="w-full sm:w-auto">
               <Button
-                className="group relative overflow-hidden px-8 py-4 text-lg font-semibold bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-200 rounded-2xl border border-primary/60 w-full sm:w-auto min-w-[200px]"
+                className="group relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-200 rounded-xl sm:rounded-2xl border border-primary/60 w-full sm:w-auto min-w-[180px] sm:min-w-[200px]"
                 size="lg"
                 aria-label="Start writing your first article"
               >
                 <span className="relative z-10">Start writing now</span>
-                <ArrowRight className="ml-2 h-5 w-5 translate-x-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5 translate-x-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Button>
             </Link>
             <Link href="/blog" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="relative overflow-hidden px-8 py-4 text-lg font-semibold border border-border/70 bg-background/70 backdrop-blur-md hover:bg-primary/5 hover:border-primary/50 transition-all duration-200 rounded-2xl w-full sm:w-auto min-w-[200px]"
+                className="relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold border border-border/70 bg-background/70 backdrop-blur-md hover:bg-primary/5 hover:border-primary/50 transition-all duration-200 rounded-xl sm:rounded-2xl w-full sm:w-auto min-w-[180px] sm:min-w-[200px]"
                 aria-label="Browse published articles"
               >
                 <span className="relative z-10">Browse articles</span>
@@ -152,7 +152,7 @@ const Hero = () => {
 
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 pt-6"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-6 pt-4 sm:pt-6"
           >
             {[
               { icon: ShieldCheck, title: "Free forever", desc: "No paywalls or hidden limits" },
@@ -161,14 +161,14 @@ const Hero = () => {
             ].map((item) => (
               <div
                 key={item.title}
-                className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card/80 backdrop-blur-xl px-4 py-3 shadow-sm"
+                className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/60 bg-card/80 backdrop-blur-xl px-3 sm:px-4 py-2.5 sm:py-3 shadow-sm"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <item.icon className="h-5 w-5" />
+                <div className="flex h-8 sm:h-10 w-8 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 text-primary">
+                  <item.icon className="h-4 sm:h-5 w-4 sm:w-5" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  <p className="text-xs sm:text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="text-[0.65rem] sm:text-xs text-muted-foreground">{item.desc}</p>
                 </div>
               </div>
             ))}
