@@ -35,7 +35,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
         const response = await axiosInstance2.get(`/v1/posts/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const postData = response.data;
+        const postData = response.data.data;
         updateTitle(postData.title);
         updateBody(postData.body);
         updatePhotoUrl(postData.photo_url);
@@ -70,7 +70,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         const photoUrl = response.data.photo_url;
@@ -108,10 +108,10 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
           if (axiosError.response.status === 422) {
             const errorData = axiosError.response.data as any;
             const titleError = errorData?.error?.issues?.find((issue: any) =>
-              issue.path.includes("title")
+              issue.path.includes("title"),
             )?.message;
             const imageError = errorData?.error?.issues?.find((issue: any) =>
-              issue.path.includes("photo_url")
+              issue.path.includes("photo_url"),
             )?.message;
             seterrortitle(titleError || "");
             seterrorimage(imageError || "");
