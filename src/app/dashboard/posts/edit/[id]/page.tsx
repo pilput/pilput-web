@@ -2,11 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { updatePostStore } from "@/stores/updatePostStore";
 import { getToken } from "@/utils/Auth";
-import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
+import { axiosInstance } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
-import axios, { AxiosError } from "axios";
-import { use, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import MyEditor from "@/components/post/Editor";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,15 +20,16 @@ export default function PostEdit() {
   const [errorimage, seterrorimage] = useState("");
   const token = getToken();
   const {
-    postId,
     post,
     loading,
+    isUpdating,
     updateTitle,
     updateBody,
     updatePhotoUrl,
     updateSlug,
     updatePostId,
     fetchPostById,
+    updatePost,
   } = updatePostStore();
 
   useEffect(() => {
@@ -79,37 +79,14 @@ export default function PostEdit() {
     }
 
     const toastid = toast.loading("Updating...");
-    try {
-      await axiosInstance2.patch(`/v1/posts/${postId}`, post, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const success = await updatePost()
+    
+    if (success) {
       seterrortitle("");
       seterrorimage("");
       toast.success("Post updated successfully", { id: toastid });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError: AxiosError = error;
-        console.error("Axios error:", axiosError.message);
-        if (axiosError.response) {
-          if (axiosError.response.status === 422) {
-            const errorData = axiosError.response.data as any;
-            const titleError = errorData?.error?.issues?.find((issue: any) =>
-              issue.path.includes("title"),
-            )?.message;
-            const imageError = errorData?.error?.issues?.find((issue: any) =>
-              issue.path.includes("photo_url"),
-            )?.message;
-            seterrortitle(titleError || "");
-            seterrorimage(imageError || "");
-            toast.error("Validation error", { id: toastid });
-          } else {
-            toast.error("Error updating post", { id: toastid });
-          }
-        } else {
-          console.error("Other error:", error);
-          toast.error("Network error", { id: toastid });
-        }
-      }
+    } else {
+      toast.error("Error updating post", { id: toastid });
     }
   }
 
@@ -125,8 +102,8 @@ export default function PostEdit() {
           <Button variant="outline" onClick={() => window.history.back()}>
             Cancel
           </Button>
-          <Button onClick={updateHandler} className="min-w-25">
-            Update
+          <Button onClick={updateHandler} disabled={isUpdating} className="min-w-25">
+            {isUpdating ? "Updating..." : "Update"}
           </Button>
         </div>
       </div>

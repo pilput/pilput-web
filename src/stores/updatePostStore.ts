@@ -1,6 +1,6 @@
 import type { Post, PostCreate } from '@/types/post'
 import { create } from 'zustand'
-import { axiosInstance3 } from '@/utils/fetch'
+import { axiosInstance2, axiosInstance3 } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
 
 const DEFAULT_BODY = `
@@ -33,12 +33,14 @@ interface UpdatePostState {
   postId: string | null
   post: PostCreate
   loading: boolean
+  isUpdating: boolean
   updateTitle: (title: string) => void
   updateBody: (body: string) => void
   updateSlug: (slug: string) => void
   updatePhotoUrl: (photoUrl: string) => void
   updatePostId: (id: string) => void
   fetchPostById: (id: string) => Promise<Post | null>
+  updatePost: () => Promise<boolean>
   resetStore: () => void
   error: boolean
   total: number
@@ -54,6 +56,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     tags: []
   },
   loading: false,
+  isUpdating: false,
   updateTitle: (title) =>
     set((state) => ({
       post: { ...state.post, title }
@@ -102,6 +105,27 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
       console.error('Error fetching post:', error)
       set(() => ({ loading: false, error: true }))
       return null
+    }
+  },
+  updatePost: async () => {
+    const { postId, post } = get()
+    const token = getToken()
+    
+    if (!postId) return false
+    
+    set(() => ({ isUpdating: true, error: false }))
+    
+    try {
+      await axiosInstance2.patch(`/v1/posts/${postId}`, post, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      
+      set(() => ({ isUpdating: false }))
+      return true
+    } catch (error) {
+      console.error('Error updating post:', error)
+      set(() => ({ isUpdating: false, error: true }))
+      return false
     }
   },
   resetStore: () =>
