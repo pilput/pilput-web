@@ -1,5 +1,7 @@
-import type { PostCreate } from '@/types/post'
+import type { Post, PostCreate } from '@/types/post'
 import { create } from 'zustand'
+import { axiosInstance2 } from '@/utils/fetch'
+import { getToken } from '@/utils/Auth'
 
 const DEFAULT_BODY = `
   <h3>Hi there,</h3>
@@ -30,17 +32,19 @@ const DEFAULT_BODY = `
 interface UpdatePostState {
   postId: string | null
   post: PostCreate
+  loading: boolean
   updateTitle: (title: string) => void
   updateBody: (body: string) => void
   updateSlug: (slug: string) => void
   updatePhotoUrl: (photoUrl: string) => void
   updatePostId: (id: string) => void
+  fetchPostById: (id: string) => Promise<Post | null>
   resetStore: () => void
   error: boolean
   total: number
 }
 
-export const updatePostStore = create<UpdatePostState>()((set) => ({
+export const updatePostStore = create<UpdatePostState>()((set, get) => ({
   postId: null,
   post: {
     title: '',
@@ -49,6 +53,7 @@ export const updatePostStore = create<UpdatePostState>()((set) => ({
     photo_url: '',
     tags: []
   },
+  loading: false,
   updateTitle: (title) =>
     set((state) => ({
       post: { ...state.post, title }
@@ -69,6 +74,34 @@ export const updatePostStore = create<UpdatePostState>()((set) => ({
     set(() => ({
       postId: id
     })),
+  fetchPostById: async (id: string) => {
+    const token = getToken()
+    set(() => ({ loading: true, error: false }))
+    try {
+      const response = await axiosInstance2.get(`/v1/posts/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const postData = response.data.data
+      
+      set(() => ({
+        postId: postData.id,
+        post: {
+          title: postData.title,
+          body: postData.body,
+          slug: postData.slug,
+          photo_url: postData.photo_url,
+          tags: postData.tags || []
+        },
+        loading: false
+      }))
+      
+      return postData
+    } catch (error) {
+      console.error('Error fetching post:', error)
+      set(() => ({ loading: false, error: true }))
+      return null
+    }
+  },
   resetStore: () =>
     set(() => ({
       postId: null,

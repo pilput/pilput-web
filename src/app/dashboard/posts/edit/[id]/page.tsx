@@ -16,42 +16,26 @@ import { ImagePlus } from "lucide-react";
 export default async function PostEdit(params: Promise<{ id: string }>) {
   const [errortitle, seterrortitle] = useState("");
   const [errorimage, seterrorimage] = useState("");
-  const [loading, setLoading] = useState(true);
   const token = getToken();
   const { id } = await params;
   const {
     postId,
     post,
+    loading,
     updateTitle,
     updateBody,
     updatePhotoUrl,
     updateSlug,
     updatePostId,
+    fetchPostById,
   } = updatePostStore();
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const response = await axiosInstance2.get(`/v1/posts/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const postData = response.data.data;
-        updateTitle(postData.title);
-        updateBody(postData.body);
-        updatePhotoUrl(postData.photo_url);
-        updateSlug(postData.slug);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching post:", error);
-        toast.error("Failed to load post");
-        setLoading(false);
-      }
-    };
     if (id) {
       updatePostId(id.toString());
-      fetchPost();
+      fetchPostById(id);
     }
-  }, [id, token]);
+  }, [id]);
 
   const update = (data: string) => {
     updateBody(data);
@@ -139,7 +123,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
           <Button variant="outline" onClick={() => window.history.back()}>
             Cancel
           </Button>
-          <Button onClick={updateHandler} className="min-w-[100px]">
+          <Button onClick={updateHandler} className="min-w-25">
             Update
           </Button>
         </div>
@@ -204,7 +188,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
           {/* Content Editor */}
           <div className="space-y-2">
             <Label className="text-base font-semibold">Content</Label>
-            <div className="min-h-[400px] border rounded-lg">
+            <div className="min-h-100 border rounded-lg">
               <MyEditor content={post.body} onchange={update} />
             </div>
           </div>
