@@ -6,18 +6,20 @@ import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import axios, { AxiosError } from "axios";
-import { useState, useEffect } from "react";
+import { use, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import MyEditor from "@/components/post/Editor";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ImagePlus } from "lucide-react";
+import { useParams } from "next/navigation";
 
-export default async function PostEdit(params: Promise<{ id: string }>) {
+export default function PostEdit() {
+  const params = useParams();
+  const id = params?.id as string;
   const [errortitle, seterrortitle] = useState("");
   const [errorimage, seterrorimage] = useState("");
   const token = getToken();
-  const { id } = await params;
   const {
     postId,
     post,
@@ -35,7 +37,7 @@ export default async function PostEdit(params: Promise<{ id: string }>) {
       updatePostId(id.toString());
       fetchPostById(id);
     }
-  }, [id]);
+  }, []);
 
   const update = (data: string) => {
     updateBody(data);

@@ -1,6 +1,6 @@
 import type { Post, PostCreate } from '@/types/post'
 import { create } from 'zustand'
-import { axiosInstance2 } from '@/utils/fetch'
+import { axiosInstance3 } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
 
 const DEFAULT_BODY = `
@@ -78,9 +78,11 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const token = getToken()
     set(() => ({ loading: true, error: false }))
     try {
-      const response = await axiosInstance2.get(`/v1/posts/${id}`, {
+      const response = await axiosInstance3.get(`/v1/posts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
+      console.log(response);
+      
       const postData = response.data.data
       
       set(() => ({
