@@ -1,7 +1,7 @@
-import type { Post, PostCreate } from '@/types/post'
-import { create } from 'zustand'
-import { axiosInstance2, axiosInstance3 } from '@/utils/fetch'
-import { getToken } from '@/utils/Auth'
+import type { Post, PostCreate } from "@/types/post";
+import { create } from "zustand";
+import { axiosInstance2, axiosInstance3 } from "@/utils/fetch";
+import { getToken } from "@/utils/Auth";
 
 const DEFAULT_BODY = `
   <h3>Hi there,</h3>
@@ -27,67 +27,65 @@ const DEFAULT_BODY = `
   <blockquote>
     Wow, that's amazing. Good work, boy! 👏<br />— Mom
   </blockquote>
-`
+`;
 
 interface UpdatePostState {
-  postId: string | null
-  post: PostCreate
-  loading: boolean
-  isUpdating: boolean
-  updateTitle: (title: string) => void
-  updateBody: (body: string) => void
-  updateSlug: (slug: string) => void
-  updatePhotoUrl: (photoUrl: string) => void
-  updatePostId: (id: string) => void
-  fetchPostById: (id: string) => Promise<Post | null>
-  updatePost: () => Promise<boolean>
-  resetStore: () => void
-  error: boolean
-  total: number
+  postId: string | null;
+  post: PostCreate;
+  loading: boolean;
+  isUpdating: boolean;
+  updateTitle: (title: string) => void;
+  updateBody: (body: string) => void;
+  updateSlug: (slug: string) => void;
+  updatePhotoUrl: (photoUrl: string) => void;
+  updatePostId: (id: string) => void;
+  fetchPostById: (id: string) => Promise<Post | null>;
+  updatePost: () => Promise<boolean>;
+  resetStore: () => void;
+  error: boolean;
+  total: number;
 }
 
 export const updatePostStore = create<UpdatePostState>()((set, get) => ({
   postId: null,
   post: {
-    title: '',
+    title: "",
     body: DEFAULT_BODY,
-    slug: '',
-    photo_url: '',
-    tags: []
+    slug: "",
+    photo_url: "",
+    tags: [],
   },
   loading: false,
   isUpdating: false,
   updateTitle: (title) =>
     set((state) => ({
-      post: { ...state.post, title }
+      post: { ...state.post, title },
     })),
   updateBody: (body) =>
     set((state) => ({
-      post: { ...state.post, body }
+      post: { ...state.post, body },
     })),
   updateSlug: (slug) =>
     set((state) => ({
-      post: { ...state.post, slug }
+      post: { ...state.post, slug },
     })),
   updatePhotoUrl: (photo_url) =>
     set((state) => ({
-      post: { ...state.post, photo_url }
+      post: { ...state.post, photo_url },
     })),
   updatePostId: (id) =>
     set(() => ({
-      postId: id
+      postId: id,
     })),
   fetchPostById: async (id: string) => {
-    const token = getToken()
-    set(() => ({ loading: true, error: false }))
+    const token = getToken();
+    set(() => ({ loading: true, error: false }));
     try {
       const response = await axiosInstance3.get(`/v1/posts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      console.log(response);
-      
-      const postData = response.data.data
-      
+      });
+      const postData = response.data.data;
+
       set(() => ({
         postId: postData.id,
         post: {
@@ -95,50 +93,50 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
           body: postData.body,
           slug: postData.slug,
           photo_url: postData.photo_url,
-          tags: postData.tags || []
+          tags: postData.tags || [],
         },
-        loading: false
-      }))
-      
-      return postData
+        loading: false,
+      }));
+
+      return postData;
     } catch (error) {
-      console.error('Error fetching post:', error)
-      set(() => ({ loading: false, error: true }))
-      return null
+      console.error("Error fetching post:", error);
+      set(() => ({ loading: false, error: true }));
+      return null;
     }
   },
   updatePost: async () => {
-    const { postId, post } = get()
-    const token = getToken()
-    
-    if (!postId) return false
-    
-    set(() => ({ isUpdating: true, error: false }))
-    
+    const { postId, post } = get();
+    const token = getToken();
+
+    if (!postId) return false;
+
+    set(() => ({ isUpdating: true, error: false }));
+
     try {
       await axiosInstance2.patch(`/v1/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      
-      set(() => ({ isUpdating: false }))
-      return true
+      });
+
+      set(() => ({ isUpdating: false }));
+      return true;
     } catch (error) {
-      console.error('Error updating post:', error)
-      set(() => ({ isUpdating: false, error: true }))
-      return false
+      console.error("Error updating post:", error);
+      set(() => ({ isUpdating: false, error: true }));
+      return false;
     }
   },
   resetStore: () =>
     set(() => ({
       postId: null,
       post: {
-        title: '',
+        title: "",
         body: DEFAULT_BODY,
-        slug: '',
-        photo_url: '',
-        tags: []
-      }
+        slug: "",
+        photo_url: "",
+        tags: [],
+      },
     })),
   error: false,
-  total: 0
-}))
+  total: 0,
+}));
