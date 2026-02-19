@@ -177,6 +177,150 @@
 }
 
 // ===========================
+// Floating Bubble Menu
+// ===========================
+.bubbleMenu {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in oklch, var(--background) 92%, black 8%);
+  box-shadow:
+    0 10px 30px color-mix(in oklch, black 18%, transparent),
+    0 1px 0 color-mix(in oklch, white 8%, transparent) inset;
+  backdrop-filter: blur(8px);
+}
+
+.bubbleMenuContainer {
+  position: fixed;
+  z-index: 30;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.bubbleSeparator {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+.bubbleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  pointer-events: auto;
+
+  &:hover {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  &.active {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+}
+
+// ===========================
+// Slash Command Menu
+// ===========================
+.slashMenu {
+  position: fixed;
+  z-index: 35;
+  min-width: 260px;
+  max-width: 320px;
+  max-height: 320px;
+  overflow: auto;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklch, var(--background) 95%, black 5%);
+  box-shadow:
+    0 16px 40px color-mix(in oklch, black 16%, transparent),
+    0 1px 0 color-mix(in oklch, white 8%, transparent) inset;
+}
+
+.slashItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-radius: 9px;
+  padding: 8px 9px;
+  text-align: left;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.12s ease;
+
+  &:hover,
+  &.active {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.slashIcon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  border: 1px solid color-mix(in oklch, var(--border) 75%, transparent);
+  background: color-mix(in oklch, var(--muted) 80%, transparent);
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.slashContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.slashLabel {
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.slashDescription {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  line-height: 1.2;
+}
+
+.slashEmpty {
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+
+// ===========================
 // Editor Content Area
 // ===========================
 .editorContent {
@@ -652,4 +796,3 @@
     }
   }
 }
-

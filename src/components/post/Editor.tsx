@@ -9,6 +9,8 @@ import TextAlign from "@tiptap/extension-text-align";
 import { CharacterCount } from "@tiptap/extension-character-count";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import MenuBar from "./MenuBar";
+import FloatingTextMenu from "./FloatingTextMenu";
+import SlashCommandMenu from "./SlashCommandMenu";
 import styles from "./post-editor.module.scss";
 
 interface TiptapProps {
@@ -82,6 +84,8 @@ const Tiptap = ({
   return (
     <div className={styles.editorWrapper}>
       <MenuBar editor={editor} />
+      <FloatingTextMenu editor={editor} />
+      <SlashCommandMenu editor={editor} />
       <div className={styles.editorContent}>
         <EditorContent editor={editor} />
       </div>
