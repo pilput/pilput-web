@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "./editor.module.scss";
+import styles from "./post-content.module.scss";
 
 interface PostContentProps {
   html: string;

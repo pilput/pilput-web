@@ -21,7 +21,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import styles from "@/components/post/editor.module.scss";
+import styles from "@/components/post/post-editor.module.scss";
 
 const MAX_TITLE_LENGTH = 150;
 const MAX_SLUG_LENGTH = 200;

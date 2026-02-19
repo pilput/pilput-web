@@ -17,7 +17,7 @@ import {
 import type { Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
 import PostContent from "@/components/post/PostContent";
-import styles from "@/components/post/editor.module.scss";
+import styles from "@/components/post/post-content.module.scss";
 
 interface SuccessResponse {
   data: Post;

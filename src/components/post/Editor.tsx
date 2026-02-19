@@ -9,7 +9,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { CharacterCount } from "@tiptap/extension-character-count";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import MenuBar from "./MenuBar";
-import styles from "./editor.module.scss";
+import styles from "./post-editor.module.scss";
 
 interface TiptapProps {
   content: string;

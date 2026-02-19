@@ -20,7 +20,7 @@ import {
   ArrowLeft,
   Eye,
 } from "lucide-react";
-import styles from "@/components/post/editor.module.scss";
+import styles from "@/components/post/post-editor.module.scss";
 
 const MAX_TITLE_LENGTH = 150;
 const MAX_SLUG_LENGTH = 200;

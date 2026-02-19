@@ -23,7 +23,7 @@ import {
   Redo,
   RemoveFormatting,
 } from "lucide-react";
-import styles from "./editor.module.scss";
+import styles from "./post-editor.module.scss";
 
 interface MenuBarProps {
   editor: Editor | null;
