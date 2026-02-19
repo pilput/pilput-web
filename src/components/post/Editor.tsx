@@ -3,74 +3,101 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Youtube from "@tiptap/extension-youtube";
-import MenuBar from "./MenuBar";
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
+import { CharacterCount } from "@tiptap/extension-character-count";
 import { Placeholder } from "@tiptap/extension-placeholder";
+import MenuBar from "./MenuBar";
+import styles from "./editor.module.scss";
 
-// define your extension array
-const extensions = [
-  StarterKit.configure({
-    paragraph: {
-      HTMLAttributes: {
-        class: "my-custom-paragraph",
-      },
-    },
-    hardBreak: {
-      keepMarks: false,
-      HTMLAttributes: {
-        class: "my-custom-break",
-      },
-    },
-  }),
-  Underline,
-  Youtube,
-  Placeholder.configure({
-    placeholder: "Write something …",
-  }),
-  Image,
-];
+interface TiptapProps {
+  content: string;
+  onchange: (data: string) => void;
+  placeholder?: string;
+  maxLength?: number;
+}
 
 const Tiptap = ({
   content,
   onchange,
-}: {
-  content: string;
-  onchange: (data: string) => void;
-}) => {
+  placeholder = "Start writing your amazing post...",
+  maxLength = 50000,
+}: TiptapProps) => {
   const editor = useEditor({
-    extensions,
+    extensions: [
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3],
+        },
+      }),
+      Underline,
+      Youtube.configure({
+        controls: true,
+        nocookie: true,
+      }),
+      Image.configure({
+        inline: true,
+        allowBase64: true,
+        HTMLAttributes: {
+          class: "rounded-lg max-w-full",
+        },
+      }),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-primary underline",
+        },
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+      CharacterCount.configure({
+        limit: maxLength,
+      }),
+      Placeholder.configure({
+        placeholder,
+        emptyEditorClass: "is-editor-empty",
+      }),
+    ],
     content,
     onUpdate: ({ editor }) => {
       onchange(editor.getHTML());
     },
     editorProps: {
       attributes: {
-        class:
-          "prose prose-lg max-w-none leading-relaxed " +
-          "text-gray-900 dark:text-gray-100 " +
-          "prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-headings:font-semibold " +
-          "prose-h1:text-2xl prose-h1:mb-4 prose-h1:mt-6 " +
-          "prose-h2:text-xl prose-h2:mb-3 prose-h2:mt-6 " +
-          "prose-h3:text-lg prose-h3:mb-2 prose-h3:mt-4 " +
-          "prose-p:text-gray-900 dark:prose-p:text-gray-100 prose-p:mb-4 prose-p:leading-7 " +
-          "prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline " +
-          "prose-strong:text-gray-900 dark:prose-strong:text-gray-100 prose-strong:font-semibold " +
-          "prose-em:text-gray-800 dark:prose-em:text-gray-200 prose-em:italic " +
-          "prose-code:text-sm prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:text-gray-900 dark:prose-code:text-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded " +
-          "prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800 prose-pre:text-gray-900 dark:prose-pre:text-gray-100 " +
-          "prose-blockquote:border-l-4 prose-blockquote:border-gray-300 dark:prose-blockquote:border-gray-600 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300 " +
-          "prose-ul:text-gray-900 dark:prose-ul:text-gray-100 " +
-          "prose-ol:text-gray-900 dark:prose-ol:text-gray-100 " +
-          "prose-li:text-gray-900 dark:prose-li:text-gray-100 focus:outline-none",
+        class: "prose prose-lg max-w-none",
       },
     },
     immediatelyRender: false,
   });
 
+  if (!editor) {
+    return null;
+  }
+
+  const characterCount = editor.storage.characterCount;
+  const percentage = Math.round((characterCount.characters() / maxLength) * 100);
+
   return (
-    <div className="w-full">
+    <div className={styles.editorWrapper}>
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+      <div className={styles.editorContent}>
+        <EditorContent editor={editor} />
+      </div>
+      <div className={styles.editorFooter}>
+        <span className={styles.wordCount}>
+          {characterCount.words()} words
+        </span>
+        <span className={styles.charLimit}>
+          {characterCount.characters()} / {maxLength.toLocaleString()} characters
+          {percentage > 80 && (
+            <span style={{ marginLeft: 8, color: percentage > 95 ? "oklch(0.6 0.2 25)" : "oklch(0.7 0.15 70)" }}>
+              ({percentage}%)
+            </span>
+          )}
+        </span>
+      </div>
     </div>
   );
 };

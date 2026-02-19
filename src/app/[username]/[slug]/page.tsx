@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import type { Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
+import styles from "@/components/post/editor.module.scss";
 
 interface SuccessResponse {
   data: Post;
@@ -44,47 +45,45 @@ export default async function Page(props: {
     <>
       <ViewRecorder postId={post.id} />
       <Navigation />
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto px-6 py-8 lg:py-12">
-          <article className="space-y-8">
+      <div className={styles.postViewWrapper}>
+        <div className={styles.postViewContainer}>
+          <article>
             {/* Header */}
-            <header className="space-y-6">
-              <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
-                {post.title}
-              </h1>
+            <header className={styles.postHeader}>
+              <h1>{post.title}</h1>
 
               {/* Author and Meta Information */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 py-6 border-y border-gray-100 dark:border-gray-800">
-                <div className="flex items-center gap-3">
+              <div className={styles.postMeta}>
+                <div className={styles.authorSection}>
                   <Link href={`/${post.user.username}`} className="shrink-0">
                     <Avatar className="w-12 h-12 ring-2 ring-gray-100 dark:ring-gray-800">
                       <AvatarImage
                         src={getProfilePicture(post.user.image)}
                         alt={`@${post.user.username}`}
                       />
-                      <AvatarFallback className="bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
+                      <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
                         {post.user.username[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </Link>
-                  <div>
+                  <div className={styles.authorInfo}>
                     <Link
                       href={`/${post.user.username}`}
-                      className="block font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      className={styles.authorName}
                     >
                       {post.user.first_name} {post.user.last_name}
                     </Link>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className={styles.authorUsername}>
                       @{post.user.username}
-                    </p>
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                <div className={styles.metaInfo}>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <span className="hover:text-gray-900 dark:hover:text-white transition-colors">
+                        <span className="hover:text-foreground transition-colors cursor-default">
                           {formatDistanceToNow(new Date(post.created_at), {
                             addSuffix: true,
                           })}
@@ -98,16 +97,16 @@ export default async function Page(props: {
                               year: "numeric",
                               month: "long",
                               day: "numeric",
-                            },
+                            }
                           )}
                         </p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
 
-                  <span className="text-gray-300 dark:text-gray-600">•</span>
+                  <span className={styles.separator}>•</span>
 
-                  <span className="flex items-center gap-1">
+                  <span className={styles.viewCount}>
                     <svg
                       className="w-4 h-4"
                       fill="currentColor"
@@ -128,7 +127,7 @@ export default async function Page(props: {
 
             {/* Featured Image */}
             {post.photo_url && (
-              <div className="rounded-xl overflow-hidden shadow-lg">
+              <div className={styles.featuredImage}>
                 <Image
                   className="w-full h-auto object-cover"
                   priority={true}
@@ -140,41 +139,22 @@ export default async function Page(props: {
               </div>
             )}
 
-            {/* Article Content */}
-            <div
-              className="prose prose-lg max-w-none prose-gray dark:prose-invert
-                           prose-headings:scroll-mt-24 prose-headings:font-bold
-                           prose-h1:text-3xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-800 prose-h1:pb-2
-                           prose-h2:text-2xl prose-h2:text-gray-900 dark:prose-h2:text-white prose-h2:mt-12 prose-h2:mb-6
-                           prose-h3:text-xl prose-h3:text-gray-800 dark:prose-h3:text-gray-200 prose-h3:mt-10 prose-h3:mb-4
-                           prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
-                           prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-a:font-medium
-                           prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
-                           prose-code:text-sm prose-code:text-green-700 dark:prose-code:text-green-400 prose-code:px-2.5 prose-code:py-1 prose-code:rounded-md prose-code:font-medium prose-code:before:content-none prose-code:after:content-none
-                           prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 prose-pre:p-6 prose-pre:rounded-xl prose-pre:shadow-lg prose-pre:overflow-x-auto
-                           prose-blockquote:border-l-4 prose-blockquote:border-blue-500 dark:prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-950/50 prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:rounded-r-lg prose-blockquote:italic
-                           prose-ul:space-y-2 prose-ol:space-y-2 prose-li:text-gray-700 dark:prose-li:text-gray-300
-                           prose-img:rounded-lg prose-img:shadow-md"
-            >
+            {/* Article Content - Using shared SCSS styles */}
+            <div className={styles.postContent}>
               <div dangerouslySetInnerHTML={{ __html: post.body }}></div>
             </div>
 
             {/* Tags Section */}
             {post.tags && post.tags.length > 0 && (
-              <div className="pt-8 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Tags
-                </h3>
-                <div className="flex flex-wrap gap-3">
+              <div className={styles.tagsSection}>
+                <h3>Tags</h3>
+                <div className={styles.tagsList}>
                   {post.tags.map((tag) => (
                     <Link
                       href={`/tags/${tag.name}`}
                       key={tag.id}
-                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-700 transition-all duration-200 hover:shadow-sm"
+                      className={styles.tagLink}
                     >
-                      <span className="text-gray-500 dark:text-gray-400 mr-1">
-                        #
-                      </span>
                       {tag.name}
                     </Link>
                   ))}
@@ -184,13 +164,9 @@ export default async function Page(props: {
           </article>
 
           {/* Comments Section */}
-          <section className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <div className="space-y-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Comments
-              </h2>
-              <Comment postId={post.id} />
-            </div>
+          <section className={styles.commentsSection}>
+            <h2>Comments</h2>
+            <Comment postId={post.id} />
           </section>
         </div>
       </div>
