@@ -1,4 +1,89 @@
 // ===========================
+// Shared Code Styles
+// ===========================
+@mixin codeThemeVars {
+  --code-inline-fg: color-mix(in oklch, var(--foreground) 90%, oklch(0.7 0.2 150));
+  --code-bg-top: color-mix(in oklch, oklch(0.18 0.02 255) 94%, var(--background));
+  --code-bg-bottom: color-mix(in oklch, oklch(0.14 0.02 255) 98%, var(--background));
+  --code-border: color-mix(in oklch, var(--border) 58%, oklch(0.2 0.01 255));
+  --code-fg: oklch(0.96 0.01 255);
+  --code-scrollbar: color-mix(in oklch, oklch(0.8 0.01 250) 28%, transparent);
+}
+
+@mixin inlineCodeStyles {
+  code:not(pre code) {
+    font-size: 0.875em;
+    background: var(--muted);
+    color: var(--code-inline-fg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.15em 0.5em;
+    font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight: 500;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+  }
+}
+
+@mixin codeBlockStyles {
+  pre {
+    background: linear-gradient(180deg, var(--code-bg-top), var(--code-bg-bottom));
+    border: 1px solid var(--code-border);
+    border-radius: 12px;
+    padding: 1.2rem 1.35rem;
+    overflow-x: auto;
+    margin: 1.5em 0;
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklch, white 7%, transparent),
+      0 8px 18px color-mix(in oklch, black 12%, transparent);
+    scrollbar-width: thin;
+    scrollbar-color: var(--code-scrollbar) transparent;
+
+    &::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--code-scrollbar);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.9em;
+      line-height: 1.75;
+      letter-spacing: 0.01em;
+      color: var(--code-fg);
+      display: block;
+      white-space: pre;
+      tab-size: 2;
+      -moz-tab-size: 2;
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    @media (max-width: 640px) {
+      padding: 0.85rem 0.95rem;
+
+      code {
+        font-size: 0.82em;
+        line-height: 1.7;
+      }
+    }
+  }
+}
+
+// ===========================
 // Editor Wrapper
 // ===========================
 .editorWrapper {
@@ -100,6 +185,8 @@
   cursor: text;
 
   :global(.ProseMirror) {
+    @include codeThemeVars;
+
     outline: none;
     min-height: 380px;
     font-size: 1rem;
@@ -152,63 +239,10 @@
     s { text-decoration: line-through; }
 
     // Inline Code
-    code:not(pre code) {
-      font-size: 0.875em;
-      background: var(--muted);
-      color: color-mix(in oklch, var(--foreground) 92%, oklch(0.72 0.18 150));
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.1em 0.45em;
-      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-weight: 500;
-    }
+    @include inlineCodeStyles;
 
     // Code Block
-    pre {
-      background:
-        linear-gradient(
-          180deg,
-          color-mix(in oklch, oklch(0.19 0.02 255) 92%, var(--background)),
-          color-mix(in oklch, oklch(0.16 0.02 255) 96%, var(--background))
-        );
-      border: 1px solid color-mix(in oklch, var(--border) 65%, oklch(0.22 0.01 255));
-      border-radius: 12px;
-      padding: 1rem 1.125rem;
-      overflow-x: auto;
-      margin: 1.25em 0;
-      box-shadow: inset 0 1px 0 color-mix(in oklch, white 6%, transparent);
-      scrollbar-width: thin;
-      scrollbar-color: color-mix(in oklch, var(--muted-foreground) 35%, transparent) transparent;
-
-      &::-webkit-scrollbar {
-        height: 10px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
-        border-radius: 999px;
-        border: 2px solid transparent;
-        background-clip: padding-box;
-      }
-
-      code {
-        background: none;
-        border: none;
-        padding: 0;
-        font-size: 0.9em;
-        line-height: 1.7;
-        color: oklch(0.96 0.01 255);
-        display: block;
-        white-space: pre;
-        tab-size: 2;
-        -moz-tab-size: 2;
-        font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      }
-    }
+    @include codeBlockStyles;
 
     // Blockquote
     blockquote {
@@ -624,6 +658,8 @@
 // Used for both Editor and Post View pages
 // ===========================
 .postContent {
+  @include codeThemeVars;
+
   font-size: 1.125rem;
   line-height: 1.75;
   color: var(--foreground);
@@ -694,68 +730,63 @@
   }
 
   // Inline Code
-  code:not(pre code) {
-    font-size: 0.875em;
-    background: var(--muted);
-    color: color-mix(in oklch, var(--foreground) 90%, oklch(0.7 0.2 150));
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.15em 0.5em;
-    font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-weight: 500;
+  @include inlineCodeStyles;
 
-    &::before,
-    &::after {
-      content: none;
+  // Code Block
+  @include codeBlockStyles;
+
+  .codeBlockShell {
+    margin: 1.5em 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--code-border);
+    box-shadow: 0 8px 18px color-mix(in oklch, black 10%, transparent);
+
+    pre {
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
     }
   }
 
-  // Code Block
-  pre {
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklch, oklch(0.18 0.02 255) 94%, var(--background)),
-        color-mix(in oklch, oklch(0.14 0.02 255) 98%, var(--background))
-      );
-    border: 1px solid color-mix(in oklch, var(--border) 58%, oklch(0.2 0.01 255));
-    border-radius: 12px;
-    padding: 1.2rem 1.35rem;
-    overflow-x: auto;
-    margin: 1.5em 0;
-    box-shadow:
-      inset 0 1px 0 color-mix(in oklch, white 7%, transparent),
-      0 8px 18px color-mix(in oklch, black 12%, transparent);
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklch, oklch(0.8 0.01 250) 28%, transparent) transparent;
+  .codeBlockHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in oklch, var(--code-bg-top) 72%, black 18%);
+    border-bottom: 1px solid color-mix(in oklch, var(--code-border) 85%, black 10%);
+  }
 
-    &::-webkit-scrollbar {
-      height: 10px;
+  .codeLanguage {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: color-mix(in oklch, var(--code-fg) 78%, var(--muted-foreground));
+  }
+
+  .codeCopyButton {
+    border: 1px solid color-mix(in oklch, var(--code-border) 85%, transparent);
+    background: color-mix(in oklch, black 15%, var(--code-bg-bottom));
+    color: var(--code-fg);
+    font-size: 0.72rem;
+    line-height: 1;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 0.28rem 0.48rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+
+    &:hover {
+      background: color-mix(in oklch, black 22%, var(--code-bg-bottom));
+      border-color: color-mix(in oklch, var(--code-fg) 25%, var(--code-border));
     }
 
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: color-mix(in oklch, oklch(0.8 0.01 250) 28%, transparent);
-      border-radius: 999px;
-      border: 2px solid transparent;
-      background-clip: padding-box;
-    }
-
-    code {
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: 0.9em;
-      line-height: 1.7;
-      color: oklch(0.96 0.01 255);
-      display: block;
-      white-space: pre;
-      tab-size: 2;
-      -moz-tab-size: 2;
-      font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    &:active {
+      transform: translateY(1px);
     }
   }
 

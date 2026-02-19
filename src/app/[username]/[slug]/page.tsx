@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import type { Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
+import PostContent from "@/components/post/PostContent";
 import styles from "@/components/post/editor.module.scss";
 
 interface SuccessResponse {
@@ -140,9 +141,7 @@ export default async function Page(props: {
             )}
 
             {/* Article Content - Using shared SCSS styles */}
-            <div className={styles.postContent}>
-              <div dangerouslySetInnerHTML={{ __html: post.body }}></div>
-            </div>
+            <PostContent html={post.body} className={styles.postContent} />
 
             {/* Tags Section */}
             {post.tags && post.tags.length > 0 && (
