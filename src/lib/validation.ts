@@ -45,8 +45,8 @@ export const registerSchema = z.object({
 
 // User login validation schema
 export const loginSchema = z.object({
-  email: z.string()
-    .email("Please enter a valid email address"),
+  identifier: z.string()
+    .min(1, "Username or email is required"),
   password: z.string()
     .min(1, "Password is required")
 });

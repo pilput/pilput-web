@@ -8,7 +8,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   GithubIcon,
-  Mail,
+  User,
   Lock,
   Loader2,
   Eye,
@@ -30,7 +30,7 @@ import { Config } from "@/utils/getConfig";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface LoginFormData {
-  email: string;
+  identifier: string;
   password: string;
 }
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
   const getErrorMessage = (error: ApiError): string => {
     if (error.response) {
       if (error.response.status === 401) {
-        return "Invalid email or password. Please try again.";
+        return "Invalid username/email or password. Please try again.";
       } else if (error.response.status === 429) {
         return "Too many login attempts. Please try again later.";
       } else if (error.response.data?.message) {
@@ -164,32 +164,28 @@ export default function LoginPage() {
               noValidate
             >
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="identifier">Username or Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
+                    id="identifier"
+                    type="text"
+                    placeholder="Enter your username or email"
                     className="pl-9"
-                    aria-invalid={errors.email ? "true" : "false"}
-                    aria-describedby={errors.email ? "email-error" : undefined}
-                    {...register("email", {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address",
-                      },
+                    aria-invalid={errors.identifier ? "true" : "false"}
+                    aria-describedby={errors.identifier ? "identifier-error" : undefined}
+                    {...register("identifier", {
+                      required: "Username or email is required",
                     })}
                   />
                 </div>
-                {errors.email && (
+                {errors.identifier && (
                   <p
-                    id="email-error"
+                    id="identifier-error"
                     className="text-sm text-red-500"
                     role="alert"
                   >
-                    {errors.email.message}
+                    {errors.identifier.message}
                   </p>
                 )}
               </div>
