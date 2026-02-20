@@ -37,6 +37,7 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import type { User } from "@/types/user";
 import UserActionComponent from "@/components/user/action";
+import { Paginate } from "@/components/common/Paginate";
 import { authStore } from "@/stores/userStore";
 import { getToken, RemoveToken } from "@/utils/Auth";
 import { axiosInstance3 } from "@/utils/fetch";
@@ -54,6 +55,9 @@ export default function ManageUser() {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const limit = 15;
+  const [Offset, setOffset] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -71,13 +75,14 @@ export default function ManageUser() {
 
   useEffect(() => {
     fetchAuth();
-    refetchUsers();
-  }, [fetchAuth]);
+    refetchUsers(Offset);
+  }, [fetchAuth, Offset]);
 
-  async function refetchUsers() {
+  async function refetchUsers(fetchOffset: number = 0) {
     setIsLoading(true);
     try {
       const { data } = await axiosInstance3.get("/v1/users", {
+        params: { limit: limit, offset: fetchOffset },
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -95,6 +100,9 @@ export default function ManageUser() {
       };
       if (response.success && Array.isArray(response.data)) {
         setusers(response.data);
+        if (response.meta?.total_items) {
+          setTotal(response.meta.total_items);
+        }
       } else {
         toast.error("Cannot connecting with server");
       }
@@ -116,6 +124,14 @@ export default function ManageUser() {
     }
   }
 
+  function changeOffset(newOffset: number) {
+    if (newOffset >= 0 && newOffset < total) {
+      setOffset(newOffset);
+    }
+  }
+
+  const currentPage = Math.floor(Offset / limit) + 1;
+
   function showModaluser() {
     setmodaluser(true);
   }
@@ -126,7 +142,7 @@ export default function ManageUser() {
 
   async function submitHandler(e: React.FormEvent) {
     e.preventDefault();
-    refetchUsers();
+    refetchUsers(Offset);
   }
 
   return (
@@ -230,7 +246,7 @@ export default function ManageUser() {
             <TableCaption>
               {isLoading
                 ? "Loading..."
-                : `${filteredUsers.length} user${filteredUsers.length === 1 ? "" : "s"} found`}
+                : `Total ${total} user${total === 1 ? "" : "s"} found`}
             </TableCaption>
             <TableHeader>
               <TableRow>
@@ -289,7 +305,7 @@ export default function ManageUser() {
                   : filteredUsers.map((user, index) => (
                       <TableRow key={user.id}>
                         <TableCell className="text-muted-foreground tabular-nums">
-                          {index + 1}
+                          {index + 1 + Offset}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -345,6 +361,23 @@ export default function ManageUser() {
                     ))}
             </TableBody>
           </Table>
+
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              Showing {Offset + 1} to{" "}
+              {Math.min(Offset + limit, total)} of {total} users
+            </div>
+            <Paginate
+              prev={() => changeOffset(Offset - limit)}
+              next={() => changeOffset(Offset + limit)}
+              goToPage={(page: number) => changeOffset(page * limit)}
+              limit={limit}
+              Offset={Offset}
+              total={total}
+              length={users.length}
+              currentPage={currentPage - 1}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>
