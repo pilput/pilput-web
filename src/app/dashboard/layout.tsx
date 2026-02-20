@@ -2,6 +2,7 @@
 
 import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -82,6 +83,7 @@ const navMain = [
 ];
 
 function AppSidebar() {
+  const pathname = usePathname();
   const isSuperAdmin = authStore((state) => state.data.is_super_admin);
 
   const filteredNavMain = navMain.map((group) => ({
@@ -119,7 +121,7 @@ function AppSidebar() {
               <SidebarMenu>
                 {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton asChild isActive={pathname === item.url}>
                       <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
