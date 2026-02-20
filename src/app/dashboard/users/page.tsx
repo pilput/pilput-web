@@ -252,6 +252,7 @@ export default function ManageUser() {
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
                 <TableHead className="min-w-[200px]">User</TableHead>
+                <TableHead>Username</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Joined</TableHead>
@@ -271,6 +272,9 @@ export default function ManageUser() {
                           <Skeleton className="h-10 w-10 rounded-full shrink-0" />
                           <Skeleton className="h-4 w-[120px]" />
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-[100px]" />
                       </TableCell>
                       <TableCell>
                         <Skeleton className="h-4 w-[180px]" />
@@ -293,7 +297,7 @@ export default function ManageUser() {
                   ? (
                     <TableRow>
                       <TableCell
-                        colSpan={7}
+                        colSpan={8}
                         className="h-24 text-center text-muted-foreground"
                       >
                         {users.length === 0
@@ -319,8 +323,11 @@ export default function ManageUser() {
                                 {user.username.substring(0, 2).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
-                            <span className="font-medium">{user.username}</span>
+                            <span className="font-medium">{user.first_name} {user.last_name}</span>
                           </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {user.username}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {user.email}
