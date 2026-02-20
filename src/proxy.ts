@@ -3,6 +3,18 @@ import type { NextRequest } from "next/server";
 
 // Define protected routes
 const protectedRoutes = ["/chat", "/dashboard"];
+const noIndexRoutes = [
+  "/login",
+  "/register",
+  "/account",
+  "/profile",
+  "/chat",
+  "/dashboard",
+];
+
+function matchesRoute(pathname: string, route: string) {
+  return pathname === route || pathname.startsWith(`${route}/`);
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -26,8 +38,14 @@ export function proxy(request: NextRequest) {
     }
   }
 
+  const response = NextResponse.next();
+
+  if (noIndexRoutes.some((route) => matchesRoute(pathname, route))) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+  }
+
   // Allow the request to proceed
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

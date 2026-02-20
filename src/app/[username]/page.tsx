@@ -2,6 +2,7 @@ import Navigation from "@/components/header/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import type { Metadata } from "next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -171,4 +172,54 @@ export default async function page(props: {
       </div>
     </>
   );
+}
+
+export async function generateMetadata(props: {
+  params: Promise<{ username: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+  try {
+    const writer = await getWriter(params.username);
+    const fullName = `${writer.first_name} ${writer.last_name}`.trim();
+    const title = fullName ? `${fullName} (@${writer.username})` : `@${writer.username}`;
+    const description =
+      writer.profile?.bio ||
+      `Read posts and updates from @${writer.username} on pilput.`;
+    const profileImage = writer.image ? getUrlImage(writer.image) : "/pilput.png";
+    const canonicalUrl = `/${params.username}`;
+
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      openGraph: {
+        type: "profile",
+        url: canonicalUrl,
+        title,
+        description,
+        images: [
+          {
+            url: profileImage,
+            alt: title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary",
+        title,
+        description,
+        images: [profileImage],
+      },
+    };
+  } catch {
+    return {
+      title: "Profile Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
 }

@@ -1,5 +1,6 @@
 import Navigation from "@/components/header/Navbar";
 import Footer from "@/components/footer/Footer";
+import type { Metadata } from "next";
 
 export default function PrivacyPage() {
   return (
@@ -133,7 +134,10 @@ export default function PrivacyPage() {
   );
 }
 
-export const metadata = {
-  title: "Privacy Policy - pilput",
-  description: "Privacy policy and data protection information for pilput.dev",
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Privacy policy and data protection information for pilput.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };

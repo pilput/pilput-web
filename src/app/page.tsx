@@ -6,10 +6,27 @@ import MissionSection from "@/components/landing/Mission";
 import CallToAction from "@/components/landing/CallToAction";
 import Community from "@/components/landing/Community";
 import Footer from "@/components/footer/Footer";
+import { Config } from "@/utils/getConfig";
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "pilput",
+    url: Config.mainbaseurl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${Config.mainbaseurl}/blog?search={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navigation />
       <main
         id="main-content"

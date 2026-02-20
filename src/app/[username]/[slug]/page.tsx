@@ -4,6 +4,7 @@ import Comment from "@/components/post/Comment";
 import { axiosInstance } from "@/utils/fetch";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +26,11 @@ interface SuccessResponse {
   success: boolean;
 }
 
+const getPostSummary = (html: string, maxLength = 160): string => {
+  const plain = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return plain.length > maxLength ? `${plain.slice(0, maxLength - 1)}...` : plain;
+};
+
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
     const response = await axiosInstance.get(`/v1/posts/u/${username}/${postSlug}`);
@@ -32,15 +38,71 @@ const getPost = async (username: string, postSlug: string): Promise<Post> => {
     return result.data;
   } catch (error) {
     console.error("Error fetching post:", error);
-    throw notFound();
+    throw new Error("POST_NOT_FOUND");
   }
 };
+
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string; username: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+
+  try {
+    const post = await getPost(params.username, params.slug);
+    const description = getPostSummary(post.body || "");
+    const image = post.photo_url ? getUrlImage(post.photo_url) : "/pilput.png";
+    const canonicalUrl = `/${params.username}/${params.slug}`;
+
+    return {
+      title: post.title,
+      description,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      openGraph: {
+        type: "article",
+        url: canonicalUrl,
+        title: post.title,
+        description,
+        publishedTime: post.created_at,
+        modifiedTime: post.updated_at,
+        authors: [`/${params.username}`],
+        tags: post.tags?.map((tag) => tag.name) || [],
+        images: [
+          {
+            url: image,
+            alt: post.title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description,
+        images: [image],
+      },
+    };
+  } catch {
+    return {
+      title: "Post Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+}
 
 export default async function Page(props: {
   params: Promise<{ slug: string; username: string }>;
 }) {
   const params = await props.params;
-  const post = await getPost(params.username, params.slug);
+  let post: Post;
+  try {
+    post = await getPost(params.username, params.slug);
+  } catch {
+    throw notFound();
+  }
 
   return (
     <>
