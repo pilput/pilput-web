@@ -192,7 +192,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     try {
       const response = await fetch(
-        `${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`,
+        `${Config.apibaseurl3}/v1/chat/conversations/${conversationId}/messages/stream`,
         {
           method: "POST",
           headers: {
@@ -260,8 +260,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
             try {
               const parsed = JSON.parse(data);
-              if (parsed.content) {
-                accumulatedContent += parsed.content;
+              const chunkText =
+                parsed.type === "ai_chunk" && typeof parsed.data === "string"
+                  ? parsed.data
+                  : (parsed.content as string | undefined);
+              if (chunkText) {
+                accumulatedContent += chunkText;
 
                 if (updateTimeout) {
                   clearTimeout(updateTimeout);
