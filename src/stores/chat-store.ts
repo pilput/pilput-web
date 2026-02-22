@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { type Message } from "@/components/chat/chat-message";
-import { axiosInstance2, axiosInstance3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 
@@ -34,9 +34,29 @@ interface CreateConversationResponse {
   };
 }
 
-interface MessagesResponse {
+/** API response for get conversation endpoint */
+interface GetConversationResponse {
+  success: boolean;
   data: {
-    messages: Message[];
+    id: string;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    title: string;
+    user_id: string;
+    chatMessages: Array<{
+      id: string;
+      created_at: string;
+      updated_at: string;
+      conversation_id: string;
+      user_id: string;
+      role: "user" | "assistant";
+      content: string;
+      model: string | null;
+      prompt_tokens: number | null;
+      completion_tokens: number | null;
+      total_tokens: number | null;
+    }>;
   };
 }
 
@@ -388,7 +408,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await axiosInstance2.get<MessagesResponse>(
+      const response = await axiosInstance3.get<GetConversationResponse>(
         `/v1/chat/conversations/${conversationId}`,
         {
           headers: {
@@ -397,10 +417,15 @@ export const useChatStore = create<ChatState>((set, get) => ({
           },
         },
       );
+      console.log(response.data);
 
-      const messages = response.data.data.messages.map((message) => ({
-        ...message,
-        createdAt: new Date(message.createdAt),
+      const chatMessages = response.data.data.chatMessages ?? [];
+      const messages: Message[] = chatMessages.map((msg) => ({
+        id: msg.id,
+        content: msg.content,
+        role: msg.role,
+        createdAt: new Date(msg.created_at),
+        isStreaming: false,
       }));
 
       set((state) => ({
@@ -452,7 +477,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         : sanitizedMessage.slice(0, 50) +
           (sanitizedMessage.length > 50 ? "..." : "");
 
-      const response = await axiosInstance2.post<CreateConversationResponse>(
+      const response = await axiosInstance3.post<CreateConversationResponse>(
         "/v1/chat/conversations",
         {
           title: conversationTitle,
@@ -602,7 +627,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await axiosInstance2.delete(
+      const response = await axiosInstance3.delete(
         `/v1/chat/conversations/${conversationId}`,
         {
           headers: {
