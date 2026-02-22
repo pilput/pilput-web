@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Plus, MessageSquare, ChevronLeft, ChevronRight, MoreVertical, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useChatStore } from "@/stores/chat-store";
+import { useChatStore, type Conversation } from "@/stores/chat-store";
 import {
   Sidebar,
   SidebarContent,
@@ -47,9 +47,7 @@ export function ChatSidebar() {
   useEffect(() => {
     fetchConversations(0, 15);
     fetchUser();
-  }, [isNewConversation]);
-
-  // console.log(userData);
+  }, [isNewConversation, fetchConversations, fetchUser]);
 
   return (
     <Sidebar
@@ -109,7 +107,7 @@ export function ChatSidebar() {
                 </div>
               ) : (
                 <>
-                  {conversations.map((chat: any) => (
+                  {conversations.map((chat: Conversation) => (
                     <SidebarMenuItem key={chat.id}>
                       <div className="relative group/item flex items-center">
                         <SidebarMenuButton

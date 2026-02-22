@@ -104,7 +104,7 @@ export function ChatMessage({
         >
           <div className="p-4">
             <div className="flex gap-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback className="bg-primary/10 text-primary">
                     {message.role === "assistant" ? (
@@ -180,7 +180,6 @@ export function ChatMessage({
                           <div className="space-y-2">
                             <Markdown
                               content={message.content}
-                              isStreaming={message.isStreaming}
                               className="text-foreground"
                             />
                             {message.isStreaming && (

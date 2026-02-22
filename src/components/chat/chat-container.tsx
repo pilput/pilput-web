@@ -1,73 +1,74 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useChatStore } from "@/stores/chat-store";
 import { ChatInput } from "./chat-input";
 import { ChatMessage } from "./chat-message";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
 
 interface ChatContainerProps {
-  currentConvertations: string;
+  currentConversation: string;
 }
 
-export function ChatContainer({ currentConvertations }: ChatContainerProps) {
+export function ChatContainer({ currentConversation }: ChatContainerProps) {
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const {
     messages,
-    isLoading,
     fetchMessages,
     sendMessage,
     createConversation,
     isNewConversation,
     selectedModel,
     availableModels,
+    loadingStates,
   } = useChatStore();
 
-  // Auto-scroll to bottom when messages change
+  const isSending =
+    loadingStates.sendingMessage || loadingStates.creatingConversation;
+  const isFetchingMessages = loadingStates.fetchingMessages;
+
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
   }, []);
 
-  // Initial scroll to bottom
   useEffect(() => {
     scrollToBottom("auto");
   }, [scrollToBottom]);
 
-  // Handle new messages being added
   useEffect(() => {
     if (messages.length > 1) {
       scrollToBottom();
     }
   }, [messages, scrollToBottom]);
-  // fetchMessages is now handled via Zustand store
 
   useEffect(() => {
-    if (!currentConvertations) return;
+    if (!currentConversation) return;
     if (isNewConversation) return;
-    fetchMessages(currentConvertations);
-  }, [currentConvertations, fetchMessages]);
+    fetchMessages(currentConversation);
+  }, [currentConversation, isNewConversation, fetchMessages]);
 
   const handleSendMessage = async (content: string) => {
-    if (currentConvertations === "") {
-      // Create new conversation
-      await createConversation("", content, router);
+    if (!currentConversation) {
+      const conversationId = await createConversation("", content);
+      if (conversationId) {
+        router.replace("/chat/" + conversationId);
+        sendMessage(content, conversationId);
+      }
     } else {
-      // Send message to existing conversation
-      await sendMessage(content, currentConvertations);
+      await sendMessage(content, currentConversation);
     }
   };
 
-  if (currentConvertations === "") {
+  if (!currentConversation) {
     return (
       <div className="flex flex-col h-full items-center justify-center bg-background p-6">
         <div className="flex flex-col items-center gap-6 max-w-2xl w-full">
           <div className="flex flex-col items-center gap-2">
-            {/* Illustration */}
             <div className="rounded-full bg-primary/10 p-4 mb-2">
               <svg
                 width="48"
@@ -101,68 +102,57 @@ export function ChatContainer({ currentConvertations }: ChatContainerProps) {
             <ChatInput
               showModelPicker={false}
               onSendMessage={handleSendMessage}
-              isDisabled={isLoading}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="flex flex-col h-full bg-background">
-        {/* Messages area */}
-        <ScrollArea className="flex-1 min-h-0">
-          <div
-            ref={chatContainerRef}
-            className="py-4"
-          >
-            <div className="max-w-6xl mx-auto w-full px-4">
-              {messages.map((message, index) => (
-                <ChatMessage
-                  key={`${message.id}-${index}`}
-                  message={message}
-                  className={index === messages.length - 1 ? "pb-20" : ""}
-                  showSeparator={index < messages.length - 1}
-                  onFeedback={(id, type) => {
-                    // Handle feedback (e.g., send to analytics)
-                    console.log(`Feedback for message ${id}: ${type}`);
-                  }}
-                />
-              ))}
-              {isLoading && (
-                <div className="py-4 px-4">
-                  <div className="max-w-3xl mx-auto w-full">
-                    <div className="flex gap-4">
-                      <Skeleton className="h-8 w-8 rounded-full" />
-                      <div className="flex-1 space-y-2">
-                        <Skeleton className="h-4 w-24" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-3/4" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} className="h-4" />
-            </div>
-          </div>
-        </ScrollArea>
-
-        {/* Input area - fixed at bottom */}
-        <div className="bg-background border-t border-border">
-          <div className="max-w-3xl mx-auto w-full p-4">
-            <div className="flex items-center justify-between mb-2">
-              <Badge variant="secondary" className="text-xs">
-                {availableModels.find(model => model.id === selectedModel)?.name || "Unknown Model"}
-              </Badge>
-            </div>
-            <ChatInput
-              onSendMessage={handleSendMessage}
-              isDisabled={isLoading}
+              isDisabled={isSending}
             />
           </div>
         </div>
       </div>
     );
   }
+
+  return (
+    <div className="flex flex-col h-full bg-background">
+      <ScrollArea className="flex-1 min-h-0">
+        <div ref={chatContainerRef} className="py-4">
+          <div className="max-w-6xl mx-auto w-full px-4">
+            {messages.map((message, index) => (
+              <ChatMessage
+                key={`${message.id}-${index}`}
+                message={message}
+                className={index === messages.length - 1 ? "pb-20" : ""}
+                showSeparator={index < messages.length - 1}
+              />
+            ))}
+            {isFetchingMessages && (
+              <div className="py-4 px-4">
+                <div className="max-w-3xl mx-auto w-full">
+                  <div className="flex gap-4">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} className="h-4" />
+          </div>
+        </div>
+      </ScrollArea>
+
+      <div className="bg-background border-t border-border">
+        <div className="max-w-3xl mx-auto w-full p-4">
+          <div className="flex items-center justify-between mb-2">
+            <Badge variant="secondary" className="text-xs">
+              {availableModels.find((m) => m.id === selectedModel)?.name ??
+                "Unknown Model"}
+            </Badge>
+          </div>
+          <ChatInput onSendMessage={handleSendMessage} isDisabled={isSending} />
+        </div>
+      </div>
+    </div>
+  );
 }

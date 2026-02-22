@@ -12,7 +12,6 @@ import { useState } from "react";
 
 interface MarkdownProps {
   content: string;
-  isStreaming?: boolean;
   className?: string;
 }
 
@@ -105,14 +104,7 @@ const CopyButton = ({
   );
 };
 
-export function Markdown({
-  content,
-  isStreaming = false,
-  className,
-}: MarkdownProps) {
-  // Remove artificial streaming simulation - let the real streaming from server handle it
-  const displayContent = content;
-
+export function Markdown({ content, className }: MarkdownProps) {
   return (
     <div className={cn("prose dark:prose-invert max-w-none", className)}>
       <ReactMarkdown
@@ -200,7 +192,7 @@ export function Markdown({
                   <span className="text-xs text-[#8b949e] font-mono uppercase tracking-wide">
                     {language || "code"}
                   </span>
-                  <CopyButton code={code} className="!opacity-100 group-hover:opacity-100 transition-opacity" />
+                  <CopyButton code={code} className="opacity-100! group-hover:opacity-100 transition-opacity" />
                 </div>
                 <pre className="overflow-x-auto p-4 text-sm leading-relaxed font-mono bg-transparent text-[#c9d1d9]">
                   <code className={className} {...props}>
@@ -274,7 +266,7 @@ export function Markdown({
           },
         }}
       >
-        {displayContent}
+        {content}
       </ReactMarkdown>
     </div>
   );

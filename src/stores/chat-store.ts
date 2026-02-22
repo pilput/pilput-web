@@ -5,7 +5,7 @@ import { getToken } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 
 // Types
-interface Conversation {
+export interface Conversation {
   id: string;
   title: string;
   createdAt: string;
@@ -123,7 +123,6 @@ interface ChatState {
   createConversation: (
     title: string,
     message: string,
-    router: any,
   ) => Promise<string | null>;
   resetPagination: () => void;
   sendMessage: (content: string, conversationId: string) => Promise<void>;
@@ -417,7 +416,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
           },
         },
       );
-      console.log(response.data);
 
       const chatMessages = response.data.data.chatMessages ?? [];
       const messages: Message[] = chatMessages.map((msg) => ({
@@ -445,14 +443,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   /**
-   * Create a new conversation and navigate to it
-   * @param title - Optional conversation title
-   * @param message - Initial message content
-   * @param router - Next.js router instance for navigation
+   * Create a new conversation and return its ID.
+   * Navigation and initial message sending are handled by the caller.
+   * @param title - Optional conversation title (auto-generated from message if empty)
+   * @param message - Initial message content used for title generation
    * @returns Conversation ID or null on failure
    */
-  createConversation: async (title, message, router) => {
-    const { isLoading, selectedModel, sendMessage } = get();
+  createConversation: async (title, message) => {
+    const { isLoading } = get();
 
     // Input validation
     const messageValidation = validateMessage(message);
@@ -497,7 +495,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({
         isNewConversation: true,
         messages: [],
-        // Reset pagination when creating new conversation to ensure fresh state
         conversations: [],
         conversationsPagination: {
           page: 0,
@@ -506,13 +503,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
           hasMore: true,
         },
       });
-
-      router.replace("/chat/" + conversationId);
-
-      // Automatically send the initial message as a streaming chat
-      setTimeout(() => {
-        sendMessage(sanitizedMessage, conversationId);
-      }, 100); // Small delay to ensure page navigation completes
 
       return conversationId;
     } catch (err: any) {
