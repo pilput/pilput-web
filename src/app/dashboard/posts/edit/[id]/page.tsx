@@ -153,7 +153,7 @@ export default function PostEdit() {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto py-6 px-4">
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <span className="text-muted-foreground">Loading post...</span>
@@ -192,7 +192,7 @@ export default function PostEdit() {
           <Button
             onClick={updateHandler}
             disabled={isUpdating}
-            className="min-w-[120px] gap-2"
+            className="min-w-30 gap-2"
           >
             {isUpdating ? (
               <>
