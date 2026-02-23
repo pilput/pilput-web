@@ -81,7 +81,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const token = getToken();
     set(() => ({ loading: true, error: false }));
     try {
-      const response = await axiosInstance3.get(`/v1/posts/${id}`, {
+      const response = await axiosInstance3.get(`/v1/posts/me/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const postData = response.data.data;
