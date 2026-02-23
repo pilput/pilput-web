@@ -13,6 +13,7 @@ import type { Holding } from "@/types/holding";
 import HoldingTableRow from "./HoldingTableRow";
 import HoldingTotalRow from "./HoldingTotalRow";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { cn, getPlatformColor, getHoldingTypeColor } from "@/lib/utils";
 
 interface HoldingTableProps {
   holdings: Holding[];
@@ -209,10 +210,10 @@ export default function HoldingTable({
         {/* Sub-filters based on selected main filter */}
         {filterType === "platform" && uniquePlatforms.length > 0 && (
           <Tabs value={selectedPlatform} onValueChange={setSelectedPlatform}>
-            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto bg-transparent p-0">
+            <TabsList className="flex-wrap h-auto gap-2 w-full sm:w-auto bg-transparent p-0">
               <TabsTrigger 
                 value="all" 
-                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md uppercase tracking-tight"
               >
                 All Platforms
               </TabsTrigger>
@@ -220,7 +221,12 @@ export default function HoldingTable({
                 <TabsTrigger 
                   key={platform} 
                   value={platform} 
-                  className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className={cn(
+                    "text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 transition-all rounded-md uppercase tracking-tight",
+                    "data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-current",
+                    getPlatformColor(platform).split(" ").filter(c => !c.startsWith("border-")).join(" "),
+                    "data-[state=active]:font-bold"
+                  )}
                 >
                   {platform}
                 </TabsTrigger>
@@ -231,10 +237,10 @@ export default function HoldingTable({
 
         {filterType === "type" && uniqueTypes.length > 0 && (
           <Tabs value={selectedType} onValueChange={setSelectedType}>
-            <TabsList className="flex-wrap h-auto gap-1 w-full sm:w-auto bg-transparent p-0">
+            <TabsList className="flex-wrap h-auto gap-2 w-full sm:w-auto bg-transparent p-0">
               <TabsTrigger 
                 value="all" 
-                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4"
               >
                 All Types
               </TabsTrigger>
@@ -242,7 +248,12 @@ export default function HoldingTable({
                 <TabsTrigger 
                   key={type.id} 
                   value={type.id.toString()} 
-                  className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className={cn(
+                    "text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 transition-all rounded-full px-4",
+                    "data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-current",
+                    getHoldingTypeColor(type.name).split(" ").filter(c => !c.startsWith("border-")).join(" "),
+                    "data-[state=active]:font-semibold"
+                  )}
                 >
                   {type.name}
                 </TabsTrigger>

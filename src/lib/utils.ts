@@ -109,6 +109,66 @@ export function formatThousandsForInput(raw: string): string {
 }
 
 /**
+ * Get color classes for a platform badge based on the platform name.
+ * Platforms use a "Brand Tag" style: slightly more saturated, visible border.
+ */
+export function getPlatformColor(platformName: string): string {
+  const colors: Record<string, string> = {
+    Ajaib: "bg-blue-100/80 text-blue-800 border-blue-300 dark:bg-blue-900/50 dark:text-blue-200 dark:border-blue-700/50",
+    Stockbit: "bg-emerald-100/80 text-emerald-800 border-emerald-300 dark:bg-emerald-900/50 dark:text-emerald-200 dark:border-emerald-700/50",
+    "Bank Jago": "bg-amber-100/80 text-amber-800 border-amber-300 dark:bg-amber-900/50 dark:text-amber-200 dark:border-amber-700/50",
+    "Bank BSI": "bg-cyan-100/80 text-cyan-800 border-cyan-300 dark:bg-cyan-900/50 dark:text-cyan-200 dark:border-cyan-700/50",
+    Bareksa: "bg-green-100/80 text-green-800 border-green-300 dark:bg-green-900/50 dark:text-green-200 dark:border-green-700/50",
+    Bibit: "bg-lime-100/80 text-lime-800 border-lime-300 dark:bg-lime-900/50 dark:text-lime-200 dark:border-lime-700/50",
+    Growin: "bg-indigo-100/80 text-indigo-800 border-indigo-300 dark:bg-indigo-900/50 dark:text-indigo-200 dark:border-indigo-700/50",
+    Pluang: "bg-orange-100/80 text-orange-800 border-orange-300 dark:bg-orange-900/50 dark:text-orange-200 dark:border-orange-700/50",
+    Others: "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
+  };
+  const normalized = platformName.trim();
+  return colors[normalized] || "bg-muted text-muted-foreground border-border";
+}
+
+/**
+ * Get color classes for a holding type.
+ * Returns only text color classes for a cleaner, non-badge look.
+ */
+export function getHoldingTypeColor(typeName: string): string {
+  const colors: Record<string, string> = {
+    // Financial Instruments
+    Stock: "text-blue-600 dark:text-blue-400",
+    Crypto: "text-orange-600 dark:text-orange-400",
+    Bond: "text-emerald-600 dark:text-emerald-400",
+    ETF: "text-purple-600 dark:text-purple-400",
+    "Mutual Fund": "text-indigo-600 dark:text-indigo-400",
+    
+    // Commodities & Physical Assets
+    Commodity: "text-amber-600 dark:text-amber-400",
+    Gold: "text-yellow-700 dark:text-yellow-500",
+    Silver: "text-slate-600 dark:text-slate-400",
+    "Real Estate": "text-rose-600 dark:text-rose-400",
+    
+    // Cash & Equivalents
+    Cash: "text-slate-600 dark:text-slate-400",
+    Savings: "text-cyan-600 dark:text-cyan-400",
+    Deposit: "text-sky-600 dark:text-sky-400",
+    Deposito: "text-sky-600 dark:text-sky-400",
+    
+    // Retirement & Long-term
+    Pension: "text-stone-600 dark:text-stone-400",
+    Insurance: "text-teal-600 dark:text-teal-400",
+    
+    // Alternative & Specialized
+    Collectibles: "text-pink-600 dark:text-pink-400",
+    Venture: "text-lime-600 dark:text-lime-400",
+    "Private Equity": "text-violet-600 dark:text-violet-400",
+    Debt: "text-red-600 dark:text-red-400",
+  };
+
+  const normalizedTypeName = typeName.trim();
+  return colors[normalizedTypeName] || "text-muted-foreground";
+}
+
+/**
  * Parse displayed input (with thousand separators) back to raw number string for storage.
  */
 export function parseThousandsFromInput(display: string): string {

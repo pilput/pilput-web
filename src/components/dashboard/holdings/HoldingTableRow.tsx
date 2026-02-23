@@ -5,59 +5,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Holding } from "@/types/holding";
 import HoldingActionComponent from "./action";
 import HoldingExpandedRow from "./HoldingExpandedRow";
-import { formatCurrency } from "@/lib/utils";
-
-function getHoldingTypeColor(typeName: string) {
-  const colors: Record<string, string> = {
-    // Financial Instruments
-    Stock: "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800",
-    Crypto: "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 dark:border-orange-800",
-    Bond: "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-800",
-    ETF: "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-800",
-    "Mutual Fund": "bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:border-indigo-800",
-    
-    // Commodities & Physical Assets
-    Commodity: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800",
-    Gold: "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-300 dark:border-yellow-800/50",
-    Silver: "bg-slate-200 text-slate-800 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
-    "Real Estate": "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/40 dark:text-rose-300 dark:border-rose-800",
-    
-    // Cash & Equivalents
-    Cash: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/40 dark:text-slate-300 dark:border-slate-800",
-    Savings: "bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/40 dark:text-cyan-300 dark:border-cyan-800",
-    Deposit: "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:border-sky-800",
-    Deposito: "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:border-sky-800",
-    
-    // Retirement & Long-term
-    Pension: "bg-stone-100 text-stone-700 border-stone-200 dark:bg-stone-900/40 dark:text-stone-300 dark:border-stone-800",
-    Insurance: "bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-800",
-    
-    // Alternative & Specialized
-    Collectibles: "bg-pink-100 text-pink-700 border-pink-200 dark:bg-pink-900/40 dark:text-pink-300 dark:border-pink-800",
-    Venture: "bg-lime-100 text-lime-700 border-lime-200 dark:bg-lime-900/40 dark:text-lime-300 dark:border-lime-800",
-    "Private Equity": "bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/40 dark:text-violet-300 dark:border-violet-800",
-    Debt: "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800",
-  };
-
-  const normalizedTypeName = typeName.trim();
-  return colors[normalizedTypeName] || "bg-secondary text-secondary-foreground";
-}
-
-function getPlatformColor(platformName: string) {
-  const colors: Record<string, string> = {
-    Ajaib: "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800",
-    Stockbit: "bg-black text-green-500 border-green-600 dark:bg-black dark:text-green-400 dark:border-green-600",
-    "Bank Jago": "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-300 dark:border-yellow-800",
-    "Bank BSI": "bg-blue-600 text-emerald-400 border-blue-700 dark:bg-blue-700 dark:text-emerald-300 dark:border-blue-800",
-    Bareksa: "bg-green-600 text-white border-green-700 dark:bg-green-700 dark:text-white dark:border-green-800",
-    Bibit: "bg-white text-green-600 border-green-200 dark:bg-white dark:text-green-600 dark:border-green-300",
-    Growin: "bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-800",
-    Pluang: "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 dark:border-orange-800",
-    Others: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
-  };
-  const normalized = platformName.trim();
-  return colors[normalized] || "bg-muted text-muted-foreground border-border";
-}
+import { formatCurrency, getPlatformColor, getHoldingTypeColor, cn } from "@/lib/utils";
 
 interface HoldingTableRowProps {
   holding: Holding;
@@ -110,18 +58,15 @@ export default function HoldingTableRow({
       <TableCell>
         <Badge
           variant="secondary"
-          className={`${getPlatformColor(holding.platform)} font-medium text-[10px] sm:text-xs px-2 py-0.5`}
+          className={`${getPlatformColor(holding.platform)} rounded-md font-bold uppercase tracking-wider text-[9px] sm:text-[10px] px-2 py-0.5 border shadow-sm`}
         >
           {holding.platform}
         </Badge>
       </TableCell>
       <TableCell>
-        <Badge 
-          variant="secondary"
-          className={`${getHoldingTypeColor(holding.holding_type.name)} font-medium text-[10px] sm:text-xs px-2 py-0.5`}
-        >
+        <span className={cn("font-medium text-[10px] sm:text-xs", getHoldingTypeColor(holding.holding_type.name))}>
           {holding.holding_type.name}
-        </Badge>
+        </span>
       </TableCell>
       <TableCell className="font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(invested, holding.currency, { showSymbol: false })}
