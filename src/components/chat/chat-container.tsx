@@ -142,8 +142,8 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
         </div>
       </ScrollArea>
 
-      <div className="bg-background border-t border-border">
-        <div className="max-w-3xl mx-auto w-full p-4">
+      <div className="bg-gradient-to-t from-background via-background/95 to-transparent px-2 pb-4 pt-2 sm:px-3">
+        <div className="max-w-3xl mx-auto w-full">
           <div className="flex items-center justify-between mb-2">
             <Badge variant="secondary" className="text-xs">
               {availableModels.find((m) => m.id === selectedModel)?.name ??

@@ -65,7 +65,7 @@ export function ChatInput({
   const selectedModelName = availableModels.find(model => model.id === selectedModel)?.name || "Unknown Model";
 
   return (
-    <div className="sticky bottom-0 w-full bg-background/95 backdrop-blur border-t border-border/60">
+    <div className="w-full rounded-[1.25rem] border border-border/60 bg-gradient-to-b from-background/95 via-background/90 to-background/80 shadow-[0_16px_40px_-28px_hsl(var(--foreground)/0.45)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
       <div className="mx-auto max-w-4xl px-3 py-3 sm:px-4 sm:py-4">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-3">
