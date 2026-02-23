@@ -120,7 +120,6 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                 key={`${message.id}-${index}`}
                 message={message}
                 className={index === messages.length - 1 ? "pb-20" : ""}
-                showSeparator={index < messages.length - 1}
               />
             ))}
             {isFetchingMessages && (

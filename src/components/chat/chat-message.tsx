@@ -5,8 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Markdown } from "./markdown";
 
@@ -23,7 +21,6 @@ interface ChatMessageProps {
   className?: string;
   onEdit?: (id: string, content: string) => void;
   onFeedback?: (id: string, type: "like" | "dislike" | "none") => void;
-  showSeparator?: boolean;
 }
 
 export function ChatMessage({
@@ -31,8 +28,8 @@ export function ChatMessage({
   className,
   onEdit,
   onFeedback,
-  showSeparator = false,
 }: ChatMessageProps) {
+  const isAssistant = message.role === "assistant";
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [hasLiked, setHasLiked] = useState<boolean | null>(null);
@@ -82,136 +79,138 @@ export function ChatMessage({
   }, [message.content, message.isStreaming]);
 
   return (
-    <div
-      className={cn(
-        "group relative py-2 px-4 w-full",
-        className
-      )}
-    >
-      <div
-        className={cn(
-          "max-w-3xl mx-auto w-full",
-          isEditing ? "pb-16" : ""
-        )}
-      >
+    <div className={cn("group relative w-full px-4 py-2", className)}>
+      <div className={cn("mx-auto w-full max-w-4xl", isEditing ? "pb-16" : "")}>
         <div
           className={cn(
-            "rounded-2xl transition-colors",
-            message.role === "assistant"
-              ? "bg-card"
-              : "bg-muted"
+            "flex gap-4",
+            isAssistant ? "items-start" : "items-start justify-end"
           )}
         >
-          <div className="p-4">
-            <div className="flex gap-4">
-              <div className="shrink-0">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary/10 text-primary">
-                    {message.role === "assistant" ? (
-                      <Bot className="h-4 w-4" />
-                    ) : (
-                      <User className="h-4 w-4" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
+          {isAssistant && (
+            <div className="shrink-0">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  <Bot className="h-4 w-4" />
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          )}
 
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-sm">
-                    {message.role === "assistant" ? "AI Assistant" : "You"}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {message.createdAt.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
+          <div className={cn("min-w-0", isAssistant ? "flex-1" : "max-w-[80%]")}>
+            <div
+              className={cn(
+                "mb-1 flex items-center gap-2",
+                isAssistant ? "" : "justify-end"
+              )}
+            >
+              {!isAssistant && <User className="h-3.5 w-3.5 text-muted-foreground" />}
+              <span className="text-sm font-medium">
+                {isAssistant ? "AI Assistant" : "You"}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {message.createdAt.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            </div>
 
-                <div className="text-sm text-foreground">
-                  <AnimatePresence mode="wait">
-                    {isEditing ? (
-                      <motion.div
-                        key="edit-mode"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="space-y-3"
+            <div
+              className={cn(
+                "text-sm text-foreground",
+                isAssistant ? "w-full" : "rounded-2xl border border-primary/20 bg-primary/10 px-4 py-3"
+              )}
+            >
+              <AnimatePresence mode="wait">
+                {isEditing ? (
+                  <motion.div
+                    key="edit-mode"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-3"
+                  >
+                    <textarea
+                      ref={textareaRef}
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                      className="w-full rounded-lg border border-border bg-background p-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-primary"
+                      rows={4}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSave();
+                        }
+                      }}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={handleSave}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
                       >
-                        <textarea
-                          ref={textareaRef}
-                          value={editedContent}
-                          onChange={(e) => setEditedContent(e.target.value)}
-                          className="w-full p-3 border rounded-lg bg-background border-border focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                          rows={4}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSave();
-                            }
-                          }}
+                        Save changes
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="view-mode"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="w-full"
+                  >
+                    <div className="relative">
+                      <div className="space-y-2">
+                        <Markdown
+                          content={message.content}
+                          className="text-foreground"
                         />
-                        <div className="flex gap-2">
+                        {message.isStreaming && (
+                          <div ref={messageEndRef} className="h-4" />
+                        )}
+                        <div
+                          className={cn(
+                            "flex items-center gap-1 pt-2 opacity-0 transition-opacity group-hover:opacity-100",
+                            isAssistant ? "" : "justify-end"
+                          )}
+                        >
                           <Button
-                            size="sm"
-                            onClick={handleSave}
-                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                            onClick={() => {
+                              navigator.clipboard.writeText(message.content);
+                            }}
                           >
-                            Save changes
+                            <Copy className="h-4 w-4" />
+                            <span className="sr-only">Copy message</span>
                           </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handleCancel}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="view-mode"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="w-full"
-                      >
-                        <div className="relative">
-                          <div className="space-y-2">
-                            <Markdown
-                              content={message.content}
-                              className="text-foreground"
-                            />
-                            {message.isStreaming && (
-                              <div ref={messageEndRef} className="h-4" />
-                            )}
-                            <div className="flex items-center gap-1 pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(message.content);
-                                }}
-                              >
-                                <Copy className="h-4 w-4" />
-                                <span className="sr-only">Copy message</span>
-                              </Button>
-                              {message.role === "user" && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                  onClick={() => {
-                                    setEditedContent(message.content);
-                                    setIsEditing(true);
-                                  }}
-                                >
-                                  <Edit className="h-4 w-4" />
-                                  <span className="sr-only">Edit message</span>
-                                </Button>
-                              )}
-                              <div className="h-6 w-px bg-border mx-1" />
+                          {message.role === "user" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                              onClick={() => {
+                                setEditedContent(message.content);
+                                setIsEditing(true);
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Edit message</span>
+                            </Button>
+                          )}
+                          {isAssistant && (
+                            <>
+                              <div className="mx-1 h-6 w-px bg-border" />
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -240,18 +239,17 @@ export function ChatMessage({
                                 <ThumbsDown className="h-4 w-4" />
                                 <span className="sr-only">Dislike</span>
                               </Button>
-                            </div>
-                          </div>
+                            </>
+                          )}
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
-        {showSeparator && <Separator className="my-4" />}
       </div>
     </div>
   );
