@@ -181,7 +181,7 @@ export default function PostCreate() {
           <Button
             onClick={publishHandler}
             disabled={isSubmitting}
-            className="min-w-[120px] gap-2"
+            className="min-w-30 gap-2"
           >
             {isSubmitting ? (
               <>
