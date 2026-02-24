@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { axiosInstance3 } from "@/utils/fetch";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

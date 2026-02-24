@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
 import { ArrowUp } from "lucide-react";
 import { axiosInstance } from "@/utils/fetch";

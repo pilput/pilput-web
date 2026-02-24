@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
 import { axiosInstance3 } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
 import Footer from "@/components/footer/Footer";
 import ProfileTab from "@/components/account/ProfileTab";

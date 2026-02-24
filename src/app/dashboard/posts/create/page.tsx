@@ -8,7 +8,7 @@ import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import axios, { AxiosError } from "axios";
 import { useState, useRef, useCallback } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import MyEditor from "@/components/post/Editor";
 import {
   ImagePlus,

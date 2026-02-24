@@ -1,4 +1,4 @@
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import { Space_Grotesk } from "next/font/google";
 import Google from "@/components/analitics/Google";
@@ -95,8 +95,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={grotesk.className}>
         <Google />
-        <ThemeProvider attribute="class">{children}</ThemeProvider>
-        <Toaster />
+        <ThemeProvider attribute="class">
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

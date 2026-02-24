@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";

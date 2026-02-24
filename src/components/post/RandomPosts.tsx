@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import PostItem from "./PostItem";
 import { axiosInstance } from "@/utils/fetch";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import PostItemPulse from "./PostItemPulse";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { getToken, RemoveToken } from "@/utils/Auth";
 import { axiosInstance3 } from "@/utils/fetch";
 import { AxiosError } from "axios";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import type { Holding, HoldingType } from "@/types/holding";
 import {
   duplicateHoldingSchema,
