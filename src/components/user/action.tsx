@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/utils/fetch";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import type { User } from "@/types/user";
 
 const UserActionComponent = ({

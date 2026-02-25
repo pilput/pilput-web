@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { holdingFormSchema } from "@/lib/validation";
 import HoldingHeader from "@/components/dashboard/holdings/HoldingHeader";
 import HoldingFormModal from "@/components/dashboard/holdings/HoldingFormModal";

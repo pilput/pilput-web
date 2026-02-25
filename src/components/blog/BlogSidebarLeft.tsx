@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import TrendingPosts from "@/components/post/TrendingPosts";
 import { axiosInstance3 } from "@/utils/fetch";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import type { Post } from "@/types/post";
 
 const BlogSidebarLeft = () => {

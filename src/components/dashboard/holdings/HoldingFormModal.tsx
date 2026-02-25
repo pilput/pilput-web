@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -97,9 +97,12 @@ export default function HoldingFormModal({
   ];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader className="space-y-3">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-2xl lg:max-w-3xl overflow-y-auto p-0"
+      >
+        <SheetHeader className="space-y-3 p-6 pb-4 border-b">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
               editingHolding 
@@ -117,18 +120,18 @@ export default function HoldingFormModal({
               )}
             </div>
             <div>
-              <DialogTitle className="text-xl">
+              <SheetTitle className="text-xl">
                 {editingHolding ? "Edit Holding" : "Add New Holding"}
-              </DialogTitle>
-              <DialogDescription className="text-sm mt-0.5">
+              </SheetTitle>
+              <SheetDescription className="text-sm mt-0.5">
                 {editingHolding
                   ? "Update the holding details below."
                   : "Create a new holding with the following details."}
-              </DialogDescription>
+              </SheetDescription>
             </div>
           </div>
-        </DialogHeader>
-        <form onSubmit={onSubmit} className="space-y-6">
+        </SheetHeader>
+        <form onSubmit={onSubmit} className="space-y-6 p-6 pt-4">
           {/* Section 1: Basic Information */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium text-muted-foreground">
@@ -429,7 +432,7 @@ export default function HoldingFormModal({
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

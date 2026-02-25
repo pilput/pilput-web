@@ -1,5 +1,5 @@
 import { deleteCookie } from "cookies-next";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 export const ErrorHandlerAPI = (error: any) => {
   // Log the error for debugging purposes

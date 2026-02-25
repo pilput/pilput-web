@@ -34,7 +34,7 @@ import { format } from "date-fns";
 import { Search, UserPlus } from "lucide-react";
 import { AxiosError } from "axios";
 import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import type { User } from "@/types/user";
 import UserActionComponent from "@/components/user/action";
 import { Paginate } from "@/components/common/Paginate";

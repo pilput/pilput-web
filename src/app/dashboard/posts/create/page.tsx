@@ -8,7 +8,7 @@ import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import axios, { AxiosError } from "axios";
 import { useState, useRef, useCallback } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import MyEditor from "@/components/post/Editor";
 import {
   ImagePlus,
@@ -181,7 +181,7 @@ export default function PostCreate() {
           <Button
             onClick={publishHandler}
             disabled={isSubmitting}
-            className="min-w-[120px] gap-2"
+            className="min-w-30 gap-2"
           >
             {isSubmitting ? (
               <>

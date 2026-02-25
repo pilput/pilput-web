@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { axiosInstance2 } from "@/utils/fetch";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { getToken } from "@/utils/Auth";
 import type { Post } from "@/types/post";
 
