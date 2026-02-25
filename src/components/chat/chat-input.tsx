@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Paperclip, Smile, AlertCircle } from "lucide-react";
+import { Send, Paperclip, AlertCircle } from "lucide-react";
 import { ModelPicker } from "./model-picker";
 import { useChatStore } from "@/stores/chat-store";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -84,30 +84,11 @@ export function ChatInput({
                   onKeyDown={handleKeyDown}
                   onInput={handleInput}
                   placeholder="Type your message..."
-                  className="min-h-[44px] max-h-[180px] w-full resize-none border-0 bg-transparent px-0 py-1 text-sm focus-visible:ring-0 focus:outline-none pr-16 sm:pr-20"
+                  className="min-h-[44px] max-h-[180px] w-full resize-none border-0 bg-transparent px-0 py-1 text-sm outline-none focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 sm:pr-20"
                   disabled={isDisabled}
                   rows={rows}
                 />
                 <div className="absolute right-0 bottom-0 flex items-center gap-1 pb-0.5 sm:pb-1 pr-1">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md"
-                          disabled={isDisabled}
-                        >
-                          <Smile className="h-4 w-4" />
-                          <span className="sr-only">Add emoji</span>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Add emoji</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
