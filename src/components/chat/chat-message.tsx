@@ -30,6 +30,8 @@ export function ChatMessage({
   onFeedback,
 }: ChatMessageProps) {
   const isAssistant = message.role === "assistant";
+  const isWaitingForStream =
+    isAssistant && message.isStreaming && !message.content.trim();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [hasLiked, setHasLiked] = useState<boolean | null>(null);
@@ -170,10 +172,24 @@ export function ChatMessage({
                   >
                     <div className="relative">
                       <div className="space-y-2">
-                        <Markdown
-                          content={message.content}
-                          className="text-foreground"
-                        />
+                        {isWaitingForStream ? (
+                          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
+                            <span className="sr-only">
+                              AI is preparing a response
+                            </span>
+                            <div className="flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.3s]" />
+                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.15s]" />
+                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary" />
+                            </div>
+                            <span>AI is typing...</span>
+                          </div>
+                        ) : (
+                          <Markdown
+                            content={message.content}
+                            className="text-foreground"
+                          />
+                        )}
                         {message.isStreaming && (
                           <div ref={messageEndRef} className="h-4" />
                         )}
