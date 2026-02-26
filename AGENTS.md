@@ -176,3 +176,24 @@ Configured in `src/utils/getConfig.ts`:
 - No specific Cursor or Copilot rule files found
 - Follow existing patterns in codebase
 - Use AI assistance for code generation while maintaining project standards
+
+## Cursor Cloud specific instructions
+
+### Service overview
+This is a **frontend-only** Next.js 16 application. There are no local backend services, databases, or Docker dependencies. All backend APIs (Axum, Express, Hono) and the WebSocket server are hosted remotely at `*.pilput.me`. The app works locally against these production endpoints.
+
+### Running the dev server
+- `bun run dev` starts Next.js on port 3000 with Turbopack.
+- `.env.local` is copied from `.env.local.example` during setup; defaults point to production APIs so the app runs without additional configuration.
+
+### Linting caveat
+- `bun run lint` (which calls `next lint`) **does not work** in Next.js 16 — the `lint` subcommand was removed from the Next.js CLI. The project has `.eslintrc.json` (legacy format) and ESLint 9 (flat-config only). Use `bunx tsc --noEmit` for type checking instead.
+
+### Type checking
+- `bunx tsc --noEmit` — passes cleanly and is the primary static analysis check.
+
+### Building
+- `bun run build` succeeds. You may see `AxiosError: 404` during static generation — this is expected because the remote API may not return data for all routes during build.
+
+### Testing
+- No test framework is configured. Validate changes with type checking (`bunx tsc --noEmit`) and manual browser testing via the dev server.
