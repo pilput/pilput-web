@@ -36,6 +36,16 @@ type Inputs = {
   username: string;
   password: string;
 };
+
+interface RegisterResponse {
+  data: {
+    access_token: string;
+    refresh_token: string;
+  };
+  message: string;
+  success: boolean;
+}
+
 const UserSchema = z.object({
   username: z.string().min(5).max(20),
   email: z.string().email(),
@@ -56,12 +66,17 @@ export default function Signup() {
     const id = toast.loading("Loading...");
     try {
       const response = await axiosInstance3.post("/v1/auth/register", data);
+      const result = response.data as RegisterResponse;
+
+      if (!result.success) {
+        throw new Error(result.message || "Register failed");
+      }
+
       toast.success("Success Create Account", { id });
       const expire = new Date();
+      expire.setTime(expire.getTime() + 6 * 60 * 60 * 1000);
 
-      expire.setDate(expire.getDate() + 3);
-
-      setCookie("token", response.data.access_token, {
+      setCookie("token", result.data.access_token, {
         expires: expire,
         secure: true,
         domain: `.${Config.maindomain}`,
