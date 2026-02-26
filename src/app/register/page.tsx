@@ -19,7 +19,16 @@ import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Mail, Lock, User, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  GithubIcon,
+  Mail,
+  Lock,
+  User,
+  Loader2,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 import { Config } from "@/utils/getConfig";
 
 type Inputs = {
@@ -93,15 +102,17 @@ export default function Signup() {
           username: username.trim(),
         });
         if (currentRequestId !== requestIdRef.current) return; // stale
-        const available = Boolean(res?.data?.data?.available);
+        const exists = res?.data?.data?.exists;
+        const available =
+          typeof exists === "boolean"
+            ? !exists
+            : Boolean(res?.data?.data?.available);
         if (res?.data?.success && available) {
           setUsernameStatus("available");
-          setUsernameMessage(res?.data?.message || "Username is available");
+          setUsernameMessage("Username is available");
         } else {
           setUsernameStatus("taken");
-          setUsernameMessage(
-            res?.data?.message || "Username already exists. Please try again."
-          );
+          setUsernameMessage("Username is already taken");
         }
       } catch (e) {
         if (currentRequestId !== requestIdRef.current) return; // stale
@@ -143,12 +154,31 @@ export default function Signup() {
                 <Input
                   id="username"
                   placeholder="Enter your username"
-                  className="pl-9"
+                  className="pl-9 pr-9"
                   {...register("username")}
                   aria-invalid={errors.username ? "true" : "false"}
                   autoComplete="username"
                   disabled={isSubmitting}
                 />
+                {!errors.username && usernameStatus === "checking" && (
+                  <Loader2
+                    className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                )}
+                {!errors.username && usernameStatus === "available" && (
+                  <CheckCircle2
+                    className="absolute right-3 top-3 h-4 w-4 text-green-600"
+                    aria-hidden="true"
+                  />
+                )}
+                {!errors.username &&
+                  (usernameStatus === "taken" || usernameStatus === "error") && (
+                    <XCircle
+                      className="absolute right-3 top-3 h-4 w-4 text-red-500"
+                      aria-hidden="true"
+                    />
+                  )}
               </div>
               {errors.username && (
                 <p className="text-sm text-red-500">
@@ -157,12 +187,12 @@ export default function Signup() {
               )}
               {!errors.username && usernameStatus !== "idle" && (
                 <p
-                  className={`text-sm ${
+                  className={`rounded-md border px-3 py-2 text-sm ${
                     usernameStatus === "available"
-                      ? "text-green-600"
+                      ? "border-green-200 bg-green-50 text-green-700"
                       : usernameStatus === "checking"
-                      ? "text-muted-foreground"
-                      : "text-red-500"
+                      ? "border-border bg-muted/50 text-muted-foreground"
+                      : "border-red-200 bg-red-50 text-red-600"
                   }`}
                   aria-live="polite"
                   role="status"
@@ -229,6 +259,26 @@ export default function Signup() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
+          <div className="relative w-full">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white dark:bg-gray-800 px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <Link
+            href={`${Config.apibaseurl3}/v1/auth/oauth/github`}
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
+            aria-label="Sign up with GitHub"
+          >
+            <GithubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+            Github
+          </Link>
+
           <div className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link
