@@ -1,5 +1,5 @@
 "use client";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import {
@@ -16,8 +16,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { FeatureCard, FeatureList } from "./FeatureCard";
+import { FeatureCard } from "./FeatureCard";
 
 interface Feature {
   id: string;
@@ -37,14 +36,7 @@ const Features: React.FC = () => {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
   const [isClient, setIsClient] = useState(false);
-
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
 
   useEffect(() => {
     setIsClient(true);
@@ -54,19 +46,18 @@ const Features: React.FC = () => {
     {
       id: "content-creation",
       icon: BookOpen,
-      title: "Rich Content Creation",
+      title: "Immersive Writing",
       description:
-        "Create and share engaging blog posts with our powerful editor featuring markdown support, real-time preview, and collaborative writing tools.",
+        "Craft stories that captivate with our high-performance writing tools. Enjoy a clean space with instant formatting and media integration.",
       background: (
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-blue-500/10 via-transparent to-transparent" />
-          <div className="absolute top-4 right-4 opacity-20">
-            <PenTool className="w-12 h-12 text-blue-500" />
+        <div className="absolute inset-0 overflow-hidden opacity-10">
+          <div className="absolute top-0 right-0 p-8">
+            <PenTool className="w-32 h-32 text-blue-500" />
           </div>
         </div>
       ),
-      stats: "10K+ Posts Created",
-      cta: "Start Writing",
+      stats: "Clean & Simple",
+      cta: "Start writing",
       delay: 0.1,
       href: "/dashboard/posts/create",
       glowColor: "blue",
@@ -75,19 +66,18 @@ const Features: React.FC = () => {
     {
       id: "ai-chat",
       icon: Bot,
-      title: "AI-Powered Chat",
+      title: "Creative Companion",
       description:
-        "Engage with our intelligent AI assistant. Get help with writing, research, brainstorming, and creative problem-solving in real-time.",
+        "Never stare at a blank page again. Our smart assistant helps you brainstorm topics, outline ideas, and refine your tone as you write.",
       background: (
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-purple-500/10 via-transparent to-transparent" />
-          <div className="absolute bottom-4 left-4 opacity-20">
-            <MessageCircle className="w-12 h-12 text-purple-500" />
+        <div className="absolute inset-0 overflow-hidden opacity-10">
+          <div className="absolute bottom-0 left-0 p-8">
+            <MessageCircle className="w-32 h-32 text-purple-500" />
           </div>
         </div>
       ),
-      stats: "1M+ Conversations",
-      cta: "Try AI Chat",
+      stats: "Smart Assistant",
+      cta: "Try Assistant",
       delay: 0.2,
       href: "/chat",
       glowColor: "purple",
@@ -96,19 +86,18 @@ const Features: React.FC = () => {
     {
       id: "holdings",
       icon: PieChart,
-      title: "Portfolio Holdings",
+      title: "Personal Dashboard",
       description:
-        "Track and manage your investment portfolio with ease. Monitor holdings across different platforms, analyze performance, and export data for comprehensive financial insights.",
+        "Stay organized and track your progress. Manage your stories and get clear insights into how your content is performing.",
       background: (
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-indigo-500/10 via-transparent to-transparent" />
-          <div className="absolute top-4 right-4 opacity-20">
-            <TrendingUp className="w-12 h-12 text-indigo-500" />
+        <div className="absolute inset-0 overflow-hidden opacity-10">
+          <div className="absolute top-0 left-0 p-8">
+            <TrendingUp className="w-32 h-32 text-primary" />
           </div>
         </div>
       ),
-      stats: "Track Investments",
-      cta: "View Holdings",
+      stats: "All-in-one",
+      cta: "Go to Dashboard",
       delay: 0.3,
       href: "/dashboard/holdings",
       glowColor: "primary",
@@ -128,269 +117,87 @@ const Features: React.FC = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative py-16 sm:py-24 md:py-32 overflow-hidden bg-linear-to-b from-background to-background/95 dark:from-black dark:to-black/95"
-      aria-labelledby="features-heading"
-      style={{ opacity }}
+      className="relative py-24 sm:py-32 lg:py-48 bg-background overflow-hidden"
     >
-      {/* Enhanced Background with Parallax Effects */}
-      <motion.div className="absolute inset-0 -z-10" style={{ y: parallaxY }}>
-        {/* Base pattern */}
-        <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,rgba(240,240,240,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(240,240,240,0.3)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(26,26,26,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(26,26,26,0.3)_1px,transparent_1px)] bg-size-[4rem_4rem]">
-          {/* Gradient orbs - Client-side only to prevent hydration issues */}
-          {isClient && (
-            <>
-              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-linear-to-br from-primary/20 to-transparent rounded-full blur-3xl animate-pulse" />
-              <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-linear-to-br from-purple-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
-              <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-linear-to-br from-green-500/20 to-transparent rounded-full blur-2xl animate-pulse delay-2000" />
-            </>
-          )}
-        </div>
-      </motion.div>
-
-      {/* Floating particles for ambiance - Client-side only to prevent hydration mismatch */}
-      {isClient && (
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={`particle-${i}`}
-              className="absolute w-1 h-1 bg-primary/30 rounded-full"
-              style={{
-                left: `${(i * 5 + 15) % 100}%`,
-                top: `${(i * 7 + 20) % 100}%`,
-              }}
-              animate={{
-                y: [0, -20, 0],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 3 + (i % 3),
-                repeat: Infinity,
-                delay: i % 4,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* Refined Background Decor */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/2 rounded-full blur-[120px] pointer-events-none" />
+      </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Enhanced Header Section */}
-        <motion.header
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.2,
-              },
-            },
-          }}
-          className="text-center mb-16 sm:mb-20 lg:mb-24"
-        >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 30, scale: 0.8 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                transition: {
-                  duration: 0.6,
-                  type: "spring",
-                  stiffness: 100,
-                },
-              },
-            }}
-            className="inline-flex items-center gap-3 mb-6 sm:mb-8"
-          >
+        <div className="flex flex-col lg:flex-row items-end justify-between gap-8 mb-20 lg:mb-32">
+          <div className="max-w-2xl space-y-6">
             <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
             >
-              <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
+              <Badge variant="secondary" className="px-4 py-1.5 bg-primary/10 text-primary border-none rounded-full">
+                Platform Innovation
+              </Badge>
             </motion.div>
-            <Badge
-              variant="outline"
-              className="text-sm sm:text-base px-4 py-2 bg-linear-to-r from-primary/10 to-primary/5 border-primary/20 text-primary font-medium"
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-black tracking-tight leading-tight"
             >
-              Why Choose PILPUT
-            </Badge>
-          </motion.div>
-
-          <motion.h2
-            id="features-heading"
-            variants={{
-              hidden: { opacity: 0, y: 40 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: {
-                  duration: 0.8,
-                  delay: 0.2,
-                  type: "spring",
-                  stiffness: 80,
-                },
-              },
-            }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 leading-tight"
-          >
-            Powerful Features for{" "}
-            <motion.span
-              className="bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent relative inline-block"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{ duration: 5, repeat: Infinity }}
-              style={{ backgroundSize: "200% 200%" }}
-            >
-              Modern Creators
-            </motion.span>
-          </motion.h2>
-
+              Precision tools for <br />
+              <span className="text-primary">exceptional results.</span>
+            </motion.h2>
+          </div>
           <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: {
-                  duration: 0.6,
-                  delay: 0.4,
-                },
-              },
-            }}
-            className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-lg md:text-xl text-muted-foreground max-w-md font-light leading-relaxed mb-2"
           >
-            Everything you need to create, share, and connect. Designed for the
-            ultimate creative experience.
+            We've stripped away the noise to give you the most powerful, 
+            intuitive tools for your creative workflow.
           </motion.p>
-        </motion.header>
+        </div>
 
-        {/* Enhanced Features Timeline */}
-        <div className="max-w-7xl mx-auto relative">
-          {/* Enhanced Timeline Line with gradient */}
-          <motion.div
-            className="absolute left-8 lg:left-1/2 top-0 bottom-0 w-1 bg-linear-to-b from-primary via-primary/60 to-primary/20 hidden sm:block rounded-full -translate-x-1/2"
-            initial={{ scaleY: 0 }}
-            animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            style={{ transformOrigin: "top" }}
-          />
-
-          <FeatureList role="list" aria-label="Platform features">
-            {features.map((feature, index) => {
-              const isEven = index % 2 === 0;
-              return (
-                <motion.div
-                  key={feature.id}
-                  initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                  animate={
-                    isInView
-                      ? { opacity: 1, x: 0 }
-                      : { opacity: 0, x: isEven ? -50 : 50 }
-                  }
-                  transition={{ duration: 0.6, delay: feature.delay }}
-                  role="listitem"
-                  className={cn(
-                    "relative flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-0",
-                    isEven ? "lg:flex-row" : "lg:flex-row-reverse"
-                  )}
-                >
-                  {/* Timeline Node - Mobile: Left, Desktop: Center */}
-                  <div className="absolute left-8 lg:left-1/2 -translate-x-1/2 flex items-center justify-center z-10">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={isInView ? { scale: 1 } : { scale: 0 }}
-                      transition={{
-                        duration: 0.4,
-                        delay: feature.delay + 0.2,
-                        type: "spring",
-                      }}
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary border-4 border-background dark:border-background shadow-xl shadow-primary/20 flex items-center justify-center"
-                    >
-                      <feature.icon
-                        className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground"
-                        aria-hidden="true"
-                      />
-                    </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+          {features.map((feature) => (
+            <motion.div
+              key={feature.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: feature.delay, duration: 0.6 }}
+            >
+              <FeatureCard
+                onClick={() => handleFeatureClick(feature)}
+                className="group h-[450px] lg:h-[500px]"
+                glowColor={feature.glowColor}
+              >
+                {feature.background}
+                <div className="relative h-full flex flex-col p-10 lg:p-12">
+                  <div className="mb-auto">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
+                        <feature.icon className="w-6 h-6" />
+                      </div>
+                      <Badge variant="outline" className="border-primary/20 text-[10px] uppercase tracking-widest font-bold">
+                        {feature.stats}
+                      </Badge>
+                    </div>
+                    <h3 className="text-2xl lg:text-3xl font-bold mb-4 tracking-tight">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground text-base lg:text-lg font-light leading-relaxed">
+                      {feature.description}
+                    </p>
                   </div>
-
-                  {/* Content Card Side */}
-                  <div
-                    className={cn(
-                      "w-full lg:w-1/2 relative",
-                      "pl-16 sm:pl-32 lg:pl-0", // Mobile indentation
-                      isEven ? "lg:pr-16" : "lg:pl-16" // Desktop spacing
-                    )}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={
-                        isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-                      }
-                      transition={{ duration: 0.6, delay: feature.delay + 0.3 }}
-                      className="w-full"
-                    >
-                      <FeatureCard
-                        onClick={() => handleFeatureClick(feature)}
-                        aria-label={`${feature.title}: ${feature.description}`}
-                        aria-describedby={`feature-stats-${feature.id}`}
-                        className="h-auto min-h-40 sm:min-h-50"
-                        glowColor={feature.glowColor}
-                      >
-                        {feature.background}
-                        <div className="z-10 p-3 sm:p-6 space-y-3 sm:space-y-4">
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
-                            <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-primary/10 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[0.65rem] sm:text-xs font-medium text-primary backdrop-blur-md">
-                              {feature.accentIcon && (
-                                <feature.accentIcon className="h-3 sm:h-4 w-3 sm:w-4" />
-                              )}
-                              {feature.stats}
-                            </div>
-                            <Badge
-                              id={`feature-stats-${feature.id}`}
-                              variant="secondary"
-                              className="text-[0.6rem] sm:text-xs font-semibold backdrop-blur-md bg-secondary/80 px-2 py-1"
-                            >
-                              {feature.cta}
-                            </Badge>
-                          </div>
-
-                          <div className="space-y-2 sm:space-y-3">
-                            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-700 dark:text-neutral-300 leading-tight">
-                              {feature.title}
-                            </h3>
-                            <p className="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                              {feature.description}
-                            </p>
-                          </div>
-
-                          <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-0.5 sm:pt-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="px-0 text-primary hover:text-primary hover:bg-transparent p-0 text-sm"
-                              onClick={() => handleFeatureClick(feature)}
-                              aria-label={`Go to ${feature.title}`}
-                            >
-                              {feature.cta}
-                              <ArrowRight className="ml-1.5 sm:ml-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </FeatureCard>
-                    </motion.div>
+                  
+                  <div className="mt-8 flex items-center text-primary font-bold group/btn">
+                    <span className="mr-2">{feature.cta}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                   </div>
-
-                  {/* Empty Spacer Side for Desktop Balance */}
-                  <div className="hidden lg:block lg:w-1/2" />
-                </motion.div>
-              );
-            })}
-          </FeatureList>
+                </div>
+              </FeatureCard>
+            </motion.div>
+          ))}
         </div>
       </div>
     </motion.section>

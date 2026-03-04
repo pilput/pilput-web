@@ -16,13 +16,13 @@ export const metadata: Metadata = {
   },
   applicationName: "pilput",
   description:
-    "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
+    "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
   keywords: [
     "publishing",
     "blog",
     "writing",
     "content creation",
-    "free platform",
+    "open platform",
     "creators",
     "articles",
   ],
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    title: "pilput - Free Publishing Platform for Creators",
+    title: "pilput - Open Publishing Platform for Creators",
     description:
-      "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
+      "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
     siteName: "pilput",
     images: [
       {
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "pilput - Free Publishing Platform for Creators",
+    title: "pilput - Open Publishing Platform for Creators",
     description:
-      "PILPUT is a free publishing platform where anyone can write and share articles without restrictions. No paywalls, no subscription fees, no hidden costs - just pure freedom to express your thoughts and reach readers worldwide.",
+      "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
     creator: "@pilput_dev",
     images: ["/pilput.png"],
   },

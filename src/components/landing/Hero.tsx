@@ -18,8 +18,9 @@ const Hero = () => {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "36%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -39,165 +40,142 @@ const Hero = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: prefersReducedMotion ? 0 : 0.2,
-        duration: prefersReducedMotion ? 0.3 : 0.6,
+        staggerChildren: prefersReducedMotion ? 0 : 0.15,
+        duration: prefersReducedMotion ? 0.3 : 0.8,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 26 },
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: prefersReducedMotion
-        ? { duration: 0.25 }
-        : { type: "spring" as const, stiffness: 120, damping: 16 },
+        ? { duration: 0.3 }
+        : { type: "spring", stiffness: 100, damping: 20 },
     },
   };
 
   return (
     <motion.section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden py-14 sm:py-16 lg:py-20"
+      className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-32"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
+      {/* Background Layering */}
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute inset-0 bg-grid-slate-100/[0.06] dark:bg-grid-slate-800/[0.1] bg-[length:28px_28px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary-rgb),0.05),transparent_70%)]" />
+      <div className="absolute inset-0 bg-grid-slate-100/[0.03] dark:bg-grid-white/[0.02] bg-[length:32px_32px]" />
+      
       <HeroBackground />
-      <motion.div className="absolute inset-0" style={{ y, opacity, background: "transparent" }} />
+      
+      <motion.div 
+        className="absolute inset-0 z-[1] pointer-events-none" 
+        style={{ y, opacity, scale }}
+      />
 
-      <motion.div
-        className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
-        variants={itemVariants}
-      >
-        <div className="text-center space-y-4 sm:space-y-6 lg:space-y-10">
-          <AnimatePresence>
-            {!isLoaded && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center justify-center py-16"
-              >
-                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <motion.div variants={itemVariants}>
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center space-y-8 lg:space-y-12">
+          
+          <motion.div variants={itemVariants} className="relative">
             <Badge
-              variant="secondary"
-              className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-all duration-200 rounded-full shadow-sm"
-              role="status"
-              aria-label="Platform feature highlight"
+              variant="outline"
+              className="px-4 py-1.5 text-xs sm:text-sm font-medium bg-primary/5 text-primary border-primary/20 backdrop-blur-md rounded-full shadow-sm"
             >
-              <Sparkles className="h-3.5 w-3.5 mr-1.5 sm:mr-2" aria-hidden="true" />
-              Free publishing platform with no limits
+              <Sparkles className="h-3.5 w-3.5 mr-2 animate-pulse" />
+              Empowering the next generation of writers
             </Badge>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="space-y-2 relative">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight leading-tight">
-              <span className="block">Write, publish, and</span>
-              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/70 bg-clip-text text-transparent relative">
-                ship ideas without friction
-                <motion.span
-                  className="absolute -inset-2 rounded-3xl blur-2xl bg-primary/12"
-                  animate={prefersReducedMotion ? {} : { opacity: [0.45, 0.8, 0.45] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  aria-hidden="true"
+          <motion.div variants={itemVariants} className="max-w-5xl space-y-4 sm:space-y-6">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] text-foreground">
+              Write, publish, and <br className="hidden sm:block" />
+              <span className="relative inline-block">
+                <span className="relative z-10 bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                  ship ideas
+                </span>
+                <motion.span 
+                  className="absolute bottom-2 left-0 w-full h-3 bg-primary/10 -z-10 rounded-full blur-sm"
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ delay: 1, duration: 1, ease: "easeOut" }}
                 />
               </span>
+              {" "}without friction.
             </h1>
+            
+            <motion.p
+              variants={itemVariants}
+              className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light"
+            >
+              PILPUT is a modern publishing platform designed for clarity. 
+              No paywalls, no clutter—just a pure focus on your creative voice.
+            </motion.p>
           </motion.div>
 
-          <motion.p
+          <motion.div
             variants={itemVariants}
-            className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl sm:max-w-3xl mx-auto leading-relaxed px-2"
-          >
-            PILPUT is a free publishing platform where anyone can write and share without restrictions.
-            No paywalls, no subscriptions, no hidden limits—just a clean place to focus on your words.
-          </motion.p>
-
-          <motion.nav
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center pt-1 sm:pt-2"
-            role="navigation"
-            aria-label="Primary actions"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full"
           >
             <Link href="/register" className="w-full sm:w-auto">
               <Button
-                className="group relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:shadow-primary/25 transition-all duration-200 rounded-xl sm:rounded-2xl border border-primary/60 w-full sm:w-auto min-w-[180px] sm:min-w-[200px]"
                 size="lg"
-                aria-label="Start writing your first article"
+                className="group relative h-14 sm:h-16 px-8 sm:px-10 text-base sm:text-lg font-bold bg-primary text-primary-foreground shadow-2xl shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 rounded-2xl border-b-4 border-primary/70 active:border-b-0 active:translate-y-1 w-full sm:min-w-[220px]"
               >
-                <span className="relative z-10">Start writing now</span>
-                <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5 translate-x-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                Start your journey
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+            
             <Link href="/blog" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold border border-border/70 bg-background/70 backdrop-blur-md hover:bg-primary/5 hover:border-primary/50 transition-all duration-200 rounded-xl sm:rounded-2xl w-full sm:w-auto min-w-[180px] sm:min-w-[200px]"
-                aria-label="Browse published articles"
+                className="h-14 sm:h-16 px-8 sm:px-10 text-base sm:text-lg font-semibold bg-background/50 backdrop-blur-xl border-border/50 hover:bg-accent hover:border-accent transition-all duration-300 rounded-2xl w-full sm:min-w-[220px]"
               >
-                <span className="relative z-10">Browse articles</span>
+                Explore articles
               </Button>
             </Link>
-          </motion.nav>
+          </motion.div>
 
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-6 pt-4 sm:pt-6"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-8 w-full max-w-4xl pt-8 lg:pt-16"
           >
             {[
-              { icon: ShieldCheck, title: "Free forever", desc: "No paywalls or hidden limits" },
-              { icon: Zap, title: "Fast by default", desc: "Edge-ready, optimized Next.js" },
-              { icon: Globe2, title: "Built to scale", desc: "SEO, social, and global ready" },
-            ].map((item) => (
+              { icon: ShieldCheck, title: "Get Started Free", desc: "Start writing at no cost." },
+              { icon: Zap, title: "Instant Load", desc: "Smooth and rapid experience." },
+              { icon: Globe2, title: "Global Reach", desc: "Get your voice heard everywhere." },
+            ].map((item, i) => (
               <div
                 key={item.title}
-                className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-border/60 bg-card/80 backdrop-blur-xl px-3 sm:px-4 py-2.5 sm:py-3 shadow-sm"
+                className="group relative p-6 rounded-3xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/20 transition-all duration-500 text-left overflow-hidden"
               >
-                <div className="flex h-8 sm:h-10 w-8 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-primary/10 text-primary">
-                  <item.icon className="h-4 sm:h-5 w-4 sm:w-5" />
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-xs sm:text-sm font-semibold text-foreground">{item.title}</p>
-                  <p className="text-[0.65rem] sm:text-xs text-muted-foreground">{item.desc}</p>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-8 -mt-8 blur-2xl group-hover:bg-primary/10 transition-colors" />
+                <div className="relative z-10 flex flex-col gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform duration-500">
+                    <item.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground text-lg">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
               </div>
             ))}
           </motion.div>
         </div>
-      </motion.div>
-
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg"
-      >
-        Skip to main content
-      </a>
+      </div>
 
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={
-          prefersReducedMotion
-            ? {}
-            : {
-              y: [0, 8, 0],
-            }
-        }
-        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden="true"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-30"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
       >
-        <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center">
-          <ChevronDown className="w-4 h-4 text-muted-foreground/50 mt-2" />
-        </div>
+        <ChevronDown className="w-6 h-6" />
       </motion.div>
     </motion.section>
   );
