@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { ArrowRight, Sparkles, ChevronDown, ShieldCheck, Zap, Globe2 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import HeroBackground from "./HeroBackground";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const { scrollYProgress } = useScroll({
@@ -30,12 +29,7 @@ const Hero = () => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -46,14 +40,14 @@ const Hero = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: prefersReducedMotion
         ? { duration: 0.3 }
-        : { type: "spring", stiffness: 100, damping: 20 },
+        : { type: "spring" as const, stiffness: 100, damping: 20 },
     },
   };
 
@@ -149,7 +143,7 @@ const Hero = () => {
               { icon: ShieldCheck, title: "Get Started Free", desc: "Start writing at no cost." },
               { icon: Zap, title: "Instant Load", desc: "Smooth and rapid experience." },
               { icon: Globe2, title: "Global Reach", desc: "Get your voice heard everywhere." },
-            ].map((item, i) => (
+            ].map((item) => (
               <div
                 key={item.title}
                 className="group relative p-6 rounded-3xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/20 transition-all duration-500 text-left overflow-hidden"
@@ -182,3 +176,7 @@ const Hero = () => {
 };
 
 export default Hero;
+
+
+
+
