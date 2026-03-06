@@ -90,6 +90,19 @@ const validateMessage = (
   return { isValid: true };
 };
 
+/**
+ * Extracts error information from an API error response
+ * Returns ChatError with isAuthError flag for 401 responses
+ */
+const extractError = (err: any, defaultMessage: string): ChatError & { isAuthError?: boolean } => {
+  const status = err?.response?.status;
+  return {
+    message: err?.response?.data?.message || defaultMessage,
+    code: status?.toString(),
+    isAuthError: status === 401,
+  };
+};
+
 interface ChatState {
   // Data
   messages: Message[];
@@ -364,19 +377,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
         };
       });
     } catch (err: any) {
-      const error: ChatError = {
-        message:
-          err?.response?.data?.message || "Failed to fetch conversations",
-        code: err?.response?.status?.toString(),
-      };
+      const error = extractError(err, "Failed to fetch conversations");
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingChats: false },
-        error,
+        error: { message: error.message, code: error.code },
       }));
 
-      // Handle authentication errors
-      if (err?.response?.status === 401 && typeof window !== "undefined") {
-        window.location.href = "/login";
+      // Auth error is returned with isAuthError flag
+      // Navigation should be handled by component or auth middleware
+      if (error.isAuthError) {
+        console.warn("Authentication error - redirect needed");
       }
     }
   },
@@ -435,13 +445,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         loadingStates: { ...state.loadingStates, fetchingMessages: false },
       }));
     } catch (err: any) {
-      const error: ChatError = {
-        message: err?.response?.data?.message || "Failed to fetch messages",
-        code: err?.response?.status?.toString(),
-      };
+      const error = extractError(err, "Failed to fetch messages");
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingMessages: false },
-        error,
+        error: { message: error.message, code: error.code },
       }));
       console.error("Error fetching messages:", error);
     }
@@ -510,14 +517,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       return conversationId;
     } catch (err: any) {
-      const error: ChatError = {
-        message:
-          err?.response?.data?.message || "Failed to create conversation",
-        code: err?.response?.status?.toString(),
-      };
+      const error = extractError(err, "Failed to create conversation");
       set((state) => ({
         loadingStates: { ...state.loadingStates, creatingConversation: false },
-        error,
+        error: { message: error.message, code: error.code },
       }));
       console.error("Error creating conversation:", error);
       return null;
@@ -552,7 +555,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     const sanitizedContent = sanitizeString(content);
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       content: sanitizedContent,
       role: "user",
       createdAt: new Date(),
@@ -561,7 +564,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     // Add user message and create placeholder for assistant response
     const assistantMessage: Message = {
-      id: `assistant-${Date.now()}`,
+      id: `assistant-${crypto.randomUUID()}`,
       content: "",
       role: "assistant",
       createdAt: new Date(),
@@ -581,10 +584,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         assistantMessage.id,
       );
     } catch (err: any) {
-      const error: ChatError = {
-        message: err?.response?.data?.message || "Failed to send message",
-        code: err?.response?.status?.toString(),
-      };
+      const error = extractError(err, "Failed to send message");
 
       console.error("Error sending message:", error);
       set((state) => {
@@ -592,7 +592,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           (msg) => msg.id !== userMessage.id && msg.id !== assistantMessage.id,
         );
         const errorMessage: Message = {
-          id: `error-${Date.now()}`,
+          id: `error-${crypto.randomUUID()}`,
           content: "Sorry, I encountered an error. Please try again.",
           role: "assistant",
           createdAt: new Date(),
@@ -600,7 +600,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         };
         return {
           messages: [...filtered, userMessage, errorMessage],
-          error,
+          error: { message: error.message, code: error.code },
         };
       });
     } finally {
@@ -651,14 +651,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }));
       return false;
     } catch (err: any) {
-      const error: ChatError = {
-        message:
-          err?.response?.data?.message || "Failed to delete conversation",
-        code: err?.response?.status?.toString(),
-      };
+      const error = extractError(err, "Failed to delete conversation");
       set((state) => ({
         loadingStates: { ...state.loadingStates, deletingConversation: false },
-        error,
+        error: { message: error.message, code: error.code },
       }));
       console.error("Error deleting conversation:", error);
       return false;
