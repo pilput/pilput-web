@@ -4,7 +4,7 @@ import React from "react";
 import { axiosInstance } from "../../utils/fetch";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { profileStore } from "@/stores/profilestorage";
+import { profileStore } from "@/stores/profile-store";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";

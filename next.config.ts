@@ -29,14 +29,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "storage.pilput.me",
-      },
-      {
-        protocol: "https",
-        hostname: "storage.pilput.net",
-      },
-      {
-        protocol: "https",
         hostname: "7ec55d5596373a0c55c0ba5f45febb9e.r2.cloudflarestorage.com",
       },
     ],

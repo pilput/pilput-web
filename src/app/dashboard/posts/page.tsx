@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { postsStore } from "@/stores/postsStorage";
+import { postsStore } from "@/stores/posts-store";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";

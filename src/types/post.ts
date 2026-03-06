@@ -41,15 +41,15 @@ export interface User {
   image: string;
 }
 
-interface Tags {
+export interface Tags {
   id: number;
   name: string;
 }
 
-interface Comment {
+export interface Comment {
   id: string;
   text: string;
-  repies: Comment[];
+  replies: Comment[];
   created_at: string;
-  user: any;
+  user: User;
 }

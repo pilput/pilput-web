@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { postsStore } from "@/stores/createPostStore";
+import { postsStore } from "@/stores/create-post-store";
 import { getToken } from "@/utils/Auth";
 import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
