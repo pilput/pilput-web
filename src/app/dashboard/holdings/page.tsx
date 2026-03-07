@@ -25,7 +25,6 @@ import {
   Eye,
   EyeOff,
   Download,
-  RefreshCw,
 } from "lucide-react";
 
 const DEFAULT_CURRENCY = "IDR";
@@ -35,9 +34,7 @@ type HeaderActionsProps = {
   onToggleHide: () => void;
   onOpenDuplicate: () => void;
   onOpenAdd: () => void;
-  onSync: () => void;
   onExportCsv: () => void;
-  isSyncing: boolean;
   canExport: boolean;
 };
 
@@ -46,9 +43,7 @@ const HeaderActions = ({
   onToggleHide,
   onOpenDuplicate,
   onOpenAdd,
-  onSync,
   onExportCsv,
-  isSyncing,
   canExport,
 }: HeaderActionsProps) => {
   return (
@@ -62,16 +57,6 @@ const HeaderActions = ({
         aria-label={hideValues ? "Show values" : "Hide values"}
       >
         {hideValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
-        onClick={onSync}
-        disabled={isSyncing}
-      >
-        <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSyncing ? "animate-spin" : ""}`} />
-        <span className="hidden sm:inline">{isSyncing ? "Syncing Price..." : "Sync Price"}</span>
       </Button>
       <Button
         variant="outline"
@@ -110,11 +95,9 @@ export default function HoldingsPage() {
     holdings,
     holdingTypes,
     isLoading,
-    isSyncing,
     expandedRows,
     fetchHoldings,
     fetchHoldingTypes,
-    syncHoldings,
     toggleExpand,
     duplicateHoldings,
   } = useHoldingsStore();
@@ -187,14 +170,6 @@ export default function HoldingsPage() {
   const openDuplicateModal = useCallback(() => {
     setDuplicateOpen(true);
   }, []);
-
-  const handleSync = useCallback(async () => {
-    try {
-      await syncHoldings();
-    } catch (error) {
-      // Error handling is done in the store
-    }
-  }, [syncHoldings]);
 
   const openEditModal = useCallback((holding: Holding) => {
     // Check if this is a duplicate (id = 0) - treat as new holding
@@ -363,9 +338,7 @@ export default function HoldingsPage() {
             onToggleHide={() => setHideValues(!hideValues)}
             onOpenDuplicate={openDuplicateModal}
             onOpenAdd={openAddModal}
-            onSync={handleSync}
             onExportCsv={handleExportCsv}
-            isSyncing={isSyncing}
             canExport={!isLoading && filteredHoldings.length > 0}
           />
         </div>
