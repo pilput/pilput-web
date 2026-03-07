@@ -29,6 +29,7 @@ interface HoldingFormModalProps {
   editingHolding: Holding | null;
   formData: {
     name: string;
+    symbol: string;
     platform: string;
     holding_type_id: string;
     currency: string;
@@ -44,6 +45,7 @@ interface HoldingFormModalProps {
   setFormData: React.Dispatch<
     React.SetStateAction<{
       name: string;
+      symbol: string;
       platform: string;
       holding_type_id: string;
       currency: string;
@@ -173,6 +175,17 @@ export default function HoldingFormModal({
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2 col-span-2 md:col-span-1">
+                <Label htmlFor="symbol">Symbol</Label>
+                <Input
+                  id="symbol"
+                  placeholder="e.g., AAPL, BTC"
+                  value={formData.symbol}
+                  onChange={(e) =>
+                    setFormData({ ...formData, symbol: e.target.value.toUpperCase() })
+                  }
+                />
               </div>
               <div className="space-y-2 col-span-2 md:col-span-1">
                 <Label htmlFor="holding_type_id">

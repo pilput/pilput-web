@@ -14,7 +14,20 @@ export default function HoldingExpandedRow({ holding, hideValues = false }: Hold
     <TableRow key={`${holding.id}-expanded`} className="bg-muted/20 hover:bg-muted/20">
       <TableCell colSpan={10} className="p-0">
         <div className="p-4 border-t border-border/50">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {/* Symbol */}
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h8m-8 5h8m-8 5h8M4 7h.01M4 12h.01M4 17h.01" />
+                </svg>
+                Symbol
+              </div>
+              <div className="font-semibold text-sm bg-background/50 inline-flex px-2 py-0.5 rounded font-mono uppercase">
+                {holding.symbol || "-"}
+              </div>
+            </div>
+
             {/* Currency */}
             <div className="space-y-1.5">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

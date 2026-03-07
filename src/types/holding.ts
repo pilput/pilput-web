@@ -10,6 +10,7 @@ export interface Holding {
   id: bigint;
   user_id: string;
   name: string;
+  symbol?: string;
   platform: string;
   holding_type_id: number;
   currency: string;

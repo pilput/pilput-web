@@ -77,6 +77,7 @@ export const duplicateHoldingSchema = z.object({
 // Add/update holding form validation schema
 export const holdingFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  symbol: z.string().optional(),
   platform: z.string().min(1, "Platform is required"),
   holding_type_id: z.union([z.string().min(1), z.number()]),
   currency: z.string().min(1, "Currency is required"),

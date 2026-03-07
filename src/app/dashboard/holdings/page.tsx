@@ -25,6 +25,7 @@ import {
   Eye,
   EyeOff,
   Download,
+  RefreshCw,
 } from "lucide-react";
 
 const DEFAULT_CURRENCY = "IDR";
@@ -34,7 +35,9 @@ type HeaderActionsProps = {
   onToggleHide: () => void;
   onOpenDuplicate: () => void;
   onOpenAdd: () => void;
+  onSync: () => void;
   onExportCsv: () => void;
+  isSyncing: boolean;
   canExport: boolean;
 };
 
@@ -43,7 +46,9 @@ const HeaderActions = ({
   onToggleHide,
   onOpenDuplicate,
   onOpenAdd,
+  onSync,
   onExportCsv,
+  isSyncing,
   canExport,
 }: HeaderActionsProps) => {
   return (
@@ -58,10 +63,20 @@ const HeaderActions = ({
       >
         {hideValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
       </Button>
-      <Button 
-        variant="outline" 
+      <Button
+        variant="outline"
         size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" 
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
+        onClick={onSync}
+        disabled={isSyncing}
+      >
+        <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSyncing ? "animate-spin" : ""}`} />
+        <span className="hidden sm:inline">{isSyncing ? "Syncing Price..." : "Sync Price"}</span>
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
         onClick={onOpenDuplicate}
       >
         <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -95,9 +110,11 @@ export default function HoldingsPage() {
     holdings,
     holdingTypes,
     isLoading,
+    isSyncing,
     expandedRows,
     fetchHoldings,
     fetchHoldingTypes,
+    syncHoldings,
     toggleExpand,
     duplicateHoldings,
   } = useHoldingsStore();
@@ -122,6 +139,7 @@ export default function HoldingsPage() {
 
   const [formData, setFormData] = useState(() => ({
     name: "",
+    symbol: "",
     platform: "",
     holding_type_id: "",
     currency: DEFAULT_CURRENCY,
@@ -150,6 +168,7 @@ export default function HoldingsPage() {
     setEditingHolding(null);
     setFormData({
       name: "",
+      symbol: "",
       platform: "",
       holding_type_id: "",
       currency: DEFAULT_CURRENCY,
@@ -169,12 +188,21 @@ export default function HoldingsPage() {
     setDuplicateOpen(true);
   }, []);
 
+  const handleSync = useCallback(async () => {
+    try {
+      await syncHoldings();
+    } catch (error) {
+      // Error handling is done in the store
+    }
+  }, [syncHoldings]);
+
   const openEditModal = useCallback((holding: Holding) => {
     // Check if this is a duplicate (id = 0) - treat as new holding
     const isDuplicate = holding.id === BigInt(0);
     setEditingHolding(isDuplicate ? null : holding);
     setFormData({
       name: holding.name,
+      symbol: holding.symbol || "",
       platform: holding.platform,
       holding_type_id: holding.holding_type_id.toString(),
       currency: holding.currency,
@@ -203,6 +231,7 @@ export default function HoldingsPage() {
     try {
       const payload = {
         ...formData,
+        symbol: formData.symbol?.trim() || null,
         holding_type_id: parseInt(formData.holding_type_id, 10),
         invested_amount: parseFloat(formData.invested_amount),
         current_value: parseFloat(formData.current_value),
@@ -273,6 +302,7 @@ export default function HoldingsPage() {
       [
         "id",
         "name",
+        "symbol",
         "platform",
         "holding_type",
         "currency",
@@ -291,6 +321,7 @@ export default function HoldingsPage() {
       ...filteredHoldings.map((holding) => [
         holding.id.toString(),
         holding.name,
+        holding.symbol ?? "",
         holding.platform,
         holding.holding_type?.name ?? "",
         holding.currency,
@@ -332,7 +363,9 @@ export default function HoldingsPage() {
             onToggleHide={() => setHideValues(!hideValues)}
             onOpenDuplicate={openDuplicateModal}
             onOpenAdd={openAddModal}
+            onSync={handleSync}
             onExportCsv={handleExportCsv}
+            isSyncing={isSyncing}
             canExport={!isLoading && filteredHoldings.length > 0}
           />
         </div>

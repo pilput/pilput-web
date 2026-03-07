@@ -13,6 +13,7 @@ interface HoldingsState {
   holdings: Holding[];
   holdingTypes: HoldingType[];
   isLoading: boolean;
+  isSyncing: boolean;
   expandedRows: Set<bigint>;
   selectedMonth: number;
   selectedYear: number;
@@ -27,6 +28,7 @@ interface HoldingsState {
     orderDir?: "asc" | "desc";
   }) => Promise<void>;
   fetchHoldingTypes: () => Promise<void>;
+  syncHoldings: () => Promise<void>;
   addHolding: (payload: any) => Promise<void>;
   updateHolding: (id: bigint, payload: any) => Promise<void>;
   deleteHolding: (id: bigint) => Promise<void>;
@@ -39,6 +41,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   holdings: [],
   holdingTypes: [],
   isLoading: false,
+  isSyncing: false,
   expandedRows: new Set(),
   selectedMonth: new Date().getMonth() + 1,
   selectedYear: new Date().getFullYear(),
@@ -113,6 +116,35 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
       }
     } catch (error) {
       console.error("Failed to fetch holding types", error);
+    }
+  },
+
+  syncHoldings: async () => {
+    const toastId = toast.loading("Syncing prices...");
+    set({ isSyncing: true });
+    try {
+      await axiosInstance3.post(
+        "/v1/holdings/sync",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      toast.success("Prices synced", { id: toastId });
+      await get().fetchHoldings();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          RemoveToken();
+          window.location.href = "/login";
+        }
+      }
+      toast.error("Failed to sync prices", { id: toastId });
+      throw error;
+    } finally {
+      set({ isSyncing: false });
     }
   },
 

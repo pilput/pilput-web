@@ -48,6 +48,11 @@ export default function HoldingTableRow({
       <TableCell className="font-medium min-w-[140px]">
         <div className="flex flex-col">
           <span className="font-semibold text-foreground">{holding.name}</span>
+          {holding.symbol && (
+            <span className="text-[10px] font-mono uppercase text-muted-foreground/90">
+              {holding.symbol}
+            </span>
+          )}
           {holding.notes && (
             <span className="text-[10px] text-muted-foreground truncate max-w-[200px]">
               {holding.notes}
