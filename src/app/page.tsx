@@ -9,23 +9,42 @@ import Footer from "@/components/footer/Footer";
 import { Config } from "@/utils/getConfig";
 
 export default function Home() {
-  const jsonLd = {
+  const baseUrl = Config.mainbaseurl;
+
+  const webSiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "pilput",
-    url: Config.mainbaseurl,
+    url: baseUrl,
+    description:
+      "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
     potentialAction: {
       "@type": "SearchAction",
-      target: `${Config.mainbaseurl}/blog?search={search_term_string}`,
+      target: `${baseUrl}/blog?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
+  };
+
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "pilput",
+    url: baseUrl,
+    logo: `${baseUrl}/pilput.png`,
+    description:
+      "Open publishing platform for creators. Write and share articles with ease.",
+    sameAs: ["https://twitter.com/pilput_dev"],
   };
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <Navigation />
       <main

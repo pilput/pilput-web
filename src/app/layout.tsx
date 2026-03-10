@@ -2,11 +2,18 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import { Space_Grotesk } from "next/font/google";
 import Google from "@/components/analitics/Google";
-import { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Config } from "@/utils/getConfig";
 import "./global.css";
 
 const siteUrl = Config.mainbaseurl;
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

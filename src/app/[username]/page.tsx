@@ -12,6 +12,7 @@ import {
 import { axiosInstance3 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
+import { Config } from "@/utils/getConfig";
 import {
   CalendarDays,
   Users,
@@ -45,8 +46,25 @@ export default async function page(props: {
   const params = await props.params;
   const writer = await getWriter(params.username);
 
+  const baseUrl = Config.mainbaseurl;
+  const profileUrl = `${baseUrl}/${params.username}`;
+  const fullName = `${writer.first_name} ${writer.last_name}`.trim();
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: fullName || writer.username,
+    url: profileUrl,
+    image: writer.image ? getUrlImage(writer.image) : `${baseUrl}/pilput.png`,
+    description: writer.profile?.bio || `Writer and creator on pilput`,
+    ...(writer.profile?.website && { sameAs: [writer.profile.website] }),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <Navigation />
       <div className="min-h-screen bg-linear-to-br from-background via-primary/5 to-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -178,6 +196,8 @@ export async function generateMetadata(props: {
   params: Promise<{ username: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
+  const baseUrl = Config.mainbaseurl;
+
   try {
     const writer = await getWriter(params.username);
     const fullName = `${writer.first_name} ${writer.last_name}`.trim();
@@ -185,7 +205,7 @@ export async function generateMetadata(props: {
     const description =
       writer.profile?.bio ||
       `Read posts and updates from @${writer.username} on pilput.`;
-    const profileImage = writer.image ? getUrlImage(writer.image) : "/pilput.png";
+    const profileImage = writer.image ? getUrlImage(writer.image) : `${baseUrl}/pilput.png`;
     const canonicalUrl = `/${params.username}`;
 
     return {
@@ -196,18 +216,20 @@ export async function generateMetadata(props: {
       },
       openGraph: {
         type: "profile",
-        url: canonicalUrl,
+        url: `${baseUrl}${canonicalUrl}`,
         title,
         description,
         images: [
           {
             url: profileImage,
             alt: title,
+            width: 400,
+            height: 400,
           },
         ],
       },
       twitter: {
-        card: "summary",
+        card: "summary_large_image",
         title,
         description,
         images: [profileImage],
