@@ -126,7 +126,7 @@ export default function Posts() {
                   <TableCell>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="max-w-[280px] truncate font-medium">
+                        <div className="max-w-[400px] truncate font-medium">
                           {post.title}
                         </div>
                       </TooltipTrigger>
@@ -155,7 +155,7 @@ export default function Posts() {
                   <TableCell>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <code className="block max-w-[180px] truncate rounded bg-muted px-1.5 py-0.5 text-xs">
+                        <code className="block max-w-[280px] truncate rounded bg-muted px-1.5 py-0.5 text-xs">
                           /{post.slug}
                         </code>
                       </TooltipTrigger>
