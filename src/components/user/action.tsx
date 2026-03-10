@@ -20,7 +20,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { axiosInstance, axiosInstance3 } from "@/utils/fetch";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -50,7 +49,6 @@ const UserActionComponent = ({
       last_name: user.last_name,
       username: user.username,
       email: user.email,
-      is_super_admin: user.is_super_admin,
     },
   });
 
@@ -61,7 +59,6 @@ const UserActionComponent = ({
         last_name: user.last_name,
         username: user.username,
         email: user.email,
-        is_super_admin: user.is_super_admin,
       });
     }
   }, [showEditDialog, user, editForm]);
@@ -70,11 +67,15 @@ const UserActionComponent = ({
     setIsSaving(true);
     const toastId = toast.loading("Saving changes...");
     try {
-      await axiosInstance3.put(`/v1/users/${user.id}`, data, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      await axiosInstance3.put(
+        `/v1/users/${user.id}`,
+        { ...data, is_super_admin: user.is_super_admin },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
       toast.success("User updated successfully", { id: toastId });
       setShowEditDialog(false);
       refetchUsers();
@@ -257,21 +258,6 @@ const UserActionComponent = ({
                   {editForm.formState.errors.email.message}
                 </p>
               )}
-            </div>
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <Label htmlFor="edit-is_super_admin">Super admin</Label>
-                <p className="text-sm text-muted-foreground">
-                  Grant or revoke super admin access
-                </p>
-              </div>
-              <Switch
-                id="edit-is_super_admin"
-                checked={editForm.watch("is_super_admin")}
-                onCheckedChange={(checked) =>
-                  editForm.setValue("is_super_admin", checked)
-                }
-              />
             </div>
             <DialogFooter>
               <Button
