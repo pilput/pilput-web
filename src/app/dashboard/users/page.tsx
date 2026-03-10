@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -34,6 +35,8 @@ import { format } from "date-fns";
 import { Search, UserPlus } from "lucide-react";
 import { AxiosError } from "axios";
 import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { User } from "@/types/user";
 import UserActionComponent from "@/components/user/action";
@@ -42,17 +45,28 @@ import { authStore } from "@/stores/userStore";
 import { getToken, RemoveToken } from "@/utils/Auth";
 import { axiosInstance3 } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
+import { addUserSchema, type AddUserFormData } from "@/lib/validation";
 
 export default function ManageUser() {
   const auth = authStore((state) => state.data);
   const fetchAuth = authStore((state) => state.fetch);
   const [users, setusers] = useState<User[]>([]);
-  const [username, setusername] = useState<string>();
-  const [email, setemail] = useState<string>();
-  const [password, setpassword] = useState<string>();
-  const [repassword, setrepassword] = useState<string>();
   const [modaluser, setmodaluser] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const addUserForm = useForm<AddUserFormData>({
+    resolver: zodResolver(addUserSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      first_name: "",
+      last_name: "",
+      is_super_admin: false,
+    },
+  });
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const limit = 15;
@@ -132,17 +146,60 @@ export default function ManageUser() {
 
   const currentPage = Math.floor(Offset / limit) + 1;
 
-  function showModaluser() {
-    setmodaluser(true);
-  }
-
   function closeModaluser() {
     setmodaluser(false);
+    addUserForm.reset();
   }
 
-  async function submitHandler(e: React.FormEvent) {
-    e.preventDefault();
-    refetchUsers(Offset);
+  async function submitAddUser(data: AddUserFormData) {
+    setIsCreating(true);
+    const toastId = toast.loading("Creating user...");
+    try {
+      const response = await axiosInstance3.post(
+        "/v1/users",
+        {
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          is_super_admin: data.is_super_admin,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      const result = response.data as { success?: boolean; message?: string };
+      if (result.success !== false) {
+        toast.success("User created successfully", { id: toastId });
+        closeModaluser();
+        refetchUsers(Offset);
+      } else {
+        toast.error(result.message ?? "Failed to create user", { id: toastId });
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          RemoveToken();
+          window.location.href = "/login";
+          return;
+        }
+        if (error.response?.status === 403) {
+          window.location.href = "/forbidden";
+          return;
+        }
+        const msg =
+          (error.response?.data as { message?: string })?.message ??
+          "Failed to create user";
+        toast.error(msg, { id: toastId });
+      } else {
+        toast.error("Failed to create user", { id: toastId });
+      }
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -165,44 +222,106 @@ export default function ManageUser() {
                     Create a new account with username, email, and password.
                   </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={submitHandler} className="space-y-4">
+                <form
+                  onSubmit={addUserForm.handleSubmit(submitAddUser)}
+                  className="space-y-4"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="first_name">First name</Label>
+                      <Input
+                        id="first_name"
+                        {...addUserForm.register("first_name")}
+                        placeholder="First name"
+                      />
+                      {addUserForm.formState.errors.first_name && (
+                        <p className="text-sm text-destructive">
+                          {addUserForm.formState.errors.first_name.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="last_name">Last name</Label>
+                      <Input
+                        id="last_name"
+                        {...addUserForm.register("last_name")}
+                        placeholder="Last name"
+                      />
+                      {addUserForm.formState.errors.last_name && (
+                        <p className="text-sm text-destructive">
+                          {addUserForm.formState.errors.last_name.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="username">Username</Label>
                     <Input
                       id="username"
-                      value={username}
-                      onChange={(e) => setusername(e.target.value)}
+                      {...addUserForm.register("username")}
                       placeholder="Enter username"
                     />
+                    {addUserForm.formState.errors.username && (
+                      <p className="text-sm text-destructive">
+                        {addUserForm.formState.errors.username.message}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
-                      value={email}
-                      onChange={(e) => setemail(e.target.value)}
+                      {...addUserForm.register("email")}
                       placeholder="Enter email"
                     />
+                    {addUserForm.formState.errors.email && (
+                      <p className="text-sm text-destructive">
+                        {addUserForm.formState.errors.email.message}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type="password"
-                      value={password}
-                      onChange={(e) => setpassword(e.target.value)}
+                      {...addUserForm.register("password")}
                       placeholder="Enter password"
                     />
+                    {addUserForm.formState.errors.password && (
+                      <p className="text-sm text-destructive">
+                        {addUserForm.formState.errors.password.message}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="repassword">Confirm password</Label>
+                    <Label htmlFor="confirmPassword">Confirm password</Label>
                     <Input
-                      id="repassword"
+                      id="confirmPassword"
                       type="password"
-                      value={repassword}
-                      onChange={(e) => setrepassword(e.target.value)}
+                      {...addUserForm.register("confirmPassword")}
                       placeholder="Confirm password"
+                    />
+                    {addUserForm.formState.errors.confirmPassword && (
+                      <p className="text-sm text-destructive">
+                        {addUserForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="is_super_admin">Super admin</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Grant super admin access to this user
+                      </p>
+                    </div>
+                    <Switch
+                      id="is_super_admin"
+                      checked={addUserForm.watch("is_super_admin")}
+                      onCheckedChange={(checked) =>
+                        addUserForm.setValue("is_super_admin", checked)
+                      }
                     />
                   </div>
                   <div className="flex justify-end gap-2">
@@ -210,10 +329,13 @@ export default function ManageUser() {
                       variant="outline"
                       type="button"
                       onClick={closeModaluser}
+                      disabled={isCreating}
                     >
                       Cancel
                     </Button>
-                    <Button type="submit">Create user</Button>
+                    <Button type="submit" disabled={isCreating}>
+                      {isCreating ? "Creating..." : "Create user"}
+                    </Button>
                   </div>
                 </form>
               </DialogContent>
