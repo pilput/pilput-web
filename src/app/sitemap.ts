@@ -18,7 +18,7 @@ const publicRoutes = ["/", "/about", "/blog", "/contact", "/forum", "/privacy", 
 
 async function getPostEntries(): Promise<MetadataRoute.Sitemap> {
   try {
-    const response = await fetch(`${Config.apibaseurl}/v1/posts?limit=200&offset=0`, {
+    const response = await fetch(`${Config.apibaseurl3}/v1/posts?limit=200&offset=0`, {
       next: { revalidate: 3600 },
     });
 
