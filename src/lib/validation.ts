@@ -43,6 +43,62 @@ export const registerSchema = z.object({
     .max(50, "Last name must be less than 50 characters")
 });
 
+// Add user (super admin) validation schema
+export const addUserSchema = z
+  .object({
+    username: z
+      .string()
+      .min(3, "Username must be at least 3 characters")
+      .max(20, "Username must be less than 20 characters")
+      .regex(
+        /^[a-zA-Z0-9_]+$/,
+        "Username can only contain letters, numbers, and underscores"
+      ),
+    email: z.string().email("Please enter a valid email address"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(100, "Password must be less than 100 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one lowercase letter, one uppercase letter, and one number"
+      ),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+    first_name: z
+      .string()
+      .min(1, "First name is required")
+      .max(50, "First name must be less than 50 characters"),
+    last_name: z
+      .string()
+      .min(1, "Last name is required")
+      .max(50, "Last name must be less than 50 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+// Edit user (super admin) validation schema
+export const editUserSchema = z.object({
+  first_name: z
+    .string()
+    .min(1, "First name is required")
+    .max(50, "First name must be less than 50 characters"),
+  last_name: z
+    .string()
+    .min(1, "Last name is required")
+    .max(50, "Last name must be less than 50 characters"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be less than 20 characters")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters, numbers, and underscores"
+    ),
+  email: z.string().email("Please enter a valid email address"),
+});
+
 // User login validation schema
 export const loginSchema = z.object({
   identifier: z.string()
@@ -100,6 +156,8 @@ export const holdingFormSchema = z.object({
 // Export types
 export type PostFormData = z.infer<typeof postSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type AddUserFormData = z.infer<typeof addUserSchema>;
+export type EditUserFormData = z.infer<typeof editUserSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type ChatMessageFormData = z.infer<typeof chatMessageSchema>;
 export type CommentFormData = z.infer<typeof commentSchema>;

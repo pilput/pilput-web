@@ -23,6 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Paginate } from "@/components/common/Paginate";
@@ -96,6 +102,7 @@ export default function Posts() {
           </div>
         </CardHeader>
         <CardContent>
+          <TooltipProvider>
           <Table>
             <TableCaption>Total {poststore.total} posts found</TableCaption>
             <TableHeader>
@@ -117,7 +124,16 @@ export default function Posts() {
                     {poststore.posts.indexOf(post) + 1 + Offset}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium line-clamp-2">{post.title}</div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="max-w-[400px] truncate font-medium">
+                          {post.title}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-[320px] break-words">{post.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </TableCell>
                   <TableCell>
                     {post.published ? (
@@ -137,9 +153,16 @@ export default function Posts() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                      /{post.slug}
-                    </code>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <code className="block max-w-[280px] truncate rounded bg-muted px-1.5 py-0.5 text-xs">
+                          /{post.slug}
+                        </code>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-[320px] break-all">/{post.slug}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </TableCell>
                   <TableCell className="text-muted-foreground whitespace-nowrap text-sm">
                     {format(post.created_at, "MMM dd, yyyy")}
@@ -157,6 +180,7 @@ export default function Posts() {
               ))}
             </TableBody>
           </Table>
+          </TooltipProvider>
 
           <div className="mt-4 flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
