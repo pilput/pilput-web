@@ -116,7 +116,7 @@ export default function ManageUser() {
           setTotal(response.meta.total_items);
         }
       } else {
-        toast.error("Cannot connecting with server");
+        toast.error("Cannot connect to server");
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -130,7 +130,7 @@ export default function ManageUser() {
           return;
         }
       }
-      toast.error("Cannot connecting with server");
+      toast.error("Cannot connect to server");
     } finally {
       setIsLoading(false);
     }
