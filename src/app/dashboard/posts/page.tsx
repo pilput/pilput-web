@@ -23,6 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Paginate } from "@/components/common/Paginate";
@@ -137,9 +143,18 @@ export default function Posts() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                      /{post.slug}
-                    </code>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <code className="block max-w-[180px] truncate rounded bg-muted px-1.5 py-0.5 text-xs">
+                            /{post.slug}
+                          </code>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-[320px] break-all">/{post.slug}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableCell>
                   <TableCell className="text-muted-foreground whitespace-nowrap text-sm">
                     {format(post.created_at, "MMM dd, yyyy")}
