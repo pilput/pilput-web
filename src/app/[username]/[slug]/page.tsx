@@ -19,6 +19,7 @@ import type { Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
 import PostContent from "@/components/post/PostContent";
 import styles from "@/components/post/post-content.module.scss";
+import { Config } from "@/utils/getConfig";
 
 interface SuccessResponse {
   data: Post;
@@ -46,11 +47,12 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string; username: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
+  const baseUrl = Config.mainbaseurl;
 
   try {
     const post = await getPost(params.username, params.slug);
     const description = getPostSummary(post.body || "");
-    const image = post.photo_url ? getUrlImage(post.photo_url) : "/pilput.png";
+    const image = post.photo_url ? getUrlImage(post.photo_url) : `${baseUrl}/pilput.png`;
     const canonicalUrl = `/${params.username}/${params.slug}`;
 
     return {
@@ -61,17 +63,19 @@ export async function generateMetadata(props: {
       },
       openGraph: {
         type: "article",
-        url: canonicalUrl,
+        url: `${baseUrl}${canonicalUrl}`,
         title: post.title,
         description,
         publishedTime: post.created_at,
         modifiedTime: post.updated_at,
-        authors: [`/${params.username}`],
+        authors: [`${baseUrl}/${params.username}`],
         tags: post.tags?.map((tag) => tag.name) || [],
         images: [
           {
             url: image,
             alt: post.title,
+            width: 1200,
+            height: 630,
           },
         ],
       },
@@ -104,8 +108,59 @@ export default async function Page(props: {
     throw notFound();
   }
 
+  const baseUrl = Config.mainbaseurl;
+  const postUrl = `${baseUrl}/${params.username}/${params.slug}`;
+  const imageUrl = post.photo_url ? getUrlImage(post.photo_url) : `${baseUrl}/pilput.png`;
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    image: imageUrl,
+    datePublished: post.created_at,
+    dateModified: post.updated_at || post.created_at,
+    author: {
+      "@type": "Person",
+      name: `${post.user.first_name} ${post.user.last_name}`.trim() || post.user.username,
+      url: `${baseUrl}/${post.user.username}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "pilput",
+      logo: {
+        "@type": "ImageObject",
+        url: `${baseUrl}/pilput.png`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": postUrl,
+    },
+    ...(post.tags?.length && {
+      keywords: post.tags.map((t) => t.name).join(", "),
+    }),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "pilput", item: baseUrl },
+      { "@type": "ListItem", position: 2, name: post.user.username, item: `${baseUrl}/${post.user.username}` },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <ViewRecorder postId={post.id} />
       <Navigation />
       <div className={styles.postViewWrapper}>
