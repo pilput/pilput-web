@@ -72,7 +72,6 @@ export const addUserSchema = z
       .string()
       .min(1, "Last name is required")
       .max(50, "Last name must be less than 50 characters"),
-    is_super_admin: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -98,7 +97,6 @@ export const editUserSchema = z.object({
       "Username can only contain letters, numbers, and underscores"
     ),
   email: z.string().email("Please enter a valid email address"),
-  is_super_admin: z.boolean(),
 });
 
 // User login validation schema

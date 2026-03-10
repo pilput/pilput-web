@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -64,7 +63,6 @@ export default function ManageUser() {
       confirmPassword: "",
       first_name: "",
       last_name: "",
-      is_super_admin: false,
     },
   });
   const [search, setSearch] = useState("");
@@ -163,7 +161,6 @@ export default function ManageUser() {
           password: data.password,
           first_name: data.first_name,
           last_name: data.last_name,
-          is_super_admin: data.is_super_admin,
         },
         {
           headers: {
@@ -308,21 +305,6 @@ export default function ManageUser() {
                         {addUserForm.formState.errors.confirmPassword.message}
                       </p>
                     )}
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="is_super_admin">Super admin</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Grant super admin access to this user
-                      </p>
-                    </div>
-                    <Switch
-                      id="is_super_admin"
-                      checked={addUserForm.watch("is_super_admin")}
-                      onCheckedChange={(checked) =>
-                        addUserForm.setValue("is_super_admin", checked)
-                      }
-                    />
                   </div>
                   <div className="flex justify-end gap-2">
                     <Button
