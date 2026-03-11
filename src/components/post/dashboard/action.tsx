@@ -32,10 +32,10 @@ const ActionComponent = ({
         { headers: { Authorization: `Bearer ${getToken()}` } }
       );
       refetchPosts();
-      toast.success("Update publish", { id });
+      toast.success("Publish status updated", { id });
     } catch (error) {
       console.log(error);
-      toast.error("Error update publish", { id });
+      toast.error("Failed to update publish status", { id });
     }
   };
 
@@ -45,10 +45,10 @@ const ActionComponent = ({
       const response = await axiosInstance2.delete(`/v1/posts/${post.id}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      toast.success("Delete post", { id });
+      toast.success("Post deleted successfully", { id });
     } catch (error) {
       console.log(error);
-      toast.error("Error delete post", { id });
+      toast.error("Failed to delete post", { id });
     }
   };
   return (

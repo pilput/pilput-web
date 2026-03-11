@@ -72,7 +72,7 @@ export default function Signup() {
         throw new Error(result.message || "Register failed");
       }
 
-      toast.success("Success Create Account", { id });
+      toast.success("Account created successfully", { id });
       const expire = new Date();
       expire.setTime(expire.getTime() + 6 * 60 * 60 * 1000);
 
