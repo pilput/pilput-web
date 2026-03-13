@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Next.js 16 blog platform called "pilput" with TypeScript, featuring:
 - User authentication and profiles with JWT tokens
 - Rich text editing with Tiptap editor (YouTube, images, formatting)
-- Real-time chat functionality with Socket.io
+- Real-time chat with HTTP streaming
 - Dashboard for post management with analytics
 - Dark/light theme support with next-themes
 - Performance monitoring and accessibility features
@@ -68,7 +68,6 @@ src/
 - **Radix UI** for accessible component primitives
 - **Zustand 5** for state management
 - **Tiptap** for rich text editing with multiple extensions
-- **Socket.io Client** for real-time chat
 - **React Hook Form + Zod** for form validation
 - **Recharts** for data visualization
 - **Framer Motion** for animations
@@ -83,7 +82,6 @@ The application uses several environment variables configured in `src/utils/getC
 NEXT_PUBLIC_API_URL=""        # Main API base URL
 NEXT_PUBLIC_API_URL_2=""      # Secondary API base URL
 NEXT_PUBLIC_DASH_URL=""       # Dashboard base URL
-NEXT_PUBLIC_WS_URL=""         # WebSocket base URL for real-time features
 NEXT_PUBLIC_STORAGE_URL=""    # Storage base URL for file uploads
 NEXT_PUBLIC_MAIN_URL=""       # Main application URL
 NEXT_PUBLIC_DOMAIN=""         # Main domain for cookie configuration
@@ -140,10 +138,10 @@ export const axiosInstance2 = axios.create({
 - Custom styling with Tailwind CSS
 
 **Real-time Chat:**
-- Socket.io integration for real-time messaging
+- HTTP streaming for AI responses
 - Message validation and sanitization
-- Typing indicators and online status
-- Persistent chat history
+- Model selection (multiple AI providers)
+- Persistent chat history with pagination
 
 **Dashboard Analytics:**
 - Recharts integration for data visualization

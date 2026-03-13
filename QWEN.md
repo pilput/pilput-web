@@ -14,7 +14,6 @@
 - **Rich Text Editor**: TipTap with custom extensions
 - **HTTP Client**: Axios with custom instances
 - **Charts**: Recharts for data visualization
-- **Real-time**: Socket.io for live features
 - **Theme**: next-themes for dark/light mode
 - **Package Manager**: Bun (preferred) or npm
 
@@ -154,8 +153,7 @@ src/
 │   ├── getConfig.ts          # App configuration management
 │   ├── getImage.ts           # Image URL utilities
 │   ├── sanitize.ts           # Input sanitization
-│   ├── slug.ts               # URL slug generation
-│   └── socketio.ts           # Socket.io configuration
+│   └── slug.ts               # URL slug generation
 └── proxy.ts                  # Proxy configuration
 ```
 

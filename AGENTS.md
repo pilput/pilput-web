@@ -81,8 +81,9 @@ src/
 - React 19 with TypeScript 5.9 (strict mode)
 - Tailwind CSS 4 + Radix UI for styling
 - Zustand 5 for state, React Hook Form + Zod for validation
-- Tiptap for rich text, Socket.io for real-time chat
+- Tiptap for rich text
 - Axios for API calls with dual endpoints
+- HTTP streaming for real-time chat
 
 ## Common Development Patterns
 
@@ -162,7 +163,6 @@ Configured in `src/utils/getConfig.ts`:
 - `NEXT_PUBLIC_API_URL` - Main API base URL
 - `NEXT_PUBLIC_API_URL_2` - Secondary API base URL
 - `NEXT_PUBLIC_DASH_URL` - Dashboard base URL
-- `NEXT_PUBLIC_WS_URL` - WebSocket base URL
 - `NEXT_PUBLIC_STORAGE_URL` - Storage base URL
 
 ### Development Guidelines

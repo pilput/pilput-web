@@ -1,121 +1,175 @@
-# pilput - Enhanced Next.js Publishing Platform
+# pilput
 
-This project has been significantly enhanced with performance optimizations, accessibility improvements, and better user experience features.
+A modern, open publishing platform built with Next.js 16+ that allows creators to write, publish, and share articles. Features rich text editing, real-time chat, analytics dashboards, and comprehensive content management.
 
-## Key Improvements Made
+![Next.js](https://img.shields.io/badge/Next.js-16+-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-blue?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-### 1. SEO & Metadata Enhancement
-- Improved metadata in `src/app/layout.tsx` with comprehensive OpenGraph and Twitter cards
-- Added detailed title templates, descriptions, and keywords for better search engine visibility
+## ✨ Features
 
-### 2. Performance Optimization
-- Reduced animated elements in the Hero component to improve rendering performance
-- Implemented mouse movement throttling to reduce CPU usage
-- Simplified background animations and reduced particle count
-- Added performance monitoring utilities in `src/utils/performance.ts`
+- **Rich Text Editor** – TipTap-based editor with headings, images, YouTube embeds, links, and slash commands
+- **Authentication** – JWT-based auth with cookie storage and automatic session refresh
+- **Blog System** – Create, edit, and publish articles with tags, cover images, view counts, likes, and comments
+- **Analytics Dashboard** – User analytics with charts and post performance metrics
+- **Real-time Chat** – Live messaging with AI model selection
+- **User Profiles** – Custom profile pages with `/[username]` routing
+- **Tags System** – Content categorization with up to 5 tags per post
+- **Dark/Light Mode** – Automatic theme switching
+- **SEO Optimized** – Comprehensive metadata, OpenGraph, Twitter cards, sitemap, and robots.txt
+- **Accessibility** – ARIA attributes, keyboard navigation, focus indicators, and screen reader support
 
-### 3. Editor Functionality Enhancement
-- Added heading options (H1, H2, H3) to the editor toolbar
-- Implemented horizontal rule insertion
-- Improved button styling with better active state indicators
-- Added tooltips for better user guidance
+## 🚀 Getting Started
 
-### 4. Dashboard Charts Improvement
-- Enhanced UserChart component with realistic data generation
-- Added totals display below the chart for better data visualization
-- Improved chart styling with gradients and better margins
-- Added loading skeletons for better UX during data fetching
+### Prerequisites
 
-### 5. Chat Interface Enhancement
-- Improved ChatInput component styling with better rounded corners and shadows
-- Added tooltips to show selected model name and provide user feedback
-- Enhanced placeholder text with keyboard shortcut instructions
-- Added visual indicators for disabled states
+- Node.js 18+ or Bun 1.0+
+- npm or Bun package manager
 
-### 6. Error Handling
-- Enhanced ErrorHandlerAPI in `src/utils/ErrorHandler.ts` with:
-  - Proper error logging for debugging
-  - Network error handling
-  - Improved authentication error handling with automatic redirect
-  - Specific handling for different HTTP status codes
-  - User-friendly toast notifications for all error types
+### Installation
 
-### 7. Accessibility Improvements
-- Added proper ARIA attributes to Navbar component
-- Implemented focus rings for keyboard navigation
-- Added aria-current for active page indication
-- Added aria-expanded for menu button state
-- Added aria-modal and aria-label for mobile menu dialog
+```bash
+# Clone the repository
+git clone <repository-url>
+cd next-turbo
 
-### 8. Loading Skeletons
-- Enhanced PostItemPulse component with better styling and hover effects
-- Improved skeleton shapes with appropriate rounded corners
-- Added smooth transitions and animations for better UX
+# Install dependencies (Bun recommended)
+bun install
+# or
+npm install
+```
 
-### 9. Form Validation with Zod
-- Created comprehensive validation schemas in `src/lib/validation.ts`:
-  - Post creation validation
-  - User registration validation
-  - User login validation
-  - Chat message validation
-  - Comment validation
-- Added proper validation rules with custom error messages
-- Exported TypeScript types for all validation schemas
+### Development
 
-### 10. Keyboard Navigation
-- Enhanced ButtonLogged component with focus rings
-- Added proper rounded corners for focus states
-- Improved keyboard accessibility throughout the application
+```bash
+# Run development server
+bun run dev
+# or
+npm run dev
+```
 
-### 11. Responsive Design
-- Enhanced Features component with additional responsive breakpoints
-- Added sm:grid-cols-2 for better tablet layout
-- Maintained existing responsive behavior for mobile and desktop
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Technologies Used
-- Next.js 13+ with App Router
-- TypeScript
-- Tailwind CSS
-- Shadcn UI components
-- Framer Motion for animations
-- Zustand for state management
-- Zod for form validation
-- React Hook Form (implied from Zod integration)
-- Axios for API calls
-- Recharts for data visualization
+### Production Build
 
-## Performance Monitoring
-The application now includes performance monitoring capabilities:
-- Track component render times
-- Monitor API call performance
-- Get average metrics for performance analysis
-- Log all performance metrics to console
+```bash
+# Build for production
+bun run build
+# or
+npm run build
 
-## Validation Schemas
-All forms in the application now have proper validation:
-- Posts: Title, body, slug, photo URL, and tags validation
-- Registration: Username, email, password, first name, and last name validation
-- Login: Email and password validation
-- Chat: Message content validation
-- Comments: Text validation
+# Start production server
+bun run start
+# or
+npm run start
+```
 
-## Accessibility Features
-- Proper ARIA attributes throughout the application
-- Keyboard navigation support
-- Focus indicators for interactive elements
-- Semantic HTML structure
-- Screen reader friendly labels and descriptions
+### Docker (Production-Ready)
 
-## Getting Started
-1. Install dependencies: `npm install`
-2. Run the development server: `npm run dev`
-3. Open [http://localhost:3000](http://localhost:3000) in your browser
+```bash
+# Build Docker image
+docker build -t pilput -f Dockerfile-bun .
 
-## Deployment
-This application can be deployed to any platform that supports Next.js, such as Vercel, Netlify, or a custom Node.js server.
+# Run container
+docker run -p 3000:3000 pilput
+```
 
-## Contributing
-All improvements follow modern React and Next.js best practices. Feel free to contribute by submitting pull requests or issues.
+## 📁 Project Structure
 
-## License
-This project is based on the pilput platform and follows its licensing terms.
+```
+src/
+├── app/                      # Next.js App Router pages
+│   ├── [username]/           # Dynamic user profile pages
+│   ├── blog/                 # Blog listing and post pages
+│   ├── chat/                 # Chat interface
+│   ├── dashboard/            # User analytics dashboard
+│   ├── login/                # Login page
+│   ├── register/             # Registration page
+│   ├── global.css            # Global styles
+│   ├── layout.tsx            # Root layout
+│   └── page.tsx              # Home page
+├── components/               # React components
+│   ├── post/                 # Post editor and display
+│   ├── ui/                   # Shadcn UI primitives
+│   ├── chat/                 # Chat interface components
+│   ├── dashboard/            # Dashboard components
+│   └── ...                   # Other components
+├── stores/                   # Zustand state management
+├── types/                    # TypeScript type definitions
+├── utils/                    # Utility functions
+├── lib/                      # Shared libraries (validation)
+└── hooks/                    # Custom React hooks
+```
+
+## 🛠 Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| **Framework** | Next.js 16+ with App Router |
+| **Language** | TypeScript 5.9+ (strict mode) |
+| **Styling** | Tailwind CSS 4 + Shadcn UI |
+| **Animations** | Framer Motion, React Three Fiber |
+| **State** | Zustand |
+| **Forms** | React Hook Form + Zod |
+| **Editor** | TipTap with custom extensions |
+| **HTTP** | Axios with custom instances |
+| **Charts** | Recharts |
+| **Theme** | next-themes |
+
+## 📝 Available Scripts
+
+```bash
+bun run dev      # Start development server
+bun run build    # Build for production
+bun run start    # Start production server
+bun run lint     # Run ESLint
+bunx tsc --noEmit # Type checking
+```
+
+## 🔐 Environment Variables
+
+Configure the following environment variables in `.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=<your-api-url>
+NEXT_PUBLIC_API_URL_2=<secondary-api-url>
+NEXT_PUBLIC_DASH_URL=<dashboard-url>
+NEXT_PUBLIC_WS_URL=<websocket-url>
+NEXT_PUBLIC_STORAGE_URL=<storage-url>
+```
+
+See `.env.local.example` for reference.
+
+## 🧪 Testing & Linting
+
+```bash
+# Run linter
+bun run lint
+
+# Type checking
+bunx tsc --noEmit
+```
+
+## 📄 License
+
+This project is based on the [pilput](https://github.com/pilput) platform and follows its licensing terms.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Follow existing React/Next.js best practices
+2. Maintain accessibility standards (WCAG)
+3. Use TypeScript with strict types
+4. Add Zod validation for all forms
+5. Include loading states and error handling
+6. Test with both light and dark themes
+
+## 📞 Support
+
+For issues and questions, please open an issue on the repository.
+
+---
+
+Built with ❤️ using Next.js and TypeScript
