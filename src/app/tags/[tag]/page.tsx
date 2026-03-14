@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Postlist from "@/components/post/Postlist";
 import Postlistpulse from "@/components/post/postlistpulse";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Hash, TrendingUp, Grid, List, Eye } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
-import { axiosInstance } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 
 import type { Post } from "@/types/post";
 
@@ -30,7 +30,7 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
 
       setIsLoading(true);
       try {
-        const { data } = await axiosInstance.get(`/v1/posts/tag/${tag}`, {
+        const { data } = await axiosInstance3.get(`/v1/posts/tag/${tag}`, {
           params: { limit: postsPerPage, offset: currentPage * postsPerPage },
         });
         const response = data;
@@ -56,7 +56,7 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
   useEffect(() => {
     async function fetchRelatedTags() {
       try {
-        const response = await axiosInstance.get("/v1/tags");
+        const response = await axiosInstance3.get("/v1/tags");
         const allTags = response.data.data.map((tagItem: any) => tagItem.name);
         // Filter out current tag and show related ones
         const filtered = allTags.filter((t: string) => t !== tag).slice(0, 10);
@@ -76,7 +76,7 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
         {/* Hero Section */}
         <div className="border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 py-4">

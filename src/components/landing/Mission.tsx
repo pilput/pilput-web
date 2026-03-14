@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, Target, Lightbulb, Heart, Github, Users, ArrowRight, Star, Rocket, BookOpen } from "lucide-react";
+import { Sparkles, Target, Lightbulb, Heart, Github, Users, ArrowRight, Star, Rocket, BookOpen, Coffee } from "lucide-react";
 
 const MissionSection = () => {
   const containerVariants = {
@@ -102,9 +103,105 @@ const MissionSection = () => {
             className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium"
           >
             We're on a mission to simplify publishing and empower creators worldwide
-            to share their stories without barriers. Our platform combines intuitive 
+            to share their stories without barriers. Our platform combines intuitive
             tools with elegant design to create an effortless creative experience.
           </motion.p>
+        </motion.div>
+
+        {/* Writing Illustration Section */}
+        <motion.div
+          className="max-w-6xl mx-auto mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={containerVariants}
+        >
+          <motion.div
+            variants={itemVariants}
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50/50 via-background to-orange-50/30 dark:from-amber-950/20 dark:via-background dark:to-orange-950/10 border border-border/50 shadow-xl"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Text Content */}
+              <div className="p-8 lg:p-12 space-y-6 order-2 lg:order-1">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100/50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-sm font-medium"
+                >
+                  <Coffee className="h-4 w-4" />
+                  <span>The Writing Experience</span>
+                </motion.div>
+
+                <motion.h3
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                  className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight"
+                >
+                  Where Ideas Flow and Stories Come to Life
+                </motion.h3>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 }}
+                  className="text-muted-foreground text-base md:text-lg leading-relaxed"
+                >
+                  We believe the best writing happens in a space that feels comfortable and inspiring. 
+                  Our platform is designed to recreate that cozy corner café atmosphere where creativity 
+                  flourishes and words flow effortlessly.
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                  className="flex flex-wrap gap-3"
+                >
+                  {["Distraction-free", "Intuitive", "Beautiful"].map((tag, index) => (
+                    <span
+                      key={tag}
+                      className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Image */}
+              <motion.div
+                variants={itemVariants}
+                className="relative h-[300px] sm:h-[400px] lg:h-[450px] order-1 lg:order-2 overflow-hidden"
+              >
+                <motion.div
+                  className="absolute inset-0"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <Image
+                    src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80"
+                    alt="Cozy writing experience with coffee and stationery"
+                    fill
+                    className="object-cover object-center"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                  />
+                </motion.div>
+                {/* Decorative overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/20 dark:to-background/40 pointer-events-none" />
+              </motion.div>
+            </div>
+
+            {/* Decorative elements */}
+            <div className="absolute top-4 right-4 w-24 h-24 bg-amber-200/20 dark:bg-amber-500/10 rounded-full blur-2xl" />
+            <div className="absolute bottom-4 left-4 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+          </motion.div>
         </motion.div>
 
         <motion.div
