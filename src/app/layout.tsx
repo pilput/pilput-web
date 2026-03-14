@@ -1,7 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import { Space_Grotesk } from "next/font/google";
-import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import type { Metadata, Viewport } from "next";
 import { Config } from "@/utils/getConfig";
 import "./global.css";
@@ -101,15 +100,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={grotesk.className}>
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-KTJ2B9MF"
-            height={0}
-            width={0}
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-        <GoogleAnalytics />
         <ThemeProvider attribute="class">
           {children}
           <Toaster />
