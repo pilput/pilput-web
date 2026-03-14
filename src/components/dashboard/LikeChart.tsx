@@ -20,7 +20,7 @@ const chartData = [
   { month: "June", desktop: 214, mobile: 140 },
 ]
 
-export default function Component() {
+export default function LikeChart() {
   return (
     <Card>
       <CardHeader>

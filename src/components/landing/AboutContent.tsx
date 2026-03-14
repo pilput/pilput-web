@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { Zap, Shield, PenSquare, Sparkles, Users, Globe, Code, Rocket } from "lucide-react";
+import { Zap, Shield, PenSquare, Sparkles, Users, Globe, Code } from "lucide-react";
 
 const AboutContent = () => {
   const [isHovered, setIsHovered] = useState(false);

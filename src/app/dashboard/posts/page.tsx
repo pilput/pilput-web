@@ -35,15 +35,15 @@ import { Paginate } from "@/components/common/Paginate";
 
 export default function Posts() {
   const limit = 15;
-  const [Offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const poststore = postsStore();
-  const currentPage = Math.floor(Offset / limit) + 1;
+  const currentPage = Math.floor(offset / limit) + 1;
 
   useEffect(() => {
-    poststore.fetch(limit, Offset);
-  }, [Offset]);
+    poststore.fetch(limit, offset);
+  }, [offset]);
 
   function changeOffset(newOffset: number) {
     if (newOffset >= 0 && newOffset < poststore.total) {
@@ -52,7 +52,7 @@ export default function Posts() {
   }
 
   const refetchPosts = () => {
-    poststore.fetch(limit, Offset);
+    poststore.fetch(limit, offset);
   };
 
   const filteredPosts = poststore.posts.filter((post) => {
@@ -121,7 +121,7 @@ export default function Posts() {
               {filteredPosts.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">
-                    {poststore.posts.indexOf(post) + 1 + Offset}
+                    {poststore.posts.indexOf(post) + 1 + offset}
                   </TableCell>
                   <TableCell>
                     <Tooltip>
@@ -184,16 +184,16 @@ export default function Posts() {
 
           <div className="mt-4 flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              Showing {Offset + 1} to{" "}
-              {Math.min(Offset + limit, poststore.total)} of {poststore.total}{" "}
+              Showing {offset + 1} to{" "}
+              {Math.min(offset + limit, poststore.total)} of {poststore.total}{" "}
               posts
             </div>
             <Paginate
-              prev={() => changeOffset(Offset - limit)}
-              next={() => changeOffset(Offset + limit)}
+              prev={() => changeOffset(offset - limit)}
+              next={() => changeOffset(offset + limit)}
               goToPage={(page: number) => changeOffset(page * limit)}
               limit={limit}
-              Offset={Offset}
+              offset={offset}
               total={poststore.total}
               length={poststore.posts.length}
               currentPage={currentPage - 1}

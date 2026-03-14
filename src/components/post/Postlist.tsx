@@ -14,7 +14,7 @@ import {
 import { motion } from "framer-motion";
 import type { Post } from "@/types/post";
 
-const Postlist = ({ post }: { post: Post }) => {
+const PostList = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
 
@@ -157,4 +157,4 @@ const Postlist = ({ post }: { post: Post }) => {
   );
 };
 
-export default Postlist;
+export default PostList;

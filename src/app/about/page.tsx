@@ -1,5 +1,5 @@
 import Navigation from "@/components/header/Navbar";
-import AboutContent from "@/components/landing/About";
+import AboutContent from "@/components/landing/AboutContent";
 import AboutMe from "@/components/landing/AboutMe";
 import MissionSection from "@/components/landing/Mission";
 import Social from "@/components/landing/Social";

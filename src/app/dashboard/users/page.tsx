@@ -68,7 +68,7 @@ export default function ManageUser() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const limit = 15;
-  const [Offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
 
   const filteredUsers = useMemo(() => {
@@ -87,8 +87,8 @@ export default function ManageUser() {
 
   useEffect(() => {
     fetchAuth();
-    refetchUsers(Offset);
-  }, [fetchAuth, Offset]);
+    refetchUsers(offset);
+  }, [fetchAuth, offset]);
 
   async function refetchUsers(fetchOffset: number = 0) {
     setIsLoading(true);
@@ -142,7 +142,7 @@ export default function ManageUser() {
     }
   }
 
-  const currentPage = Math.floor(Offset / limit) + 1;
+  const currentPage = Math.floor(offset / limit) + 1;
 
   function closeModaluser() {
     setmodaluser(false);
@@ -172,7 +172,7 @@ export default function ManageUser() {
       if (result.success !== false) {
         toast.success("User created successfully", { id: toastId });
         closeModaluser();
-        refetchUsers(Offset);
+        refetchUsers(offset);
       } else {
         toast.error(result.message ?? "Failed to create user", { id: toastId });
       }
@@ -413,7 +413,7 @@ export default function ManageUser() {
                   : filteredUsers.map((user, index) => (
                       <TableRow key={user.id}>
                         <TableCell className="text-muted-foreground tabular-nums">
-                          {index + 1 + Offset}
+                          {index + 1 + offset}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -475,15 +475,15 @@ export default function ManageUser() {
 
           <div className="mt-4 flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              Showing {Offset + 1} to{" "}
-              {Math.min(Offset + limit, total)} of {total} users
+              Showing {offset + 1} to{" "}
+              {Math.min(offset + limit, total)} of {total} users
             </div>
             <Paginate
-              prev={() => changeOffset(Offset - limit)}
-              next={() => changeOffset(Offset + limit)}
+              prev={() => changeOffset(offset - limit)}
+              next={() => changeOffset(offset + limit)}
               goToPage={(page: number) => changeOffset(page * limit)}
               limit={limit}
-              Offset={Offset}
+              offset={offset}
               total={total}
               length={users.length}
               currentPage={currentPage - 1}

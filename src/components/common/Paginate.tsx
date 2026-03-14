@@ -14,7 +14,7 @@ interface MyComponentProps {
   next: () => void;
   goToPage: (page: number) => void; // Add function to go to specific page
   limit: number;
-  Offset: number;
+  offset: number;
   total: number;
   length: number;
   currentPage: number;
@@ -81,10 +81,10 @@ export function Paginate(props: MyComponentProps) {
           <PaginationItem>
             <PaginationPrevious 
               href={`?page=${props.currentPage - 1}`}
-              className={props.Offset <= 0 ? "pointer-events-none opacity-50" : ""}
+              className={props.offset <= 0 ? "pointer-events-none opacity-50" : ""}
               onClick={(e) => {
                 e.preventDefault();
-                if (props.Offset > 0) props.prev();
+                if (props.offset > 0) props.prev();
               }}
             />
           </PaginationItem>
@@ -122,13 +122,13 @@ export function Paginate(props: MyComponentProps) {
             <PaginationNext 
               href={`?page=${props.currentPage + 1}`}
               className={
-                props.length + props.Offset >= props.total
+                props.length + props.offset >= props.total
                   ? "pointer-events-none opacity-50"
                   : ""
               }
               onClick={(e) => {
                 e.preventDefault();
-                if (props.length + props.Offset < props.total) props.next();
+                if (props.length + props.offset < props.total) props.next();
               }}
             />
           </PaginationItem>

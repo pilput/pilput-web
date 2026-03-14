@@ -1,7 +1,7 @@
 "use client";
 
-import Postlist from "@/components/post/Postlist";
-import Postlistpulse from "@/components/post/postlistpulse";
+import PostList from "@/components/post/PostList";
+import PostListPulse from "@/components/post/PostListPulse";
 import { Paginate } from "@/components/common/Paginate";
 import { Filter, X, FileQuestion, Sparkles } from "lucide-react";
 import type { Post } from "@/types/post";
@@ -62,7 +62,7 @@ const BlogPosts = ({
             <div key="posts">
               {posts.map((post, index) => (
                 <div key={post.id} className="mb-4">
-                  <Postlist post={post} />
+                  <PostList post={post} />
                 </div>
               ))}
             </div>
@@ -100,7 +100,7 @@ const BlogPosts = ({
               .fill(0)
               .map((_, i) => (
                 <div key={i}>
-                  <Postlistpulse />
+                  <PostListPulse />
                 </div>
               ))}
           </div>
@@ -122,7 +122,7 @@ const BlogPosts = ({
             }
             goToPage={(page) => setCurrentPage(page)}
             limit={postsPerPage}
-            Offset={currentPage * postsPerPage}
+            offset={currentPage * postsPerPage}
             total={total}
             length={posts.length}
             currentPage={currentPage}

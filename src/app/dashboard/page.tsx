@@ -1,7 +1,7 @@
 "use client";
 
 // import PostsChart from "@/components/dashboard/PostChart";
-import LikeChart from "@/components/dashboard/likeChat";
+import LikeChart from "@/components/dashboard/LikeChart";
 import UserChart from "@/components/dashboard/UserChart";
 import UserDemographicsChart from "@/components/dashboard/UserDemographicsChart";
 import EngagementChart from "@/components/dashboard/EngagementChart";

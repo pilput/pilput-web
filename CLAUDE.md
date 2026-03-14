@@ -76,7 +76,7 @@ src/
 
 ### Environment Variables and Configuration
 
-The application uses several environment variables configured in `src/utils/getCofig.ts`:
+The application uses several environment variables configured in `src/utils/getConfig.ts`:
 
 ```typescript
 NEXT_PUBLIC_API_URL=""        # Main API base URL
@@ -234,7 +234,7 @@ Located in `src/types/`:
 - **Main Layout**: `src/app/layout.tsx` - Contains metadata and theme provider
 - **TypeScript Config**: `tsconfig.json` - Strict mode with path aliases
 - **Next.js Config**: `next.config.ts` - Remote images and security headers
-- **API Configuration**: `src/utils/fetch.ts` and `src/utils/getCofig.ts`
+- **API Configuration**: `src/utils/fetch.ts` and `src/utils/getConfig.ts`
 - **Error Handling**: `src/utils/ErrorHandler.ts` - Global error management
 
 ### Validation & Types

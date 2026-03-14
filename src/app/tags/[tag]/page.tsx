@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import Postlist from "@/components/post/Postlist";
-import Postlistpulse from "@/components/post/postlistpulse";
+import PostList from "@/components/post/PostList";
+import PostListPulse from "@/components/post/PostListPulse";
 import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
@@ -206,13 +206,13 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
                 {isLoading ? (
                   <div className="space-y-6">
                     {Array.from({ length: 5 }).map((_, index) => (
-                      <Postlistpulse key={index} />
+                      <PostListPulse key={index} />
                     ))}
                   </div>
                 ) : posts.length > 0 ? (
                   <div className="space-y-6">
                     {posts.map((post) => (
-                      <Postlist key={post.id} post={post} />
+                      <PostList key={post.id} post={post} />
                     ))}
                   </div>
                 ) : (
@@ -243,7 +243,7 @@ const TagPage = ( { params }: { params: { tag: string } }) => {
                       currentPage={currentPage}
                       total={total}
                       limit={postsPerPage}
-                      Offset={currentPage * postsPerPage}
+                      offset={currentPage * postsPerPage}
                       prev={() => setCurrentPage(Math.max(0, currentPage - 1))}
                       next={() =>
                         setCurrentPage(

@@ -1,5 +1,5 @@
 
-const Postlistpulse = () => {
+const PostListPulse = () => {
   return (
     <article className="group relative animate-pulse bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm h-full flex flex-col">
       {/* Cover Image placeholder (16/9 aspect ratio) */}
@@ -48,4 +48,4 @@ const Postlistpulse = () => {
   );
 };
 
-export default Postlistpulse;
+export default PostListPulse;

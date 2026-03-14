@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
 import { Space_Grotesk } from "next/font/google";
-import Google from "@/components/analitics/Google";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import type { Metadata, Viewport } from "next";
 import { Config } from "@/utils/getConfig";
 import "./global.css";
@@ -101,7 +101,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={grotesk.className}>
-        <Google />
+        <GoogleAnalytics />
         <ThemeProvider attribute="class">
           {children}
           <Toaster />

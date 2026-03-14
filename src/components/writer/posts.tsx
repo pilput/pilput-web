@@ -2,7 +2,7 @@
 
 import { axiosInstance3 } from "@/utils/fetch";
 import { useEffect, useState } from "react";
-import Postlist from "../post/Postlist";
+import PostList from "../post/PostList";
 import type { Post } from "@/types/post";
 
 function Posts(props: { username: string }) {
@@ -84,7 +84,7 @@ function Posts(props: { username: string }) {
       ) : (
         <div className="grid gap-6">
           {posts.map((post) => (
-            <Postlist key={post.id} post={post} />
+            <PostList key={post.id} post={post} />
           ))}
         </div>
       )}

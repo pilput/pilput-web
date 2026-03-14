@@ -2,7 +2,7 @@ import { Config } from "@/utils/getConfig";
 import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
-// import {storagebaseurl} from '@/utils/getCofig'
+// import {storagebaseurl} from '@/utils/getConfig'
 
 interface Profile {
   id: string;
