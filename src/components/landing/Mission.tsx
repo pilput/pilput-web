@@ -70,9 +70,9 @@ const MissionSection = () => {
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-gradient-to-br from-background via-primary/5 to-background relative overflow-hidden">
+    <section className="py-20 md:py-28 bg-linear-to-br from-background via-primary/5 to-background relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-[size:50px_50px]" />
+      <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
 
@@ -85,7 +85,7 @@ const MissionSection = () => {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="mb-6">
-            <Badge variant="secondary" className="mb-4 mx-auto px-4 py-1 text-sm font-medium bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/30">
+            <Badge variant="secondary" className="mb-4 mx-auto bg-linear-to-r from-primary/20 to-secondary/20 border-primary/30">
               <Star className="inline-block mr-2 h-3 w-3" />
               Our Mission
             </Badge>
@@ -93,14 +93,14 @@ const MissionSection = () => {
           
           <motion.h2
             variants={itemVariants}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6 leading-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent mb-6 leading-tight"
           >
             Building the Future of Publishing
           </motion.h2>
           
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
           >
             We're on a mission to simplify publishing and empower creators worldwide
             to share their stories without barriers. Our platform combines intuitive
@@ -118,7 +118,7 @@ const MissionSection = () => {
         >
           <motion.div
             variants={itemVariants}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50/50 via-background to-orange-50/30 dark:from-amber-950/20 dark:via-background dark:to-orange-950/10 border border-border/50 shadow-xl"
+            className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-50/50 via-background to-orange-50/30 dark:from-amber-950/20 dark:via-background dark:to-orange-950/10 border border-border/50 shadow-xl"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               {/* Text Content */}
@@ -139,7 +139,7 @@ const MissionSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
-                  className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight"
+                  className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight"
                 >
                   Where Ideas Flow and Stories Come to Life
                 </motion.h3>
@@ -149,7 +149,7 @@ const MissionSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 }}
-                  className="text-muted-foreground text-base md:text-lg leading-relaxed"
+                  className="text-muted-foreground text-lg leading-relaxed"
                 >
                   We believe the best writing happens in a space that feels comfortable and inspiring. 
                   Our platform is designed to recreate that cozy corner café atmosphere where creativity 
@@ -194,7 +194,7 @@ const MissionSection = () => {
                   />
                 </motion.div>
                 {/* Decorative overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-background/20 dark:to-background/40 pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-l from-transparent via-transparent to-background/20 dark:to-background/40 pointer-events-none" />
               </motion.div>
             </div>
 
@@ -217,24 +217,24 @@ const MissionSection = () => {
               initial="rest"
               whileHover="hover"
             >
-              <Card className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl px-8 h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-12 h-12 bg-linear-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center shadow-md">
                       <Sparkles className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-foreground">Our Vision</h3>
+                      <h3 className="text-2xl font-bold">Our Vision</h3>
                       <p className="text-sm text-muted-foreground">What drives us forward</p>
                     </div>
                   </div>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
-                    <p className="text-base">
+                    <p>
                       We envision a world where every voice can be heard, where creators
                       have the tools and platform they need to reach global audiences
                       easily and effectively.
                     </p>
-                    <p className="text-base">
+                    <p>
                       Our commitment to community and accessibility ensures that
                       premium publishing tools are available to everyone, regardless
                       of their technical background.
@@ -251,23 +251,23 @@ const MissionSection = () => {
               initial="rest"
               whileHover="hover"
             >
-              <Card className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl px-8 h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-secondary/20 to-purple/20 rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-12 h-12 bg-linear-to-br from-secondary/20 to-purple/20 rounded-full flex items-center justify-center shadow-md">
                       <Target className="h-6 w-6 text-secondary" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-foreground">Our Commitment</h3>
+                      <h3 className="text-2xl font-bold">Our Commitment</h3>
                       <p className="text-sm text-muted-foreground">What we stand for</p>
                     </div>
                   </div>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
-                    <p className="text-base">
+                    <p>
                       We're committed to building a sustainable, community-first platform that
                       prioritizes creator rights, privacy, and meaningful connections.
                     </p>
-                    <p className="text-base">
+                    <p>
                       Every feature we build is designed to make your writing journey
                       smoother, more enjoyable, and more impactful.
                     </p>
@@ -300,17 +300,17 @@ const MissionSection = () => {
                   initial="rest"
                   whileHover="hover"
                 >
-                  <Card className={`bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 group-hover:bg-card/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 ${colors.border}`}>
+                  <Card className={`bg-card/30 backdrop-blur-sm border-border/30 rounded-xl group-hover:bg-card/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 ${colors.border}`}>
                     <CardContent className="text-center space-y-4">
                       <motion.div
-                        className={`w-16 h-16 bg-gradient-to-br ${colors.bg} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/10 transition-colors shadow-md`}
+                        className={`w-16 h-16 bg-linear-to-br ${colors.bg} rounded-full flex items-center justify-center mx-auto group-hover:bg-primary/10 transition-colors shadow-md`}
                         whileHover={{ scale: 1.1 }}
                         transition={{ type: "spring" as const, stiffness: 300 }}
                       >
                         {value.icon}
                       </motion.div>
-                      <h4 className="text-lg font-semibold text-foreground mb-2">{value.title}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed font-medium">{value.description}</p>
+                      <h4 className="text-lg font-semibold">{value.title}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{value.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -325,9 +325,9 @@ const MissionSection = () => {
           viewport={{ once: true, amount: 0.1 }}
           variants={itemVariants}
         >
-          <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-purple/10 rounded-3xl p-12 backdrop-blur-sm border border-border/50 shadow-xl">
+          <div className="bg-linear-to-r from-primary/10 via-secondary/10 to-purple/10 rounded-3xl p-12 backdrop-blur-sm border border-border/50 shadow-xl">
             <motion.h3
-              className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6"
+              className="text-3xl md:text-4xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -335,7 +335,7 @@ const MissionSection = () => {
               Join Our Journey
             </motion.h3>
             <motion.p
-              className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-medium"
+              className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -352,7 +352,7 @@ const MissionSection = () => {
               <Button
                 asChild
                 size="lg"
-                className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-6 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25 transform-gpu"
+                className="bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
               >
                 <Link href="/register">
                   <Users className="mr-2 h-5 w-5" />
@@ -363,7 +363,7 @@ const MissionSection = () => {
                 asChild
                 variant="outline"
                 size="lg"
-                className="border border-border hover:border-primary/50 hover:bg-primary/5 px-8 py-6 rounded-full font-semibold transition-all duration-300 hover:scale-105 bg-gradient-to-r from-card to-card hover:from-primary/5 hover:to-primary/5"
+                className="hover:border-primary/50 hover:bg-primary/5 px-8 py-6 rounded-full transition-all duration-300 hover:scale-105"
               >
                 <Link href="/blog">
                   <BookOpen className="mr-2 h-5 w-5" />

@@ -59,7 +59,7 @@ const PostList = ({ post }: { post: Post }) => {
           <div className="min-w-0 flex-1">
             <Link
               href={`/${post.user.username}`}
-              className="block font-semibold text-sm text-foreground hover:text-primary transition-colors"
+              className="block font-semibold text-sm hover:text-primary transition-colors"
             >
               {post.user?.first_name} {post.user?.last_name}
             </Link>
@@ -82,8 +82,8 @@ const PostList = ({ post }: { post: Post }) => {
             href={`/${post.user.username}/${post.slug}`}
             className="block group"
           >
-            <motion.h2 
-              className="font-bold text-xl md:text-2xl text-foreground leading-tight line-clamp-3 group-hover:text-primary transition-colors"
+            <motion.h2
+              className="font-bold text-xl md:text-2xl leading-tight line-clamp-3 group-hover:text-primary transition-colors"
               whileHover={{ x: 2 }}
             >
               {post.title}
