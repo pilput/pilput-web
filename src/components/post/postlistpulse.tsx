@@ -3,7 +3,7 @@ const PostListPulse = () => {
   return (
     <article className="group relative animate-pulse bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm h-full flex flex-col">
       {/* Cover Image placeholder (16/9 aspect ratio) */}
-      <div className="relative w-full aspect-[16/9] bg-gray-200 dark:bg-gray-800" />
+      <div className="relative w-full aspect-video bg-gray-200 dark:bg-gray-800" />
 
       <div className="p-6 flex-1 flex flex-col">
         {/* Author Info */}

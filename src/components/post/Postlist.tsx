@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
@@ -26,7 +25,7 @@ const PostList = ({ post }: { post: Post }) => {
     >
       {/* Cover Image */}
       {post.photo_url && (
-        <div className="relative overflow-hidden aspect-[16/9]">
+        <div className="relative overflow-hidden aspect-video">
           <Image
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
             src={getUrlImage(post.photo_url)}
