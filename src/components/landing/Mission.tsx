@@ -177,7 +177,7 @@ const MissionSection = () => {
               {/* Image */}
               <motion.div
                 variants={itemVariants}
-                className="relative h-[300px] sm:h-[400px] lg:h-[450px] order-1 lg:order-2 overflow-hidden"
+                className="relative h-75 sm:h-100 lg:h-112.5 order-1 lg:order-2 overflow-hidden"
               >
                 <motion.div
                   className="absolute inset-0"
