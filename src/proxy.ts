@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// Required for Cloudflare Workers/Pages - Node.js middleware is not supported
+export const runtime = "edge";
+
 // Define protected routes
 const protectedRoutes = ["/chat", "/dashboard"];
 const noIndexRoutes = [
