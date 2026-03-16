@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
@@ -26,13 +25,10 @@ const PostList = ({ post }: { post: Post }) => {
       {/* Cover Image */}
       {post.photo_url && (
         <div className="relative overflow-hidden aspect-video">
-          <Image
+          <img
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
             src={getUrlImage(post.photo_url)}
             alt={post.title}
-            width={800}
-            height={450}
-            sizes="(max-width: 768px) 100vw, 70vw"
           />
         </div>
       )}
@@ -46,11 +42,9 @@ const PostList = ({ post }: { post: Post }) => {
           >
             <Link href={`/${post.user.username}`}>
               {post.user?.image && (
-                <Image
-                  className="rounded-full object-cover border-2 border-border"
+                <img
+                  className="rounded-full object-cover border-2 border-border w-9 h-9"
                   src={getProfilePicture(post.user?.image)}
-                  width={36}
-                  height={36}
                   alt={post.user?.first_name || "Author"}
                 />
               )}
