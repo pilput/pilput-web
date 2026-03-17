@@ -13,10 +13,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "storage.pilput.me",
-      },
-      {
-        protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
       {

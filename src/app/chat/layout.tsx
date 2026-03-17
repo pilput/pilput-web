@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import ChatLayoutClient from "./ChatLayoutClient";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: "/chat",
+  },
   robots: {
     index: false,
     follow: false,

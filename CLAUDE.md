@@ -170,7 +170,7 @@ The Tiptap editor includes these extensions:
 ### Image Handling
 Configured remote image patterns in `next.config.ts`:
 - d42zd71vraxqs.cloudfront.net
-- storage.pilput.dev
+- storage.pilput.net
 
 ### Type Definitions
 Located in `src/types/`:

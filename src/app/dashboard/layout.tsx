@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import DashboardLayoutClient from "./DashboardLayoutClient";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: "/dashboard",
+  },
   robots: {
     index: false,
     follow: false,

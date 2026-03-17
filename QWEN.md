@@ -366,7 +366,7 @@ Multi-stage build for optimized image:
 ### Image Remote Patterns
 Configured in `next.config.ts` for:
 - `d42zd71vraxqs.cloudfront.net`
-- `storage.pilput.net` / `storage.pilput.me`
+- `storage.pilput.net`
 - `avatars.githubusercontent.com`
 - `lh3.googleusercontent.com`
 - `t3.storage.dev`

@@ -96,7 +96,7 @@ const DashboardTopBar = () => {
                     {yourstore.data.first_name} {yourstore.data.last_name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {yourstore.data.email || "admin@pilput.dev"}
+                    {yourstore.data.email || "admin@pilput.net"}
                   </p>
                 </div>
               </DropdownMenuLabel>

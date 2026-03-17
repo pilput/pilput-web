@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Account Settings",
   alternates: {
-    canonical: "/account",
-  },
-  robots: {
-    index: false,
-    follow: false,
+    canonical: "/dashboard/holdings/overview",
   },
 };
 
-export default function AccountLayout({
+export default function DashboardHoldingsOverviewLayout({
   children,
 }: {
   children: React.ReactNode;

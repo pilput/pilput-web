@@ -2,6 +2,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ShieldX } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Forbidden",
+  description: "You don't have permission to access this resource.",
+  alternates: {
+    canonical: "/forbidden",
+  },
+};
 
 export default function ForbiddenPage() {
   return (

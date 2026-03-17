@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Login",
   description: "Login to your pilput account.",
+  alternates: {
+    canonical: "/login",
+  },
   robots: {
     index: false,
     follow: false,
