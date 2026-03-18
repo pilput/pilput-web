@@ -40,7 +40,6 @@ export const authStore = create<authDataState>()((set) => ({
           // Error will be handled in the component layer
         }
       }
-      console.log(error);
       set({ error: true });
     }
   },

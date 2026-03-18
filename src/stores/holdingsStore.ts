@@ -83,7 +83,6 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
       if (response.success) {
         set({ holdings: response.data });
       } else {
-        console.log(response);
         toast.error("Cannot connect to server");
       }
     } catch (error) {
