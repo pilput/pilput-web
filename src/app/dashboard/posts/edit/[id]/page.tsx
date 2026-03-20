@@ -45,6 +45,8 @@ export default function PostEdit() {
     updateBody,
     updatePhotoUrl,
     updateSlug,
+    addTag,
+    removeTagAt,
     updatePostId,
     fetchPostById,
     updatePost,
@@ -122,7 +124,14 @@ export default function PostEdit() {
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && tagInput.trim()) {
       e.preventDefault();
-      setTagInput("");
+      const result = addTag(tagInput);
+      if (result.ok) {
+        setTagInput("");
+      } else if (result.reason === "duplicate") {
+        toast.error("Tag already added");
+      } else if (result.reason === "limit") {
+        toast.error("You can add up to 5 tags");
+      }
     }
   };
 
@@ -362,9 +371,16 @@ export default function PostEdit() {
             <CardContent>
               <div className={styles.tagsWrapper}>
                 {post.tags?.map((tag, index) => (
-                  <span key={index} className={styles.tag}>
+                  <span
+                    key={tag.id != null ? tag.id : `new-${tag.name}-${index}`}
+                    className={styles.tag}
+                  >
                     {tag.name}
-                    <button type="button">
+                    <button
+                      type="button"
+                      aria-label={`Remove tag ${tag.name}`}
+                      onClick={() => removeTagAt(index)}
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </span>

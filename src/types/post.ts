@@ -41,8 +41,9 @@ export interface User {
   image: string;
 }
 
+/** `id` is set when loaded from API; omit for new tags on create/update. */
 export interface Tags {
-  id: number;
+  id?: number;
   name: string;
 }
 

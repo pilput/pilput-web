@@ -27,17 +27,21 @@ const DEFAULT_BODY = `
   </blockquote>
 `
 
+const MAX_TAGS = 5
+
 interface PostsState {
   post: PostCreate
   updateTitle: (title: string) => void
   updateBody: (body: string) => void
   updateSlug: (slug: string) => void
   updatePhotoUrl: (photoUrl: string) => void
+  addTag: (name: string) => { ok: true } | { ok: false; reason: "empty" | "duplicate" | "limit" }
+  removeTagAt: (index: number) => void
   error: boolean
   total: number
 }
 
-export const postsStore = create<PostsState>()((set) => ({
+export const postsStore = create<PostsState>()((set, get) => ({
   post: {
     title: '',
     body: DEFAULT_BODY,
@@ -60,6 +64,29 @@ export const postsStore = create<PostsState>()((set) => ({
   updatePhotoUrl: (photo_url) => 
     set((state) => ({ 
       post: { ...state.post, photo_url } 
+    })),
+  addTag: (rawName) => {
+    const name = rawName.trim()
+    if (!name) return { ok: false, reason: "empty" }
+    const { post } = get()
+    if (post.tags.length >= MAX_TAGS) return { ok: false, reason: "limit" }
+    const lower = name.toLowerCase()
+    if (post.tags.some((t) => t.name.toLowerCase() === lower))
+      return { ok: false, reason: "duplicate" }
+    set((state) => ({
+      post: {
+        ...state.post,
+        tags: [...state.post.tags, { name }],
+      },
+    }))
+    return { ok: true }
+  },
+  removeTagAt: (index) =>
+    set((state) => ({
+      post: {
+        ...state.post,
+        tags: state.post.tags.filter((_, i) => i !== index),
+      },
     })),
   error: false,
   total: 0
