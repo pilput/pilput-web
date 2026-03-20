@@ -131,7 +131,7 @@ export default function Posts() {
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className="max-w-[320px] break-words">{post.title}</p>
+                        <p className="max-w-[320px] wrap-break-word">{post.title}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
