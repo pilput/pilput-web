@@ -200,11 +200,15 @@ export async function generateMetadata(props: {
   try {
     const writer = await getWriter(params.username);
     const fullName = `${writer.first_name} ${writer.last_name}`.trim();
-    const title = fullName ? `${fullName} (@${writer.username})` : `@${writer.username}`;
+    const title = fullName
+      ? `${fullName} (@${writer.username})`
+      : `@${writer.username}`;
     const description =
       writer.profile?.bio ||
       `Read posts and updates from @${writer.username} on pilput.`;
-    const profileImage = writer.image ? getUrlImage(writer.image) : `${baseUrl}/pilput.png`;
+    const profileImage = writer.image
+      ? getUrlImage(writer.image)
+      : `${baseUrl}/pilput.png`;
     const canonicalUrl = `/${params.username}`;
 
     return {
