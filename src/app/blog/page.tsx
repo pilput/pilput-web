@@ -5,6 +5,9 @@ import Navigation from "@/components/header/Navbar";
 import { ArrowUp } from "lucide-react";
 import { axiosInstance } from "@/utils/fetch";
 import type { Post } from "@/types/post";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
+import { useTrendingTags } from "@/hooks/useTrendingTags";
 
 import BlogHero from "@/components/blog/BlogHero";
 import BlogPosts from "@/components/blog/BlogPosts";
@@ -18,44 +21,27 @@ const Blog = () => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [trendingTags, setTrendingTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
+  const showScrollTop = useScrollTopVisibility(400);
+  const trendingTags = useTrendingTags();
+
+  const handleSearchQueryChange = useCallback((query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(0);
+  }, []);
 
   const handleTagClick = useCallback((tag: string) => {
-    setSearchQuery(tag);
-    setCurrentPage(0);
-  }, []);
+    handleSearchQueryChange(tag);
+  }, [handleSearchQueryChange]);
 
   const handleClearSearch = useCallback(() => {
-    setSearchQuery("");
-    setDebouncedSearchQuery("");
-    setCurrentPage(0);
-  }, []);
+    handleSearchQueryChange("");
+  }, [handleSearchQueryChange]);
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
-  // Track scroll position for scroll-to-top button
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Debounce search query
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-      setCurrentPage(0); // Reset to first page when search changes
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
 
   useEffect(() => {
     async function fetchPosts() {
@@ -90,34 +76,13 @@ const Blog = () => {
     fetchPosts();
   }, [currentPage, debouncedSearchQuery]);
 
-  useEffect(() => {
-    async function fetchTags() {
-      try {
-        const response = await axiosInstance.get("/v1/tags");
-        setTrendingTags(response.data.data.map((tag: any) => tag.name));
-      } catch (error) {
-        console.error("Error fetching tags:", error);
-        // Fallback to default tags if API fails
-        setTrendingTags([
-          "ai",
-          "nextjs",
-          "typescript",
-          "webdev",
-          "react",
-          "javascript",
-        ]);
-      }
-    }
-    fetchTags();
-  }, []);
-
   return (
     <>
       <Navigation />
       <div className="min-h-screen bg-background">
         <BlogHero
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          setSearchQuery={handleSearchQueryChange}
           handleClearSearch={handleClearSearch}
           trendingTags={trendingTags}
           onTagClick={handleTagClick}
