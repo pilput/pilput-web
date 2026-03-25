@@ -69,7 +69,7 @@ const BlogHero = ({
                   <Clock3 className="w-4 h-4" />
                   Trending tags:
                 </span>
-                {trendingTags.slice(0, 8).map((tag, index) => (
+                {trendingTags.slice(0, 5).map((tag, index) => (
                   <button
                     key={index}
                     onClick={() => onTagClick(tag)}

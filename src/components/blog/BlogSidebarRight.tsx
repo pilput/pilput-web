@@ -22,7 +22,7 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {Array.isArray(trendingTags) && trendingTags.length > 0 ? (
-                  trendingTags.slice(0, 10).map((tag, index) => (
+                  trendingTags.slice(0, 7).map((tag, index) => (
                     <div key={index}>
                       <Link
                         href={`/tags/${tag}`}
