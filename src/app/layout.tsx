@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
-import { Space_Grotesk } from "next/font/google";
+import { Geist } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import { Config } from "@/utils/getConfig";
 import "./global.css";
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
   },
 };
 
-const grotesk = Space_Grotesk({
+const geist = Geist({
   subsets: ["latin"],
   display: "swap",
 });
@@ -99,7 +99,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={grotesk.className}>
+      <body className={geist.className}>
         <ThemeProvider attribute="class">
           {children}
           <Toaster />
