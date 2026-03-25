@@ -161,35 +161,35 @@ export default function PostCreate() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto py-6 px-4">
+    <div className="max-w-6xl mx-auto py-4 px-3 sm:py-6 sm:px-4 lg:px-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => window.history.back()}
-            className="text-muted-foreground"
+            className="text-muted-foreground w-fit"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">Create New Post</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-xl sm:text-2xl font-bold">Create New Post</h1>
+            <p className="text-sm text-muted-foreground hidden sm:block">
               Write and publish your new article
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" disabled className="gap-2">
+        <div className="flex gap-3 sm:ml-auto">
+          <Button variant="outline" disabled className="gap-2 hidden sm:flex">
             <Eye className="h-4 w-4" />
             Preview
           </Button>
           <Button
             onClick={publishHandler}
             disabled={isSubmitting}
-            className="min-w-30 gap-2"
+            className="w-full sm:w-auto min-w-[120px] gap-2"
           >
             {isSubmitting ? (
               <>
@@ -211,7 +211,7 @@ export default function PostCreate() {
         <div className={styles.postMain}>
           {/* Title */}
           <Card className="shadow-sm">
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
               <div className={styles.titleWrapper}>
                 <input
                   id="title"
@@ -220,7 +220,7 @@ export default function PostCreate() {
                     updateSlug(convertToSlug(e.target.value));
                     setErrorTitle("");
                   }}
-                  className={styles.titleInput}
+                  className={`${styles.titleInput} text-lg sm:text-xl md:text-[1.375rem]`}
                   value={post.title}
                   placeholder="Enter your post title..."
                   maxLength={MAX_TITLE_LENGTH}

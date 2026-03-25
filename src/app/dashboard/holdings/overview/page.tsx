@@ -303,7 +303,7 @@ export default function HoldingOverviewPage() {
               <CardContent className="space-y-2 sm:space-y-3">
                 {statistics && (
                   <>
-                    <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-background border border-border/40 hover:border-blue-500/30 transition-colors">
+                    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-blue-500/30 transition-colors">
                       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                         <Wallet className="h-4 w-4 text-blue-500/60 shrink-0" />
                         <span className="text-xs sm:text-sm text-muted-foreground truncate">
@@ -315,7 +315,7 @@ export default function HoldingOverviewPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-background border border-border/40 hover:border-purple-500/30 transition-colors">
+                    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-purple-500/30 transition-colors">
                       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                         <Building2 className="h-4 w-4 text-purple-500/60 shrink-0" />
                         <span className="text-xs sm:text-sm text-muted-foreground truncate">
@@ -327,7 +327,7 @@ export default function HoldingOverviewPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors">
+                    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors">
                       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                         <PieChart className="h-4 w-4 text-emerald-500/60 shrink-0" />
                         <span className="text-xs sm:text-sm text-muted-foreground truncate">
@@ -340,7 +340,7 @@ export default function HoldingOverviewPage() {
                     </div>
 
                     {statistics.topPlatform && (
-                      <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-lg bg-background border border-border/40 hover:border-amber-500/30 transition-colors">
+                      <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-amber-500/30 transition-colors">
                         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                           <Award className="h-4 w-4 text-amber-500/60 shrink-0" />
                           <span className="text-xs sm:text-sm text-muted-foreground truncate">
@@ -378,7 +378,7 @@ export default function HoldingOverviewPage() {
                   {statistics.topPerformers.map((holding, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-2.5 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors"
+                        className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors"
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-xs sm:text-sm font-medium truncate">
@@ -430,7 +430,7 @@ export default function HoldingOverviewPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="p-2.5 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/50">
+                    <div className="p-2 sm:p-2.5 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/50">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                           Best: {statistics.bestAssetType.name}
@@ -449,7 +449,7 @@ export default function HoldingOverviewPage() {
                       </div>
                     </div>
 
-                    <div className="p-2.5 rounded-lg bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-800/50">
+                    <div className="p-2 sm:p-2.5 rounded-lg bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-800/50">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-semibold text-rose-700 dark:text-rose-300">
                           Needs Review: {statistics.worstAssetType.name}

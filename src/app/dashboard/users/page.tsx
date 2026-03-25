@@ -200,19 +200,19 @@ export default function ManageUser() {
   }
 
   return (
-    <div className="mx-auto p-8">
+    <div className="mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
       <Card className="">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-bold">User Management</CardTitle>
+        <CardHeader className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardTitle className="text-xl sm:text-2xl font-bold">User Management</CardTitle>
             <Dialog open={modaluser} onOpenChange={setmodaluser}>
               <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
+                <Button className="flex items-center gap-2 w-full sm:w-auto">
                   <UserPlus className="h-4 w-4" />
                   Add new user
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Add new user</DialogTitle>
                   <DialogDescription>
@@ -223,7 +223,7 @@ export default function ManageUser() {
                   onSubmit={addUserForm.handleSubmit(submitAddUser)}
                   className="space-y-4"
                 >
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="first_name">First name</Label>
                       <Input
@@ -306,7 +306,7 @@ export default function ManageUser() {
                       </p>
                     )}
                   </div>
-                  <div className="flex justify-end gap-2">
+                  <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
                     <Button
                       variant="outline"
                       type="button"
@@ -323,7 +323,7 @@ export default function ManageUser() {
               </DialogContent>
             </Dialog>
           </div>
-          <div className="mt-4 flex items-center gap-4">
+          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -334,7 +334,7 @@ export default function ManageUser() {
               />
             </div>
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
               <SelectContent>
@@ -345,136 +345,140 @@ export default function ManageUser() {
             </Select>
           </div>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableCaption>
-              {isLoading
-                ? "Loading..."
-                : `Total ${total} user${total === 1 ? "" : "s"} found`}
-            </TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">#</TableHead>
-                <TableHead className="min-w-[200px]">User</TableHead>
-                <TableHead>Username</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead>Last logged</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading
-                ? Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell className="text-muted-foreground">
-                        <Skeleton className="h-4 w-6" />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-                          <Skeleton className="h-4 w-[120px]" />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[100px]" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[180px]" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-6 w-20" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-24" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-24" />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Skeleton className="h-8 w-[80px] ml-auto" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : filteredUsers.length === 0
-                  ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={8}
-                        className="h-24 text-center text-muted-foreground"
-                      >
-                        {users.length === 0
-                          ? "No users yet."
-                          : "No users match your search or filter."}
-                      </TableCell>
-                    </TableRow>
-                    )
-                  : filteredUsers.map((user, index) => (
-                      <TableRow key={user.id}>
-                        <TableCell className="text-muted-foreground tabular-nums">
-                          {index + 1 + offset}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9 shrink-0">
-                              <AvatarImage
-                                src={getProfilePicture(user.image ?? "")}
-                                alt={user.username}
-                                className="object-cover"
+        <CardContent className="p-2 sm:p-4 md:p-6">
+          <div className="overflow-x-auto -mx-2 sm:-mx-4 md:-mx-6">
+            <div className="min-w-[900px] px-2 sm:px-4 md:px-6">
+              <Table>
+                <TableCaption>
+                  {isLoading
+                    ? "Loading..."
+                    : `Total ${total} user${total === 1 ? "" : "s"} found`}
+                </TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-12">#</TableHead>
+                    <TableHead className="min-w-[200px]">User</TableHead>
+                    <TableHead className="hidden md:table-cell">Username</TableHead>
+                    <TableHead className="hidden lg:table-cell">Email</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                    <TableHead className="hidden xl:table-cell">Last logged</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading
+                    ? Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell className="text-muted-foreground">
+                            <Skeleton className="h-4 w-6" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                              <Skeleton className="h-4 w-[120px]" />
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <Skeleton className="h-4 w-[100px]" />
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <Skeleton className="h-4 w-[180px]" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-6 w-20" />
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <Skeleton className="h-4 w-24" />
+                          </TableCell>
+                          <TableCell className="hidden xl:table-cell">
+                            <Skeleton className="h-4 w-24" />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Skeleton className="h-8 w-[80px] ml-auto" />
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    : filteredUsers.length === 0
+                      ? (
+                        <TableRow>
+                          <TableCell
+                            colSpan={8}
+                            className="h-24 text-center text-muted-foreground"
+                          >
+                            {users.length === 0
+                              ? "No users yet."
+                              : "No users match your search or filter."}
+                          </TableCell>
+                        </TableRow>
+                        )
+                      : filteredUsers.map((user, index) => (
+                          <TableRow key={user.id}>
+                            <TableCell className="text-muted-foreground tabular-nums">
+                              {index + 1 + offset}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-9 w-9 shrink-0">
+                                  <AvatarImage
+                                    src={getProfilePicture(user.image ?? "")}
+                                    alt={user.username}
+                                    className="object-cover"
+                                  />
+                                  <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
+                                    {user.username.substring(0, 2).toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <span className="font-medium">{user.first_name} {user.last_name}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-muted-foreground hidden md:table-cell">
+                              {user.username}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground hidden lg:table-cell">
+                              {user.email}
+                            </TableCell>
+                            <TableCell>
+                              {user.is_super_admin ? (
+                                <Badge
+                                  variant="default"
+                                  className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
+                                >
+                                  Admin
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  variant="outline"
+                                  className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
+                                >
+                                  User
+                                </Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
+                              {format(user.created_at, "MMM dd, yyyy")}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden xl:table-cell">
+                              {user.last_logged_at
+                                ? format(user.last_logged_at, "MMM dd, yyyy HH:mm")
+                                : "—"}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <UserActionComponent
+                                user={user}
+                                auth={undefined}
+                                refetchUsers={refetchUsers}
                               />
-                              <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
-                                {user.username.substring(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="font-medium">{user.first_name} {user.last_name}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {user.username}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {user.email}
-                        </TableCell>
-                        <TableCell>
-                          {user.is_super_admin ? (
-                            <Badge
-                              variant="default"
-                              className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
-                            >
-                              Admin
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="outline"
-                              className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
-                            >
-                              User
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground whitespace-nowrap text-sm">
-                          {format(user.created_at, "MMM dd, yyyy")}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground whitespace-nowrap text-sm">
-                          {user.last_logged_at
-                            ? format(user.last_logged_at, "MMM dd, yyyy HH:mm")
-                            : "—"}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <UserActionComponent
-                            user={user}
-                            auth={undefined}
-                            refetchUsers={refetchUsers}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-            </TableBody>
-          </Table>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
 
-          <div className="mt-4 flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-muted-foreground text-center sm:text-left">
               Showing {offset + 1} to{" "}
               {Math.min(offset + limit, total)} of {total} users
             </div>

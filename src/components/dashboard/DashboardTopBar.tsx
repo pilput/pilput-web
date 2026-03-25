@@ -44,19 +44,19 @@ const DashboardTopBar = () => {
     <TooltipProvider>
       <div className="flex items-center justify-between w-full">
         {/* Left Section - Welcome Message */}
-        <div className="flex items-center">
+        <div className="hidden sm:flex items-center">
           <div className="flex flex-col">
-            <h1 className="text-lg font-semibold text-foreground">
+            <h1 className="text-base md:text-lg font-semibold text-foreground truncate max-w-[200px] md:max-w-[300px] lg:max-w-none">
               Welcome back, {yourstore.data.first_name}!
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs md:text-sm text-muted-foreground hidden md:block">
               Here&#39;s what&#39;s happening with your dashboard today.
             </p>
           </div>
         </div>
 
         {/* Right Section - Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2 ml-auto">
           {/* Theme Toggle */}
           <Tooltip>
             <TooltipTrigger asChild>

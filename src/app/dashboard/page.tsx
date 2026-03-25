@@ -12,14 +12,14 @@ function Page() {
   const isSuperAdmin = authStore((state) => state.data.is_super_admin);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-6">
       {/* Top Row */}
       <div>
         <UserChart />
       </div>
 
       {/* Second Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <UserDemographicsChart />
         <LikeChart />
       </div>

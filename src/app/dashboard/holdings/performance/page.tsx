@@ -62,7 +62,7 @@ export default function PerformancePage() {
       </div>
 
       {/* Content */}
-      <div className="rounded-2xl border border-border/80 bg-card/80 p-4 sm:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none dark:bg-muted/20 backdrop-blur-sm">
+      <div className="rounded-2xl border border-border/80 bg-card/80 p-3 sm:p-4 lg:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none dark:bg-muted/20 backdrop-blur-sm">
         <HoldingComparison
           isOpen={true}
           targetMonth={parseInt(activeMonth)}
