@@ -22,4 +22,27 @@ export async function getDataExternal(url: string, params: any) {
   }
 }
 
+export async function forgotPassword(email: string) {
+  try {
+    const response = await axiosInstance3.post("/v1/auth/forgot-password", {
+      email,
+    });
+    return response.data;
+  } catch (error) {
+    return ErrorHandlerAPI(error);
+  }
+}
+
+export async function resetPassword(token: string, password: string) {
+  try {
+    const response = await axiosInstance3.post("/v1/auth/reset-password", {
+      token,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    return ErrorHandlerAPI(error);
+  }
+}
+
 
