@@ -29,8 +29,21 @@ async function fetchInitialPosts(): Promise<{ posts: Post[]; total: number }> {
   }
 }
 
+async function fetchTrendingTags(): Promise<string[]> {
+  try {
+    const { data } = await axiosInstance.get("/v1/tags");
+    return data.data.map((tag: { name: string }) => tag.name);
+  } catch (error) {
+    console.error("Error fetching tags:", error);
+    return ["ai", "nextjs", "typescript", "webdev", "react", "javascript"];
+  }
+}
+
 export default async function BlogPage() {
-  const { posts, total } = await fetchInitialPosts();
+  const [{ posts, total }, trendingTags] = await Promise.all([
+    fetchInitialPosts(),
+    fetchTrendingTags(),
+  ]);
 
   return (
     <>
@@ -39,6 +52,7 @@ export default async function BlogPage() {
         initialPosts={posts}
         initialTotal={total}
         postsPerPage={postsPerPage}
+        trendingTags={trendingTags}
       />
     </>
   );

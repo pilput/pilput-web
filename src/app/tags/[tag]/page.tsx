@@ -5,6 +5,8 @@ import TagContent from "./TagContent";
 
 const postsPerPage = 10;
 
+export const revalidate = 30;
+
 interface PostsResponse {
   data: Post[];
   meta?: { total_items: number };

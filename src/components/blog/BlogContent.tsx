@@ -7,7 +7,6 @@ import { axiosInstance } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
-import { useTrendingTags } from "@/hooks/useTrendingTags";
 
 import BlogHero from "@/components/blog/BlogHero";
 import BlogPosts from "@/components/blog/BlogPosts";
@@ -18,9 +17,10 @@ interface BlogContentProps {
   initialPosts: Post[];
   initialTotal: number;
   postsPerPage: number;
+  trendingTags: string[];
 }
 
-const BlogContent = ({ initialPosts, initialTotal, postsPerPage }: BlogContentProps) => {
+const BlogContent = ({ initialPosts, initialTotal, postsPerPage, trendingTags }: BlogContentProps) => {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [total, setTotal] = useState(initialTotal);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,6 @@ const BlogContent = ({ initialPosts, initialTotal, postsPerPage }: BlogContentPr
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
   const showScrollTop = useScrollTopVisibility(400);
-  const trendingTags = useTrendingTags();
 
   const handleSearchQueryChange = useCallback((query: string) => {
     setSearchQuery(query);
