@@ -1,127 +1,43 @@
-"use client";
-import { useEffect, useState, useCallback } from "react";
-import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
-import { ArrowUp } from "lucide-react";
+import BlogContent from "@/components/blog/BlogContent";
 import { axiosInstance } from "@/utils/fetch";
 import type { Post } from "@/types/post";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
-import { useTrendingTags } from "@/hooks/useTrendingTags";
-
-import BlogHero from "@/components/blog/BlogHero";
-import BlogPosts from "@/components/blog/BlogPosts";
-import BlogSidebarLeft from "@/components/blog/BlogSidebarLeft";
-import BlogSidebarRight from "@/components/blog/BlogSidebarRight";
 
 const postsPerPage = 10;
 
-const Blog = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
-  const showScrollTop = useScrollTopVisibility(400);
-  const trendingTags = useTrendingTags();
+interface PostsResponse {
+  data: Post[];
+  meta?: { total_items: number };
+  total?: number;
+}
 
-  const handleSearchQueryChange = useCallback((query: string) => {
-    setSearchQuery(query);
-    setCurrentPage(0);
-  }, []);
+async function fetchInitialPosts(): Promise<{ posts: Post[]; total: number }> {
+  try {
+    const { data } = await axiosInstance.get<PostsResponse>("/v1/posts", {
+      params: { limit: postsPerPage, offset: 0 },
+    });
 
-  const handleTagClick = useCallback((tag: string) => {
-    handleSearchQueryChange(tag);
-  }, [handleSearchQueryChange]);
+    return {
+      posts: data.data || [],
+      total: data.meta?.total_items || data.total || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching initial posts:", error);
+    return { posts: [], total: 0 };
+  }
+}
 
-  const handleClearSearch = useCallback(() => {
-    handleSearchQueryChange("");
-  }, [handleSearchQueryChange]);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-  useEffect(() => {
-    async function fetchPosts() {
-      setIsLoading(true);
-      try {
-        const params: any = {
-          limit: postsPerPage,
-          offset: currentPage * postsPerPage,
-        };
-
-        if (debouncedSearchQuery.trim()) {
-          params.search = debouncedSearchQuery.trim();
-        }
-
-        const { data } = await axiosInstance.get("/v1/posts", { params });
-        const response = data;
-        if (response.data) {
-          setPosts(response.data);
-          if (response.meta && response.meta.total_items) {
-            setTotal(response.meta.total_items);
-          } else if (response.total) {
-            setTotal(response.total);
-          }
-        } else {
-          toast.error("Error loading posts");
-        }
-      } catch (error) {
-        toast.error("Error loading posts");
-      }
-      setIsLoading(false);
-    }
-    fetchPosts();
-  }, [currentPage, debouncedSearchQuery]);
+export default async function BlogPage() {
+  const { posts, total } = await fetchInitialPosts();
 
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-background">
-        <BlogHero
-          searchQuery={searchQuery}
-          setSearchQuery={handleSearchQueryChange}
-          handleClearSearch={handleClearSearch}
-          trendingTags={trendingTags}
-          onTagClick={handleTagClick}
-        />
-
-        {/* Main Content */}
-        <div className="container mx-auto px-4 py-12">
-          {/* Main Content Area */}
-          <div className="flex flex-col xl:flex-row gap-8">
-            <BlogSidebarLeft />
-
-            <BlogPosts
-              posts={posts}
-              isLoading={isLoading}
-              total={total}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              postsPerPage={postsPerPage}
-              searchQuery={debouncedSearchQuery}
-              onClearSearch={handleClearSearch}
-            />
-
-            <BlogSidebarRight trendingTags={trendingTags} />
-          </div>
-        </div>
-
-        {/* Scroll to Top Button */}
-        {showScrollTop && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl border border-primary/60 backdrop-blur-md"
-            aria-label="Scroll to top"
-          >
-            <ArrowUp className="w-5 h-5" />
-          </button>
-        )}
-      </div>
+      <BlogContent
+        initialPosts={posts}
+        initialTotal={total}
+        postsPerPage={postsPerPage}
+      />
     </>
   );
-};
-
-export default Blog;
+}
