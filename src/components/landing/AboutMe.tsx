@@ -1,11 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, Globe, MapPin, Code2 } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Code2,
+  Globe,
+  MapPin,
+  MessagesSquare,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
 
 const AboutMe = () => {
   const containerVariants = {
@@ -94,17 +101,17 @@ const AboutMe = () => {
               <div className="flex flex-wrap gap-4 pt-4">
                 <Button variant="outline" size="icon" asChild className="hover:text-primary hover:border-primary/50 transition-colors">
                   <Link href="https://github.com/cecep31" target="_blank" aria-label="GitHub Profile">
-                    <Github className="h-5 w-5" />
+                    <GitHubIcon className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" asChild className="hover:text-blue-600 hover:border-blue-600/50 transition-colors">
                   <Link href="https://www.linkedin.com/in/cecep31/" target="_blank" aria-label="LinkedIn Profile">
-                    <Linkedin className="h-5 w-5" />
+                    <BriefcaseBusiness className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" asChild className="hover:text-sky-500 hover:border-sky-500/50 transition-colors">
                   <Link href="https://twitter.com/cecep_januardi" target="_blank" aria-label="Twitter Profile">
-                    <Twitter className="h-5 w-5" />
+                    <MessagesSquare className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" asChild className="hover:text-purple-500 hover:border-purple-500/50 transition-colors">

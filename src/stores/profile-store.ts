@@ -34,10 +34,15 @@ export const profileStore = create<Store>()((set) => ({
     fullName: "temp",
   },
   refresh: () => {
+    const token = getToken();
+    if (!token) {
+      return;
+    }
+
     axios
       .get(Config.apibaseurl+"/auth/profile", {
         headers: {
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {

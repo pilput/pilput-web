@@ -38,7 +38,7 @@ const Tiptap = ({
       }),
       CodeBlockLowlight.configure({
         lowlight,
-      }),
+      }) as any,
       Underline,
       Youtube.configure({
         controls: true,

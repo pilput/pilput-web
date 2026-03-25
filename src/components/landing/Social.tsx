@@ -1,17 +1,23 @@
+import type { ComponentType, SVGProps } from "react";
 import { Button } from "@/components/ui/button";
 import {
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Github, Twitter, Linkedin, Mail, LucideIcon } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Mail,
+  MessagesSquare,
+} from "lucide-react";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
 
 interface SocialLink {
   name: string;
   url: string;
-  icon: LucideIcon;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   description: string;
   color: string;
   hoverColor: string;
@@ -21,7 +27,7 @@ const socialLinks: SocialLink[] = [
   {
     name: "GitHub",
     url: "https://github.com/cecep31",
-    icon: Github,
+    icon: GitHubIcon,
     description: "Check out my open source projects",
     color: "text-gray-800 dark:text-gray-200",
     hoverColor: "hover:bg-gray-500/10",
@@ -29,7 +35,7 @@ const socialLinks: SocialLink[] = [
   {
     name: "Twitter",
     url: "https://x.com/cecep_januardi",
-    icon: Twitter,
+    icon: MessagesSquare,
     description: "Follow me for tech updates",
     color: "text-blue-500 dark:text-blue-400",
     hoverColor: "hover:bg-blue-500/10",
@@ -37,7 +43,7 @@ const socialLinks: SocialLink[] = [
   {
     name: "LinkedIn",
     url: "https://linkedin.com/in/cecep31",
-    icon: Linkedin,
+    icon: BriefcaseBusiness,
     description: "Connect with me professionally",
     color: "text-blue-600 dark:text-blue-500",
     hoverColor: "hover:bg-blue-500/10",

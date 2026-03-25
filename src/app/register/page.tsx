@@ -21,14 +21,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowLeft,
-  GithubIcon,
-  Mail,
-  Lock,
-  User,
-  Loader2,
   CheckCircle2,
+  Loader2,
+  Lock,
+  Mail,
+  User,
   XCircle,
 } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { Config } from "@/utils/getConfig";
 
 type Inputs = {
@@ -290,7 +290,7 @@ export default function Signup() {
             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
             aria-label="Sign up with GitHub"
           >
-            <GithubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+            <GitHubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
             Github
           </Link>
 

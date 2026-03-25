@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, Target, Lightbulb, Heart, Github, Users, ArrowRight, Star, Rocket, BookOpen, Coffee } from "lucide-react";
+import { Sparkles, Target, Lightbulb, Heart, Users, ArrowRight, Star, Rocket, BookOpen, Coffee } from "lucide-react";
 
 const MissionSection = () => {
   const containerVariants = {

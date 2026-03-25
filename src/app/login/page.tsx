@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
-  GithubIcon,
-  User,
-  Lock,
-  Loader2,
   Eye,
   EyeOff,
+  Loader2,
+  Lock,
+  User,
 } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -287,7 +287,7 @@ export default function LoginPage() {
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
               aria-label="Sign in with GitHub"
             >
-              <GithubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+              <GitHubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
               Github
             </Link>
 
