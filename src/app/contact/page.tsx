@@ -25,7 +25,8 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 text-center mb-8">
-            Have a question, comment, or feedback? We&apos;d love to hear from you.
+            Have a question, comment, or feedback? We&apos;d love to hear from
+            you.
           </p>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">

@@ -179,7 +179,7 @@ export default async function Page(props: {
                         src={getProfilePicture(post.user.image)}
                         alt={`@${post.user.username}`}
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
+                      <AvatarFallback className="bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
                         {post.user.username[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>

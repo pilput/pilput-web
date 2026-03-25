@@ -152,7 +152,7 @@ export default function WriterProfileClient({
                               {
                                 month: "short",
                                 year: "numeric",
-                              }
+                              },
                             )}
                           </span>
                         </div>
