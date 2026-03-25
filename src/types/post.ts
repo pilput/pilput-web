@@ -19,7 +19,8 @@ export interface PostCreate {
   body: string;
   slug: string;
   photo_url: string;
-  tags: Tags[];
+  /** Tag names only, e.g. `['coding', 'history']` */
+  tags: string[];
 }
 
 export interface ErrorCreatePost {

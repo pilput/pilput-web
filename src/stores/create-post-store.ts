@@ -71,12 +71,12 @@ export const postsStore = create<PostsState>()((set, get) => ({
     const { post } = get()
     if (post.tags.length >= MAX_TAGS) return { ok: false, reason: "limit" }
     const lower = name.toLowerCase()
-    if (post.tags.some((t) => t.name.toLowerCase() === lower))
+    if (post.tags.some((t) => t.toLowerCase() === lower))
       return { ok: false, reason: "duplicate" }
     set((state) => ({
       post: {
         ...state.post,
-        tags: [...state.post.tags, { name }],
+        tags: [...state.post.tags, name],
       },
     }))
     return { ok: true }

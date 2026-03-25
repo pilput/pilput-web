@@ -71,8 +71,8 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
               transition={{ delay: index * 0.1 }}
               className="group relative bg-card hover:bg-card/80 border border-border hover:border-primary/20 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg"
             >
-              <Link href={`/${userUsername}/${post.slug}`} className="block h-full flex flex-col">
-                <div className="relative aspect-[16/9] overflow-hidden">
+              <Link href={`/${userUsername}/${post.slug}`} className="block h-full flex-col">
+                <div className="relative aspect-video overflow-hidden">
                    <Image
                     src={getUrlImage(post.photo_url)}
                     alt={post.title}

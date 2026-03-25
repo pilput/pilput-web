@@ -385,13 +385,13 @@ export default function PostEdit() {
               <div className={styles.tagsWrapper}>
                 {post.tags?.map((tag, index) => (
                   <span
-                    key={tag.id != null ? tag.id : `new-${tag.name}-${index}`}
+                    key={`${tag}-${index}`}
                     className={styles.tag}
                   >
-                    {tag.name}
+                    {tag}
                     <button
                       type="button"
-                      aria-label={`Remove tag ${tag.name}`}
+                      aria-label={`Remove tag ${tag}`}
                       onClick={() => removeTagAt(index)}
                     >
                       <X className="h-3 w-3" />

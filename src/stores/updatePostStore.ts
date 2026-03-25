@@ -83,12 +83,12 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const { post } = get();
     if (post.tags.length >= MAX_TAGS) return { ok: false, reason: "limit" };
     const lower = name.toLowerCase();
-    if (post.tags.some((t) => t.name.toLowerCase() === lower))
+    if (post.tags.some((t) => t.toLowerCase() === lower))
       return { ok: false, reason: "duplicate" };
     set((state) => ({
       post: {
         ...state.post,
-        tags: [...state.post.tags, { name }],
+        tags: [...state.post.tags, name],
       },
     }));
     return { ok: true };
@@ -113,6 +113,11 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
       });
       const postData = response.data.data;
 
+      const rawTags = postData.tags ?? [];
+      const tags: string[] = rawTags.map((t: { name?: string } | string) =>
+        typeof t === "string" ? t : (t.name ?? "")
+      ).filter(Boolean);
+
       set(() => ({
         postId: postData.id,
         post: {
@@ -120,7 +125,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
           body: postData.body,
           slug: postData.slug,
           photo_url: postData.photo_url,
-          tags: postData.tags || [],
+          tags,
         },
         loading: false,
       }));

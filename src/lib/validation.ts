@@ -16,10 +16,8 @@ export const postSchema = z.object({
     .url("Please enter a valid URL")
     .optional()
     .or(z.literal("")),
-  tags: z.array(z.object({
-    id: z.number().optional(),
-    name: z.string().min(1, "Tag name is required")
-  }))
+  tags: z
+    .array(z.string().min(1, "Tag name is required"))
     .max(5, "You can select up to 5 tags")
 });
 
