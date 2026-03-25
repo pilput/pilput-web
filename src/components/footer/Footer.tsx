@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="space-y-3 max-w-xl">
             <Link
               href="/"
-              className="text-lg font-semibold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+              className="text-lg font-semibold tracking-tight bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent"
             >
               pilput.net
             </Link>

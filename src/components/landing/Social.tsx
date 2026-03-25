@@ -60,16 +60,16 @@ const socialLinks: SocialLink[] = [
 
 export default function Social() {
   return (
-    <section className="w-full border-t border-border/50 bg-gradient-to-b from-background to-primary/5 py-24 relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-[size:50px_50px]" />
+    <section className="w-full border-t border-border/50 bg-linear-to-b from-background to-primary/5 py-24 relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       
       <div className="container mx-auto px-4 relative z-10">
         <CardHeader className="text-center pb-12">
-          <CardTitle className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-4">
+          <CardTitle className="text-4xl md:text-5xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-4">
             Let&apos;s Connect!
           </CardTitle>
           <CardDescription className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Find me across the web and let&apos;s start a conversation. I'm always open to discussing new projects, ideas, or just tech in general.
+            Find me across the web and let&apos;s start a conversation. I&apos;m always open to discussing new projects, ideas, or just tech in general.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0 pb-8">
