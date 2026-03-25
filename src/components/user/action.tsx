@@ -90,7 +90,11 @@ const UserActionComponent = ({
     setIsDeleting(true);
     const toastid = toast.loading("Deleting user...");
     try {
-      const response = await axiosInstance3.delete("/v1/users/" + user.id);
+      const response = await axiosInstance3.delete("/v1/users/" + user.id, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       if (response.status === 200) {
         toast.success("User Deleted", { id: toastid });
         setShowDeleteDialog(false);
