@@ -1,12 +1,13 @@
 "use client";
 
-// import PostsChart from "@/components/dashboard/PostChart";
-import LikeChart from "@/components/dashboard/LikeChart";
-import UserChart from "@/components/dashboard/UserChart";
-import UserDemographicsChart from "@/components/dashboard/UserDemographicsChart";
-import EngagementChart from "@/components/dashboard/EngagementChart";
-import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHoldingsChart";
 import { authStore } from "@/stores/userStore";
+import dynamic from "next/dynamic";
+
+const LikeChart = dynamic(() => import("@/components/dashboard/LikeChart"), { ssr: false });
+const UserChart = dynamic(() => import("@/components/dashboard/UserChart"), { ssr: false });
+const UserDemographicsChart = dynamic(() => import("@/components/dashboard/UserDemographicsChart"), { ssr: false });
+const EngagementChart = dynamic(() => import("@/components/dashboard/EngagementChart"), { ssr: false });
+const MonthlyHoldingsChart = dynamic(() => import("@/components/dashboard/holdings/MonthlyHoldingsChart"), { ssr: false });
 
 function Page() {
   const isSuperAdmin = authStore((state) => state.data.is_super_admin);

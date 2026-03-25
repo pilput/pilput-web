@@ -8,7 +8,20 @@ import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
-import MyEditor from "@/components/post/Editor";
+import dynamic from "next/dynamic";
+
+const MyEditor = dynamic(() => import("@/components/post/Editor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-72 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center">
+      <div className="flex flex-col items-center gap-2">
+        <FileText className="h-8 w-8 text-muted-foreground/50" />
+        <span className="text-sm text-muted-foreground">Loading editor...</span>
+      </div>
+    </div>
+  ),
+});
+
 import {
   ImagePlus,
   X,

@@ -10,7 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { postsStore } from "@/stores/posts-store";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
 import { format } from "date-fns";
@@ -37,6 +38,7 @@ export default function Posts() {
   const limit = 15;
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, 300);
   const [status, setStatus] = useState("all");
   const poststore = postsStore();
   const currentPage = Math.floor(offset / limit) + 1;
@@ -55,16 +57,18 @@ export default function Posts() {
     poststore.fetch(limit, offset);
   };
 
-  const filteredPosts = poststore.posts.filter((post) => {
-    const matchesSearch = post.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesStatus =
-      status === "all" ||
-      (status === "published" && post.published) ||
-      (status === "draft" && !post.published);
-    return matchesSearch && matchesStatus;
-  });
+  const filteredPosts = useMemo(() => {
+    return poststore.posts.filter((post) => {
+      const matchesSearch = post.title
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase());
+      const matchesStatus =
+        status === "all" ||
+        (status === "published" && post.published) ||
+        (status === "draft" && !post.published);
+      return matchesSearch && matchesStatus;
+    });
+  }, [poststore.posts, debouncedSearch, status]);
 
   return (
     <div className="mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
