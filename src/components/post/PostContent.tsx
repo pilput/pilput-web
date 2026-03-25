@@ -1,5 +1,6 @@
 "use client";
 
+import { highlightCodeElement } from "@/lib/code-highlight";
 import { useEffect, useRef } from "react";
 import styles from "./post-content.module.scss";
 
@@ -42,9 +43,11 @@ const PostContent = ({ html, className }: PostContentProps) => {
       }
 
       const code = pre.querySelector("code");
-      if (!code) {
+      if (!code || !(code instanceof HTMLElement)) {
         return;
       }
+
+      highlightCodeElement(code);
 
       const wrapper = document.createElement("div");
       wrapper.className = styles.codeBlockShell;

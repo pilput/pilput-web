@@ -23,6 +23,7 @@
         "@react-three/fiber": "^9.5.0",
         "@tailwindcss/postcss": "^4.2.2",
         "@tiptap/extension-character-count": "^3.20.4",
+        "@tiptap/extension-code-block-lowlight": "^3.20.5",
         "@tiptap/extension-image": "^3.20.4",
         "@tiptap/extension-link": "^3.20.4",
         "@tiptap/extension-placeholder": "^3.20.4",
@@ -40,14 +41,15 @@
         "date-fns": "^4.1.0",
         "framer-motion": "^12.38.0",
         "highlight.js": "^11.11.1",
+        "lowlight": "^3.3.0",
         "lucide-react": "^0.577.0",
-        "next": "^16.2.0",
+        "next": "^16.2.1",
         "next-themes": "^0.4.6",
         "radix-ui": "^1.4.3",
         "react": "^19.2.4",
         "react-day-picker": "^9.14.0",
         "react-dom": "^19.2.4",
-        "react-hook-form": "^7.71.2",
+        "react-hook-form": "^7.72.0",
         "react-markdown": "^10.1.0",
         "recharts": "^3.8.0",
         "rehype-highlight": "^7.0.2",
@@ -468,6 +470,8 @@
     "@tiptap/extension-code": ["@tiptap/extension-code@3.20.4", "", { "peerDependencies": { "@tiptap/core": "^3.20.4" } }, "sha512-7j8Hi964bH1SZ9oLdZC1fkqWz27mliSDV7M8lmL/M14+Qw42D/VOAKS4Aw9OCFtHMlTsjLR6qsoVxL8Lpkt6NA=="],
 
     "@tiptap/extension-code-block": ["@tiptap/extension-code-block@3.20.4", "", { "peerDependencies": { "@tiptap/core": "^3.20.4", "@tiptap/pm": "^3.20.4" } }, "sha512-Zlw3FrXTy01+o1yISeX/LC+iJeHA+ym602bMXGmtA6lyl7QSOSO7WExweJ6xeJGhbCjldwT5al6fkRAs8iGJZg=="],
+
+    "@tiptap/extension-code-block-lowlight": ["@tiptap/extension-code-block-lowlight@3.20.5", "", { "peerDependencies": { "@tiptap/core": "^3.20.5", "@tiptap/extension-code-block": "^3.20.5", "@tiptap/pm": "^3.20.5", "highlight.js": "^11", "lowlight": "^2 || ^3" } }, "sha512-EINMkflwiUfCkBTAj1meP+nwEEUyXKmJF4yQVHzbt/iIswMtIc/7qvyld92VBgXWJkc+vo/lIPioaZGoSO7TsQ=="],
 
     "@tiptap/extension-document": ["@tiptap/extension-document@3.20.4", "", { "peerDependencies": { "@tiptap/core": "^3.20.4" } }, "sha512-zF1CIFVLt8MfSpWWnPwtGyxPOsT0xYM2qJKcXf2yZcTG37wDKmUi6heG53vGigIavbQlLaAFvs+1mNdOu2x/0A=="],
 
