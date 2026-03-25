@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { axiosInstance, axiosInstance3 } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,7 +90,7 @@ const UserActionComponent = ({
     setIsDeleting(true);
     const toastid = toast.loading("Deleting user...");
     try {
-      const response = await axiosInstance.delete("/v1/users/" + user.id);
+      const response = await axiosInstance3.delete("/v1/users/" + user.id);
       if (response.status === 200) {
         toast.success("User Deleted", { id: toastid });
         setShowDeleteDialog(false);
