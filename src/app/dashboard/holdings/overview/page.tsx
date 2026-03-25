@@ -284,13 +284,13 @@ export default function HoldingOverviewPage() {
         />
 
         {/* Chart and Insights Grid */}
-        <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 min-w-0">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="md:col-span-2 lg:col-span-2 min-w-0">
             <OverviewChart holdings={holdings} hideValues={hideValues} />
           </div>
           <div className="space-y-4 sm:space-y-6">
             {/* Quick Insights Card */}
-            <Card className="border-none shadow-none bg-muted/30">
+            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
               <CardHeader className="pb-3 sm:pb-4">
                 <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <BarChart3 className="h-4 w-4" />
@@ -364,7 +364,7 @@ export default function HoldingOverviewPage() {
 
             {/* Performance Insights */}
             {statistics && statistics.topPerformers.length > 0 && (
-              <Card className="border-none shadow-none bg-muted/30">
+              <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
                 <CardHeader className="pb-3 sm:pb-4">
                   <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-emerald-500" />
@@ -419,7 +419,7 @@ export default function HoldingOverviewPage() {
             {statistics &&
               statistics.bestAssetType &&
               statistics.worstAssetType && (
-                <Card className="border-none shadow-none bg-muted/30">
+                <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
                   <CardHeader className="pb-3 sm:pb-4">
                     <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                       <Coins className="h-4 w-4" />
@@ -473,7 +473,7 @@ export default function HoldingOverviewPage() {
 
             {/* Strategy Insights */}
             {statistics && (
-              <Card className="border-none shadow-none bg-muted/30">
+              <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
                 <CardHeader className="pb-3 sm:pb-4">
                   <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <Info className="h-4 w-4" />
@@ -528,7 +528,7 @@ export default function HoldingOverviewPage() {
         {/* Currency Breakdown */}
         {statistics &&
           Object.keys(statistics.currencyBreakdown).length > 0 && (
-            <Card className="border-none shadow-none bg-muted/30">
+            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
               <CardHeader className="pb-3 sm:pb-4">
                 <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <DollarSign className="h-4 w-4" />
@@ -617,9 +617,9 @@ export default function HoldingOverviewPage() {
 
         {/* Percentage Distribution Cards */}
         {statistics && (
-          <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
             {/* Platform Percentage Distribution */}
-            <Card className="border-none shadow-none bg-muted/30">
+            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
               <CardHeader className="pb-3 sm:pb-4">
                 <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
@@ -707,7 +707,7 @@ export default function HoldingOverviewPage() {
             </Card>
 
             {/* Asset Type Percentage Distribution */}
-            <Card className="border-none shadow-none bg-muted/30">
+            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
               <CardHeader className="pb-3 sm:pb-4">
                 <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <PieChart className="h-4 w-4" />

@@ -97,7 +97,8 @@ export default function OverviewChart({
     }
   }
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  // Custom tooltip content as inline function to avoid component creation during render
+  const renderTooltipContent = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload
       return (
@@ -119,7 +120,7 @@ export default function OverviewChart({
     return null
   }
 
-  const renderLegend = () => (
+  const renderLegendContent = () => (
     <div className="flex flex-wrap justify-center gap-4 mt-4">
       {chartData.map((entry, index) => {
         const isHidden = hiddenTypes.includes(entry.name)
@@ -148,14 +149,14 @@ export default function OverviewChart({
   )
 
   return (
-    <div className="grid gap-6">
-      <Card className="flex flex-col border-none shadow-none bg-muted/30">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-semibold">Asset Allocation</CardTitle>
-          <CardDescription>Distribution by Asset Type</CardDescription>
+    <div className="grid gap-4 sm:gap-6">
+      <Card className="flex flex-col border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
+        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
+          <CardTitle className="text-base sm:text-lg font-semibold">Asset Allocation</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Distribution by Asset Type</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1">
-          <div className="h-75 w-full">
+        <CardContent className="flex-1 px-2 sm:px-6 pb-3 sm:pb-6">
+          <div className="h-[280px] sm:h-[300px] w-full">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -177,8 +178,8 @@ export default function OverviewChart({
                       />
                     ))}
                   </Pie>
-                  <RechartsTooltip content={<CustomTooltip />} cursor={false} />
-                  <Legend content={renderLegend} verticalAlign="bottom" />
+                  <RechartsTooltip content={renderTooltipContent} cursor={false} />
+                  <Legend content={renderLegendContent} verticalAlign="bottom" />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -190,13 +191,13 @@ export default function OverviewChart({
         </CardContent>
       </Card>
 
-      <Card className="flex flex-col border-none shadow-none bg-muted/30">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-semibold">Platform Distribution</CardTitle>
-          <CardDescription>Value and percentage across platforms</CardDescription>
+      <Card className="flex flex-col border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
+        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
+          <CardTitle className="text-base sm:text-lg font-semibold">Platform Distribution</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Value and percentage across platforms</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1">
-          <div className="h-62.5 w-full">
+        <CardContent className="flex-1 px-2 sm:px-6 pb-3 sm:pb-6">
+          <div className="h-[250px] sm:h-[260px] w-full">
             {platformDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
@@ -216,7 +217,7 @@ export default function OverviewChart({
                     tickLine={false}
                   />
                   <RechartsTooltip
-                    content={<CustomTooltip />}
+                    content={renderTooltipContent}
                     cursor={{ fill: "hsl(var(--primary))", opacity: 0.05 }}
                   />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>

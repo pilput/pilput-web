@@ -78,7 +78,7 @@ export default function HoldingSummaryCards({
 
   if (isLoading) {
     return (
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i} className="animate-pulse overflow-hidden rounded-2xl border border-border/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-5 pt-4 sm:pt-5">
@@ -138,7 +138,7 @@ export default function HoldingSummaryCards({
 
   return (
     <motion.div
-      className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4"
+      className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
