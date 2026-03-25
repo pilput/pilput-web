@@ -99,7 +99,7 @@ function ResetPasswordForm() {
     try {
       const { data } = await axiosInstance3.post("/v1/auth/reset-password", {
         token,
-        password: form.password,
+        new_password: form.password,
       });
       const result = data as ResetPasswordResponse;
 
