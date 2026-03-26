@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { BriefcaseBusiness, Mail, MessagesSquare } from "lucide-react";
+import { BriefcaseBusiness, Mail } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { XIcon } from "@/components/icons/XIcon";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -41,7 +42,7 @@ const Footer = () => {
           <div className="flex items-center gap-3">
             {[
               { href: "https://github.com/pilput", label: "GitHub", icon: GitHubIcon },
-              { href: "https://twitter.com/pilput_dev", label: "Twitter", icon: MessagesSquare },
+              { href: "https://x.com/pilput_dev", label: "X", icon: XIcon },
               { href: "https://linkedin.com/in/cecep31", label: "LinkedIn", icon: BriefcaseBusiness },
               { href: "mailto:cecepjanuardi@proton.me", label: "Email", icon: Mail },
             ].map((item) => (

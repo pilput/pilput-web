@@ -1,18 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  BriefcaseBusiness,
-  Code2,
-  Globe,
-  MapPin,
-  MessagesSquare,
-} from "lucide-react";
+import { BriefcaseBusiness, Code2, Globe, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { XIcon } from "@/components/icons/XIcon";
 
 const AboutMe = () => {
   const containerVariants = {
@@ -109,9 +104,9 @@ const AboutMe = () => {
                     <BriefcaseBusiness className="h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="icon" asChild className="hover:text-sky-500 hover:border-sky-500/50 transition-colors">
-                  <Link href="https://twitter.com/cecep_januardi" target="_blank" aria-label="Twitter Profile">
-                    <MessagesSquare className="h-5 w-5" />
+                <Button variant="outline" size="icon" asChild className="hover:text-foreground hover:border-foreground/50 transition-colors">
+                  <Link href="https://x.com/cecep_januardi" target="_blank" aria-label="X profile">
+                    <XIcon className="h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="icon" asChild className="hover:text-purple-500 hover:border-purple-500/50 transition-colors">

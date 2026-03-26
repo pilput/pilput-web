@@ -31,8 +31,13 @@ import HoldingSummaryCards from "@/components/dashboard/holdings/HoldingSummaryC
 import OverviewChart from "@/components/dashboard/holdings/OverviewChart";
 import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHoldingsChart";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
-import { formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import type { Holding } from "@/types/holding";
+
+/** Theme chart tokens from `src/app/global.css` — matches OverviewChart / MonthlyHoldingsChart */
+function holdingsChartColorVar(index: number) {
+  return `var(--chart-${(index % 5) + 1})`;
+}
 
 export default function HoldingOverviewPage() {
   const { holdings, isLoading, fetchHoldings, fetchHoldingTypes } =
@@ -229,7 +234,7 @@ export default function HoldingOverviewPage() {
   const maskValue = () => "••••••";
 
   return (
-    <div className="container mx-auto space-y-4 sm:space-y-6">
+    <div className="flex w-full flex-col gap-4 md:gap-6">
       {/* Header Section */}
       <div className="flex flex-col gap-3 sm:gap-4">
         <div className="flex items-start gap-3 sm:gap-4">
@@ -276,7 +281,7 @@ export default function HoldingOverviewPage() {
       </div>
 
       {/* Content Grid */}
-      <div className="grid gap-4 sm:gap-6">
+      <div className="grid gap-4 md:gap-6">
         <HoldingSummaryCards
           holdings={holdings}
           isLoading={isLoading}
@@ -284,11 +289,11 @@ export default function HoldingOverviewPage() {
         />
 
         {/* Chart and Insights Grid */}
-        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div className="md:col-span-2 lg:col-span-2 min-w-0">
             <OverviewChart holdings={holdings} hideValues={hideValues} />
           </div>
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Quick Insights Card */}
             <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
               <CardHeader className="pb-3 sm:pb-4">
@@ -303,9 +308,9 @@ export default function HoldingOverviewPage() {
               <CardContent className="space-y-2 sm:space-y-3">
                 {statistics && (
                   <>
-                    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-blue-500/30 transition-colors">
-                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                        <Wallet className="h-4 w-4 text-blue-500/60 shrink-0" />
+                    <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
+                      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                        <Wallet className="h-4 w-4 shrink-0 text-chart-1" />
                         <span className="text-xs sm:text-sm text-muted-foreground truncate">
                           Total Assets
                         </span>
@@ -315,9 +320,9 @@ export default function HoldingOverviewPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-purple-500/30 transition-colors">
-                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                        <Building2 className="h-4 w-4 text-purple-500/60 shrink-0" />
+                    <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
+                      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                        <Building2 className="h-4 w-4 shrink-0 text-chart-2" />
                         <span className="text-xs sm:text-sm text-muted-foreground truncate">
                           Platforms
                         </span>
@@ -327,9 +332,9 @@ export default function HoldingOverviewPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors">
-                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                        <PieChart className="h-4 w-4 text-emerald-500/60 shrink-0" />
+                    <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
+                      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                        <PieChart className="h-4 w-4 shrink-0 text-chart-3" />
                         <span className="text-xs sm:text-sm text-muted-foreground truncate">
                           Asset Types
                         </span>
@@ -340,9 +345,9 @@ export default function HoldingOverviewPage() {
                     </div>
 
                     {statistics.topPlatform && (
-                      <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-amber-500/30 transition-colors">
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                          <Award className="h-4 w-4 text-amber-500/60 shrink-0" />
+                      <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
+                        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                          <Award className="h-4 w-4 shrink-0 text-chart-4" />
                           <span className="text-xs sm:text-sm text-muted-foreground truncate">
                             Top Platform
                           </span>
@@ -367,7 +372,7 @@ export default function HoldingOverviewPage() {
               <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
                 <CardHeader className="pb-3 sm:pb-4">
                   <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-emerald-500" />
+                    <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                     Top Performers
                   </CardTitle>
                   <CardDescription className="text-xs sm:text-sm">
@@ -378,7 +383,7 @@ export default function HoldingOverviewPage() {
                   {statistics.topPerformers.map((holding, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-background border border-border/40 hover:border-emerald-500/30 transition-colors"
+                        className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30"
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-xs sm:text-sm font-medium truncate">
@@ -390,11 +395,12 @@ export default function HoldingOverviewPage() {
                         </div>
                         <div className="flex flex-col items-end ml-2 shrink-0">
                           <span
-                            className={`text-xs sm:text-sm font-semibold ${
+                            className={cn(
+                              "text-xs sm:text-sm font-semibold",
                               holding.returnPercent >= 0
                                 ? "text-emerald-600 dark:text-emerald-400"
-                                : "text-rose-600 dark:text-rose-400"
-                            }`}
+                                : "text-destructive"
+                            )}
                           >
                             {hideValues
                               ? maskValue()
@@ -430,8 +436,8 @@ export default function HoldingOverviewPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="p-2 sm:p-2.5 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/50">
-                      <div className="flex items-center justify-between mb-1">
+                    <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/5 p-2 sm:p-2.5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+                      <div className="mb-1 flex items-center justify-between">
                         <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                           Best: {statistics.bestAssetType.name}
                         </span>
@@ -449,18 +455,18 @@ export default function HoldingOverviewPage() {
                       </div>
                     </div>
 
-                    <div className="p-2 sm:p-2.5 rounded-lg bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-800/50">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-semibold text-rose-700 dark:text-rose-300">
+                    <div className="rounded-lg border border-destructive/25 bg-destructive/5 p-2 sm:p-2.5 dark:bg-destructive/10">
+                      <div className="mb-1 flex items-center justify-between">
+                        <span className="text-xs font-semibold text-destructive">
                           Needs Review: {statistics.worstAssetType.name}
                         </span>
-                        <ArrowDownRight className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400" />
+                        <ArrowDownRight className="h-3.5 w-3.5 text-destructive" />
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] text-muted-foreground">
                           {statistics.worstAssetType.count} assets
                         </span>
-                        <span className="text-xs font-bold text-rose-600 dark:text-rose-400">
+                        <span className="text-xs font-bold text-destructive">
                           {hideValues
                             ? maskValue()
                             : `${statistics.worstAssetType.avgReturnPercent >= 0 ? "+" : ""}${statistics.worstAssetType.avgReturnPercent.toFixed(1)}%`}
@@ -505,7 +511,7 @@ export default function HoldingOverviewPage() {
                         .
                       </p>
                     ) : (
-                      <p className="text-rose-600 dark:text-rose-400">
+                      <p className="text-destructive">
                         Consider reviewing underperforming assets and
                         rebalancing your portfolio.
                       </p>
@@ -556,7 +562,7 @@ export default function HoldingOverviewPage() {
                       return (
                         <div
                           key={currency}
-                          className="p-3 rounded-lg bg-background border border-border/40 hover:border-primary/30 transition-colors"
+                          className="rounded-lg border border-border/40 bg-background p-3 transition-colors hover:border-primary/30 hover:bg-accent/30"
                         >
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-semibold">
@@ -592,11 +598,12 @@ export default function HoldingOverviewPage() {
                                 Return:
                               </span>
                               <span
-                                className={`font-semibold ${
+                                className={cn(
+                                  "font-semibold",
                                   currencyReturnPercent >= 0
                                     ? "text-emerald-600 dark:text-emerald-400"
-                                    : "text-rose-600 dark:text-rose-400"
-                                }`}
+                                    : "text-destructive"
+                                )}
                               >
                                 {hideValues
                                   ? maskValue()
@@ -617,7 +624,7 @@ export default function HoldingOverviewPage() {
 
         {/* Percentage Distribution Cards */}
         {statistics && (
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+          <div className="grid gap-4 md:gap-6 md:grid-cols-2">
             {/* Platform Percentage Distribution */}
             <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
               <CardHeader className="pb-3 sm:pb-4">
@@ -652,27 +659,17 @@ export default function HoldingOverviewPage() {
                     }))
                     .sort((a, b) => b.value - a.value)
                     .map((item, index) => {
-                      const CHART_COLORS = [
-                        "#3b82f6", // Blue
-                        "#8b5cf6", // Purple
-                        "#ec4899", // Pink
-                        "#f59e0b", // Amber
-                        "#10b981", // Emerald
-                        "#6366f1", // Indigo
-                      ];
+                      const barColor = holdingsChartColorVar(index);
                       return (
                         <div
                           key={item.platform}
                           className="space-y-2"
                         >
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <div className="flex min-w-0 flex-1 items-center gap-2">
                               <div
-                                className="w-3 h-3 rounded-full shrink-0"
-                                style={{
-                                  backgroundColor:
-                                    CHART_COLORS[index % CHART_COLORS.length],
-                                }}
+                                className="h-3 w-3 shrink-0 rounded-full"
+                                style={{ backgroundColor: barColor }}
                               />
                               <span className="text-sm font-medium truncate">
                                 {item.platform}
@@ -689,13 +686,12 @@ export default function HoldingOverviewPage() {
                               </span>
                             </div>
                           </div>
-                          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                          <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                             <div
                               className="h-full rounded-full transition-all"
                               style={{
                                 width: `${item.percent}%`,
-                                backgroundColor:
-                                  CHART_COLORS[index % CHART_COLORS.length],
+                                backgroundColor: barColor,
                               }}
                             />
                           </div>
@@ -740,27 +736,17 @@ export default function HoldingOverviewPage() {
                     }))
                     .sort((a, b) => b.value - a.value)
                     .map((item, index) => {
-                      const CHART_COLORS = [
-                        "#3b82f6", // Blue
-                        "#8b5cf6", // Purple
-                        "#ec4899", // Pink
-                        "#f59e0b", // Amber
-                        "#10b981", // Emerald
-                        "#6366f1", // Indigo
-                      ];
+                      const barColor = holdingsChartColorVar(index);
                       return (
                         <div
                           key={item.typeName}
                           className="space-y-2"
                         >
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <div className="flex min-w-0 flex-1 items-center gap-2">
                               <div
-                                className="w-3 h-3 rounded-full shrink-0"
-                                style={{
-                                  backgroundColor:
-                                    CHART_COLORS[index % CHART_COLORS.length],
-                                }}
+                                className="h-3 w-3 shrink-0 rounded-full"
+                                style={{ backgroundColor: barColor }}
                               />
                               <span className="text-sm font-medium truncate">
                                 {item.typeName}
@@ -777,13 +763,12 @@ export default function HoldingOverviewPage() {
                               </span>
                             </div>
                           </div>
-                          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                          <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                             <div
                               className="h-full rounded-full transition-all"
                               style={{
                                 width: `${item.percent}%`,
-                                backgroundColor:
-                                  CHART_COLORS[index % CHART_COLORS.length],
+                                backgroundColor: barColor,
                               }}
                             />
                           </div>

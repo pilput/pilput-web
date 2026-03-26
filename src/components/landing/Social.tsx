@@ -7,12 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import {
-  BriefcaseBusiness,
-  Mail,
-  MessagesSquare,
-} from "lucide-react";
+import { BriefcaseBusiness, Mail } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { XIcon } from "@/components/icons/XIcon";
 
 interface SocialLink {
   name: string;
@@ -33,12 +30,12 @@ const socialLinks: SocialLink[] = [
     hoverColor: "hover:bg-gray-500/10",
   },
   {
-    name: "Twitter",
+    name: "X",
     url: "https://x.com/cecep_januardi",
-    icon: MessagesSquare,
+    icon: XIcon,
     description: "Follow me for tech updates",
-    color: "text-blue-500 dark:text-blue-400",
-    hoverColor: "hover:bg-blue-500/10",
+    color: "text-foreground",
+    hoverColor: "hover:bg-muted/80",
   },
   {
     name: "LinkedIn",
