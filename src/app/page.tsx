@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Navigation from "@/components/header/Navbar";
 import Hero from "@/components/landing/Hero";
 import Highlights from "@/components/landing/Highlights";
@@ -6,9 +7,32 @@ import MissionSection from "@/components/landing/Mission";
 import CallToAction from "@/components/landing/CallToAction";
 import Community from "@/components/landing/Community";
 import Footer from "@/components/footer/Footer";
+import HomeFeedContent from "@/components/home/HomeFeedContent";
 import { Config } from "@/utils/getConfig";
+import { fetchInitialPosts, postsPerPage } from "@/lib/blog-feed-data";
 
-export default function Home() {
+/** Cookie read per request — do not statically cache one HTML for all users */
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const cookieStore = await cookies();
+  const isLoggedIn = Boolean(cookieStore.get("token")?.value);
+
+  if (isLoggedIn) {
+    const { posts, total } = await fetchInitialPosts();
+
+    return (
+      <>
+        <Navigation />
+        <HomeFeedContent
+          initialPosts={posts}
+          initialTotal={total}
+          postsPerPage={postsPerPage}
+        />
+      </>
+    );
+  }
+
   const baseUrl = Config.mainbaseurl;
 
   const webSiteJsonLd = {

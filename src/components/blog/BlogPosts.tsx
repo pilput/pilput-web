@@ -3,7 +3,7 @@
 import PostList from "@/components/post/PostList";
 import PostListPulse from "@/components/post/PostListPulse";
 import { Paginate } from "@/components/common/Paginate";
-import { Filter, X, FileQuestion, Sparkles } from "lucide-react";
+import { Filter, X, FileQuestion, Sparkles, Rss } from "lucide-react";
 import type { Post } from "@/types/post";
 
 interface BlogPostsProps {
@@ -15,6 +15,8 @@ interface BlogPostsProps {
   postsPerPage: number;
   searchQuery: string; // This should be the active filter (debounced)
   onClearSearch: () => void;
+  /** "feed" = compact home feed; "blog" = full blog toolbar copy */
+  variant?: "blog" | "feed";
 }
 
 const BlogPosts = ({
@@ -26,17 +28,35 @@ const BlogPosts = ({
   postsPerPage,
   searchQuery,
   onClearSearch,
+  variant = "blog",
 }: BlogPostsProps) => {
   const totalPages = Math.max(1, Math.ceil(total / postsPerPage));
+  const isFeed = variant === "feed";
 
   return (
     <div className="flex-1">
       {/* Toolbar */}
       <div className="sticky top-3 z-20 mb-4">
-        <div className="flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-4 py-3 shadow-sm backdrop-blur">
+        <div
+          className={
+            isFeed
+              ? "flex flex-wrap items-center gap-3 border-b border-border/60 pb-4"
+              : "flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-4 py-3 shadow-sm backdrop-blur"
+          }
+        >
           <div className="flex items-center gap-2 text-sm text-foreground font-semibold">
-            <Sparkles className="w-4 h-4 text-primary" />
-            {total ? `${total} stories` : "Stories"}
+            {isFeed ? (
+              <Rss className="w-4 h-4 text-primary" />
+            ) : (
+              <Sparkles className="w-4 h-4 text-primary" />
+            )}
+            {isFeed
+              ? total
+                ? `${total} posts`
+                : "Feed"
+              : total
+                ? `${total} stories`
+                : "Stories"}
           </div>
           <div className="text-sm text-muted-foreground">
             Page {currentPage + 1} of {totalPages}

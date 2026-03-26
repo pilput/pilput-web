@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ButtonLogged from "./ButtonLogged";
 import { usePathname } from "next/navigation";
 import DarkModeButton from "./Darkmode";
@@ -12,17 +12,19 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-
-const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Blog", href: "/blog" },
-  { name: "About", href: "/about" },
-  { name: "Chat", href: "/chat" },
-];
+import { getCookie } from "cookies-next";
+import { getMainNavItems } from "./nav-items";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [showmenu, setshowmenu] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setLoggedIn(Boolean(getCookie("token")));
+  }, []);
+
+  const navigation = useMemo(() => getMainNavItems(loggedIn), [loggedIn]);
 
   function toggleMenu() {
     setshowmenu((prev) => !prev);
