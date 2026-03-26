@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { ArrowUp } from "lucide-react";
-import { axiosInstance } from "@/utils/fetch";
+import { axiosInstance3 } from "@/utils/fetch";
+import { getToken } from "@/utils/Auth";
 import type { Post } from "@/types/post";
 import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
 import BlogPosts from "@/components/blog/BlogPosts";
@@ -41,11 +42,12 @@ const HomeFeedContent = ({
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstance.get("/v1/posts", {
+        const { data } = await axiosInstance3.get("/v1/posts/feed/for-you", {
           params: {
             limit: postsPerPage,
             offset: currentPage * postsPerPage,
           },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
         const response = data;
         if (response.data) {
@@ -70,7 +72,7 @@ const HomeFeedContent = ({
     <div className="min-h-screen bg-background">
       <main className="container mx-auto max-w-3xl px-4 py-8 md:py-10">
         <header className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight">Feed</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">For you</h1>
           <p className="text-sm text-muted-foreground mt-1.5">
             Updates from the community. For search and topics, open{" "}
             <Link

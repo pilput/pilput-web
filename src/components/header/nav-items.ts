@@ -3,7 +3,7 @@ export type NavItem = { name: string; href: string };
 export function getMainNavItems(isLoggedIn: boolean): NavItem[] {
   return [
     {
-      name: isLoggedIn ? "Feed" : "Home",
+      name: isLoggedIn ? "For you" : "Home",
       href: "/",
     },
     { name: isLoggedIn ? "Latest" : "Blog", href: "/blog" },
