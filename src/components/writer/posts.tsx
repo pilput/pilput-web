@@ -5,7 +5,12 @@ import { useEffect, useState } from "react";
 import PostList from "../post/PostList";
 import type { Post } from "@/types/post";
 
-function Posts(props: { username: string }) {
+function Posts(props: {
+  username: string;
+  /** When false, only the list / empty state is shown (parent provides section title). */
+  showHeading?: boolean;
+}) {
+  const showHeading = props.showHeading !== false;
   const [posts, setposts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,8 +34,14 @@ function Posts(props: { username: string }) {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-foreground">Posts</h2>
+        <div
+          className={`flex items-center ${showHeading ? "justify-between" : "justify-end"}`}
+        >
+          {showHeading ? (
+            <h2 className="text-2xl font-bold text-foreground">Posts</h2>
+          ) : (
+            <span className="sr-only">Posts</span>
+          )}
           <div className="text-sm text-muted-foreground">Loading posts...</div>
         </div>
         <div className="grid gap-6">
@@ -50,9 +61,19 @@ function Posts(props: { username: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Posts</h2>
-        <div className="text-sm text-muted-foreground">
+      <div className="flex items-center justify-between gap-4">
+        {showHeading ? (
+          <h2 className="text-2xl font-bold text-foreground">Posts</h2>
+        ) : (
+          <span className="sr-only">Posts</span>
+        )}
+        <div
+          className={
+            showHeading
+              ? "text-sm text-muted-foreground"
+              : "ml-auto text-sm font-medium text-muted-foreground"
+          }
+        >
           {posts.length} {posts.length === 1 ? "post" : "posts"}
         </div>
       </div>

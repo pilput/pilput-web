@@ -1,187 +1,30 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, User, Link as LinkIcon } from "lucide-react";
 import PostsUser from "@/components/writer/posts";
-import type { Writer } from "@/types/writer";
 
 interface WriterProfileClientProps {
-  writer: Writer;
   username: string;
 }
 
 export default function WriterProfileClient({
-  writer,
   username,
 }: WriterProfileClientProps) {
-  const [activeTab, setActiveTab] = useState<"posts" | "about">("posts");
-
   return (
-    <div className="space-y-6">
-      {/* Navigation Pills */}
-      <div className="flex justify-center">
-        <div className="bg-muted/50 backdrop-blur-sm rounded-full p-1 border border-border/50">
-          <div className="flex space-x-1">
-            <button
-              onClick={() => setActiveTab("posts")}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === "posts"
-                  ? "bg-background text-foreground shadow-sm border border-border/50"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              Posts
-            </button>
-            <button
-              onClick={() => setActiveTab("about")}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === "about"
-                  ? "bg-background text-foreground shadow-sm border border-border/50"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-              }`}
-            >
-              <User className="w-4 h-4" />
-              About
-            </button>
-          </div>
+    <Card className="overflow-hidden border-border/60 shadow-sm">
+      <CardContent className="p-0">
+        <div className="border-b border-border/50 bg-muted/20 px-5 py-4 sm:px-8 sm:py-5">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Writing
+          </p>
+          <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+            Posts from @{username}
+          </h2>
         </div>
-      </div>
-
-      {/* Content Card */}
-      <Card className="shadow-sm">
-        <CardContent className="p-6 sm:p-8">
-          {activeTab === "posts" ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <FileText className="w-5 h-5 text-blue-500" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-                      Latest Posts
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Explore {writer.first_name}&apos;s writing
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <PostsUser username={username} />
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-500/10 rounded-lg">
-                  <User className="w-5 h-5 text-purple-500" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                    About {writer.first_name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Get to know the writer
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Bio Section */}
-                <div className="lg:col-span-2 space-y-4">
-                  <div className="prose prose-gray dark:prose-invert max-w-none">
-                    {writer.profile?.bio ? (
-                      <p className="text-muted-foreground leading-relaxed text-base">
-                        {writer.profile.bio}
-                      </p>
-                    ) : (
-                      <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg border border-dashed border-border/50">
-                        <User className="w-5 h-5 text-muted-foreground" />
-                        <p className="text-muted-foreground italic">
-                          No bio available yet. {writer.first_name} hasn&apos;t
-                          added a bio to their profile.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Info Cards */}
-                <div className="space-y-4">
-                  {/* Personal Info Card */}
-                  <Card className="border-border/50 shadow-sm">
-                    <CardContent className="p-4">
-                      <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        Personal Info
-                      </h4>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">
-                            Full Name
-                          </span>
-                          <span className="font-medium text-right">
-                            {writer.first_name} {writer.last_name}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">
-                            Username
-                          </span>
-                          <span className="font-medium text-right">
-                            @{writer.username}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">Joined</span>
-                          <span className="font-medium text-right">
-                            {new Date(writer.created_at).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "short",
-                                year: "numeric",
-                              },
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Contact Card */}
-                  <Card className="border-border/50 shadow-sm">
-                    <CardContent className="p-4">
-                      <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
-                        <LinkIcon className="w-4 h-4" />
-                        Contact & Links
-                      </h4>
-                      <div className="space-y-2">
-                        {writer.profile?.website ? (
-                          <a
-                            href={writer.profile.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors text-sm group"
-                          >
-                            <LinkIcon className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                            <span className="font-medium">Visit Website</span>
-                          </a>
-                        ) : (
-                          <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                            <LinkIcon className="w-4 h-4" />
-                            <span>No website added</span>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        <div className="px-4 py-6 sm:px-8 sm:py-8">
+          <PostsUser username={username} showHeading={false} />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
