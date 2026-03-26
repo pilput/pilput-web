@@ -1,27 +1,17 @@
 import Navigation from "@/components/header/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Metadata } from "next";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { axiosInstance3 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import { Config } from "@/utils/getConfig";
-import {
-  CalendarDays,
-  Users,
-  Edit2,
-  MoreHorizontal,
-  Link as LinkIcon,
-} from "lucide-react";
+import { CalendarDays, Link as LinkIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import WriterProfileClient from "./WriterProfileClient";
+import ProfileFollowActions from "@/components/writer/ProfileFollowActions";
+import type { Writer } from "@/types/writer";
+import { cookies } from "next/headers";
 
 interface succesResponse {
   data: Writer;
@@ -31,7 +21,13 @@ interface succesResponse {
 
 const getWriter = async (username: string): Promise<Writer> => {
   try {
-    const { data } = await axiosInstance3.get(`/v1/users/username/${username}`);
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    const { data } = await axiosInstance3.get(`/v1/users/username/${username}`, {
+      ...(token && {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    });
     const result = data as succesResponse;
     return result.data;
   } catch {
@@ -44,6 +40,7 @@ export default async function page(props: {
 }) {
   const params = await props.params;
   const writer = await getWriter(params.username);
+  const redirectPath = `/${params.username}`;
 
   const baseUrl = Config.mainbaseurl;
   const profileUrl = `${baseUrl}/${params.username}`;
@@ -74,7 +71,11 @@ export default async function page(props: {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-16 w-16 ring-2 ring-background">
-                      <AvatarImage src={getUrlImage(writer.image)} />
+                      <AvatarImage
+                      src={
+                        writer.image ? getUrlImage(writer.image) : undefined
+                      }
+                    />
                       <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                         {writer.first_name?.[0]}
                         {writer.last_name?.[0]}
@@ -90,29 +91,12 @@ export default async function page(props: {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
-                      <Edit2 className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem className="cursor-pointer">
-                          <Users className="w-4 h-4 mr-2" />
-                          Share Profile
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer text-red-600">
-                          Report
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                  <ProfileFollowActions
+                    writerId={writer.id}
+                    profileUsername={writer.username}
+                    initialIsFollowing={Boolean(writer.is_following)}
+                    redirectPath={redirectPath}
+                  />
                 </div>
               </CardHeader>
 
@@ -157,7 +141,7 @@ export default async function page(props: {
                 <div className="grid grid-cols-3 gap-6">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      {/* {profile.followers?.toLocaleString() || '0'} */}0
+                      {(writer.followers_count ?? 0).toLocaleString()}
                     </div>
                     <div className="text-sm text-muted-foreground font-medium">
                       Followers
@@ -165,7 +149,7 @@ export default async function page(props: {
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      {/* {profile.following?.toLocaleString() || '0'} */}0
+                      {(writer.following_count ?? 0).toLocaleString()}
                     </div>
                     <div className="text-sm text-muted-foreground font-medium">
                       Following
@@ -173,7 +157,7 @@ export default async function page(props: {
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      {/* {profile.posts?.toLocaleString() || '0'} */}0
+                      {(writer.posts_count ?? 0).toLocaleString()}
                     </div>
                     <div className="text-sm text-muted-foreground font-medium">
                       Posts

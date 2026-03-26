@@ -4,18 +4,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, User, Link as LinkIcon } from "lucide-react";
 import PostsUser from "@/components/writer/posts";
-
-interface Writer {
-  first_name: string;
-  last_name: string;
-  username: string;
-  image?: string;
-  created_at: string;
-  profile?: {
-    bio?: string;
-    website?: string;
-  };
-}
+import type { Writer } from "@/types/writer";
 
 interface WriterProfileClientProps {
   writer: Writer;

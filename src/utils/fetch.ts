@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "./Auth";
 import { ErrorHandlerAPI } from "./ErrorHandler";
 import { Config } from "./getConfig";
 
@@ -43,6 +44,22 @@ export async function resetPassword(token: string, password: string) {
   } catch (error) {
     return ErrorHandlerAPI(error);
   }
+}
+
+export function followUser(userId: string) {
+  return axiosInstance3.post(
+    `/v1/users/${userId}/follow`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    },
+  );
+}
+
+export function unfollowUser(userId: string) {
+  return axiosInstance3.delete(`/v1/users/${userId}/follow`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
 }
 
 
