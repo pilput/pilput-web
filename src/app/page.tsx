@@ -9,24 +9,21 @@ import Community from "@/components/landing/Community";
 import Footer from "@/components/footer/Footer";
 import HomeFeedContent from "@/components/home/HomeFeedContent";
 import { Config } from "@/utils/getConfig";
-import { fetchInitialPosts, postsPerPage } from "@/lib/blog-feed-data";
+import { postsPerPage } from "@/lib/blog-feed-data";
 
-/** Cookie read per request — do not statically cache one HTML for all users */
+/** Cookie read per request — needed to branch guest (SSR landing) vs logged-in (client feed only) */
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const cookieStore = await cookies();
-  const isLoggedIn = Boolean(cookieStore.get("token")?.value);
+  const isLoggedIn = Boolean((await cookies()).get("token")?.value);
 
   if (isLoggedIn) {
-    const { posts, total } = await fetchInitialPosts();
-
     return (
       <>
         <Navigation />
         <HomeFeedContent
-          initialPosts={posts}
-          initialTotal={total}
+          initialPosts={[]}
+          initialTotal={0}
           postsPerPage={postsPerPage}
         />
       </>

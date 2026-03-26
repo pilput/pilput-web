@@ -36,28 +36,55 @@ const Navbar = () => {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b backdrop-blur-xl",
+        loggedIn
+          ? "border-border/30 bg-background/95 supports-backdrop-filter:bg-background/75"
+          : "border-border/60 bg-background/80"
+      )}
+    >
       <div className="container mx-auto px-4">
-        <nav className="flex h-16 items-center justify-between" aria-label="Main navigation">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="text-xl font-semibold tracking-tight bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent hover:from-primary/90 hover:to-primary/60 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md"
-            aria-label="Pilput home"
-          >
-            pilput
-          </Link>
+        <nav
+          className={cn(
+            "flex h-14 md:h-16 items-center w-full gap-3 md:gap-4",
+            loggedIn ? "justify-end md:justify-between" : "justify-between"
+          )}
+          aria-label="Main navigation"
+        >
+          {!loggedIn && (
+            <Link
+              href="/"
+              className="text-xl font-semibold tracking-tight bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent hover:from-primary/90 hover:to-primary/60 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md shrink-0"
+              aria-label="Pilput home"
+            >
+              pilput
+            </Link>
+          )}
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex">
-            <NavigationMenu>
-              <NavigationMenuList>
+          <div
+            className={cn(
+              "hidden md:flex",
+              loggedIn ? "flex-1 justify-start min-w-0" : "flex-1 justify-center"
+            )}
+          >
+            <NavigationMenu
+              className={cn(loggedIn && "max-w-none flex-1 justify-start")}
+            >
+              <NavigationMenuList
+                className={cn(
+                  "flex-wrap",
+                  loggedIn && "justify-start gap-0.5 sm:gap-1"
+                )}
+              >
                 {navigation.map((item) => (
-                  <NavigationMenuItem key={item.name}>
+                  <NavigationMenuItem key={`${item.href}-${item.name}`}>
                     <Link
                       href={item.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
+                        loggedIn && "h-8 px-3 text-[13px] font-medium",
                         pathname === item.href
                           ? "bg-primary/10 text-primary border border-primary/30 shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
@@ -72,15 +99,16 @@ const Navbar = () => {
           </div>
 
           {/* Right side - Desktop */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             <DarkModeButton />
             <ButtonLogged />
           </div>
 
           {/* Mobile menu button */}
           <button
+            type="button"
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg border border-border/70 bg-background/70 hover:bg-accent/60 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="md:hidden p-2 rounded-lg border border-border/70 bg-background/70 hover:bg-accent/60 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0"
             aria-label={showmenu ? "Close menu" : "Open menu"}
             aria-expanded={showmenu}
           >
@@ -99,7 +127,7 @@ const Navbar = () => {
             <div className="py-3 sm:py-4 space-y-1.5 sm:space-y-2">
               {navigation.map((item) => (
                 <Link
-                  key={item.name}
+                  key={`${item.href}-${item.name}`}
                   href={item.href}
                   onClick={() => setshowmenu(false)}
                   className={cn(

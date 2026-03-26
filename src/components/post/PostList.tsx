@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Heart,
   Bookmark,
@@ -11,6 +14,12 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Post } from "@/types/post";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const PostList = ({ post }: { post: Post }) => {
   const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
@@ -41,13 +50,15 @@ const PostList = ({ post }: { post: Post }) => {
             whileHover={{ scale: 1.05 }}
           >
             <Link href={`/${post.user.username}`}>
-              {post.user?.image && (
-                <img
-                  className="rounded-full object-cover border-2 border-border w-9 h-9"
+              <Avatar className="h-9 w-9 border-2 border-border">
+                <AvatarImage
                   src={getProfilePicture(post.user?.image)}
-                  alt={post.user?.first_name || "Author"}
+                  alt={post.user?.first_name || post.user.username || "Author"}
                 />
-              )}
+                <AvatarFallback className="text-xs font-semibold">
+                  {post.user?.first_name?.[0] || post.user.username[0]}
+                </AvatarFallback>
+              </Avatar>
             </Link>
           </motion.div>
           <div className="min-w-0 flex-1">
@@ -109,9 +120,28 @@ const PostList = ({ post }: { post: Post }) => {
               </motion.div>
             ))}
             {tags.length > 3 && (
-              <span className="text-xs text-muted-foreground px-2 py-1">
-                +{tags.length - 3} more
-              </span>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span
+                      className="text-xs text-muted-foreground px-2 py-1 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2"
+                      tabIndex={0}
+                    >
+                      +{tags.length - 3} more
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-xs text-left">
+                    <p className="mb-1.5 font-medium text-background">
+                      Tags not shown in preview
+                    </p>
+                    <ul className="space-y-0.5 font-normal">
+                      {tags.slice(3).map((tag) => (
+                        <li key={tag.id}>#{tag.name}</li>
+                      ))}
+                    </ul>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </div>
         )}

@@ -22,7 +22,8 @@ const HomeFeedContent = ({
 }: HomeFeedContentProps) => {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [total, setTotal] = useState(initialTotal);
-  const [isLoading, setIsLoading] = useState(false);
+  /** Avoid empty-state flash when loading client-only (no SSR posts) */
+  const [isLoading, setIsLoading] = useState(() => initialPosts.length === 0);
   const [currentPage, setCurrentPage] = useState(0);
   const showScrollTop = useScrollTopVisibility(400);
 
