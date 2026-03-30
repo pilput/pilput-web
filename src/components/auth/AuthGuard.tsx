@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { getCookie } from "cookies-next";
 
@@ -11,20 +11,16 @@ interface AuthGuardProps {
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const token = getCookie("token");
 
   useEffect(() => {
-    const token = getCookie("token");
     if (!token) {
       const redirectParam = encodeURIComponent(pathname);
       router.replace(`/login?redirect=${redirectParam}`);
-      setIsAuthorized(false);
-    } else {
-      setIsAuthorized(true);
     }
-  }, [pathname, router]);
+  }, [pathname, router, token]);
 
-  if (isAuthorized === false || isAuthorized === null) {
+  if (!token) {
     return null;
   }
 

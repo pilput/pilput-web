@@ -11,7 +11,7 @@ export default function Community() {
         <div className="flex flex-col items-center text-center mb-16 sm:mb-24 space-y-6">
           <Badge variant="outline" className="px-4 py-1.5 border-primary/20 bg-primary/5 text-primary backdrop-blur-sm rounded-full">
             <Sparkles className="w-3.5 h-3.5 mr-2" />
-            Discover what's new
+            Discover what&apos;s new
           </Badge>
           
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight">

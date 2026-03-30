@@ -13,7 +13,7 @@ import ProfileFollowActions from "@/components/writer/ProfileFollowActions";
 import type { Writer } from "@/types/writer";
 import { cookies } from "next/headers";
 
-interface succesResponse {
+interface SuccessResponse {
   data: Writer;
   message: string;
   success: boolean;
@@ -28,7 +28,7 @@ const getWriter = async (username: string): Promise<Writer> => {
         headers: { Authorization: `Bearer ${token}` },
       }),
     });
-    const result = data as succesResponse;
+    const result = data as SuccessResponse;
     return result.data;
   } catch {
     throw notFound();

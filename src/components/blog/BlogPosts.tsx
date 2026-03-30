@@ -64,7 +64,7 @@ const BlogPosts = ({
           {searchQuery && (
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-foreground text-sm border border-border/60">
                 <Filter className="w-3 h-3" />
-                Searching "{searchQuery}"
+                Searching &quot;{searchQuery}&quot;
                 <button
                   onClick={onClearSearch}
                   className="text-muted-foreground hover:text-foreground"

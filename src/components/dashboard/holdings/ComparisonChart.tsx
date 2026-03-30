@@ -25,6 +25,55 @@ interface ComparisonChartProps {
   hideValues?: boolean;
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ name: string; value: number }>;
+  label?: string;
+  hideValues?: boolean;
+}
+
+function CustomTooltip({
+  active,
+  payload,
+  label,
+  hideValues = false,
+}: CustomTooltipProps) {
+  if (active && payload && payload.length >= 2) {
+    return (
+      <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          <div className="flex flex-col min-w-0">
+            <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
+              {label}
+            </span>
+            <span className="font-bold text-muted-foreground text-xs sm:text-sm truncate">
+              {payload[0].name}
+            </span>
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
+              Value
+            </span>
+            <span className="font-bold text-xs sm:text-sm wrap-break-word">
+              {hideValues ? "••••••" : payload[0].value.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex flex-col min-w-0 col-span-2">
+            <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
+              {payload[1].name}
+            </span>
+            <span className="font-bold text-xs sm:text-sm wrap-break-word">
+              {hideValues ? "••••••" : payload[1].value.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export default function ComparisonChart({
   data,
   hideValues = false,
@@ -41,42 +90,6 @@ export default function ComparisonChart({
       Current: data.summary.to.totalCurrentValue,
     },
   ];
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <div className="flex flex-col min-w-0">
-              <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
-                {label}
-              </span>
-              <span className="font-bold text-muted-foreground text-xs sm:text-sm truncate">
-                {payload[0].name}
-              </span>
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
-                Value
-              </span>
-              <span className="font-bold text-xs sm:text-sm break-words">
-                {hideValues ? "••••••" : payload[0].value.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex flex-col min-w-0 col-span-2">
-              <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
-                {payload[1].name}
-              </span>
-              <span className="font-bold text-xs sm:text-sm break-words">
-                {hideValues ? "••••••" : payload[1].value.toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card>
@@ -115,7 +128,7 @@ export default function ComparisonChart({
                 width={50}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={<CustomTooltip hideValues={hideValues} />}
                 cursor={{ fill: "var(--muted)", opacity: 0.2 }}
               />
               <Legend 

@@ -106,6 +106,7 @@ export default function LoginPage() {
 
       setCookie("token", result.data.access_token, {
         expires: expire,
+        path: "/",
         domain: `.${Config.maindomain}`,
         sameSite: "none",
         secure: true,

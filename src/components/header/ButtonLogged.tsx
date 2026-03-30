@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { getCookie } from "cookies-next";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { User, LogIn, Settings, ChevronDown } from "lucide-react";
+import { RemoveToken } from "@/utils/Auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const ButtonLogged = () => {
-  const [token, settoken] = useState("");
-  useEffect(() => {
-    settoken(getCookie("token")?.toString() || "");
-  }, []);
+  const token = getCookie("token")?.toString() || "";
 
   return (
     <>
@@ -47,8 +44,7 @@ const ButtonLogged = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  // Clear token and redirect to login
-                  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  RemoveToken();
                   window.location.href = "/login";
                 }}
                 className="text-red-600 dark:text-red-400"

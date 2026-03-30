@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +26,6 @@ const TagsPage = () => {
   const [tags, setTags] = useState<TagWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTags, setFilteredTags] = useState<TagWithStats[]>([]);
 
   useEffect(() => {
     async function fetchTags() {
@@ -41,7 +40,6 @@ const TagsPage = () => {
             post_count: Math.floor(Math.random() * 50) + 1, // Mock data
           }));
           setTags(tagsWithStats);
-          setFilteredTags(tagsWithStats);
         } else {
           console.error("Error loading tags");
         }
@@ -57,26 +55,32 @@ const TagsPage = () => {
           { id: "6", name: "javascript", post_count: 35, created_at: new Date().toISOString() },
         ];
         setTags(fallbackTags);
-        setFilteredTags(fallbackTags);
       }
       setIsLoading(false);
     }
     fetchTags();
   }, []);
 
-  useEffect(() => {
-    const filtered = tags.filter((tag) =>
-      tag.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredTags(filtered);
-  }, [searchTerm, tags]);
+  const filteredTags = useMemo(
+    () =>
+      tags.filter((tag) =>
+        tag.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [searchTerm, tags]
+  );
 
-  const sortedTags = filteredTags.sort((a, b) => (b.post_count || 0) - (a.post_count || 0));
+  const sortedTags = useMemo(
+    () =>
+      [...filteredTags].sort(
+        (a, b) => (b.post_count || 0) - (a.post_count || 0)
+      ),
+    [filteredTags]
+  );
 
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
         {/* Hero Section */}
         <div className="border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 py-4">
@@ -147,7 +151,7 @@ const TagsPage = () => {
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <Hash className="w-4 h-4 text-white" />
                           </div>
                           <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">

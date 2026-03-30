@@ -1,5 +1,4 @@
 import { getCookie } from "cookies-next";
-import { axiosInstance2, axiosInstance3 } from "./fetch";
 import { Config } from "./getConfig";
 
 export function getToken() {
@@ -8,9 +7,17 @@ export function getToken() {
 }
 
 export function logOut() {
+  if (typeof document === "undefined") {
+    return;
+  }
+
   document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${Config.maindomain};`;
 }
 
 export function RemoveToken() {
+  if (typeof document === "undefined") {
+    return;
+  }
+
   document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${Config.maindomain};`;
 }

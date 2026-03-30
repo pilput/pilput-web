@@ -1,8 +1,6 @@
-import { Config } from "@/utils/getConfig";
-import axios from "axios";
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
-// import {storagebaseurl} from '@/utils/getConfig'
+import { axiosInstance3 } from "@/utils/fetch";
 
 interface Profile {
   id: string;
@@ -18,39 +16,47 @@ interface Profile {
 
 type Store = {
   profile: Profile;
-  refresh: () => void;
+  refresh: () => Promise<void>;
 };
 
 export const profileStore = create<Store>()((set) => ({
   profile: {
     id: "",
-    email: "temp@gmail.com",
-    first_name: "temp",
-    last_name: "admin",
-    image: "/wkwkw",
+    email: "",
+    first_name: "",
+    last_name: "",
+    image: "",
     issuperadmin: false,
-    created_at: "2023-06-13T09:58:56.003Z",
-    updated_at: "2023-06-13T09:58:56.003Z",
-    fullName: "temp",
+    created_at: "",
+    updated_at: "",
+    fullName: "",
   },
-  refresh: () => {
+  refresh: async () => {
     const token = getToken();
     if (!token) {
       return;
     }
 
-    axios
-      .get(Config.apibaseurl+"/auth/profile", {
+    try {
+      const response = await axiosInstance3.get("/v1/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        const data = response.data;
-        set({ profile: data });
-      })
-      .catch((error) => {
-        console.error(error);
       });
+
+      const data = response.data?.data;
+      if (!data) {
+        return;
+      }
+
+      set({
+        profile: {
+          ...data,
+          fullName: `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim(),
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   },
 }));

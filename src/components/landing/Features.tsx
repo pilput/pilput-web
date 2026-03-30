@@ -1,7 +1,7 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React, { useRef, useCallback } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -34,11 +34,6 @@ const Features: React.FC = () => {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const features: Feature[] = [
     {
@@ -150,7 +145,7 @@ const Features: React.FC = () => {
             viewport={{ once: true }}
             className="text-lg md:text-xl text-muted-foreground max-w-md font-light leading-relaxed mb-2"
           >
-            We've stripped away the noise to give you the most powerful, 
+            We&apos;ve stripped away the noise to give you the most powerful,
             intuitive tools for your creative workflow.
           </motion.p>
         </div>

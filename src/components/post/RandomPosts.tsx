@@ -10,7 +10,7 @@ import { ArrowRight, RefreshCw } from "lucide-react";
 import type { Post } from "@/types/post";
 import { cn } from "@/lib/utils";
 
-interface succesResponse {
+interface SuccessResponse {
   data: Post[];
   message: string;
   success: boolean;
@@ -27,7 +27,7 @@ const PostsRandomList = () => {
     try {
       setIsLoading(true);
       const response = await axiosInstance.get("/v1/posts/random?limit=6");
-      const result = response.data as succesResponse;
+      const result = response.data as SuccessResponse;
       setposts(result.data);
     } catch {
       toast.error("Failed to fetch random posts");

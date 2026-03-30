@@ -1,9 +1,7 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { axiosInstance } from "../../utils/fetch";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { profileStore } from "@/stores/profile-store";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,11 +11,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getProfilePicture } from "@/utils/getImage";
 
 const Profile = () => {
-  const router = useRouter();
   const { profile, refresh } = profileStore();
 
+  useEffect(() => {
+    if (!profile.id) {
+      void refresh();
+    }
+  }, [profile.id, refresh]);
+
   if (!profile.id) {
-    refresh();
     return (
       <div className="flex justify-center mb-10">
         <Card className="w-full max-w-2xl my-20">
@@ -46,7 +48,7 @@ const Profile = () => {
       <Card className="w-full max-w-2xl my-20">
         <CardHeader className="relative">
           <Link
-            href="/update-profile"
+            href="/account"
             className="absolute right-6 top-6 transition-transform hover:scale-105"
           >
             <Button variant="outline" size="icon">
@@ -59,7 +61,7 @@ const Profile = () => {
             <div className="relative group">
               <Avatar className="h-32 w-32">
                 <AvatarImage
-                  src={profile.image ? getProfilePicture(profile.image) : "https://placeimg.com/640/480/any"}
+                  src={profile.image ? getProfilePicture(profile.image) : undefined}
                   alt={profile.fullName || "Profile picture"}
                   className="object-cover"
                 />
@@ -87,9 +89,8 @@ const Profile = () => {
             <div className="w-full max-w-md space-y-4">
               <div className="text-center space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  An artist of considerable range, Mike is the name taken by
-                  Melbourne-raised, Brooklyn-based Nick Murphy writes, performs
-                  and records all of his own music, giving it a warm.
+                  Manage your account details, update your profile, and keep
+                  your information up to date.
                 </p>
                 <div className="pt-4">
                   <Link href="/">

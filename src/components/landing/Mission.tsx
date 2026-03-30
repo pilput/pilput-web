@@ -102,7 +102,7 @@ const MissionSection = () => {
             variants={itemVariants}
             className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
           >
-            We're on a mission to simplify publishing and empower creators worldwide
+            We&apos;re on a mission to simplify publishing and empower creators worldwide
             to share their stories without barriers. Our platform combines intuitive
             tools with elegant design to create an effortless creative experience.
           </motion.p>
@@ -264,7 +264,7 @@ const MissionSection = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p>
-                      We're committed to building a sustainable, community-first platform that
+                      We&apos;re committed to building a sustainable, community-first platform that
                       prioritizes creator rights, privacy, and meaningful connections.
                     </p>
                     <p>
@@ -340,8 +340,8 @@ const MissionSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              Whether you're a writer, storyteller, or simply someone who
-              believes in the power of shared ideas, there's a place for you here.
+              Whether you&apos;re a writer, storyteller, or simply someone who
+              believes in the power of shared ideas, there&apos;s a place for you here.
             </motion.p>
             <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center"

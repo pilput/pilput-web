@@ -227,6 +227,8 @@ export const FeatureCard: React.FC<FeatureCardProps> = memo(
   }
 );
 
+FeatureCard.displayName = "FeatureCard";
+
 interface FeatureListProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;

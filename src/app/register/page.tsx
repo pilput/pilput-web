@@ -79,6 +79,7 @@ export default function Signup() {
       setCookie("token", result.data.access_token, {
         expires: expire,
         secure: true,
+        path: "/",
         domain: `.${Config.maindomain}`,
         sameSite: "none",
       });
