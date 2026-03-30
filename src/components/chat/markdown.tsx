@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import rehypePrism from "rehype-prism-plus/common";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import "highlight.js/styles/github-dark.css";
+import "prismjs/themes/prism-tomorrow.css";
 import { useState } from "react";
 
 interface MarkdownProps {
@@ -109,7 +109,7 @@ export function Markdown({ content, className }: MarkdownProps) {
     <div className={cn("prose dark:prose-invert max-w-none", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
+        rehypePlugins={[rehypePrism]}
         components={{
           // Customize headings
           h1: ({
@@ -174,7 +174,7 @@ export function Markdown({ content, className }: MarkdownProps) {
             children,
             ...props
           }: CodeBlockProps) => {
-            const match = /language-(\w+)/.exec(className || "");
+            const match = /language-([\w+-]+)/.exec(className || "");
             const language = match ? match[1] : "";
             const code = String(children).replace(/\n$/, "");
 

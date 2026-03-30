@@ -1,56 +1,29 @@
-import { createLowlight } from "lowlight";
-import hljs from "highlight.js/lib/core";
-import bash from "highlight.js/lib/languages/bash";
-import css from "highlight.js/lib/languages/css";
-import javascript from "highlight.js/lib/languages/javascript";
-import json from "highlight.js/lib/languages/json";
-import markdown from "highlight.js/lib/languages/markdown";
-import plaintext from "highlight.js/lib/languages/plaintext";
-import python from "highlight.js/lib/languages/python";
-import typescript from "highlight.js/lib/languages/typescript";
-import xml from "highlight.js/lib/languages/xml";
+import Prism from "prismjs";
 
-import "highlight.js/styles/github-dark.css";
+import "prismjs/components/prism-markup";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-bash";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-markdown";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-tsx";
 
-const grammars = {
-  javascript,
-  typescript,
-  css,
-  json,
-  bash,
-  xml,
-  markdown,
-  python,
-  plaintext,
-} as const;
-
-export const lowlight = createLowlight(grammars);
-
-hljs.registerLanguage("javascript", javascript);
-hljs.registerLanguage("typescript", typescript);
-hljs.registerLanguage("css", css);
-hljs.registerLanguage("json", json);
-hljs.registerLanguage("bash", bash);
-hljs.registerLanguage("xml", xml);
-hljs.registerLanguage("markdown", markdown);
-hljs.registerLanguage("python", python);
-hljs.registerLanguage("plaintext", plaintext);
-hljs.registerLanguage("js", javascript);
-hljs.registerLanguage("ts", typescript);
-hljs.registerLanguage("shell", bash);
-hljs.registerLanguage("sh", bash);
-hljs.registerLanguage("html", xml);
+import "prismjs/themes/prism-tomorrow.css";
 
 const LANG_ALIASES: Record<string, string> = {
   code: "plaintext",
   txt: "plaintext",
   text: "plaintext",
+  plain: "plaintext",
   js: "javascript",
-  jsx: "javascript",
+  jsx: "jsx",
   mjs: "javascript",
   cjs: "javascript",
   ts: "typescript",
-  tsx: "typescript",
+  tsx: "tsx",
   py: "python",
   md: "markdown",
   sh: "bash",
@@ -58,10 +31,15 @@ const LANG_ALIASES: Record<string, string> = {
   zsh: "bash",
   yml: "plaintext",
   yaml: "plaintext",
-  vue: "xml",
-  svg: "xml",
+  html: "markup",
+  xml: "markup",
+  svg: "markup",
+  vue: "markup",
 };
 
+/**
+ * Resolve fenced / class language to a Prism grammar id, or "plaintext".
+ */
 export function resolveHighlightLanguage(
   className: string,
   dataLanguage?: string | null
@@ -72,25 +50,71 @@ export function resolveHighlightLanguage(
   return LANG_ALIASES[raw] ?? raw;
 }
 
+function hasPrismGrammar(lang: string): boolean {
+  return Boolean(
+    lang &&
+      lang !== "plaintext" &&
+      typeof Prism.languages[lang] === "object"
+  );
+}
+
+/**
+ * Human-readable label for UI (post header, chat). Mirrors previous detectLanguage behavior.
+ */
+export function formatLanguageLabel(resolvedPrismLang: string, rawFromClass?: string): string {
+  if (resolvedPrismLang === "markup") {
+    const r = rawFromClass?.toLowerCase();
+    if (r === "html" || r === "xml" || r === "svg" || r === "vue") return r;
+    return "markup";
+  }
+  if (resolvedPrismLang === "bash") return "shell";
+  if (resolvedPrismLang === "plaintext" || !resolvedPrismLang) return "code";
+  return resolvedPrismLang;
+}
+
+/**
+ * Extract raw language slug from class/data-language for labeling.
+ */
+export function extractRawLanguageSlug(
+  className: string,
+  dataLanguage?: string | null
+): string | undefined {
+  const haystack = `${className} ${dataLanguage ?? ""}`;
+  const match = /(?:language|lang)-([a-z0-9+#-]+)/i.exec(haystack);
+  return match?.[1]?.toLowerCase();
+}
+
+/**
+ * Highlight a `<code>` element inside `<pre>` (post HTML hydration).
+ */
 export function highlightCodeElement(code: HTMLElement): void {
-  if (code.classList.contains("hljs")) {
+  if (code.dataset.prismHighlighted === "true") {
     return;
   }
+
   const lang = resolveHighlightLanguage(code.className, code.getAttribute("data-language"));
   const source = code.textContent ?? "";
+
   if (!source.trim()) {
-    code.classList.add("hljs");
+    code.dataset.prismHighlighted = "true";
     return;
   }
-  const resolved = hljs.getLanguage(lang) ? lang : "plaintext";
+
+  const grammarLang = hasPrismGrammar(lang) ? lang : "plaintext";
+
+  if (grammarLang === "plaintext") {
+    code.textContent = source;
+    code.dataset.prismHighlighted = "true";
+    return;
+  }
+
   try {
-    const { value } = hljs.highlight(source, {
-      language: resolved,
-      ignoreIllegals: true,
-    });
-    code.innerHTML = value;
-    code.classList.add("hljs");
+    const grammar = Prism.languages[grammarLang];
+    code.innerHTML = Prism.highlight(source, grammar, grammarLang);
+    code.dataset.prismHighlighted = "true";
   } catch {
-    code.classList.add("hljs");
+    code.textContent = source;
+    code.dataset.prismHighlighted = "true";
   }
 }
+

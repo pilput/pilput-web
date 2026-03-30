@@ -1,8 +1,7 @@
 "use client";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { lowlight } from "@/lib/code-highlight";
+import { CodeBlockPrism } from "@/lib/code-block-prism";
 import Underline from "@tiptap/extension-underline";
 import Youtube from "@tiptap/extension-youtube";
 import Image from "@tiptap/extension-image";
@@ -36,9 +35,7 @@ const Tiptap = ({
         },
         codeBlock: false,
       }),
-      CodeBlockLowlight.configure({
-        lowlight,
-      }) as any,
+      CodeBlockPrism,
       Underline,
       Youtube.configure({
         controls: true,

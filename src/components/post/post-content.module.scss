@@ -70,11 +70,11 @@
       -moz-tab-size: 2;
       font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-      &:not(.hljs) {
+      &:not(:has(.token)) {
         color: var(--code-fg);
       }
 
-      &.hljs {
+      &:has(.token) {
         background: transparent !important;
       }
     }

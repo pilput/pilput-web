@@ -1,6 +1,11 @@
 "use client";
 
-import { highlightCodeElement } from "@/lib/code-highlight";
+import {
+  extractRawLanguageSlug,
+  formatLanguageLabel,
+  highlightCodeElement,
+  resolveHighlightLanguage,
+} from "@/lib/code-highlight";
 import { useEffect, useRef } from "react";
 import styles from "./post-content.module.scss";
 
@@ -8,22 +13,6 @@ interface PostContentProps {
   html: string;
   className?: string;
 }
-
-const detectLanguage = (codeElement: HTMLElement): string => {
-  const classNames = `${codeElement.className} ${codeElement.getAttribute("data-language") ?? ""}`;
-  const matches = classNames.match(/(?:language|lang)-([a-z0-9+#-]+)/i);
-  if (!matches?.[1]) {
-    return "code";
-  }
-
-  const raw = matches[1].toLowerCase();
-  if (raw === "ts") return "typescript";
-  if (raw === "js") return "javascript";
-  if (raw === "py") return "python";
-  if (raw === "sh") return "shell";
-  if (raw === "md") return "markdown";
-  return raw;
-};
 
 const PostContent = ({ html, className }: PostContentProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -57,7 +46,15 @@ const PostContent = ({ html, className }: PostContentProps) => {
 
       const language = document.createElement("span");
       language.className = styles.codeLanguage;
-      language.textContent = detectLanguage(code);
+      const raw = extractRawLanguageSlug(
+        code.className,
+        code.getAttribute("data-language")
+      );
+      const resolved = resolveHighlightLanguage(
+        code.className,
+        code.getAttribute("data-language")
+      );
+      language.textContent = formatLanguageLabel(resolved, raw);
 
       const copyButton = document.createElement("button");
       copyButton.className = styles.codeCopyButton;
