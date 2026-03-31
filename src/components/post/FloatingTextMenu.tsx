@@ -44,8 +44,9 @@ const FloatingTextMenu = ({ editor }: FloatingTextMenuProps) => {
     if (!editor) return;
 
     const handleBlur = () => setIsVisible(false);
-
-    updatePosition();
+    const frame = window.requestAnimationFrame(() => {
+      updatePosition();
+    });
 
     editor.on("selectionUpdate", updatePosition);
     editor.on("transaction", updatePosition);
@@ -55,6 +56,7 @@ const FloatingTextMenu = ({ editor }: FloatingTextMenuProps) => {
     window.addEventListener("resize", updatePosition);
 
     return () => {
+      window.cancelAnimationFrame(frame);
       editor.off("selectionUpdate", updatePosition);
       editor.off("transaction", updatePosition);
       editor.off("blur", handleBlur);

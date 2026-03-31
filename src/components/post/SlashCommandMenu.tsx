@@ -189,7 +189,9 @@ const SlashCommandMenu = ({ editor }: SlashCommandMenuProps) => {
   useEffect(() => {
     if (!editor) return;
 
-    updateSlashState();
+    const frame = window.requestAnimationFrame(() => {
+      updateSlashState();
+    });
     editor.on("selectionUpdate", updateSlashState);
     editor.on("transaction", updateSlashState);
     editor.on("blur", closeMenu);
@@ -198,6 +200,7 @@ const SlashCommandMenu = ({ editor }: SlashCommandMenuProps) => {
     window.addEventListener("scroll", updateSlashState, true);
 
     return () => {
+      window.cancelAnimationFrame(frame);
       editor.off("selectionUpdate", updateSlashState);
       editor.off("transaction", updateSlashState);
       editor.off("blur", closeMenu);
@@ -207,7 +210,13 @@ const SlashCommandMenu = ({ editor }: SlashCommandMenuProps) => {
   }, [closeMenu, editor, updateSlashState]);
 
   useEffect(() => {
-    setActiveIndex(0);
+    const frame = window.requestAnimationFrame(() => {
+      setActiveIndex(0);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
   }, [query, isVisible]);
 
   useEffect(() => {

@@ -31,6 +31,56 @@ type SortConfig = {
 
 type FilterType = "all" | "platform" | "type";
 
+function SortIcon({
+  isActive,
+  direction,
+}: {
+  isActive: boolean;
+  direction: SortConfig["direction"];
+}) {
+  if (!isActive) {
+    return <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />;
+  }
+
+  return direction === "asc" ? (
+    <ArrowUp className="ml-2 h-4 w-4" />
+  ) : (
+    <ArrowDown className="ml-2 h-4 w-4" />
+  );
+}
+
+function HeaderCell({
+  label,
+  columnKey,
+  className = "",
+  sortConfig,
+  onSort,
+}: {
+  label: string;
+  columnKey: string;
+  className?: string;
+  sortConfig: SortConfig;
+  onSort: (column: string) => void;
+}) {
+  return (
+    <TableHead
+      className={cn(
+        "font-semibold cursor-pointer hover:text-foreground transition-colors",
+        className
+      )}
+      onClick={() => onSort(columnKey)}
+    >
+      <div className="flex items-center whitespace-nowrap">
+        {label}
+        <SortIcon
+          isActive={sortConfig.key === columnKey}
+          direction={sortConfig.direction}
+        />
+      </div>
+    </TableHead>
+  );
+}
+
 export default function HoldingTable({
   holdings,
   isLoading,
@@ -140,36 +190,6 @@ export default function HoldingTable({
     });
   }, [filteredHoldings, sortConfig]);
 
-  const SortIcon = ({ column }: { column: string }) => {
-    if (sortConfig.key !== column)
-      return <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />;
-    return sortConfig.direction === "asc" ? (
-      <ArrowUp className="ml-2 h-4 w-4" />
-    ) : (
-      <ArrowDown className="ml-2 h-4 w-4" />
-    );
-  };
-
-  const HeaderCell = ({
-    label,
-    columnKey,
-    className = "",
-  }: {
-    label: string;
-    columnKey: string;
-    className?: string;
-  }) => (
-    <TableHead
-      className={`font-semibold cursor-pointer hover:text-foreground transition-colors ${className}`}
-      onClick={() => handleSort(columnKey)}
-    >
-      <div className="flex items-center whitespace-nowrap">
-        {label}
-        <SortIcon column={columnKey} />
-      </div>
-    </TableHead>
-  );
-
   const handleFilterTypeChange = (value: string) => {
     setFilterType(value as FilterType);
     // Reset sub-filters when changing main filter type
@@ -182,7 +202,7 @@ export default function HoldingTable({
   return (
     <div className="rounded-lg border bg-card overflow-hidden">
       {/* Filter Tabs */}
-      <div className="p-3 sm:p-4 border-b bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 space-y-3">
+      <div className="p-3 sm:p-4 border-b bg-linear-to-r from-muted/30 via-muted/20 to-muted/30 space-y-3">
         {/* Main Filter Tabs: ALL, Platform, Type */}
         <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
           <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-muted/50 p-1">
@@ -283,13 +303,55 @@ export default function HoldingTable({
           <TableHeader>
             <TableRow className="bg-muted/40 hover:bg-muted/50 border-b-2">
               <TableHead className="w-10 sm:w-12 font-semibold text-xs sm:text-sm text-center">#</TableHead>
-              <HeaderCell label="Name" columnKey="name" className="text-xs sm:text-sm min-w-[140px]" />
-              <HeaderCell label="Platform" columnKey="platform" className="text-xs sm:text-sm" />
-              <HeaderCell label="Type" columnKey="holding_type" className="text-xs sm:text-sm" />
-              <HeaderCell label="Invested" columnKey="invested_amount" className="text-xs sm:text-sm text-right" />
-              <HeaderCell label="Current" columnKey="current_value" className="text-xs sm:text-sm text-right" />
-              <HeaderCell label="P/L" columnKey="realized_value" className="text-xs sm:text-sm text-right" />
-              <HeaderCell label="Return" columnKey="realized_percent" className="text-xs sm:text-sm text-right" />
+              <HeaderCell
+                label="Name"
+                columnKey="name"
+                className="text-xs sm:text-sm min-w-[140px]"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
+              <HeaderCell
+                label="Platform"
+                columnKey="platform"
+                className="text-xs sm:text-sm"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
+              <HeaderCell
+                label="Type"
+                columnKey="holding_type"
+                className="text-xs sm:text-sm"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
+              <HeaderCell
+                label="Invested"
+                columnKey="invested_amount"
+                className="text-xs sm:text-sm text-right"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
+              <HeaderCell
+                label="Current"
+                columnKey="current_value"
+                className="text-xs sm:text-sm text-right"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
+              <HeaderCell
+                label="P/L"
+                columnKey="realized_value"
+                className="text-xs sm:text-sm text-right"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
+              <HeaderCell
+                label="Return"
+                columnKey="realized_percent"
+                className="text-xs sm:text-sm text-right"
+                sortConfig={sortConfig}
+                onSort={handleSort}
+              />
               <TableHead className="w-10 text-center"></TableHead>
               <TableHead className="w-20 sm:w-24 font-semibold text-xs sm:text-sm text-center">Actions</TableHead>
             </TableRow>
