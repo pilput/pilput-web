@@ -12,7 +12,7 @@
 - **State Management**: Zustand 5
 - **Forms**: React Hook Form 7 + Zod 4 validation
 - **Rich Text Editor**: TipTap 3 with custom extensions
-- **HTTP Client**: Axios with custom instances
+- **HTTP Client**: Native fetch with custom client instances
 - **Charts**: Recharts for data visualization
 - **Theme**: next-themes for dark/light mode
 - **Package Manager**: Bun (recommended) or npm
@@ -143,7 +143,7 @@ src/
 │   └── validation.ts         # Zod validation schemas
 ├── stores/                   # Zustand state stores
 │   ├── chat-store.ts         # Chat state management
-│   ├── createPostStore.ts    # Post creation state
+│   ├── create-post-store.ts  # Post creation state
 │   ├── holdingsStore.ts      # Holdings/portfolio state
 │   ├── posts-store.ts        # Posts cache/storage
 │   ├── profile-store.ts      # Profile data state
@@ -160,7 +160,7 @@ src/
 ├── utils/                    # Utility functions
 │   ├── Auth.ts               # Authentication utilities (token management)
 │   ├── ErrorHandler.ts       # Centralized error handling API
-│   ├── fetch.ts              # Axios instance configuration
+│   ├── fetch.ts              # Native fetch client configuration
 │   ├── getConfig.ts          # App configuration management
 │   ├── getImage.ts           # Image URL utilities
 │   ├── sanitize.ts           # Input sanitization
@@ -248,7 +248,7 @@ All schemas export inferred TypeScript types (e.g., `PostFormData`, `RegisterFor
 ## Authentication Flow
 
 1. **Token Storage**: JWT stored in cookie (`token`)
-2. **API Requests**: Axios interceptors add `Authorization: Bearer <token>`
+2. **API Requests**: Fetch interceptors add `Authorization: Bearer <token>`
 3. **Session Expiry**: 
    - 401 errors trigger automatic logout
    - Token removed, user redirected to `/login?redirect=<current>`
@@ -290,14 +290,14 @@ Centralized `ErrorHandlerAPI` provides:
 
 ## API Configuration (`src/utils/fetch.ts`)
 
-Three Axios instances for different API endpoints:
+Three fetch client instances for different API endpoints:
 ```typescript
 apiClient          // baseURL: Config.apibaseurl (Railway default)
 apiClientSecondary // baseURL: Config.apibaseurl2 (api.pilput.net)
 apiClientApp       // baseURL: Config.apibaseurl3 (hono.pilput.net)
 ```
 
-All instances use `ErrorHandlerAPI` for consistent error handling.
+All instances use `ErrorHandlerAPI` for consistent error handling. The fetch client is built with native `fetch` API with custom error handling, URL building, and response parsing.
 
 ## SEO & Metadata (`src/app/layout.tsx`)
 
@@ -309,7 +309,7 @@ Comprehensive metadata configuration:
 - **Robots**: Index, follow, max-image-preview: large
 - **Icons**: Favicon configurations
 - **Canonical URLs**: Proper alternate links
-- **Font**: Space Grotesk from Google Fonts
+- **Font**: Geist from Google Fonts
 
 ## Performance Optimizations
 
@@ -536,7 +536,7 @@ export const myStore = create<MyState>()((set) => ({
 5. **Common Tasks**:
    - **Add Component**: Create in `src/components/feature/`, use Shadcn patterns
    - **Add Page**: Create folder in `src/app/` with `page.tsx`
-   - **Add API Call**: Use existing Axios instances in `src/utils/fetch.ts`
+   - **Add API Call**: Use existing fetch clients in `src/utils/fetch.ts`
    - **Add Validation**: Extend schemas in `src/lib/validation.ts`
    - **Add State**: Create store in `src/stores/` following Zustand patterns
 
