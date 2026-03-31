@@ -1,7 +1,7 @@
 import Footer from "@/components/footer/Footer";
 import Navigation from "@/components/header/Navbar";
 import Comment from "@/components/post/Comment";
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -34,7 +34,7 @@ const getPostSummary = (html: string, maxLength = 160): string => {
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const response = await axiosInstance.get(`/v1/posts/u/${username}/${postSlug}`);
+    const response = await apiClient.get(`/v1/posts/u/${username}/${postSlug}`);
     const result = response.data as SuccessResponse;
     return result.data;
   } catch (error) {

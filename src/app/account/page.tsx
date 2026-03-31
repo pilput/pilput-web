@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, User, Shield, AlertTriangle, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getCookie } from "cookies-next";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
@@ -48,7 +48,7 @@ export default function AccountPage() {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axiosInstance3.get("/v1/auth/profile", {
+      const response = await apiClientApp.get("/v1/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.data); // API returns data.data structure
@@ -76,7 +76,7 @@ export default function AccountPage() {
   const handleProfileUpdate = async (data: any) => {
     setProfileLoading(true);
     try {
-      const response = await axiosInstance3.put("/v1/auth/profile", data, {
+      const response = await apiClientApp.put("/v1/auth/profile", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -99,7 +99,7 @@ export default function AccountPage() {
 
     setPasswordLoading(true);
     try {
-      await axiosInstance3.patch(
+      await apiClientApp.patch(
         "/v1/auth/password",
         {
           old_password: data.old_password,
@@ -139,7 +139,7 @@ export default function AccountPage() {
     }
 
     try {
-      await axiosInstance3.delete("/v1/auth/account", {
+      await apiClientApp.delete("/v1/auth/account", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

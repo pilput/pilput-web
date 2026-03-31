@@ -292,9 +292,9 @@ Centralized `ErrorHandlerAPI` provides:
 
 Three Axios instances for different API endpoints:
 ```typescript
-axiosInstance   // baseURL: Config.apibaseurl (Railway default)
-axiosInstance2  // baseURL: Config.apibaseurl2 (api.pilput.net)
-axiosInstance3  // baseURL: Config.apibaseurl3 (hono.pilput.net)
+apiClient          // baseURL: Config.apibaseurl (Railway default)
+apiClientSecondary // baseURL: Config.apibaseurl2 (api.pilput.net)
+apiClientApp       // baseURL: Config.apibaseurl3 (hono.pilput.net)
 ```
 
 All instances use `ErrorHandlerAPI` for consistent error handling.
@@ -427,12 +427,12 @@ Configured in `next.config.ts` for:
 ### Adding API Endpoints
 ```typescript
 // In appropriate utility file
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 
 export async function newEndpoint(data: any) {
   try {
-    const response = await axiosInstance3.post('/endpoint', data);
+    const response = await apiClientApp.post('/endpoint', data);
     return response.data;
   } catch (error) {
     return ErrorHandlerAPI(error);
@@ -459,7 +459,7 @@ const form = useForm<MyFormData>({
 ```typescript
 // src/stores/myStore.ts
 import { create } from "zustand";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 
 interface MyState {
   data: MyData;
@@ -471,7 +471,7 @@ export const myStore = create<MyState>()((set) => ({
   data: { /* initial state */ },
   fetch: async () => {
     try {
-      const { data } = await axiosInstance3.get("/endpoint");
+      const { data } = await apiClientApp.get("/endpoint");
       set({ data: data.data, error: false });
     } catch (error) {
       set({ error: true });

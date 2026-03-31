@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,7 +67,7 @@ const UserActionComponent = ({
     setIsSaving(true);
     const toastId = toast.loading("Saving changes...");
     try {
-      await axiosInstance3.put(
+      await apiClientApp.put(
         `/v1/users/${user.id}`,
         { ...data, is_super_admin: user.is_super_admin },
         {
@@ -90,7 +90,7 @@ const UserActionComponent = ({
     setIsDeleting(true);
     const toastid = toast.loading("Deleting user...");
     try {
-      const response = await axiosInstance3.delete("/v1/users/" + user.id, {
+      const response = await apiClientApp.delete("/v1/users/" + user.id, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { toast } from "sonner";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -65,7 +65,7 @@ export default function Signup() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     try {
-      const response = await axiosInstance3.post("/v1/auth/register", data);
+      const response = await apiClientApp.post("/v1/auth/register", data);
       const result = response.data as RegisterResponse;
 
       if (!result.success) {
@@ -114,7 +114,7 @@ export default function Signup() {
     const currentRequestId = ++requestIdRef.current;
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await axiosInstance3.post("/v1/auth/check-username", {
+        const res = await apiClientApp.post("/v1/auth/check-username", {
           username: username.trim(),
         });
         if (currentRequestId !== requestIdRef.current) return; // stale

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { ArrowUp } from "lucide-react";
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
@@ -65,7 +65,7 @@ const BlogContent = ({ initialPosts, initialTotal, postsPerPage, trendingTags }:
           params.search = debouncedSearchQuery.trim();
         }
 
-        const { data } = await axiosInstance.get("/v1/posts", { params });
+        const { data } = await apiClient.get("/v1/posts", { params });
         const response = data;
         if (response.data) {
           setPosts(response.data);

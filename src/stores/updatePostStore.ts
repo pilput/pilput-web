@@ -1,6 +1,6 @@
 import type { Post, PostCreate } from "@/types/post";
 import { create } from "zustand";
-import { axiosInstance2, axiosInstance3 } from "@/utils/fetch";
+import { apiClientSecondary, apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 
 const DEFAULT_BODY = `
@@ -108,7 +108,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const token = getToken();
     set(() => ({ loading: true, error: false }));
     try {
-      const response = await axiosInstance3.get(`/v1/posts/me/${id}`, {
+      const response = await apiClientApp.get(`/v1/posts/me/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const postData = response.data.data;
@@ -146,7 +146,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     set(() => ({ isUpdating: true, error: false }));
 
     try {
-      await axiosInstance2.patch(`/v1/posts/${postId}`, post, {
+      await apiClientSecondary.patch(`/v1/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

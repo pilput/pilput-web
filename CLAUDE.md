@@ -71,7 +71,7 @@ src/
 - **React Hook Form + Zod** for form validation
 - **Recharts** for data visualization
 - **Framer Motion** for animations
-- **Axios** for API calls with dual endpoints
+- **Native `fetch`** via `apiClient` / `apiClientSecondary` / `apiClientApp` in `src/utils/fetch.ts`
 - **Bun** as the package manager
 
 ### Environment Variables and Configuration
@@ -106,15 +106,11 @@ const fetchUser = authStore(state => state.fetch);
 
 ### API Configuration
 
-**Dual API Endpoints** in `src/utils/fetch.ts`:
+**API clients** in `src/utils/fetch.ts` (native `fetch`):
 ```typescript
-export const axiosInstance = axios.create({
-  baseURL: Config.apibaseurl,    // Main API
-});
-
-export const axiosInstance2 = axios.create({
-  baseURL: Config.apibaseurl2,   // Secondary API
-});
+export const apiClient = createClient(Config.apibaseurl);           // Main API
+export const apiClientSecondary = createClient(Config.apibaseurl2); // Secondary API
+export const apiClientApp = createClient(Config.apibaseurl3);       // App API (auth, users, chat, …)
 ```
 
 **Authentication Flow:**
@@ -254,7 +250,7 @@ Located in `src/types/`:
 // Add to src/utils/fetch.ts
 export async function newEndpoint(data: any) {
   try {
-    const response = await axiosInstance.post('/endpoint', data);
+    const response = await apiClient.post('/endpoint', data);
     return response.data;
   } catch (error) {
     return ErrorHandlerAPI(error);

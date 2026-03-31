@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import PostItem from "./PostItem";
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
 import PostItemPulse from "./PostItemPulse";
 import Link from "next/link";
@@ -26,7 +26,7 @@ const PostsRandomList = () => {
   const fetchRandomPosts = async () => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.get("/v1/posts/random?limit=6");
+      const response = await apiClient.get("/v1/posts/random?limit=6");
       const result = response.data as SuccessResponse;
       setposts(result.data);
     } catch {

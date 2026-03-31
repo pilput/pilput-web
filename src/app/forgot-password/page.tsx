@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface ForgotPasswordFormData {
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
   const onSubmit: SubmitHandler<ForgotPasswordFormData> = async (form) => {
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance3.post(
+      const { data } = await apiClientApp.post(
         "/v1/auth/forgot-password",
         form
       );

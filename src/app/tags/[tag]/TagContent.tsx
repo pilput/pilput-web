@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Hash, TrendingUp, Grid, List, Eye } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 
 interface TagContentProps {
@@ -45,7 +45,7 @@ export default function TagContent({
     async function fetchPostsByTag() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstance3.get<PostsResponse>(
+        const { data } = await apiClientApp.get<PostsResponse>(
           `/v1/posts/tag/${tag}`,
           {
             params: { limit: postsPerPage, offset: currentPage * postsPerPage },

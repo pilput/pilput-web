@@ -2,7 +2,7 @@ import Navigation from "@/components/header/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Metadata } from "next";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import { Config } from "@/utils/getConfig";
@@ -23,7 +23,7 @@ const getWriter = async (username: string): Promise<Writer> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const { data } = await axiosInstance3.get(`/v1/users/username/${username}`, {
+    const { data } = await apiClientApp.get(`/v1/users/username/${username}`, {
       ...(token && {
         headers: { Authorization: `Bearer ${token}` },
       }),

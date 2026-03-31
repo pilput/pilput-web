@@ -153,7 +153,7 @@ src/
 - Tailwind CSS 4 + Radix UI for styling
 - Zustand 5 for state, React Hook Form + Zod for validation
 - Tiptap for rich text editing
-- Axios for API calls with dual endpoints (axiosInstance3, etc.)
+- Native `fetch` via clients in `src/utils/fetch.ts` (`apiClient`, `apiClientSecondary`, `apiClientApp`)
 - Sonner for toast notifications
 - HTTP streaming for real-time chat
 
@@ -164,7 +164,7 @@ src/
 // src/utils/fetch.ts or appropriate fetch file
 export async function newEndpoint(data: any) {
   try {
-    const response = await axiosInstance.post('/endpoint', data);
+    const response = await apiClient.post('/endpoint', data);
     return response.data;
   } catch (error) {
     return ErrorHandlerAPI(error);
@@ -175,7 +175,7 @@ export async function newEndpoint(data: any) {
 ### Zustand Store Pattern
 ```typescript
 import { create } from "zustand";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import type { Auth } from "@/types/you";
 
 interface AuthState {
@@ -188,7 +188,7 @@ export const authStore = create<AuthState>()((set) => ({
   data: { username: "loading...", email: "Loading...", image: "placeholder/spinner.gif", ... },
   fetch: async () => {
     try {
-      const { data } = await axiosInstance3.get("/v1/users/me");
+      const { data } = await apiClientApp.get("/v1/users/me");
       set({ data: data.data, error: false });
     } catch (error) {
       set({ error: true });

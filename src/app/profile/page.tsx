@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { axiosInstance } from "../../utils/fetch";
+import { apiClient } from "../../utils/fetch";
 import { profileStore } from "@/stores/profile-store";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ const Profile = () => {
   }
 
   async function deletePicture() {
-    const response = await axiosInstance.delete("/auth/profile/avatar");
+    const response = await apiClient.delete("/auth/profile/avatar");
     if (response.status >= 200 && response.status <= 299) {
       refresh();
     }

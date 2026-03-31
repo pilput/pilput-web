@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 
 export const postsPerPage = 10;
@@ -14,7 +14,7 @@ export async function fetchInitialPosts(): Promise<{
   total: number;
 }> {
   try {
-    const { data } = await axiosInstance.get<PostsResponse>("/v1/posts", {
+    const { data } = await apiClient.get<PostsResponse>("/v1/posts", {
       params: { limit: postsPerPage, offset: 0 },
     });
 
@@ -30,7 +30,7 @@ export async function fetchInitialPosts(): Promise<{
 
 export async function fetchTrendingTags(): Promise<string[]> {
   try {
-    const { data } = await axiosInstance.get("/v1/tags");
+    const { data } = await apiClient.get("/v1/tags");
     return data.data.map((tag: { name: string }) => tag.name);
   } catch (error) {
     console.error("Error fetching tags:", error);

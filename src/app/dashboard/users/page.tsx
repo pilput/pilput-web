@@ -32,7 +32,6 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { Search, UserPlus } from "lucide-react";
-import { AxiosError } from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,7 +41,7 @@ import UserActionComponent from "@/components/user/action";
 import { Paginate } from "@/components/common/Paginate";
 import { authStore } from "@/stores/userStore";
 import { getToken, RemoveToken } from "@/utils/Auth";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp, isHttpError } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { addUserSchema, type AddUserFormData } from "@/lib/validation";
 
@@ -93,7 +92,7 @@ export default function ManageUser() {
   async function refetchUsers(fetchOffset: number = 0) {
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance3.get("/v1/users", {
+      const { data } = await apiClientApp.get("/v1/users", {
         params: { limit: limit, offset: fetchOffset },
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -119,7 +118,7 @@ export default function ManageUser() {
         toast.error("Cannot connect to server");
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
+      if (isHttpError(error)) {
         if (error.response?.status === 401) {
           RemoveToken();
           window.location.href = "/login";
@@ -153,7 +152,7 @@ export default function ManageUser() {
     setIsCreating(true);
     const toastId = toast.loading("Creating user...");
     try {
-      const response = await axiosInstance3.post(
+      const response = await apiClientApp.post(
         "/v1/users",
         {
           username: data.username,
@@ -177,7 +176,7 @@ export default function ManageUser() {
         toast.error(result.message ?? "Failed to create user", { id: toastId });
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
+      if (isHttpError(error)) {
         if (error.response?.status === 401) {
           RemoveToken();
           window.location.href = "/login";

@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postsStore } from "@/stores/create-post-store";
 import { getToken } from "@/utils/Auth";
-import { axiosInstance, axiosInstance2 } from "@/utils/fetch";
+import {
+  apiClient,
+  apiClientSecondary,
+  isHttpError,
+} from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
-import axios, { AxiosError } from "axios";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
@@ -78,7 +81,7 @@ export default function PostCreate() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await axiosInstance.post(
+      const response = await apiClient.post(
         "/api/v1/posts/image",
         formData,
         {
@@ -151,7 +154,7 @@ export default function PostCreate() {
     const toastId = toast.loading("Publishing post...");
 
     try {
-      await axiosInstance2.post("/v1/posts", post, {
+      await apiClientSecondary.post("/v1/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setErrorTitle("");
@@ -159,10 +162,9 @@ export default function PostCreate() {
       toast.success("Post published successfully!", { id: toastId });
       // Reset form or redirect
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError: AxiosError = error;
-        console.error("Axios error:", axiosError.message);
-        if (axiosError.response?.status === 422) {
+      if (isHttpError(error)) {
+        console.error("Publish error:", error.message);
+        if (error.response?.status === 422) {
           toast.error("Validation error. Please check your inputs.", { id: toastId });
         } else {
           toast.error("Failed to publish post. Please try again.", { id: toastId });

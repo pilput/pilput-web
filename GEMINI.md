@@ -78,8 +78,8 @@ docker run -p 3000:3000 pilput
 - **Data Validation:** Always use Zod schemas defined in `src/lib/validation.ts` for form and API data validation.
 - **State Management:** Use Zustand for global state. Avoid prop drilling for shared data like user authentication (`authStore`).
 - **Styling:** Prefer Tailwind utility classes. Use `cn()` (from `src/lib/utils.ts`) for conditional class merging. For complex component-specific styles, use `.module.scss`.
-- **API Calls:** Use the appropriate `axiosInstance` from `src/utils/fetch.ts`.
-  - `axiosInstance3` is commonly used for user and auth-related endpoints.
+- **API Calls:** Use the appropriate client from `src/utils/fetch.ts` (`apiClient`, `apiClientSecondary`, `apiClientApp`).
+  - `apiClientApp` is commonly used for user and auth-related endpoints.
 - **Rich Text:** When modifying the editor, ensure compatibility with existing TipTap extensions in `src/components/post/Editor.tsx`.
 - **Accessibility:** Ensure all new UI components follow Radix UI/Shadcn standards for ARIA and keyboard navigation.
 - **SEO:** Update `metadata` and `viewport` in `layout.tsx` or individual pages as needed.

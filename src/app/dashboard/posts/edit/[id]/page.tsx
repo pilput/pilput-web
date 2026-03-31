@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { updatePostStore } from "@/stores/updatePostStore";
 import { getToken } from "@/utils/Auth";
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -92,7 +92,7 @@ export default function PostEdit() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await axiosInstance.post(
+      const response = await apiClient.post(
         "/api/v1/posts/image",
         formData,
         {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 
 const DEFAULT_TAGS = [
   "ai",
@@ -18,7 +18,7 @@ export function useTrendingTags() {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await axiosInstance.get("/v1/tags");
+        const response = await apiClient.get("/v1/tags");
         setTrendingTags(response.data.data.map((tag: { name: string }) => tag.name));
       } catch (error) {
         console.error("Error fetching tags:", error);

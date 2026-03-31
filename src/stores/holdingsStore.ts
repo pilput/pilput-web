@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { getToken, RemoveToken } from "@/utils/Auth";
-import { axiosInstance3 } from "@/utils/fetch";
-import { AxiosError } from "axios";
+import { apiClientApp, isHttpError } from "@/utils/fetch";
 import { toast } from "sonner";
 import type { Holding, HoldingType } from "@/types/holding";
 import {
@@ -64,7 +63,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         orderDir,
       });
 
-      const { data } = await axiosInstance3.get("/v1/holdings", {
+      const { data } = await apiClientApp.get("/v1/holdings", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -86,11 +85,9 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         toast.error("Cannot connect to server");
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          RemoveToken();
-          window.location.href = "/login";
-        }
+      if (isHttpError(error) && error.response?.status === 401) {
+        RemoveToken();
+        window.location.href = "/login";
       }
       toast.error("Cannot connect to server");
     } finally {
@@ -100,7 +97,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
   fetchHoldingTypes: async () => {
     try {
-      const { data } = await axiosInstance3.get("/v1/holdings/types", {
+      const { data } = await apiClientApp.get("/v1/holdings/types", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -122,7 +119,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading("Syncing prices...");
     set({ isSyncing: true });
     try {
-      await axiosInstance3.post(
+      await apiClientApp.post(
         "/v1/holdings/sync",
         {},
         {
@@ -134,11 +131,9 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
       toast.success("Prices synced", { id: toastId });
       await get().fetchHoldings();
     } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          RemoveToken();
-          window.location.href = "/login";
-        }
+      if (isHttpError(error) && error.response?.status === 401) {
+        RemoveToken();
+        window.location.href = "/login";
       }
       toast.error("Failed to sync prices", { id: toastId });
       throw error;
@@ -150,7 +145,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   addHolding: async (payload) => {
     const toastId = toast.loading("Creating...");
     try {
-      await axiosInstance3.post("/v1/holdings", payload, {
+      await apiClientApp.post("/v1/holdings", payload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -168,7 +163,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   updateHolding: async (id, payload) => {
     const toastId = toast.loading("Updating...");
     try {
-      await axiosInstance3.put(`/v1/holdings/${id}`, payload, {
+      await apiClientApp.put(`/v1/holdings/${id}`, payload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -186,7 +181,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   deleteHolding: async (id) => {
     const toastId = toast.loading("Deleting...");
     try {
-      await axiosInstance3.delete(`/v1/holdings/${id}`, {
+      await apiClientApp.delete(`/v1/holdings/${id}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -205,7 +200,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading("Duplicating...");
     try {
       const validatedPayload = duplicateHoldingSchema.parse(payload);
-      await axiosInstance3.post("/v1/holdings/duplicate", validatedPayload, {
+      await apiClientApp.post("/v1/holdings/duplicate", validatedPayload, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

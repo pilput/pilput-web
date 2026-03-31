@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 
 interface Profile {
   id: string;
@@ -38,7 +38,7 @@ export const profileStore = create<Store>()((set) => ({
     }
 
     try {
-      const response = await axiosInstance3.get("/v1/auth/profile", {
+      const response = await apiClientApp.get("/v1/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

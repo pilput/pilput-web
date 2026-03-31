@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { axiosInstance3 } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface ResetPasswordFormData {
@@ -97,7 +97,7 @@ function ResetPasswordForm() {
 
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance3.post("/v1/auth/reset-password", {
+      const { data } = await apiClientApp.post("/v1/auth/reset-password", {
         token,
         new_password: form.password,
       });

@@ -11,7 +11,7 @@ import {
   ArrowRight,
   Tag as TagIcon,
 } from "lucide-react";
-import { axiosInstance } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { Input } from "@/components/ui/input";
 
 interface TagWithStats {
@@ -31,7 +31,7 @@ const TagsPage = () => {
     async function fetchTags() {
       setIsLoading(true);
       try {
-        const { data } = await axiosInstance.get("/v1/tags");
+        const { data } = await apiClient.get("/v1/tags");
         const response = data;
         if (response.data) {
           // Add mock post counts since the API doesn't provide them
