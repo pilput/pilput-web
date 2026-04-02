@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Plus, MessageSquare, ChevronLeft, ChevronRight, MoreVertical, Trash2 } from "lucide-react";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeftOpen, Trash2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useChatStore, type Conversation } from "@/stores/chat-store";
 import {
@@ -39,7 +39,7 @@ export function ChatSidebar() {
     conversationsPagination,
     loadMoreConversations,
     isNewConversation,
-    deleteConversation
+    deleteConversation,
   } = useChatStore();
   const { toggleSidebar, state } = useSidebar();
   const { fetch: fetchUser, data: userData } = authStore();
@@ -52,116 +52,148 @@ export function ChatSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-border/70 bg-card/90 text-foreground shadow-lg shadow-border/20 backdrop-blur"
+      className="border-r border-border bg-sidebar text-sidebar-foreground"
     >
-      <SidebarHeader className="px-3 py-3 border-b border-border/60 bg-card/80 flex flex-row items-center justify-between group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2">
-        <h2 className="text-xl font-bold group-data-[collapsible=icon]:hidden text-foreground">
-          AI Chat
-        </h2>
-        <Button
-          variant="ghost"
-          size="icon"
+      {/* Header */}
+      <SidebarHeader className="border-b border-border/50">
+        {/* Expanded state */}
+        <div className="flex items-center justify-between px-4 py-3 group-data-[collapsible=icon]:hidden">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <Sparkles className="h-4 w-4 text-primary" />
+            </div>
+            <span className="text-base font-semibold tracking-tight">
+              pilput <span className="text-primary font-bold">AI</span>
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="h-7 w-7 shrink-0 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            title="Collapse sidebar"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+            <span className="sr-only">Collapse sidebar</span>
+          </Button>
+        </div>
+
+        {/* Collapsed (icon) state — clicking expands sidebar */}
+        <button
           onClick={toggleSidebar}
-          className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 rounded-full border border-transparent group-data-[collapsible=icon]:h-7 group-data-[collapsible=icon]:w-7"
+          title="Expand sidebar"
+          className="hidden group-data-[collapsible=icon]:flex w-full flex-col items-center gap-3 py-3 px-0"
         >
-          {state === "expanded" ? (
-            <ChevronLeft className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-          <span className="sr-only">Toggle sidebar</span>
-        </Button>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors">
+            <Sparkles className="h-4 w-4 text-primary" />
+          </div>
+        </button>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-1">
         {/* New Chat Button */}
-        <SidebarGroup>
-          <SidebarGroupContent className="px-3 py-3 group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2">
+        <SidebarGroup className="py-2 group-data-[collapsible=icon]:py-1">
+          <SidebarGroupContent>
+            {/* Expanded */}
             <Button
               asChild
-              variant="outline"
-              className="w-full justify-start gap-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:px-3 rounded-xl border-border/70 bg-card hover:bg-primary/10 hover:text-primary"
+              className="w-full justify-start gap-2 h-9 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm group-data-[collapsible=icon]:hidden"
             >
               <Link href="/chat" title="New Chat">
-                <Plus className="w-5 h-5 shrink-0" />
-                <span className="group-data-[collapsible=icon]:hidden">
-                  New Chat
-                </span>
+                <Plus className="h-4 w-4 shrink-0" />
+                <span className="text-sm font-medium">New Chat</span>
               </Link>
             </Button>
+
+            {/* Collapsed — icon only, centered */}
+            <div className="hidden group-data-[collapsible=icon]:flex justify-center">
+              <Button
+                asChild
+                size="icon"
+                className="h-8 w-8 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                title="New Chat"
+              >
+                <Link href="/chat">
+                  <Plus className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Chat List */}
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-          <SidebarGroupLabel className="px-3 text-xs text-muted-foreground/80 uppercase tracking-wider font-semibold mb-2">
-            Recent Conversations
+        {/* Chat List — only in expanded mode */}
+        <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
+          <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+            Conversations
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1 px-1">
+            <SidebarMenu className="gap-0.5">
               {conversations.length === 0 ? (
-                <div className="text-center text-muted-foreground/60 py-8 text-sm px-3 flex flex-col items-center gap-3 bg-muted rounded-xl border border-dashed border-border/50">
-                  <MessageSquare className="w-10 h-10 opacity-40 text-muted-foreground/50" />
-                  <p className="font-medium">No conversations yet.</p>
-                  <p className="text-xs text-muted-foreground/70">Start a new chat to get started!</p>
+                <div className="flex flex-col items-center gap-2 py-10 px-3 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                    <MessageSquare className="h-5 w-5 text-muted-foreground/50" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground">No conversations yet</p>
+                  <p className="text-xs text-muted-foreground/60">Start a new chat above</p>
                 </div>
               ) : (
                 <>
-                  {conversations.map((chat: Conversation) => (
-                    <SidebarMenuItem key={chat.id}>
-                      <div className="relative group/item flex items-center">
-                        <SidebarMenuButton
-                          asChild
-                          isActive={chat.id === currentConversationId}
-                          className={cn(
-                            "flex-1 justify-start font-normal text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap rounded-xl transition-all duration-200 group hover:scale-[1.01]",
-                            chat.id === currentConversationId
-                              ? "bg-primary/10 text-primary border border-primary/30 shadow-md shadow-primary/10"
-                              : "hover:bg-muted text-muted-foreground hover:text-foreground hover:border hover:border-border/60"
-                          )}
-                          tooltip={chat.title}
-                        >
-                          <Link href={`/chat/${chat.id}`} className="flex items-center gap-3 px-3 py-2 pr-8">
-                            <MessageSquare className={cn(
-                              "h-4 w-4 shrink-0 transition-all duration-200",
-                              chat.id === currentConversationId
-                                ? "opacity-100 text-primary scale-110"
-                                : "opacity-70 group-hover:opacity-100 group-hover:scale-105"
-                            )} />
-                            <span className="truncate font-medium">
-                              {chat.title}
-                            </span>
-                          </Link>
-                        </SidebarMenuButton>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 opacity-0 group-hover/item:opacity-100 hover:bg-muted transition-all duration-200 rounded-md"
-                              title="More options"
-                            >
-                              <MoreVertical className="h-3 w-3" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteConversation(chat.id);
-                              }}
-                              className="text-destructive focus:text-destructive focus:bg-destructive/10"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </SidebarMenuItem>
-                  ))}
-                  
-                  {/* Chat Pagination */}
+                  {conversations.map((chat: Conversation) => {
+                    const isActive = chat.id === currentConversationId;
+                    return (
+                      <SidebarMenuItem key={chat.id}>
+                        <div className="group/item relative flex items-center">
+                          <SidebarMenuButton
+                            asChild
+                            isActive={isActive}
+                            className={cn(
+                              "h-9 w-full flex-1 rounded-lg px-3 text-sm transition-colors",
+                              isActive
+                                ? "bg-primary/10 text-primary font-medium"
+                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-normal"
+                            )}
+                            tooltip={chat.title}
+                          >
+                            <Link href={`/chat/${chat.id}`} className="flex items-center gap-2.5 pr-6">
+                              <MessageSquare
+                                className={cn(
+                                  "h-3.5 w-3.5 shrink-0",
+                                  isActive ? "text-primary" : "text-muted-foreground/60"
+                                )}
+                              />
+                              <span className="truncate">{chat.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md opacity-0 group-hover/item:opacity-100 hover:bg-destructive/10 hover:text-destructive transition-all"
+                                title="Delete conversation"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-44">
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteConversation(chat.id);
+                                }}
+                                className="text-destructive focus:text-destructive focus:bg-destructive/10"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete conversation
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </SidebarMenuItem>
+                    );
+                  })}
+
                   <ChatPagination
                     currentPage={conversationsPagination.page}
                     totalPages={Math.ceil(conversationsPagination.total / conversationsPagination.limit)}
@@ -178,19 +210,33 @@ export function ChatSidebar() {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="px-3 py-3 border-t border-border/60 bg-card/80 backdrop-blur group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2">
-        <div className="flex flex-col gap-3 group-data-[collapsible=icon]:items-center">
-          <div className="flex items-center justify-center gap-3 mt-1 p-2 rounded-xl bg-muted hover:bg-muted/80 transition-all duration-200 group-data-[collapsible=icon]:mt-0 group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:hover:scale-105 border border-border/60">
-            <Avatar className="h-8 w-8 ring-2 ring-primary/30 group-data-[collapsible=icon]:h-7 group-data-[collapsible=icon]:w-7 shadow-sm">
-              <AvatarImage src={userData.image} alt={userData.username} />
-              <AvatarFallback className="text-xs font-semibold group-data-[collapsible=icon]:text-[10px] bg-primary/10 text-primary">
-                {userData.username ? userData.username[0].toUpperCase() : "U"}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm text-foreground font-semibold group-data-[collapsible=icon]:hidden">
+      <SidebarFooter className="border-t border-border/50 p-2 group-data-[collapsible=icon]:p-1">
+        {/* Expanded */}
+        <div className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-accent transition-colors cursor-default group-data-[collapsible=icon]:hidden">
+          <Avatar className="h-7 w-7 shrink-0 ring-1 ring-border">
+            <AvatarImage src={userData.image} alt={userData.username} />
+            <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
+              {userData.username ? userData.username[0].toUpperCase() : "U"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-medium text-foreground truncate leading-tight">
               {userData.username}
             </span>
+            <span className="text-[11px] text-muted-foreground truncate leading-tight">
+              {userData.email}
+            </span>
           </div>
+        </div>
+
+        {/* Collapsed — avatar only, centered */}
+        <div className="hidden group-data-[collapsible=icon]:flex justify-center py-1">
+          <Avatar className="h-7 w-7 ring-1 ring-border">
+            <AvatarImage src={userData.image} alt={userData.username} />
+            <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
+              {userData.username ? userData.username[0].toUpperCase() : "U"}
+            </AvatarFallback>
+          </Avatar>
         </div>
       </SidebarFooter>
     </Sidebar>

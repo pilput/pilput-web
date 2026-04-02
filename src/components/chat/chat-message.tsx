@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Edit, ThumbsDown, ThumbsUp, Bot, User } from "lucide-react";
+import { Copy, Check, Edit, ThumbsDown, ThumbsUp, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Markdown } from "./markdown";
 
@@ -35,16 +34,14 @@ export function ChatMessage({
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [hasLiked, setHasLiked] = useState<boolean | null>(null);
+  const [copied, setCopied] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
-  const handleEdit = () => {
+  const handleSave = () => {
     if (editedContent.trim() === "") return;
     onEdit?.(message.id, editedContent);
     setIsEditing(false);
-  };
-
-  const handleSave = () => {
-    handleEdit();
   };
 
   const handleCancel = () => {
@@ -52,27 +49,31 @@ export function ChatMessage({
     setIsEditing(false);
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   const handleLike = () => {
-    const newLikeState = hasLiked === true ? null : true;
-    setHasLiked(newLikeState);
-    onFeedback?.(message.id, newLikeState ? "like" : "none");
+    const next = hasLiked === true ? null : true;
+    setHasLiked(next);
+    onFeedback?.(message.id, next ? "like" : "none");
   };
 
   const handleDislike = () => {
-    const newDislikeState = hasLiked === false ? null : false;
-    setHasLiked(newDislikeState);
-    onFeedback?.(message.id, newDislikeState === false ? "dislike" : "none");
+    const next = hasLiked === false ? null : false;
+    setHasLiked(next);
+    onFeedback?.(message.id, next === false ? "dislike" : "none");
   };
 
-  // Focus textarea when editing starts
   useEffect(() => {
     if (isEditing && textareaRef.current) {
       textareaRef.current.focus();
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
     }
   }, [isEditing]);
-
-  // Auto-scroll to bottom when streaming
-  const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (message.isStreaming && messageEndRef.current) {
@@ -81,192 +82,176 @@ export function ChatMessage({
   }, [message.content, message.isStreaming]);
 
   return (
-    <div className={cn("group relative w-full px-4 py-2", className)}>
-      <div className={cn("mx-auto w-full max-w-4xl", isEditing ? "pb-16" : "")}>
-        <div
-          className={cn(
-            "flex gap-4",
-            isAssistant ? "items-start" : "items-start justify-end"
-          )}
-        >
-          {isAssistant && (
-            <div className="shrink-0">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  <Bot className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
-            </div>
-          )}
-
-          <div className={cn("min-w-0", isAssistant ? "flex-1" : "max-w-[80%]")}>
-            <div
-              className={cn(
-                "mb-1 flex items-center gap-2",
-                isAssistant ? "" : "justify-end"
-              )}
-            >
-              {!isAssistant && <User className="h-3.5 w-3.5 text-muted-foreground" />}
-              <span className="text-sm font-medium">
-                {isAssistant ? "AI Assistant" : "You"}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {message.createdAt.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className={cn("group w-full px-4 py-3", className)}
+    >
+      <div className="mx-auto w-full max-w-3xl">
+        {isAssistant ? (
+          /* ── AI message ── */
+          <div className="flex gap-3 items-start">
+            <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
             </div>
 
-            <div
-              className={cn(
-                "text-sm text-foreground",
-                isAssistant ? "w-full" : "rounded-2xl border border-primary/20 bg-primary/10 px-4 py-3"
-              )}
-            >
-              <AnimatePresence mode="wait">
-                {isEditing ? (
-                  <motion.div
-                    key="edit-mode"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="space-y-3"
-                  >
-                    <textarea
-                      ref={textareaRef}
-                      value={editedContent}
-                      onChange={(e) => setEditedContent(e.target.value)}
-                      className="w-full rounded-lg border border-border bg-background p-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-primary"
-                      rows={4}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSave();
-                        }
-                      }}
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={handleSave}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90"
-                      >
-                        Save changes
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={handleCancel}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </motion.div>
+            <div className="flex-1 min-w-0 space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-foreground">AI Assistant</span>
+                <span className="text-[11px] text-muted-foreground/60">
+                  {message.createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
+
+              <div className="text-sm leading-relaxed text-foreground">
+                {isWaitingForStream ? (
+                  <div className="flex items-center gap-1.5 py-2">
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary/70 [animation-delay:-0.3s]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary/70 [animation-delay:-0.15s]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary/70" />
+                  </div>
                 ) : (
-                  <motion.div
-                    key="view-mode"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="w-full"
-                  >
-                    <div className="relative">
-                      <div className="space-y-2">
-                        {isWaitingForStream ? (
-                          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
-                            <span className="sr-only">
-                              AI is preparing a response
-                            </span>
-                            <div className="flex items-center gap-1">
-                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.3s]" />
-                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.15s]" />
-                              <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary" />
-                            </div>
-                            <span>AI is typing...</span>
-                          </div>
-                        ) : (
-                          <Markdown
-                            content={message.content}
-                            className="text-foreground"
-                          />
-                        )}
-                        {message.isStreaming && (
-                          <div ref={messageEndRef} className="h-4" />
-                        )}
-                        <div
-                          className={cn(
-                            "flex items-center gap-1 pt-2 opacity-0 transition-opacity group-hover:opacity-100",
-                            isAssistant ? "" : "justify-end"
-                          )}
-                        >
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                            onClick={() => {
-                              navigator.clipboard.writeText(message.content);
-                            }}
-                          >
-                            <Copy className="h-4 w-4" />
-                            <span className="sr-only">Copy message</span>
-                          </Button>
-                          {message.role === "user" && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                              onClick={() => {
-                                setEditedContent(message.content);
-                                setIsEditing(true);
-                              }}
-                            >
-                              <Edit className="h-4 w-4" />
-                              <span className="sr-only">Edit message</span>
-                            </Button>
-                          )}
-                          {isAssistant && (
-                            <>
-                              <div className="mx-1 h-6 w-px bg-border" />
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className={cn(
-                                  "h-8 w-8",
-                                  hasLiked === true
-                                    ? "text-green-500 hover:text-green-600 dark:text-green-400 dark:hover:text-green-300"
-                                    : "text-muted-foreground hover:text-foreground"
-                                )}
-                                onClick={handleLike}
-                              >
-                                <ThumbsUp className="h-4 w-4" />
-                                <span className="sr-only">Like</span>
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className={cn(
-                                  "h-8 w-8",
-                                  hasLiked === false
-                                    ? "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
-                                    : "text-muted-foreground hover:text-foreground"
-                                )}
-                                onClick={handleDislike}
-                              >
-                                <ThumbsDown className="h-4 w-4" />
-                                <span className="sr-only">Dislike</span>
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key="ai-content"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <Markdown content={message.content} className="text-foreground" />
+                    </motion.div>
+                  </AnimatePresence>
                 )}
-              </AnimatePresence>
+              </div>
+
+              {message.isStreaming && <div ref={messageEndRef} />}
+
+              {/* Action bar */}
+              {!isWaitingForStream && !message.isStreaming && (
+                <div className="flex items-center gap-0.5 pt-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent"
+                    onClick={handleCopy}
+                    title="Copy"
+                  >
+                    {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                  </Button>
+                  <div className="mx-1 h-4 w-px bg-border" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "h-7 w-7 rounded-md hover:bg-accent",
+                      hasLiked === true
+                        ? "text-green-500"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    onClick={handleLike}
+                    title="Good response"
+                  >
+                    <ThumbsUp className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "h-7 w-7 rounded-md hover:bg-accent",
+                      hasLiked === false
+                        ? "text-destructive"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    onClick={handleDislike}
+                    title="Bad response"
+                  >
+                    <ThumbsDown className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        ) : (
+          /* ── User message ── */
+          <div className="flex justify-end">
+            <div className="max-w-[78%] space-y-1">
+              <div className="flex items-center justify-end gap-2">
+                <span className="text-[11px] text-muted-foreground/60">
+                  {message.createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </span>
+                <span className="text-xs font-semibold text-foreground">You</span>
+              </div>
+
+              {isEditing ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="space-y-2"
+                >
+                  <textarea
+                    ref={textareaRef}
+                    value={editedContent}
+                    onChange={(e) => {
+                      setEditedContent(e.target.value);
+                      e.target.style.height = "auto";
+                      e.target.style.height = e.target.scrollHeight + "px";
+                    }}
+                    className="w-full resize-none overflow-hidden rounded-2xl border border-border bg-card p-3 text-sm text-foreground outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30"
+                    rows={3}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSave();
+                      }
+                      if (e.key === "Escape") handleCancel();
+                    }}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button size="sm" variant="ghost" onClick={handleCancel} className="h-7 text-xs">
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={handleSave} className="h-7 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
+                      Save
+                    </Button>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="group/bubble relative">
+                  <div className="rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-sm">
+                    <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  </div>
+
+                  {/* Action bar */}
+                  <div className="mt-1 flex items-center justify-end gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent"
+                      onClick={handleCopy}
+                      title="Copy"
+                    >
+                      {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent"
+                      onClick={() => {
+                        setEditedContent(message.content);
+                        setIsEditing(true);
+                      }}
+                      title="Edit"
+                    >
+                      <Edit className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 }
