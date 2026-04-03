@@ -219,6 +219,7 @@ export default function AccountPage() {
                       user={user}
                       onSubmit={handleProfileUpdate}
                       loading={profileLoading}
+                      onProfileUpdate={fetchUserProfile}
                     />
                   </TabsContent>
 

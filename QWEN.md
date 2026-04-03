@@ -297,7 +297,7 @@ apiClientSecondary // baseURL: Config.apibaseurl2 (api.pilput.net)
 apiClientApp       // baseURL: Config.apibaseurl3 (hono.pilput.net)
 ```
 
-All instances use `ErrorHandlerAPI` for consistent error handling. The fetch client is built with native `fetch` API with custom error handling, URL building, and response parsing.
+All instances use native `fetch` API with custom error handling, URL building, and response parsing.
 
 ## SEO & Metadata (`src/app/layout.tsx`)
 
@@ -307,8 +307,6 @@ Comprehensive metadata configuration:
 - **OpenGraph**: Type, locale, images, site name
 - **Twitter Cards**: Summary large image with creator handle
 - **Robots**: Index, follow, max-image-preview: large
-- **Icons**: Favicon configurations
-- **Canonical URLs**: Proper alternate links
 - **Font**: Geist from Google Fonts
 
 ## Performance Optimizations
