@@ -20,6 +20,8 @@ import ViewRecorder from "@/components/post/RecordView";
 import PostContent from "@/components/post/PostContent";
 import styles from "@/components/post/post-content.module.scss";
 import { Config } from "@/utils/getConfig";
+import BookmarkButton from "@/components/post/BookmarkButton";
+import { cn } from "@/lib/utils";
 
 interface SuccessResponse {
   data: Post;
@@ -197,7 +199,9 @@ export default async function Page(props: {
                   </div>
                 </div>
 
-                <div className={styles.metaInfo}>
+                <div className="flex flex-1 min-w-0 flex-wrap items-center justify-end gap-3 sm:ml-auto">
+                  <BookmarkButton postId={post.id} />
+                  <div className={cn(styles.metaInfo, "ml-0!")}>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
@@ -239,6 +243,7 @@ export default async function Page(props: {
                     </svg>
                     {post.view_count} views
                   </span>
+                </div>
                 </div>
               </div>
             </header>

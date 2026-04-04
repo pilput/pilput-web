@@ -6,12 +6,12 @@ import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Heart,
-  Bookmark,
   Clock,
   Eye,
   MessageCircle,
   Share2,
 } from "lucide-react";
+import BookmarkButton from "@/components/post/BookmarkButton";
 import { motion } from "framer-motion";
 import type { Post } from "@/types/post";
 import {
@@ -73,12 +73,7 @@ const PostList = ({ post }: { post: Post }) => {
               {format(post.created_at, "MMM d, yyyy")}
             </div>
           </div>
-          <motion.button
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
-            whileHover={{ scale: 1.05 }}
-          >
-            <Bookmark className="w-4 h-4 text-muted-foreground" />
-          </motion.button>
+          <BookmarkButton postId={post.id} variant="compact" />
         </div>
 
         {/* Title & Content */}
