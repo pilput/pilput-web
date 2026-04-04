@@ -2,7 +2,7 @@ import Navigation from "@/components/header/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Metadata } from "next";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import { Config } from "@/utils/getConfig";
@@ -23,7 +23,7 @@ const getWriter = async (username: string): Promise<Writer> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const { data } = await apiClientApp.get(`/v1/users/username/${username}`, {
+    const { data } = await apiClient.get(`/v1/users/username/${username}`, {
       ...(token && {
         headers: { Authorization: `Bearer ${token}` },
       }),
@@ -138,7 +138,10 @@ export default async function page(props: {
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div className="rounded-lg border border-border/50 bg-muted/20 p-4 sm:p-5">
                     <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
-                      <User className="h-4 w-4 text-muted-foreground" aria-hidden />
+                      <User
+                        className="h-4 w-4 text-muted-foreground"
+                        aria-hidden
+                      />
                       Personal
                     </h2>
                     <dl className="space-y-3 text-sm">
@@ -175,7 +178,10 @@ export default async function page(props: {
 
                   <div className="rounded-lg border border-border/50 bg-muted/20 p-4 sm:p-5">
                     <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
-                      <LinkIcon className="h-4 w-4 text-muted-foreground" aria-hidden />
+                      <LinkIcon
+                        className="h-4 w-4 text-muted-foreground"
+                        aria-hidden
+                      />
                       Links
                     </h2>
                     {writer.profile?.website ? (
