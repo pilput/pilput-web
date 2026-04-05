@@ -28,7 +28,6 @@ import {
   FileText,
   ArrowLeft,
   DollarSign,
-  TrendingUp,
   LayoutDashboard,
 } from "lucide-react";
 import { authStore } from "@/stores/userStore";
@@ -73,11 +72,6 @@ const navMain = [
         title: "Holdings",
         url: "/dashboard/holdings",
         icon: DollarSign,
-      },
-      {
-        title: "Performance",
-        url: "/dashboard/holdings/performance",
-        icon: TrendingUp,
       },
     ],
   },

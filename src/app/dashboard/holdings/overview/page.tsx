@@ -16,6 +16,7 @@ import {
   Wallet,
   DollarSign,
   TrendingUp,
+  TrendingDown,
   Award,
   BarChart3,
   PieChart,
@@ -24,19 +25,70 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Info,
+  Layers,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 import { useHoldingsStore } from "@/stores/holdingsStore";
 import HoldingSummaryCards from "@/components/dashboard/holdings/HoldingSummaryCards";
 import OverviewChart from "@/components/dashboard/holdings/OverviewChart";
 import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHoldingsChart";
+import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
 import { cn, formatCurrency } from "@/lib/utils";
-import type { Holding } from "@/types/holding";
 
-/** Theme chart tokens from `src/app/global.css` — matches OverviewChart / MonthlyHoldingsChart */
 function holdingsChartColorVar(index: number) {
   return `var(--chart-${(index % 5) + 1})`;
+}
+
+const STORAGE_KEY = "overview-sections-collapsed";
+
+type SectionKey = "summary" | "allocation" | "performance" | "trends";
+
+function loadCollapsed(): Record<SectionKey, boolean> {
+  if (typeof window === "undefined")
+    return { summary: false, allocation: false, performance: false, trends: false };
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}");
+  } catch {
+    return { summary: false, allocation: false, performance: false, trends: false };
+  }
+}
+
+function CollapsibleSection({
+  id,
+  label,
+  collapsed,
+  onToggle,
+  children,
+}: {
+  id: SectionKey;
+  label: string;
+  collapsed: boolean;
+  onToggle: (id: SectionKey) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <button
+        type="button"
+        onClick={() => onToggle(id)}
+        className="flex w-full items-center gap-3 mb-3 sm:mb-4 group"
+      >
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70 group-hover:text-muted-foreground transition-colors">
+          {label}
+        </span>
+        <div className="flex-1 h-px bg-border/50" />
+        <ChevronDown
+          className={cn(
+            "h-3.5 w-3.5 text-muted-foreground/50 group-hover:text-muted-foreground transition-all duration-200 shrink-0",
+            collapsed && "-rotate-90"
+          )}
+        />
+      </button>
+      {!collapsed && children}
+    </section>
+  );
 }
 
 export default function HoldingOverviewPage() {
@@ -49,15 +101,24 @@ export default function HoldingOverviewPage() {
   const [filterYear, setFilterYear] = useState(
     new Date().getFullYear().toString()
   );
-
   const [hideValues, setHideValues] = useState(() => {
-    // Load preference from localStorage
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("hideHoldingValues");
-      return saved === "true";
+      return localStorage.getItem("hideHoldingValues") === "true";
     }
     return false;
   });
+
+  const [collapsed, setCollapsed] = useState<Record<SectionKey, boolean>>(loadCollapsed);
+
+  function toggleSection(id: SectionKey) {
+    setCollapsed((prev) => {
+      const next = { ...prev, [id]: !prev[id] };
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      }
+      return next;
+    });
+  }
 
   useEffect(() => {
     fetchHoldings();
@@ -65,7 +126,6 @@ export default function HoldingOverviewPage() {
   }, [fetchHoldings, fetchHoldingTypes]);
 
   useEffect(() => {
-    // Save preference to localStorage
     if (typeof window !== "undefined") {
       localStorage.setItem("hideHoldingValues", hideValues.toString());
     }
@@ -77,11 +137,8 @@ export default function HoldingOverviewPage() {
     await fetchHoldings({ month, year });
   }
 
-  // Calculate comprehensive statistics
   const statistics = useMemo(() => {
-    if (!holdings || holdings.length === 0) {
-      return null;
-    }
+    if (!holdings || holdings.length === 0) return null;
 
     const totalInvested = holdings.reduce(
       (sum, h) => sum + parseFloat(h.invested_amount),
@@ -95,14 +152,11 @@ export default function HoldingOverviewPage() {
       (h) => h.gain_amount != null && h.gain_amount !== ""
     );
     const totalReturn = hasGainAmounts
-      ? holdings.reduce(
-          (sum, h) => sum + parseFloat(h.gain_amount ?? "0"),
-          0
-        )
+      ? holdings.reduce((sum, h) => sum + parseFloat(h.gain_amount ?? "0"), 0)
       : totalCurrent - totalInvested;
-    const totalReturnPercent = totalInvested > 0 ? (totalReturn / totalInvested) * 100 : 0;
+    const totalReturnPercent =
+      totalInvested > 0 ? (totalReturn / totalInvested) * 100 : 0;
 
-    // Currency breakdown (use gain_amount from holdings when present)
     const currencyBreakdown = holdings.reduce((acc, h) => {
       const currency = h.currency || "Unknown";
       const invested = parseFloat(h.invested_amount);
@@ -111,9 +165,8 @@ export default function HoldingOverviewPage() {
         h.gain_amount != null && h.gain_amount !== ""
           ? parseFloat(h.gain_amount)
           : current - invested;
-      if (!acc[currency]) {
+      if (!acc[currency])
         acc[currency] = { invested: 0, current: 0, returnAmount: 0, count: 0 };
-      }
       acc[currency].invested += invested;
       acc[currency].current += current;
       acc[currency].returnAmount += returnAmount;
@@ -121,7 +174,6 @@ export default function HoldingOverviewPage() {
       return acc;
     }, {} as Record<string, { invested: number; current: number; returnAmount: number; count: number }>);
 
-    // Asset type performance (use gain_amount from holdings when present)
     const assetTypePerformance = holdings.reduce((acc, h) => {
       const typeName = h.holding_type?.name || "Unknown";
       const invested = parseFloat(h.invested_amount);
@@ -130,8 +182,7 @@ export default function HoldingOverviewPage() {
         h.gain_amount != null && h.gain_amount !== ""
           ? parseFloat(h.gain_amount)
           : current - invested;
-
-      if (!acc[typeName]) {
+      if (!acc[typeName])
         acc[typeName] = {
           invested: 0,
           current: 0,
@@ -139,24 +190,17 @@ export default function HoldingOverviewPage() {
           count: 0,
           avgReturnPercent: 0,
         };
-      }
       acc[typeName].invested += invested;
       acc[typeName].current += current;
       acc[typeName].returnAmount += returnAmount;
       acc[typeName].count += 1;
-      acc[typeName].avgReturnPercent = acc[typeName].invested > 0
-        ? (acc[typeName].returnAmount / acc[typeName].invested) * 100
-        : 0;
+      acc[typeName].avgReturnPercent =
+        acc[typeName].invested > 0
+          ? (acc[typeName].returnAmount / acc[typeName].invested) * 100
+          : 0;
       return acc;
-    }, {} as Record<string, {
-      invested: number;
-      current: number;
-      returnAmount: number;
-      count: number;
-      avgReturnPercent: number;
-    }>);
+    }, {} as Record<string, { invested: number; current: number; returnAmount: number; count: number; avgReturnPercent: number }>);
 
-    // Top performing holdings (by return %); use gain_amount/gain_percent from holdings when present
     const holdingsWithReturn = holdings
       .map((h) => {
         const invested = parseFloat(h.invested_amount);
@@ -175,42 +219,64 @@ export default function HoldingOverviewPage() {
       })
       .sort((a, b) => b.returnPercent - a.returnPercent);
 
-    const topPerformers = holdingsWithReturn.slice(0, 3);
+    const topPerformers = holdingsWithReturn.slice(0, 5);
     const worstPerformers = holdingsWithReturn.slice(-3).reverse();
 
-    // Platform statistics
     const platformStats = holdings.reduce((acc, h) => {
       const platform = h.platform || "Unknown";
       const current = parseFloat(h.current_value);
-      if (!acc[platform]) {
-        acc[platform] = { value: 0, count: 0 };
-      }
+      if (!acc[platform]) acc[platform] = { value: 0, count: 0 };
       acc[platform].value += current;
       acc[platform].count += 1;
       return acc;
     }, {} as Record<string, { value: number; count: number }>);
 
-    const topPlatform = Object.entries(platformStats)
-      .sort((a, b) => b[1].value - a[1].value)[0];
+    const topPlatform = Object.entries(platformStats).sort(
+      (a, b) => b[1].value - a[1].value
+    )[0];
 
-    // Best and worst asset types
     const assetTypeEntries = Object.entries(assetTypePerformance)
-      .map(([name, data]) => ({
-        name,
-        ...data,
-      }))
+      .map(([name, data]) => ({ name, ...data }))
       .sort((a, b) => b.avgReturnPercent - a.avgReturnPercent);
 
-    const bestAssetType = assetTypeEntries[0];
-    const worstAssetType = assetTypeEntries[assetTypeEntries.length - 1];
-
-    // Get most common currency
     const mostCommonCurrency =
       Object.keys(currencyBreakdown).length > 0
         ? Object.entries(currencyBreakdown).sort(
             (a, b) => b[1].count - a[1].count
           )[0][0]
         : "IDR";
+
+    const platformDistribution = Object.entries(
+      holdings.reduce((acc, h) => {
+        const platform = h.platform || "Unknown";
+        const value = parseFloat(h.current_value);
+        if (!acc[platform]) acc[platform] = 0;
+        acc[platform] += value;
+        return acc;
+      }, {} as Record<string, number>)
+    )
+      .map(([platform, value]) => ({
+        platform,
+        value,
+        percent: totalCurrent > 0 ? (value / totalCurrent) * 100 : 0,
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    const assetTypeDistribution = Object.entries(
+      holdings.reduce((acc, h) => {
+        const typeName = h.holding_type?.name || "Unknown";
+        const value = parseFloat(h.current_value);
+        if (!acc[typeName]) acc[typeName] = 0;
+        acc[typeName] += value;
+        return acc;
+      }, {} as Record<string, number>)
+    )
+      .map(([typeName, value]) => ({
+        typeName,
+        value,
+        percent: totalCurrent > 0 ? (value / totalCurrent) * 100 : 0,
+      }))
+      .sort((a, b) => b.value - a.value);
 
     return {
       totalInvested,
@@ -222,54 +288,46 @@ export default function HoldingOverviewPage() {
       topPerformers,
       worstPerformers,
       topPlatform,
-      bestAssetType,
-      worstAssetType,
+      bestAssetType: assetTypeEntries[0],
+      worstAssetType: assetTypeEntries[assetTypeEntries.length - 1],
       primaryCurrency: mostCommonCurrency,
       totalAssets: holdings.length,
       totalPlatforms: new Set(holdings.map((h) => h.platform)).size,
       totalAssetTypes: new Set(holdings.map((h) => h.holding_type?.name)).size,
+      platformDistribution,
+      assetTypeDistribution,
     };
   }, [holdings]);
 
-  const maskValue = () => "••••••";
+  const mask = () => "••••••";
 
   return (
-    <div className="flex w-full flex-col gap-4 md:gap-6">
-      {/* Header Section */}
-      <div className="flex flex-col gap-3 sm:gap-4">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <Button variant="ghost" size="icon" className="shrink-0" asChild>
-            <Link href="/dashboard/holdings">
-              <ArrowLeft className="w-4 h-4" />
-            </Link>
-          </Button>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-              Portfolio Overview
-            </h1>
-            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-              Track and analyze your investment performance across all assets.
-            </p>
-          </div>
-        </div>
-        
-        {/* Filter and Actions */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pl-9 sm:pl-11">
-          <div className="flex-1 min-w-0">
-            <HoldingFilter
-              month={filterMonth}
-              year={filterYear}
-              onMonthChange={setFilterMonth}
-              onYearChange={setFilterYear}
-              onFilter={handleFilter}
-            />
+    <div className="flex w-full flex-col gap-6 sm:gap-8">
+
+      {/* ── Page Header ─────────────────────────────────── */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <Button variant="ghost" size="icon" className="shrink-0" asChild>
+              <Link href="/dashboard/holdings">
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </Button>
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
+                Portfolio Overview
+              </h1>
+              <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 hidden sm:block">
+                Analyze your investment performance across all assets.
+              </p>
+            </div>
           </div>
           <Button
             variant="outline"
             size="icon"
             onClick={() => setHideValues(!hideValues)}
             title={hideValues ? "Show values" : "Hide values"}
-            className="shrink-0 h-9 sm:h-10"
+            className="shrink-0"
           >
             {hideValues ? (
               <EyeOff className="w-4 h-4" />
@@ -278,509 +336,421 @@ export default function HoldingOverviewPage() {
             )}
           </Button>
         </div>
+
+        {/* Filter bar */}
+        <div className="rounded-xl border border-border/70 bg-muted/30 px-3 py-2.5 sm:px-4">
+          <HoldingFilter
+            month={filterMonth}
+            year={filterYear}
+            onMonthChange={setFilterMonth}
+            onYearChange={setFilterYear}
+            onFilter={handleFilter}
+          />
+        </div>
+
+        {/* Quick-stat chips */}
+        {statistics && (
+          <div className="flex flex-wrap gap-2">
+            {[
+              { icon: Wallet, label: `${statistics.totalAssets} assets`, color: "text-chart-1" },
+              { icon: Building2, label: `${statistics.totalPlatforms} platforms`, color: "text-chart-2" },
+              { icon: Layers, label: `${statistics.totalAssetTypes} types`, color: "text-chart-3" },
+              ...(statistics.topPlatform
+                ? [{ icon: Award, label: `Top: ${statistics.topPlatform[0]}`, color: "text-chart-4" }]
+                : []),
+            ].map(({ icon: Icon, label, color }) => (
+              <div
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium"
+              >
+                <Icon className={cn("h-3.5 w-3.5", color)} />
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Content Grid */}
-      <div className="grid gap-4 md:gap-6">
+      {/* ── Section: Summary ────────────────────────────── */}
+      <CollapsibleSection id="summary" label="Summary" collapsed={!!collapsed.summary} onToggle={toggleSection}>
         <HoldingSummaryCards
           holdings={holdings}
           isLoading={isLoading}
           hideValues={hideValues}
         />
+      </CollapsibleSection>
 
-        {/* Chart and Insights Grid */}
-        <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div className="md:col-span-2 lg:col-span-2 min-w-0">
+      {/* ── Section: Allocation ─────────────────────────── */}
+      <CollapsibleSection id="allocation" label="Allocation" collapsed={!!collapsed.allocation} onToggle={toggleSection}>
+        <div className="grid gap-4 md:gap-5 lg:grid-cols-3">
+          {/* Main chart — takes 2/3 on large screens */}
+          <div className="lg:col-span-2 min-w-0">
             <OverviewChart holdings={holdings} hideValues={hideValues} />
           </div>
-          <div className="space-y-4 md:space-y-6">
-            {/* Quick Insights Card */}
-            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  Portfolio Overview
+
+          {/* Distribution bars — right column */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
+            {/* Platform Distribution */}
+            <Card className="border-border/60">
+              <CardHeader className="pb-3 pt-4 px-4">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  Platform
                 </CardTitle>
-                <CardDescription className="text-xs sm:text-sm">
-                  Key metrics and statistics
-                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2 sm:space-y-3">
-                {statistics && (
-                  <>
-                    <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
-                      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                        <Wallet className="h-4 w-4 shrink-0 text-chart-1" />
-                        <span className="text-xs sm:text-sm text-muted-foreground truncate">
-                          Total Assets
-                        </span>
+              <CardContent className="px-4 pb-4 space-y-2.5">
+                {statistics?.platformDistribution.map((item, index) => (
+                  <div key={item.platform} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <div
+                          className="h-2 w-2 shrink-0 rounded-full"
+                          style={{ backgroundColor: holdingsChartColorVar(index) }}
+                        />
+                        <span className="truncate font-medium">{item.platform}</span>
                       </div>
-                      <span className="text-sm sm:text-base font-semibold ml-2 shrink-0">
-                        {statistics.totalAssets}
+                      <span className="font-bold ml-2 shrink-0 tabular-nums">
+                        {hideValues ? "•••" : `${item.percent.toFixed(1)}%`}
                       </span>
                     </div>
-
-                    <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
-                      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                        <Building2 className="h-4 w-4 shrink-0 text-chart-2" />
-                        <span className="text-xs sm:text-sm text-muted-foreground truncate">
-                          Platforms
-                        </span>
-                      </div>
-                      <span className="text-sm sm:text-base font-semibold ml-2 shrink-0">
-                        {statistics.totalPlatforms}
-                      </span>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${item.percent}%`,
+                          backgroundColor: holdingsChartColorVar(index),
+                        }}
+                      />
                     </div>
-
-                    <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
-                      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                        <PieChart className="h-4 w-4 shrink-0 text-chart-3" />
-                        <span className="text-xs sm:text-sm text-muted-foreground truncate">
-                          Asset Types
-                        </span>
-                      </div>
-                      <span className="text-sm sm:text-base font-semibold ml-2 shrink-0">
-                        {statistics.totalAssetTypes}
-                      </span>
-                    </div>
-
-                    {statistics.topPlatform && (
-                      <div className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30">
-                        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                          <Award className="h-4 w-4 shrink-0 text-chart-4" />
-                          <span className="text-xs sm:text-sm text-muted-foreground truncate">
-                            Top Platform
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-end ml-2 shrink-0">
-                          <span className="text-xs sm:text-sm font-semibold truncate max-w-[100px]">
-                            {statistics.topPlatform[0]}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            {statistics.topPlatform[1].count} assets
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+                  </div>
+                ))}
               </CardContent>
             </Card>
 
-            {/* Performance Insights */}
-            {statistics && statistics.topPerformers.length > 0 && (
-              <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-                <CardHeader className="pb-3 sm:pb-4">
-                  <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    Top Performers
-                  </CardTitle>
-                  <CardDescription className="text-xs sm:text-sm">
-                    Best returns this period
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {statistics.topPerformers.map((holding, idx) => (
+            {/* Asset Type Distribution */}
+            <Card className="border-border/60">
+              <CardHeader className="pb-3 pt-4 px-4">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <PieChart className="h-3.5 w-3.5 text-muted-foreground" />
+                  Asset Types
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 pb-4 space-y-2.5">
+                {statistics?.assetTypeDistribution.map((item, index) => (
+                  <div key={item.typeName} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <div
+                          className="h-2 w-2 shrink-0 rounded-full"
+                          style={{ backgroundColor: holdingsChartColorVar(index) }}
+                        />
+                        <span className="truncate font-medium">{item.typeName}</span>
+                      </div>
+                      <span className="font-bold ml-2 shrink-0 tabular-nums">
+                        {hideValues ? "•••" : `${item.percent.toFixed(1)}%`}
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
                       <div
-                        key={idx}
-                        className="flex items-center justify-between rounded-lg border border-border/40 bg-background p-2 sm:p-2.5 transition-colors hover:border-primary/30 hover:bg-accent/30"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs sm:text-sm font-medium truncate">
-                            {holding.name}
-                          </p>
-                          <p className="text-[10px] text-muted-foreground truncate">
-                            {holding.platform}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-end ml-2 shrink-0">
-                          <span
-                            className={cn(
-                              "text-xs sm:text-sm font-semibold",
-                              holding.returnPercent >= 0
-                                ? "text-emerald-600 dark:text-emerald-400"
-                                : "text-destructive"
-                            )}
-                          >
-                            {hideValues
-                              ? maskValue()
-                              : `${holding.returnPercent >= 0 ? "+" : ""}${holding.returnPercent.toFixed(1)}%`}
-                          </span>
-                          {!hideValues && (
-                            <span className="text-[10px] text-muted-foreground">
-                              {formatCurrency(
-                                Math.abs(holding.returnAmount),
-                                holding.currency
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                </CardContent>
-              </Card>
-            )}
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${item.percent}%`,
+                          backgroundColor: holdingsChartColorVar(index),
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
-            {/* Asset Type Performance */}
-            {statistics &&
-              statistics.bestAssetType &&
-              statistics.worstAssetType && (
-                <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-                  <CardHeader className="pb-3 sm:pb-4">
-                    <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                      <Coins className="h-4 w-4" />
-                      Asset Type Performance
-                    </CardTitle>
-                    <CardDescription className="text-xs sm:text-sm">
-                      Best and worst performers
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/5 p-2 sm:p-2.5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
-                      <div className="mb-1 flex items-center justify-between">
-                        <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
-                          Best: {statistics.bestAssetType.name}
-                        </span>
-                        <ArrowUpRight className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+        {/* Currency breakdown (only shown when multiple currencies) */}
+        {statistics && Object.keys(statistics.currencyBreakdown).length > 1 && (
+          <Card className="mt-4 md:mt-5 border-border/60">
+            <CardHeader className="pb-3 pt-4 px-4 sm:px-6">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                Currency Breakdown
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Portfolio distribution by currency
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-4 sm:px-6 pb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {Object.entries(statistics.currencyBreakdown)
+                  .sort((a, b) => b[1].current - a[1].current)
+                  .map(([currency, data]) => {
+                    const pct =
+                      statistics.totalCurrent > 0
+                        ? (data.current / statistics.totalCurrent) * 100
+                        : 0;
+                    const retPct =
+                      data.invested > 0
+                        ? (data.returnAmount / data.invested) * 100
+                        : 0;
+                    return (
+                      <div
+                        key={currency}
+                        className="rounded-lg border border-border/50 bg-muted/20 p-3 hover:bg-accent/30 transition-colors"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-bold">{currency}</span>
+                          <span className="text-[10px] text-muted-foreground font-medium">
+                            {pct.toFixed(1)}%
+                          </span>
+                        </div>
+                        <div className="space-y-1 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Value</span>
+                            <span className="font-medium tabular-nums">
+                              {hideValues ? mask() : formatCurrency(data.current, currency)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between pt-1 border-t border-border/40">
+                            <span className="text-muted-foreground">Return</span>
+                            <span
+                              className={cn(
+                                "font-semibold tabular-nums",
+                                retPct >= 0
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : "text-destructive"
+                              )}
+                            >
+                              {hideValues
+                                ? mask()
+                                : `${retPct >= 0 ? "+" : ""}${retPct.toFixed(1)}%`}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground pt-0.5">
+                            {data.count} asset{data.count !== 1 ? "s" : ""}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-muted-foreground">
-                          {statistics.bestAssetType.count} assets
+                    );
+                  })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </CollapsibleSection>
+
+      {/* ── Section: Performance ────────────────────────── */}
+      {statistics && (
+        <CollapsibleSection id="performance" label="Performance" collapsed={!!collapsed.performance} onToggle={toggleSection}>
+          <div className="grid gap-4 md:gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+            {/* Top Performers */}
+            <Card className="border-border/60">
+              <CardHeader className="pb-3 pt-4 px-4 sm:px-5">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <TrendingUp className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                  Top Performers
+                </CardTitle>
+                <CardDescription className="text-xs">Best returns this period</CardDescription>
+              </CardHeader>
+              <CardContent className="px-4 sm:px-5 pb-4 space-y-2">
+                {statistics.topPerformers.map((holding, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between rounded-lg border border-border/40 bg-muted/20 px-3 py-2 hover:bg-accent/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-[10px] font-bold text-muted-foreground/60 shrink-0 w-4">
+                        {idx + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate">{holding.name}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{holding.platform}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end ml-2 shrink-0">
+                      <span
+                        className={cn(
+                          "text-xs font-bold tabular-nums",
+                          holding.returnPercent >= 0
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-destructive"
+                        )}
+                      >
+                        {hideValues
+                          ? mask()
+                          : `${holding.returnPercent >= 0 ? "+" : ""}${holding.returnPercent.toFixed(1)}%`}
+                      </span>
+                      {!hideValues && (
+                        <span className="text-[10px] text-muted-foreground tabular-nums">
+                          {formatCurrency(Math.abs(holding.returnAmount), holding.currency)}
                         </span>
-                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Worst Performers */}
+            <Card className="border-border/60">
+              <CardHeader className="pb-3 pt-4 px-4 sm:px-5">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                  <TrendingDown className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
+                  Needs Review
+                </CardTitle>
+                <CardDescription className="text-xs">Lowest returns this period</CardDescription>
+              </CardHeader>
+              <CardContent className="px-4 sm:px-5 pb-4 space-y-2">
+                {statistics.worstPerformers.map((holding, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between rounded-lg border border-border/40 bg-muted/20 px-3 py-2 hover:bg-accent/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-[10px] font-bold text-muted-foreground/60 shrink-0 w-4">
+                        {idx + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate">{holding.name}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{holding.platform}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end ml-2 shrink-0">
+                      <span
+                        className={cn(
+                          "text-xs font-bold tabular-nums",
+                          holding.returnPercent >= 0
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-destructive"
+                        )}
+                      >
+                        {hideValues
+                          ? mask()
+                          : `${holding.returnPercent >= 0 ? "+" : ""}${holding.returnPercent.toFixed(1)}%`}
+                      </span>
+                      {!hideValues && (
+                        <span className="text-[10px] text-muted-foreground tabular-nums">
+                          {formatCurrency(Math.abs(holding.returnAmount), holding.currency)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Asset Type Performance + Strategy */}
+            <div className="space-y-4">
+              {statistics.bestAssetType && statistics.worstAssetType && (
+                <Card className="border-border/60">
+                  <CardHeader className="pb-3 pt-4 px-4 sm:px-5">
+                    <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                      <Coins className="h-3.5 w-3.5 text-muted-foreground" />
+                      Asset Type
+                    </CardTitle>
+                    <CardDescription className="text-xs">Best &amp; worst category</CardDescription>
+                  </CardHeader>
+                  <CardContent className="px-4 sm:px-5 pb-4 space-y-2.5">
+                    <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/5 px-3 py-2.5 dark:bg-emerald-500/10">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-1.5">
+                          <ArrowUpRight className="h-3 w-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 truncate">
+                            {statistics.bestAssetType.name}
+                          </span>
+                        </div>
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 tabular-nums shrink-0 ml-2">
                           {hideValues
-                            ? maskValue()
+                            ? mask()
                             : `${statistics.bestAssetType.avgReturnPercent >= 0 ? "+" : ""}${statistics.bestAssetType.avgReturnPercent.toFixed(1)}%`}
                         </span>
                       </div>
+                      <p className="text-[10px] text-muted-foreground">
+                        {statistics.bestAssetType.count} assets
+                      </p>
                     </div>
 
-                    <div className="rounded-lg border border-destructive/25 bg-destructive/5 p-2 sm:p-2.5 dark:bg-destructive/10">
-                      <div className="mb-1 flex items-center justify-between">
-                        <span className="text-xs font-semibold text-destructive">
-                          Needs Review: {statistics.worstAssetType.name}
-                        </span>
-                        <ArrowDownRight className="h-3.5 w-3.5 text-destructive" />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-muted-foreground">
-                          {statistics.worstAssetType.count} assets
-                        </span>
-                        <span className="text-xs font-bold text-destructive">
+                    <div className="rounded-lg border border-destructive/25 bg-destructive/5 px-3 py-2.5 dark:bg-destructive/10">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-1.5">
+                          <ArrowDownRight className="h-3 w-3 text-destructive shrink-0" />
+                          <span className="text-xs font-semibold text-destructive truncate">
+                            {statistics.worstAssetType.name}
+                          </span>
+                        </div>
+                        <span className="text-xs font-bold text-destructive tabular-nums shrink-0 ml-2">
                           {hideValues
-                            ? maskValue()
+                            ? mask()
                             : `${statistics.worstAssetType.avgReturnPercent >= 0 ? "+" : ""}${statistics.worstAssetType.avgReturnPercent.toFixed(1)}%`}
                         </span>
                       </div>
+                      <p className="text-[10px] text-muted-foreground">
+                        {statistics.worstAssetType.count} assets
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
               )}
 
-            {/* Strategy Insights */}
-            {statistics && (
-              <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-                <CardHeader className="pb-3 sm:pb-4">
-                  <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                    <Info className="h-4 w-4" />
-                    Strategy Insights
+              {/* Strategy Insights */}
+              <Card className="border-border/60">
+                <CardHeader className="pb-2 pt-4 px-4 sm:px-5">
+                  <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                    <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                    Insights
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2.5 text-xs text-muted-foreground leading-relaxed">
+                <CardContent className="px-4 sm:px-5 pb-4">
+                  <div className="space-y-2 text-xs text-muted-foreground leading-relaxed">
                     <p>
-                      Your portfolio spans{" "}
+                      Portfolio spans{" "}
                       <span className="font-semibold text-foreground">
                         {statistics.totalPlatforms} platforms
                       </span>{" "}
-                      with{" "}
+                      &amp;{" "}
                       <span className="font-semibold text-foreground">
                         {statistics.totalAssetTypes} asset types
                       </span>
                       .
                     </p>
                     {statistics.totalReturnPercent > 0 ? (
-                      <p className="text-emerald-600 dark:text-emerald-400">
-                        Portfolio is performing well with a{" "}
-                        <span className="font-semibold">
-                          {hideValues
-                            ? maskValue()
-                            : `${statistics.totalReturnPercent.toFixed(1)}%`}{" "}
-                          return
-                        </span>
-                        .
+                      <p className="text-emerald-600 dark:text-emerald-400 font-medium">
+                        Performing well —{" "}
+                        {hideValues ? mask() : `${statistics.totalReturnPercent.toFixed(1)}%`} total
+                        return.
                       </p>
                     ) : (
-                      <p className="text-destructive">
-                        Consider reviewing underperforming assets and
-                        rebalancing your portfolio.
+                      <p className="text-destructive font-medium">
+                        Consider reviewing underperforming assets.
                       </p>
                     )}
                     <p>
                       {Object.keys(statistics.currencyBreakdown).length > 1
-                        ? "You're holding multiple currencies. Monitor exchange rate impacts."
-                        : "Portfolio is concentrated in a single currency."}
+                        ? "Multi-currency portfolio — watch exchange rate impact."
+                        : "Single-currency portfolio."}
                     </p>
                   </div>
                 </CardContent>
               </Card>
-            )}
+            </div>
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* ── Section: Trends ─────────────────────────────── */}
+      <CollapsibleSection id="trends" label="Trends" collapsed={!!collapsed.trends} onToggle={toggleSection}>
+        <div className="space-y-4 md:space-y-5">
+          <MonthlyHoldingsChart />
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-3 sm:p-4 lg:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none dark:bg-muted/20 backdrop-blur-sm">
+            <HoldingComparison
+              isOpen={true}
+              targetMonth={parseInt(filterMonth)}
+              targetYear={parseInt(filterYear)}
+              hideValues={hideValues}
+            />
           </div>
         </div>
+      </CollapsibleSection>
 
-        {/* Monthly Holdings Trend */}
-        <MonthlyHoldingsChart />
-
-        {/* Currency Breakdown */}
-        {statistics &&
-          Object.keys(statistics.currencyBreakdown).length > 0 && (
-            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  Currency Breakdown
-                </CardTitle>
-                <CardDescription className="text-xs sm:text-sm">
-                  Portfolio distribution by currency
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {Object.entries(statistics.currencyBreakdown)
-                    .sort((a, b) => b[1].current - a[1].current)
-                    .map(([currency, data]) => {
-                      const currencyPercent =
-                        statistics.totalCurrent > 0
-                          ? (data.current / statistics.totalCurrent) * 100
-                          : 0;
-                      const currencyReturn = data.returnAmount;
-                      const currencyReturnPercent =
-                        data.invested > 0
-                          ? (currencyReturn / data.invested) * 100
-                          : 0;
-
-                      return (
-                        <div
-                          key={currency}
-                          className="rounded-lg border border-border/40 bg-background p-3 transition-colors hover:border-primary/30 hover:bg-accent/30"
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-semibold">
-                              {currency}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {currencyPercent.toFixed(1)}%
-                            </span>
-                          </div>
-                          <div className="space-y-1">
-                            <div className="flex justify-between text-xs">
-                              <span className="text-muted-foreground">
-                                Value:
-                              </span>
-                              <span className="font-medium">
-                                {hideValues
-                                  ? maskValue()
-                                  : formatCurrency(data.current, currency)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-xs">
-                              <span className="text-muted-foreground">
-                                Invested:
-                              </span>
-                              <span className="font-medium">
-                                {hideValues
-                                  ? maskValue()
-                                  : formatCurrency(data.invested, currency)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-xs pt-1 border-t border-border/40">
-                              <span className="text-muted-foreground">
-                                Return:
-                              </span>
-                              <span
-                                className={cn(
-                                  "font-semibold",
-                                  currencyReturnPercent >= 0
-                                    ? "text-emerald-600 dark:text-emerald-400"
-                                    : "text-destructive"
-                                )}
-                              >
-                                {hideValues
-                                  ? maskValue()
-                                  : `${currencyReturnPercent >= 0 ? "+" : ""}${currencyReturnPercent.toFixed(1)}%`}
-                              </span>
-                            </div>
-                            <div className="text-[10px] text-muted-foreground pt-1">
-                              {data.count} asset{data.count !== 1 ? "s" : ""}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-        {/* Percentage Distribution Cards */}
-        {statistics && (
-          <div className="grid gap-4 md:gap-6 md:grid-cols-2">
-            {/* Platform Percentage Distribution */}
-            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  Platform Distribution (%)
-                </CardTitle>
-                <CardDescription className="text-xs sm:text-sm">
-                  Portfolio allocation by platform
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {Object.entries(
-                    holdings.reduce((acc, h) => {
-                      const platform = h.platform || "Unknown";
-                      const value = parseFloat(h.current_value);
-                      if (!acc[platform]) {
-                        acc[platform] = 0;
-                      }
-                      acc[platform] += value;
-                      return acc;
-                    }, {} as Record<string, number>)
-                  )
-                    .map(([platform, value]) => ({
-                      platform,
-                      value,
-                      percent:
-                        statistics.totalCurrent > 0
-                          ? (value / statistics.totalCurrent) * 100
-                          : 0,
-                    }))
-                    .sort((a, b) => b.value - a.value)
-                    .map((item, index) => {
-                      const barColor = holdingsChartColorVar(index);
-                      return (
-                        <div
-                          key={item.platform}
-                          className="space-y-2"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex min-w-0 flex-1 items-center gap-2">
-                              <div
-                                className="h-3 w-3 shrink-0 rounded-full"
-                                style={{ backgroundColor: barColor }}
-                              />
-                              <span className="text-sm font-medium truncate">
-                                {item.platform}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-3 ml-2 shrink-0">
-                              <span className="text-xs text-muted-foreground">
-                                {hideValues
-                                  ? maskValue()
-                                  : formatCurrency(item.value, statistics.primaryCurrency)}
-                              </span>
-                              <span className="text-sm font-bold min-w-[50px] text-right">
-                                {hideValues ? "•••" : `${item.percent.toFixed(1)}%`}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                            <div
-                              className="h-full rounded-full transition-all"
-                              style={{
-                                width: `${item.percent}%`,
-                                backgroundColor: barColor,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Asset Type Percentage Distribution */}
-            <Card className="border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                  <PieChart className="h-4 w-4" />
-                  Asset Type Distribution (%)
-                </CardTitle>
-                <CardDescription className="text-xs sm:text-sm">
-                  Portfolio allocation by asset type
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {Object.entries(
-                    holdings.reduce((acc, h) => {
-                      const typeName = h.holding_type?.name || "Unknown";
-                      const value = parseFloat(h.current_value);
-                      if (!acc[typeName]) {
-                        acc[typeName] = 0;
-                      }
-                      acc[typeName] += value;
-                      return acc;
-                    }, {} as Record<string, number>)
-                  )
-                    .map(([typeName, value]) => ({
-                      typeName,
-                      value,
-                      percent:
-                        statistics.totalCurrent > 0
-                          ? (value / statistics.totalCurrent) * 100
-                          : 0,
-                    }))
-                    .sort((a, b) => b.value - a.value)
-                    .map((item, index) => {
-                      const barColor = holdingsChartColorVar(index);
-                      return (
-                        <div
-                          key={item.typeName}
-                          className="space-y-2"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex min-w-0 flex-1 items-center gap-2">
-                              <div
-                                className="h-3 w-3 shrink-0 rounded-full"
-                                style={{ backgroundColor: barColor }}
-                              />
-                              <span className="text-sm font-medium truncate">
-                                {item.typeName}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-3 ml-2 shrink-0">
-                              <span className="text-xs text-muted-foreground">
-                                {hideValues
-                                  ? maskValue()
-                                  : formatCurrency(item.value, statistics.primaryCurrency)}
-                              </span>
-                              <span className="text-sm font-bold min-w-[50px] text-right">
-                                {hideValues ? "•••" : `${item.percent.toFixed(1)}%`}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                            <div
-                              className="h-full rounded-full transition-all"
-                              style={{
-                                width: `${item.percent}%`,
-                                backgroundColor: barColor,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

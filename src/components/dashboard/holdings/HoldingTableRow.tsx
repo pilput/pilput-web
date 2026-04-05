@@ -69,9 +69,15 @@ export default function HoldingTableRow({
         </Badge>
       </TableCell>
       <TableCell>
-        <span className={cn("font-medium text-[10px] sm:text-xs", getHoldingTypeColor(holding.holding_type.name))}>
+        <Badge
+          variant="secondary"
+          className={cn(
+            getHoldingTypeColor(holding.holding_type.name),
+            "rounded-md font-semibold tracking-wide text-[9px] sm:text-[10px] px-2 py-0.5 border shadow-sm"
+          )}
+        >
           {holding.holding_type.name}
-        </span>
+        </Badge>
       </TableCell>
       <TableCell className="font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(invested, holding.currency, { showSymbol: false })}
