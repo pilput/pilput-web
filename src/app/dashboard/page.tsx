@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 
 const LikeChart = dynamic(() => import("@/components/dashboard/LikeChart"), { ssr: false });
 const UserChart = dynamic(() => import("@/components/dashboard/UserChart"), { ssr: false });
-const UserDemographicsChart = dynamic(() => import("@/components/dashboard/UserDemographicsChart"), { ssr: false });
 const EngagementChart = dynamic(() => import("@/components/dashboard/EngagementChart"), { ssr: false });
 const MonthlyHoldingsChart = dynamic(() => import("@/components/dashboard/holdings/MonthlyHoldingsChart"), { ssr: false });
 
@@ -20,8 +19,7 @@ function Page() {
       </div>
 
       {/* Second Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-        <UserDemographicsChart />
+      <div>
         <LikeChart />
       </div>
 
