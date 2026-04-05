@@ -97,7 +97,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
   fetchHoldingTypes: async () => {
     try {
-      const { data } = await apiClientApp.get("/v1/holdings/types", {
+      const { data } = await apiClientApp.get("/v1/holding-types", {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
