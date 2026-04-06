@@ -62,14 +62,15 @@ const ActionComponent = ({
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem>
-          <a
-            href={`/blog/${post.slug}`}
+          <Link
+            href={`/${post.user.username}/${post.slug}`}
             target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center"
           >
             <Eye className="mr-2 h-4 w-4" />
             <span>View</span>
-          </a>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <Link
