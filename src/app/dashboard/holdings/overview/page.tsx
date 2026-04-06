@@ -19,7 +19,6 @@ import {
   TrendingDown,
   Award,
   BarChart3,
-  PieChart,
   Coins,
   Building2,
   ArrowUpRight,
@@ -88,6 +87,57 @@ function CollapsibleSection({
       </button>
       {!collapsed && children}
     </section>
+  );
+}
+
+function AllocationBreakdown({
+  platformDistribution,
+}: {
+  platformDistribution: { platform: string; value: number; percent: number }[];
+}) {
+  const items = platformDistribution.map((d) => ({ label: d.platform, percent: d.percent }));
+
+  return (
+    <Card className="border-border/60 bg-card">
+      <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
+        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+          <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+          Platform Allocation
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="px-4 pb-4 sm:px-5">
+        <div className="space-y-3">
+        {items.map((item, index) => (
+          <div key={item.label} className="space-y-1">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: holdingsChartColorVar(index) }}
+                />
+                <span className="truncate font-medium">{item.label}</span>
+              </div>
+              <span className="font-bold ml-2 shrink-0 tabular-nums">
+                {item.percent.toFixed(1)}%
+              </span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${item.percent}%`,
+                  backgroundColor: holdingsChartColorVar(index),
+                }}
+              />
+            </div>
+          </div>
+        ))}
+        {items.length === 0 && (
+          <p className="text-xs text-muted-foreground text-center py-4">No data</p>
+        )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -284,6 +334,7 @@ export default function HoldingOverviewPage() {
       totalReturn,
       totalReturnPercent,
       currencyBreakdown,
+      currencyCount: Object.keys(currencyBreakdown).length,
       assetTypePerformance,
       topPerformers,
       worstPerformers,
@@ -382,110 +433,63 @@ export default function HoldingOverviewPage() {
 
       {/* ── Section: Allocation ─────────────────────────── */}
       <CollapsibleSection id="allocation" label="Allocation" collapsed={!!collapsed.allocation} onToggle={toggleSection}>
-        <div className="grid gap-4 md:gap-5 lg:grid-cols-3">
-          {/* Main chart — takes 2/3 on large screens */}
-          <div className="lg:col-span-2 min-w-0">
-            <OverviewChart holdings={holdings} hideValues={hideValues} />
-          </div>
+        {statistics?.currencyCount && statistics.currencyCount > 1 ? (
+          <Card className="border-border/60 bg-card">
+            <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <Info className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                Allocation unavailable across mixed currencies
+              </CardTitle>
+              <CardDescription className="text-xs">
+                This portfolio contains multiple currencies, so allocation by value would be misleading without a shared base currency.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-4 pb-4 sm:px-5">
+              <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-3">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Use the currency breakdown below for now, or add converted base values before showing portfolio-wide allocation again.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:gap-5 lg:grid-cols-3">
+            {/* Main chart — takes 2/3 on large screens */}
+            <div className="lg:col-span-2 min-w-0">
+              <OverviewChart
+                holdings={holdings}
+                currency={statistics?.primaryCurrency ?? "IDR"}
+                hideValues={hideValues}
+              />
+            </div>
 
-          {/* Distribution bars — right column */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
-            {/* Platform Distribution */}
-            <Card className="border-border/60">
-              <CardHeader className="pb-3 pt-4 px-4">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                  <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  Platform
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-4 pb-4 space-y-2.5">
-                {statistics?.platformDistribution.map((item, index) => (
-                  <div key={item.platform} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <div
-                          className="h-2 w-2 shrink-0 rounded-full"
-                          style={{ backgroundColor: holdingsChartColorVar(index) }}
-                        />
-                        <span className="truncate font-medium">{item.platform}</span>
-                      </div>
-                      <span className="font-bold ml-2 shrink-0 tabular-nums">
-                        {hideValues ? "•••" : `${item.percent.toFixed(1)}%`}
-                      </span>
-                    </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                          width: `${item.percent}%`,
-                          backgroundColor: holdingsChartColorVar(index),
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Asset Type Distribution */}
-            <Card className="border-border/60">
-              <CardHeader className="pb-3 pt-4 px-4">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                  <PieChart className="h-3.5 w-3.5 text-muted-foreground" />
-                  Asset Types
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-4 pb-4 space-y-2.5">
-                {statistics?.assetTypeDistribution.map((item, index) => (
-                  <div key={item.typeName} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <div
-                          className="h-2 w-2 shrink-0 rounded-full"
-                          style={{ backgroundColor: holdingsChartColorVar(index) }}
-                        />
-                        <span className="truncate font-medium">{item.typeName}</span>
-                      </div>
-                      <span className="font-bold ml-2 shrink-0 tabular-nums">
-                        {hideValues ? "•••" : `${item.percent.toFixed(1)}%`}
-                      </span>
-                    </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                          width: `${item.percent}%`,
-                          backgroundColor: holdingsChartColorVar(index),
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+            {/* Distribution bars — right column */}
+            <AllocationBreakdown
+              platformDistribution={statistics?.platformDistribution ?? []}
+            />
           </div>
-        </div>
+        )}
 
         {/* Currency breakdown (only shown when multiple currencies) */}
         {statistics && Object.keys(statistics.currencyBreakdown).length > 1 && (
-          <Card className="mt-4 md:mt-5 border-border/60">
-            <CardHeader className="pb-3 pt-4 px-4 sm:px-6">
+          <Card className="mt-4 border-border/60 bg-card md:mt-5">
+            <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
                 Currency Breakdown
               </CardTitle>
               <CardDescription className="text-xs">
-                Portfolio distribution by currency
+                Grouped by holding currency. Values are shown per currency and not summed across currencies.
               </CardDescription>
             </CardHeader>
-            <CardContent className="px-4 sm:px-6 pb-4">
+            <CardContent className="px-4 pb-4 sm:px-5">
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {Object.entries(statistics.currencyBreakdown)
                   .sort((a, b) => b[1].current - a[1].current)
                   .map(([currency, data]) => {
-                    const pct =
-                      statistics.totalCurrent > 0
-                        ? (data.current / statistics.totalCurrent) * 100
+                    const assetShare =
+                      statistics.totalAssets > 0
+                        ? (data.count / statistics.totalAssets) * 100
                         : 0;
                     const retPct =
                       data.invested > 0
@@ -499,7 +503,7 @@ export default function HoldingOverviewPage() {
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-bold">{currency}</span>
                           <span className="text-[10px] text-muted-foreground font-medium">
-                            {pct.toFixed(1)}%
+                            {assetShare.toFixed(1)}% of assets
                           </span>
                         </div>
                         <div className="space-y-1 text-xs">

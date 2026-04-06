@@ -1,13 +1,18 @@
 "use client"
 
 import * as React from "react"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, BarChart, Bar, XAxis, YAxis } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import type { Holding } from "@/types/holding"
 import { formatCurrency } from "@/lib/utils"
 
+function getAllocationColor(index: number) {
+  return `var(--chart-${(index % 5) + 1})`
+}
+
 interface OverviewChartProps {
   holdings: Holding[]
+  currency?: string
   hideValues?: boolean
   hiddenTypes?: string[]
   onToggleType?: (typeName: string, isHidden: boolean) => void
@@ -15,6 +20,7 @@ interface OverviewChartProps {
 
 export default function OverviewChart({ 
   holdings, 
+  currency = "IDR",
   hideValues = false, 
   hiddenTypes: externalHiddenTypes = [], 
   onToggleType 
@@ -29,7 +35,7 @@ export default function OverviewChart({
   }, [holdings])
 
   // Aggregate and compute chart data in one pass with percentages
-  const { chartData, typeNames } = React.useMemo(() => {
+  const chartData = React.useMemo(() => {
     const typeMap = new Map<string, number>()
     const typeSet = new Set<string>()
     
@@ -52,39 +58,8 @@ export default function OverviewChart({
         percent: parseFloat(percent.toFixed(1))
       }
     }).sort((a, b) => b.value - a.value)
-    
-    return { chartData: data, typeNames: names }
+    return data
   }, [holdings, hiddenTypes, totalValue])
-
-  // Platform distribution with percentages
-  const platformDistribution = React.useMemo(() => {
-    const map = new Map<string, number>()
-    holdings.forEach(h => {
-      const platform = h.platform || "Other"
-      const value = parseFloat(h.current_value)
-      map.set(platform, (map.get(platform) || 0) + value)
-    })
-    return Array.from(map.entries())
-      .map(([name, value]) => {
-        const percent = totalValue > 0 ? (value / totalValue) * 100 : 0
-        return { 
-          name, 
-          value,
-          percent: parseFloat(percent.toFixed(1))
-        }
-      })
-      .sort((a, b) => b.value - a.value)
-  }, [holdings, totalValue])
-
-  // Chart colors
-  const CHART_COLORS = [
-    "#3b82f6", // Blue
-    "#8b5cf6", // Purple
-    "#ec4899", // Pink
-    "#f59e0b", // Amber
-    "#10b981", // Emerald
-    "#6366f1", // Indigo
-  ]
 
   const handleTypeToggle = (typeName: string) => {
     const isHidden = hiddenTypes.includes(typeName)
@@ -108,10 +83,10 @@ export default function OverviewChart({
               {data.name}
             </span>
             <span className="text-sm font-bold font-mono">
-              {hideValues ? "••••••" : formatCurrency(data.value, "IDR")}
+              {hideValues ? "••••••" : formatCurrency(data.value, currency)}
             </span>
             <span className="text-xs text-muted-foreground">
-              {hideValues ? "•••" : `${data.percent}%`} of portfolio
+              {data.percent}% of portfolio
             </span>
           </div>
         </div>
@@ -121,27 +96,25 @@ export default function OverviewChart({
   }
 
   const renderLegendContent = () => (
-    <div className="flex flex-wrap justify-center gap-4 mt-4">
+    <div className="mt-4 flex flex-wrap justify-center gap-3 sm:gap-4">
       {chartData.map((entry, index) => {
         const isHidden = hiddenTypes.includes(entry.name)
         return (
           <div
             key={index}
-            className={`flex items-center gap-2 cursor-pointer transition-opacity ${
+            className={`inline-flex items-center gap-2 rounded-full border border-border/50 bg-muted/20 px-2.5 py-1 text-xs transition-all ${
               isHidden ? "opacity-40 line-through" : "opacity-100"
             }`}
             onClick={() => handleTypeToggle(entry.name)}
           >
             <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: getAllocationColor(index) }}
             />
-            <span className="text-sm text-muted-foreground">{entry.name}</span>
-            {!hideValues && (
-              <span className="text-xs font-semibold text-foreground">
-                {entry.percent}%
-              </span>
-            )}
+            <span className="text-muted-foreground">{entry.name}</span>
+            <span className="font-semibold text-foreground">
+              {entry.percent}%
+            </span>
           </div>
         )
       })}
@@ -149,114 +122,47 @@ export default function OverviewChart({
   )
 
   return (
-    <div className="grid gap-4 sm:gap-6">
-      <Card className="flex flex-col border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
-          <CardTitle className="text-base sm:text-lg font-semibold">Asset Allocation</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Distribution by Asset Type</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 px-2 sm:px-6 pb-3 sm:pb-6">
-          <div className="h-[280px] sm:h-[300px] w-full">
-            {chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={70}
-                    outerRadius={130}
-                    paddingAngle={2}
-                    dataKey="value"
-                    strokeWidth={0}
-                  >
-                    {chartData.map((_, index) => (
-                      <Cell
-                        key={index}
-                        fill={CHART_COLORS[index % CHART_COLORS.length]}
-                        className="hover:opacity-80 transition-opacity cursor-pointer"
-                      />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip content={renderTooltipContent} cursor={false} />
-                  <Legend content={renderLegendContent} verticalAlign="bottom" />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground text-sm italic">
-                No data available
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="flex flex-col border border-border/40 sm:border-none shadow-sm sm:shadow-none bg-muted/30">
-        <CardHeader className="pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
-          <CardTitle className="text-base sm:text-lg font-semibold">Platform Distribution</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Value and percentage across platforms</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 px-2 sm:px-6 pb-3 sm:pb-6">
-          <div className="h-[250px] sm:h-[260px] w-full">
-            {platformDistribution.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={platformDistribution}
-                  layout="vertical"
-                  margin={{ top: 5, right: 60, left: 0, bottom: 5 }}
-                  barCategoryGap="30%"
+    <Card className="flex flex-col border-border/60 bg-card">
+      <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
+        <CardTitle className="text-sm font-semibold">Asset Allocation</CardTitle>
+        <CardDescription className="text-xs">
+          Distribution by Asset Type. Click a legend item to hide or show a category.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex-1 px-3 pb-4 sm:px-5">
+        <div className="h-[280px] sm:h-[300px] w-full">
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={130}
+                  paddingAngle={2}
+                  dataKey="value"
+                  strokeWidth={0}
                 >
-                  <XAxis type="number" hide />
-                  <YAxis
-                    dataKey="name"
-                    type="category"
-                    width={120}
-                    tick={{ fontSize: 12, fill: "currentColor", fontWeight: 600 }}
-                    className="text-foreground"
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <RechartsTooltip
-                    content={renderTooltipContent}
-                    cursor={{ fill: "hsl(var(--primary))", opacity: 0.05 }}
-                  />
-                  <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
-                    {platformDistribution.map((_, index) => (
-                      <Cell
-                        key={index}
-                        fill={CHART_COLORS[index % CHART_COLORS.length]}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground text-sm italic">
-                No platform data available
-              </div>
-            )}
-          </div>
-          {/* Percentage labels for platforms */}
-          {platformDistribution.length > 0 && (
-            <div className="mt-4 space-y-2">
-              {platformDistribution.map((item, index) => (
-                <div key={index} className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+                  {chartData.map((_, index) => (
+                    <Cell
+                      key={index}
+                      fill={getAllocationColor(index)}
+                      className="hover:opacity-80 transition-opacity cursor-pointer"
                     />
-                    <span className="text-muted-foreground">{item.name}</span>
-                  </div>
-                  <span className="font-semibold">
-                    {hideValues ? "•••" : `${item.percent}%`}
-                  </span>
-                </div>
-              ))}
+                  ))}
+                </Pie>
+                <RechartsTooltip content={renderTooltipContent} cursor={false} />
+                <Legend content={renderLegendContent} verticalAlign="bottom" />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex h-full items-center justify-center text-muted-foreground text-sm italic">
+              No data available
             </div>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
