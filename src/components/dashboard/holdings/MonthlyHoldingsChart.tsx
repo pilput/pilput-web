@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
+import { cn } from "@/lib/utils";
 
 /** "YYYY-MM" from input type="month" -> { month, year } */
 function parseMonthValue(value: string): { month: number; year: number } | null {
@@ -234,15 +235,43 @@ export default function MonthlyHoldingsChart({
     return null;
   };
 
+  const renderLegendContent = () => (
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+      {[
+        { name: "Total Invested", color: "var(--chart-2)" },
+        { name: "Current Value", color: "var(--chart-1)" },
+        { name: "Holdings Count", color: "var(--chart-3, #f97316)", dashed: true },
+      ].map((item) => (
+        <div
+          key={item.name}
+          className="inline-flex items-center gap-2"
+        >
+          <span
+            className={cn(
+              "h-2.5 w-2.5 rounded-full",
+              item.dashed && "h-0 w-4 rounded-none border-t-2 border-dashed bg-transparent"
+            )}
+            style={
+              item.dashed
+                ? { borderColor: item.color }
+                : { backgroundColor: item.color }
+            }
+          />
+          <span className="text-muted-foreground">{item.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
-    <Card className="border-none shadow-none bg-muted/30">
-      <CardHeader className="pb-3 sm:pb-4">
-        <div className="flex flex-col gap-3 sm:gap-4">
-          <div>
-            <CardTitle className="text-base sm:text-lg font-semibold">
+    <Card className="border-border/60 bg-card">
+      <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <CardTitle className="text-sm font-semibold">
               Monthly Holdings Performance
             </CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
+            <CardDescription className="text-xs">
               Total invested vs current value per month
             </CardDescription>
           </div>
@@ -252,7 +281,7 @@ export default function MonthlyHoldingsChart({
                 <Label className="text-xs text-muted-foreground">From</Label>
                 <Input
                   type="month"
-                  className="h-8 w-[140px] sm:w-[160px] text-xs"
+                  className="h-8 w-[140px] text-xs sm:w-[160px]"
                   value={draft.startDate}
                   onChange={(e) =>
                     setDraft((p) => ({ ...p, startDate: e.target.value }))
@@ -263,7 +292,7 @@ export default function MonthlyHoldingsChart({
                 <Label className="text-xs text-muted-foreground">To</Label>
                 <Input
                   type="month"
-                  className="h-8 w-[140px] sm:w-[160px] text-xs"
+                  className="h-8 w-[140px] text-xs sm:w-[160px]"
                   value={draft.endDate}
                   onChange={(e) =>
                     setDraft((p) => ({ ...p, endDate: e.target.value }))
@@ -294,72 +323,74 @@ export default function MonthlyHoldingsChart({
           )}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 pb-4 sm:px-5">
         {isLoading ? (
-          <div className="flex h-[260px] items-center justify-center text-xs sm:text-sm text-muted-foreground">
+          <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-border/60 bg-muted/10 text-xs text-muted-foreground sm:text-sm">
             Loading monthly holdings...
           </div>
         ) : error ? (
-          <div className="flex h-[260px] items-center justify-center text-xs sm:text-sm text-destructive">
+          <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-destructive/30 bg-destructive/5 px-4 text-center text-xs text-destructive sm:text-sm">
             {error}
           </div>
         ) : chartData.length === 0 ? (
-          <div className="flex h-[260px] items-center justify-center text-xs sm:text-sm text-muted-foreground">
+          <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-border/60 bg-muted/10 px-4 text-center text-xs text-muted-foreground sm:text-sm">
             No monthly holdings data available
           </div>
         ) : (
-          <div className="h-[260px] sm:h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={chartData}
-                margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="label"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={formatMonthLabel}
-                />
-                <YAxis yAxisId="value" domain={[0, "auto"]} hide />
-                <YAxis yAxisId="count" domain={[0, "auto"]} orientation="right" hide />
-                <RechartsTooltip content={<CustomTooltip />} />
-                <Legend
-                  wrapperStyle={{ paddingTop: 8, fontSize: 12 }}
-                  iconType="circle"
-                  iconSize={8}
-                />
-                <Line
-                  yAxisId="value"
-                  type="monotone"
-                  dataKey="totalInvested"
-                  name="Total Invested"
-                  stroke="var(--chart-2)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  yAxisId="value"
-                  type="monotone"
-                  dataKey="totalCurrentValue"
-                  name="Current Value"
-                  stroke="var(--chart-1)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  yAxisId="count"
-                  type="monotone"
-                  dataKey="holdingsCount"
-                  name="Holdings Count"
-                  stroke="var(--chart-3, #f97316)"
-                  strokeWidth={2}
-                  dot={false}
-                  strokeDasharray="4 4"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="rounded-xl bg-muted/10 p-1 sm:p-2">
+            <div className="h-[260px] w-full sm:h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={chartData}
+                  margin={{ top: 14, right: 12, left: 12, bottom: 6 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.18)" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    tickFormatter={formatMonthLabel}
+                    tick={{ fontSize: 12, fill: "currentColor" }}
+                  />
+                  <YAxis yAxisId="value" domain={[0, "auto"]} hide />
+                  <YAxis yAxisId="count" domain={[0, "auto"]} orientation="right" hide />
+                  <RechartsTooltip content={<CustomTooltip />} />
+                  <Legend content={renderLegendContent} verticalAlign="bottom" />
+                  <Line
+                    yAxisId="value"
+                    type="monotone"
+                    dataKey="totalInvested"
+                    name="Total Invested"
+                    stroke="var(--chart-2)"
+                    strokeWidth={2.5}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                  />
+                  <Line
+                    yAxisId="value"
+                    type="monotone"
+                    dataKey="totalCurrentValue"
+                    name="Current Value"
+                    stroke="var(--chart-1)"
+                    strokeWidth={2.5}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                  />
+                  <Line
+                    yAxisId="count"
+                    type="monotone"
+                    dataKey="holdingsCount"
+                    name="Holdings Count"
+                    stroke="var(--chart-3, #f97316)"
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                    strokeDasharray="4 4"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         )}
       </CardContent>
