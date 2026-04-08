@@ -19,13 +19,25 @@ import { cn } from "@/lib/utils";
 
 interface BookmarkButtonProps {
   postId: string;
+  /** Server-side bookmark total; optional optimistic count updates on toggle. */
+  initialCount?: number;
+  /** When true, shows total bookmarks (compact: icon + number, like likes). */
+  showCount?: boolean;
   className?: string;
   iconClassName?: string;
   variant?: "default" | "compact";
 }
 
+function normalizeBookmarkCount(value: number | undefined): number {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return Math.floor(n);
+}
+
 export default function BookmarkButton({
   postId,
+  initialCount = 0,
+  showCount = false,
   className,
   iconClassName,
   variant = "default",
@@ -40,6 +52,11 @@ export default function BookmarkButton({
   const loaded = bookmarkStore((s) => s.loaded);
 
   const [busy, setBusy] = useState(false);
+  const [count, setCount] = useState(() => normalizeBookmarkCount(initialCount));
+
+  useEffect(() => {
+    setCount(normalizeBookmarkCount(initialCount));
+  }, [initialCount, postId]);
 
   useEffect(() => {
     if (!getToken()) {
@@ -58,6 +75,11 @@ export default function BookmarkButton({
     setBusy(true);
     try {
       const action = await toggleBookmark(postId);
+      setCount((c) => {
+        if (action === "added") return c + 1;
+        if (action === "removed") return Math.max(0, c - 1);
+        return c;
+      });
       toast.success(
         action === "added" ? "Saved to reading list" : "Removed from reading list",
       );
@@ -81,12 +103,18 @@ export default function BookmarkButton({
               disabled={showSpinner}
               onClick={() => void onClick()}
               className={cn(
-                "p-2 rounded-lg hover:bg-muted transition-colors disabled:opacity-50",
+                "inline-flex items-center gap-1 rounded-lg p-2 hover:bg-muted transition-colors disabled:opacity-50",
                 isBookmarked && "text-primary",
                 className,
               )}
               whileHover={{ scale: 1.05 }}
-              aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+              aria-label={
+                showCount
+                  ? `${isBookmarked ? "Remove bookmark" : "Add bookmark"}, ${count} saves`
+                  : isBookmarked
+                    ? "Remove bookmark"
+                    : "Add bookmark"
+              }
             >
               <Bookmark
                 className={cn(
@@ -95,6 +123,11 @@ export default function BookmarkButton({
                   iconClassName,
                 )}
               />
+              {showCount && (
+                <span className="min-w-[1ch] text-xs font-medium tabular-nums">
+                  {count}
+                </span>
+              )}
             </motion.button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
@@ -141,6 +174,9 @@ export default function BookmarkButton({
                 iconClassName,
               )}
             />
+            {showCount && (
+              <span className="tabular-nums min-w-[1ch]">{count}</span>
+            )}
             {isBookmarked ? "Saved" : "Save"}
           </motion.button>
         </TooltipTrigger>

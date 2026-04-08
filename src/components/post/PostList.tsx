@@ -13,7 +13,11 @@ import {
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
-import { getPostLikesCount, type Post } from "@/types/post";
+import {
+  getPostBookmarkCount,
+  getPostLikesCount,
+  type Post,
+} from "@/types/post";
 import {
   Tooltip,
   TooltipContent,
@@ -152,8 +156,10 @@ const PostList = ({ post }: { post: Post }) => {
             />
             <BookmarkButton
               postId={post.id}
+              initialCount={getPostBookmarkCount(post)}
+              showCount
               variant="compact"
-              className="h-9 w-9 rounded-md border border-border/70 bg-background p-0 shadow-sm hover:bg-muted"
+              className="h-9 min-w-9 justify-center rounded-md border border-border/70 bg-background px-2 shadow-sm hover:bg-muted"
             />
             <motion.button
               type="button"

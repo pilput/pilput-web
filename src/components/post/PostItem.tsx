@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Eye, Heart, MessageCircle, Calendar, User } from "lucide-react";
-import { getPostLikesCount, type Post } from "@/types/post";
+import { Eye, Heart, Bookmark, Calendar, User } from "lucide-react";
+import { getPostBookmarkCount, getPostLikesCount, type Post } from "@/types/post";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -63,6 +63,10 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
               <div className="flex items-center space-x-1 group-hover:text-red-500/70 transition-colors" title="Likes">
                 <Heart className="h-3.5 w-3.5" />
                 <span>{getPostLikesCount(post)}</span>
+              </div>
+              <div className="flex items-center space-x-1" title="Bookmarks">
+                <Bookmark className="h-3.5 w-3.5" />
+                <span>{getPostBookmarkCount(post)}</span>
               </div>
             </div>
           )}

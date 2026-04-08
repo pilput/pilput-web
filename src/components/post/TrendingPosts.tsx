@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { TrendingUp, Eye, Heart, User, Sparkles } from "lucide-react";
+import { TrendingUp, Eye, Heart, Bookmark, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
-import { getPostLikesCount, type Post } from "@/types/post";
+import { getPostBookmarkCount, getPostLikesCount, type Post } from "@/types/post";
 
 interface TrendingPostsProps {
   posts: Post[];
@@ -117,6 +117,10 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                       <Eye className="w-3.5 h-3.5" />
                       {post.view_count?.toLocaleString() || 0}
                     </div>
+                    <div className="flex items-center gap-1 text-muted-foreground">
+                      <Bookmark className="w-3.5 h-3.5" />
+                      {getPostBookmarkCount(post)}
+                    </div>
                     <div className="ml-auto flex items-center gap-1 text-primary/80">
                        <Heart className="w-3.5 h-3.5" />
                        {getPostLikesCount(post)}
@@ -167,6 +171,10 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                   <span className="flex items-center gap-0.5">
                      <Eye className="w-3 h-3" />
                      {post.view_count?.toLocaleString()}
+                  </span>
+                  <span className="flex items-center gap-0.5">
+                    <Bookmark className="w-3 h-3" />
+                    {getPostBookmarkCount(post)}
                   </span>
                 </div>
               </div>

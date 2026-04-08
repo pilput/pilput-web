@@ -15,6 +15,8 @@ export interface Post {
   /** Present when the post payload is loaded with an authenticated context. */
   is_liked_by_current_user?: boolean;
   comments_count?: number;
+  /** Total bookmarks (saves) for this post when the API includes it. */
+  bookmark_count?: number;
   tags: Tags[];
 }
 
@@ -58,6 +60,14 @@ export function getPostLikesCount(
 ): number {
   const raw = post.likes_count ?? post.like_count;
   const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return Math.floor(n);
+}
+
+export function getPostBookmarkCount(
+  post: Pick<Post, "bookmark_count">,
+): number {
+  const n = Number(post.bookmark_count);
   if (!Number.isFinite(n) || n < 0) return 0;
   return Math.floor(n);
 }

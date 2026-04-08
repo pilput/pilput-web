@@ -19,6 +19,8 @@ interface PostDetailEngagementRowProps {
   initialCount: number;
   createdAt: string;
   viewCount: number;
+  /** From `post.bookmark_count` when the API includes it. */
+  initialBookmarkCount: number;
 }
 
 export function PostDetailEngagementRow({
@@ -27,6 +29,7 @@ export function PostDetailEngagementRow({
   initialCount,
   createdAt,
   viewCount,
+  initialBookmarkCount,
 }: PostDetailEngagementRowProps) {
   const { liked, count, busy, onToggle } = usePostLike(
     postId,
@@ -97,10 +100,12 @@ export function PostDetailEngagementRow({
         />
         <BookmarkButton
           postId={postId}
+          initialCount={initialBookmarkCount}
+          showCount
           variant="compact"
           className={cn(
             actionBtnClass,
-            "inline-flex w-9 items-center justify-center p-0",
+            "inline-flex min-w-9 items-center justify-center gap-1 px-2",
           )}
         />
       </div>

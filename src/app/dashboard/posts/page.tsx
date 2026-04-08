@@ -107,7 +107,7 @@ export default function Posts() {
         </CardHeader>
         <CardContent className="p-2 sm:p-4 md:p-6">
           <div className="overflow-x-auto -mx-2 sm:-mx-4 md:-mx-6">
-            <div className="min-w-[800px] px-2 sm:px-4 md:px-6">
+            <div className="min-w-[880px] px-2 sm:px-4 md:px-6">
               <TooltipProvider>
               <Table>
                 <TableCaption>Total {poststore.total} posts found</TableCaption>
@@ -120,6 +120,7 @@ export default function Posts() {
                     <TableHead className="hidden lg:table-cell">Created</TableHead>
                     <TableHead className="hidden lg:table-cell">Updated</TableHead>
                     <TableHead className="text-center">Views</TableHead>
+                    <TableHead className="text-center">Bookmarks</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -178,6 +179,9 @@ export default function Posts() {
                       </TableCell>
                       <TableCell className="text-center tabular-nums">
                         {post.view_count ?? 0}
+                      </TableCell>
+                      <TableCell className="text-center tabular-nums">
+                        {post.bookmark_count ?? 0}
                       </TableCell>
                       <TableCell className="text-right">
                         <ActionComponent post={post} refetchPosts={refetchPosts} />

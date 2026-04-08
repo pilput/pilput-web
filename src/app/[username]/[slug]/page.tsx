@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getPostLikesCount, type Post } from "@/types/post";
+import { getPostBookmarkCount, getPostLikesCount, type Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
 import PostContent from "@/components/post/PostContent";
 import { PostDetailEngagementRow } from "@/components/post/PostDetailEngagementRow";
@@ -197,6 +197,7 @@ export default async function Page(props: {
                   initialCount={getPostLikesCount(post)}
                   createdAt={post.created_at}
                   viewCount={post.view_count}
+                  initialBookmarkCount={getPostBookmarkCount(post)}
                 />
               </div>
             </header>
