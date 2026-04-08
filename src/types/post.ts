@@ -9,7 +9,11 @@ export interface Post {
   updated_at: string;
   published: boolean;
   view_count: number;
+  /** Some API responses use `likes_count`, others `like_count`. */
   likes_count?: number;
+  like_count?: number;
+  /** Present when the post payload is loaded with an authenticated context. */
+  is_liked_by_current_user?: boolean;
   comments_count?: number;
   tags: Tags[];
 }
@@ -46,6 +50,16 @@ export interface User {
 export interface Tags {
   id?: number;
   name: string;
+}
+
+/** Resolves like total whether the payload uses `likes_count` or `like_count`. */
+export function getPostLikesCount(
+  post: Pick<Post, "likes_count" | "like_count">,
+): number {
+  const raw = post.likes_count ?? post.like_count;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return Math.floor(n);
 }
 
 export interface Comment {

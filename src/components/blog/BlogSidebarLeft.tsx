@@ -35,7 +35,7 @@ const BlogSidebarLeft = () => {
   }, []);
 
   return (
-    <div className="xl:w-72 order-first xl:order-none">
+    <div className="xl:w-72 order-first xl:order-0">
       <Card className="bg-card border border-border/70 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className="p-4">
           <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">

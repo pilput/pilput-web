@@ -8,20 +8,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDistanceToNow } from "date-fns";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { Post } from "@/types/post";
+import { getPostLikesCount, type Post } from "@/types/post";
 import ViewRecorder from "@/components/post/RecordView";
 import PostContent from "@/components/post/PostContent";
+import { PostDetailEngagementRow } from "@/components/post/PostDetailEngagementRow";
 import styles from "@/components/post/post-content.module.scss";
 import { Config } from "@/utils/getConfig";
-import BookmarkButton from "@/components/post/BookmarkButton";
-import { cn } from "@/lib/utils";
 
 interface SuccessResponse {
   data: Post;
@@ -199,52 +191,13 @@ export default async function Page(props: {
                   </div>
                 </div>
 
-                <div className="flex flex-1 min-w-0 flex-wrap items-center justify-end gap-3 sm:ml-auto">
-                  <BookmarkButton postId={post.id} />
-                  <div className={cn(styles.metaInfo, "ml-0!")}>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <span className="hover:text-foreground transition-colors cursor-default">
-                          {formatDistanceToNow(new Date(post.created_at), {
-                            addSuffix: true,
-                          })}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>
-                          {new Date(post.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <span className={styles.separator}>•</span>
-
-                  <span className={styles.viewCount}>
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {post.view_count} views
-                  </span>
-                </div>
-                </div>
+                <PostDetailEngagementRow
+                  postId={post.id}
+                  initialLiked={post.is_liked_by_current_user ?? false}
+                  initialCount={getPostLikesCount(post)}
+                  createdAt={post.created_at}
+                  viewCount={post.view_count}
+                />
               </div>
             </header>
 

@@ -230,3 +230,55 @@ export function unfollowUser(userId: string) {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
+
+/** Like record from `POST /v1/likes/:post_id` (toggle). */
+export type PostLikeRecord = {
+  id: string;
+  post_id: string;
+  user_id: string;
+  created_at: string;
+};
+
+type LikesToggleEnvelope = {
+  success?: boolean;
+  data: PostLikeRecord | null | undefined;
+};
+
+/**
+ * Toggle like on a post. Requires a Bearer token.
+ * When the like is removed, `data` may be null — treat that as unliked.
+ */
+export async function togglePostLike(postId: string): Promise<{
+  liked: boolean;
+  record: PostLikeRecord | undefined;
+}> {
+  const token = getToken();
+  if (!token) {
+    throw new Error("AUTH_REQUIRED");
+  }
+  const { data } = await apiClientApp.post<LikesToggleEnvelope>(
+    `/v1/likes/${postId}`,
+    undefined,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  const record = data?.data ?? undefined;
+  const liked = record != null;
+  return { liked, record };
+}
+
+/** List likes for a post (auth required per API). */
+export async function getPostLikes(postId: string) {
+  const token = getToken();
+  if (!token) {
+    return null;
+  }
+  const { data } = await apiClientApp.get<{
+    success?: boolean;
+    data: Array<{ id: string; created_at: string; user_id?: string }>;
+  }>(`/v1/likes/${postId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data?.data ?? [];
+}

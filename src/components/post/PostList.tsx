@@ -5,15 +5,15 @@ import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Heart,
   Clock,
   Eye,
   MessageCircle,
   Share2,
 } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
+import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
-import type { Post } from "@/types/post";
+import { getPostLikesCount, type Post } from "@/types/post";
 import {
   Tooltip,
   TooltipContent,
@@ -73,7 +73,6 @@ const PostList = ({ post }: { post: Post }) => {
               {format(post.created_at, "MMM d, yyyy")}
             </div>
           </div>
-          <BookmarkButton postId={post.id} variant="compact" />
         </div>
 
         {/* Title & Content */}
@@ -141,33 +140,43 @@ const PostList = ({ post }: { post: Post }) => {
           </div>
         )}
 
-        {/* Engagement */}
-        <div className="flex items-center justify-between pt-3 border-t border-border/50">
-          <div className="flex items-center gap-4">
-            <motion.button 
-              className="flex items-center gap-1.5 text-muted-foreground hover:text-red-500 transition-colors text-sm"
-              whileHover={{ scale: 1.02 }}
+        {/* Engagement — satu baris alat: aksi kiri, stat kanan */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border/40 pt-3">
+          <div className="flex flex-wrap items-center gap-1">
+            <LikeButton
+              postId={post.id}
+              initialLiked={post.is_liked_by_current_user ?? false}
+              initialCount={getPostLikesCount(post)}
+              variant="compact"
+              className="h-9 min-w-9 justify-center rounded-md border border-border/70 bg-background px-2 shadow-sm hover:bg-muted"
+            />
+            <BookmarkButton
+              postId={post.id}
+              variant="compact"
+              className="h-9 w-9 rounded-md border border-border/70 bg-background p-0 shadow-sm hover:bg-muted"
+            />
+            <motion.button
+              type="button"
+              className="inline-flex h-9 min-w-9 items-center justify-center gap-1 rounded-md border border-border/70 bg-background px-2 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+              whileHover={{ scale: 1.01 }}
+              aria-label={`${post.comments_count || 0} comments`}
             >
-              <Heart className="w-4 h-4" />
-              {(post.likes_count ?? 0) > 0 && post.likes_count}
+              <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
+              <span className="tabular-nums">{post.comments_count || 0}</span>
             </motion.button>
-            <motion.button 
-              className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm"
-              whileHover={{ scale: 1.02 }}
+            <motion.button
+              type="button"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border/70 bg-background text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+              whileHover={{ scale: 1.01 }}
+              aria-label="Share"
             >
-              <MessageCircle className="w-4 h-4" />
-              {post.comments_count || 0}
-            </motion.button>
-            <motion.button 
-              className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors text-sm"
-              whileHover={{ scale: 1.02 }}
-            >
-              <Share2 className="w-4 h-4" />
+              <Share2 className="h-4 w-4" />
             </motion.button>
           </div>
-          <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
-            <Eye className="w-4 h-4" />
-            {(post.view_count ?? 0) > 0 && post.view_count}
+          <div className="flex items-center gap-1.5 text-sm tabular-nums text-muted-foreground">
+            <Eye className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+            <span>{(post.view_count ?? 0).toLocaleString()}</span>
+            <span className="text-xs font-normal">views</span>
           </div>
         </div>
       </div>

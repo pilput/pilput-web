@@ -354,6 +354,8 @@
   @media (min-width: 640px) {
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
   }
 }
 
@@ -361,6 +363,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .authorInfo {

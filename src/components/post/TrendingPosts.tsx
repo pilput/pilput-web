@@ -3,7 +3,7 @@ import { TrendingUp, Eye, Heart, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
-import type { Post } from "@/types/post";
+import { getPostLikesCount, type Post } from "@/types/post";
 
 interface TrendingPostsProps {
   posts: Post[];
@@ -119,7 +119,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                     </div>
                     <div className="ml-auto flex items-center gap-1 text-primary/80">
                        <Heart className="w-3.5 h-3.5" />
-                       {post.likes_count || 0}
+                       {getPostLikesCount(post)}
                     </div>
                   </div>
                 </div>
