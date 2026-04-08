@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 import TrendingPosts from "@/components/post/TrendingPosts";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
 import type { Post } from "@/types/post";
 
@@ -16,7 +16,7 @@ const BlogSidebarLeft = () => {
     async function fetchTrendingPosts() {
       setIsTrendingLoading(true);
       try {
-        const { data } = await apiClientApp.get("/v1/posts/trending", {
+        const { data } = await apiClient.get("/v1/posts/trending", {
           params: { limit: 5 },
         });
         const response = data;
