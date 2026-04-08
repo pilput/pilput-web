@@ -239,7 +239,7 @@ export default async function Page(props: {
           </article>
 
           {/* Comments Section */}
-          <section className={styles.commentsSection}>
+          <section id="comments" className={styles.commentsSection}>
             <h2>Comments</h2>
             <Comment postId={post.id} />
           </section>

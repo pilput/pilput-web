@@ -103,11 +103,16 @@ export default function BookmarkButton({
               disabled={showSpinner}
               onClick={() => void onClick()}
               className={cn(
-                "inline-flex items-center gap-1 rounded-lg p-2 hover:bg-muted transition-colors disabled:opacity-50",
-                isBookmarked && "text-primary",
+                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm transition-colors",
+                "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
+                "disabled:pointer-events-none disabled:opacity-50",
+                isBookmarked &&
+                  "text-primary hover:bg-primary/10 hover:text-primary",
                 className,
               )}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              aria-pressed={isBookmarked}
               aria-label={
                 showCount
                   ? `${isBookmarked ? "Remove bookmark" : "Add bookmark"}, ${count} saves`
@@ -118,13 +123,15 @@ export default function BookmarkButton({
             >
               <Bookmark
                 className={cn(
-                  "w-4 h-4",
-                  isBookmarked ? "fill-primary text-primary" : "text-muted-foreground",
+                  "h-4 w-4 shrink-0 stroke-[1.75]",
+                  isBookmarked
+                    ? "fill-primary text-primary"
+                    : "text-muted-foreground",
                   iconClassName,
                 )}
               />
               {showCount && (
-                <span className="min-w-[1ch] text-xs font-medium tabular-nums">
+                <span className="min-w-[1ch] tabular-nums text-[13px]">
                   {count}
                 </span>
               )}

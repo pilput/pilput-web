@@ -4,12 +4,7 @@ import Link from "next/link";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Clock,
-  Eye,
-  MessageCircle,
-  Share2,
-} from "lucide-react";
+import { Clock, Eye, MessageCircle } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
@@ -144,45 +139,38 @@ const PostList = ({ post }: { post: Post }) => {
           </div>
         )}
 
-        {/* Engagement — satu baris alat: aksi kiri, stat kanan */}
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border/40 pt-3">
-          <div className="flex flex-wrap items-center gap-1">
+        {/* Engagement — satu baris stat minimal, tanpa kotak per aksi */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <div className="flex items-center gap-0.5 sm:gap-1">
             <LikeButton
               postId={post.id}
               initialLiked={post.is_liked_by_current_user ?? false}
               initialCount={getPostLikesCount(post)}
               variant="compact"
-              className="h-9 min-w-9 justify-center rounded-md border border-border/70 bg-background px-2 shadow-sm hover:bg-muted"
             />
             <BookmarkButton
               postId={post.id}
               initialCount={getPostBookmarkCount(post)}
               showCount
               variant="compact"
-              className="h-9 min-w-9 justify-center rounded-md border border-border/70 bg-background px-2 shadow-sm hover:bg-muted"
             />
-            <motion.button
-              type="button"
-              className="inline-flex h-9 min-w-9 items-center justify-center gap-1 rounded-md border border-border/70 bg-background px-2 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
-              whileHover={{ scale: 1.01 }}
-              aria-label={`${post.comments_count || 0} comments`}
+            <Link
+              href={`/${post.user.username}/${post.slug}#comments`}
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
+              aria-label={`${post.comments_count || 0} comments — open post`}
             >
-              <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
-              <span className="tabular-nums">{post.comments_count || 0}</span>
-            </motion.button>
-            <motion.button
-              type="button"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border/70 bg-background text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
-              whileHover={{ scale: 1.01 }}
-              aria-label="Share"
-            >
-              <Share2 className="h-4 w-4" />
-            </motion.button>
+              <MessageCircle
+                className="h-4 w-4 shrink-0 stroke-[1.75]"
+                aria-hidden
+              />
+              <span className="tabular-nums text-[13px]">
+                {post.comments_count || 0}
+              </span>
+            </Link>
           </div>
-          <div className="flex items-center gap-1.5 text-sm tabular-nums text-muted-foreground">
-            <Eye className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+          <div className="flex items-center gap-1.5 text-xs tabular-nums text-muted-foreground">
+            <Eye className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
             <span>{(post.view_count ?? 0).toLocaleString()}</span>
-            <span className="text-xs font-normal">views</span>
           </div>
         </div>
       </div>
