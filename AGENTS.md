@@ -223,8 +223,9 @@ export const authStore = create<AuthState>()((set) => ({
 Configured in `src/utils/getConfig.ts`:
 - `NEXT_PUBLIC_API_URL` - Main API base URL
 - `NEXT_PUBLIC_API_URL_2` - App API base URL (auth, users, chat, holdings, feed)
-- `NEXT_PUBLIC_DASH_URL` - Dashboard base URL
 - `NEXT_PUBLIC_STORAGE_URL` - Storage base URL
+- `NEXT_PUBLIC_MAIN_URL` - Main base URL
+- `NEXT_PUBLIC_DOMAIN` - Domain
 
 ### Development Guidelines
 - Follow existing patterns and conventions in codebase
