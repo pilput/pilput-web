@@ -18,9 +18,14 @@ interface MyComponentProps {
   total: number;
   length: number;
   currentPage: number;
+  /** When set, used for link hrefs (e.g. `?page=2&q=foo`). Defaults to legacy `?page=<0-based index>`. */
+  getPageHref?: (pageIndex: number) => string;
 }
 
 export function Paginate(props: MyComponentProps) {
+  const hrefFor = (pageIndex: number) =>
+    props.getPageHref ? props.getPageHref(pageIndex) : `?page=${pageIndex}`;
+
   // Calculate total pages
   const totalPages = Math.ceil(props.total / props.limit);
   
@@ -80,7 +85,7 @@ export function Paginate(props: MyComponentProps) {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious 
-              href={`?page=${props.currentPage - 1}`}
+              href={hrefFor(Math.max(0, props.currentPage - 1))}
               className={props.offset <= 0 ? "pointer-events-none opacity-50" : ""}
               onClick={(e) => {
                 e.preventDefault();
@@ -102,7 +107,7 @@ export function Paginate(props: MyComponentProps) {
             return (
               <PaginationItem key={`page-${pageIndex}`}>
                 <PaginationLink 
-                  href={`?page=${pageIndex}`}
+                  href={hrefFor(pageIndex)}
                   isActive={pageIndex === props.currentPage}
                   onClick={(e) => {
                     e.preventDefault();
@@ -120,7 +125,9 @@ export function Paginate(props: MyComponentProps) {
           
           <PaginationItem>
             <PaginationNext 
-              href={`?page=${props.currentPage + 1}`}
+              href={hrefFor(
+                Math.min(totalPages - 1, props.currentPage + 1)
+              )}
               className={
                 props.length + props.offset >= props.total
                   ? "pointer-events-none opacity-50"

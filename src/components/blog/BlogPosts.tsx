@@ -11,12 +11,14 @@ interface BlogPostsProps {
   isLoading: boolean;
   total: number;
   currentPage: number;
-  setCurrentPage: (page: number) => void;
+  onPageChange: (page: number) => void;
   postsPerPage: number;
   searchQuery: string; // This should be the active filter (debounced)
   onClearSearch: () => void;
   /** "feed" = compact home feed; "blog" = full blog toolbar copy */
   variant?: "blog" | "feed";
+  /** Pagination link query builder (1-based `page`, optional `q`) */
+  getPageHref?: (pageIndex: number) => string;
 }
 
 const BlogPosts = ({
@@ -24,11 +26,12 @@ const BlogPosts = ({
   isLoading,
   total,
   currentPage,
-  setCurrentPage,
+  onPageChange,
   postsPerPage,
   searchQuery,
   onClearSearch,
   variant = "blog",
+  getPageHref,
 }: BlogPostsProps) => {
   const totalPages = Math.max(1, Math.ceil(total / postsPerPage));
   const isFeed = variant === "feed";
@@ -131,21 +134,22 @@ const BlogPosts = ({
       {posts.length > 0 && total > postsPerPage && (
         <div className="mt-12 flex justify-center">
           <Paginate
-            prev={() => setCurrentPage(Math.max(0, currentPage - 1))}
+            prev={() => onPageChange(Math.max(0, currentPage - 1))}
             next={() =>
-              setCurrentPage(
+              onPageChange(
                 Math.min(
                   Math.ceil(total / postsPerPage) - 1,
                   currentPage + 1
                 )
               )
             }
-            goToPage={(page) => setCurrentPage(page)}
+            goToPage={(page) => onPageChange(page)}
             limit={postsPerPage}
             offset={currentPage * postsPerPage}
             total={total}
             length={posts.length}
             currentPage={currentPage}
+            getPageHref={getPageHref}
           />
         </div>
       )}

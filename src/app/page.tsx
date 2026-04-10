@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import Navigation from "@/components/header/Navbar";
 import Hero from "@/components/landing/Hero";
@@ -20,11 +21,17 @@ export default async function Home() {
     return (
       <>
         <Navigation />
-        <HomeFeedContent
-          initialPosts={[]}
-          initialTotal={0}
-          postsPerPage={postsPerPage}
-        />
+        <Suspense
+          fallback={
+            <div className="min-h-screen bg-background animate-pulse" />
+          }
+        >
+          <HomeFeedContent
+            initialPosts={[]}
+            initialTotal={0}
+            postsPerPage={postsPerPage}
+          />
+        </Suspense>
       </>
     );
   }
