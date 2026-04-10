@@ -1,6 +1,6 @@
 import type { Post, PostCreate } from "@/types/post";
 import { create } from "zustand";
-import { apiClientSecondary, apiClientApp } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 
 const DEFAULT_BODY = `
@@ -146,7 +146,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     set(() => ({ isUpdating: true, error: false }));
 
     try {
-      await apiClientSecondary.patch(`/v1/posts/${postId}`, post, {
+      await apiClientApp.patch(`/v1/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

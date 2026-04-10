@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postsStore } from "@/stores/create-post-store";
 import { getToken } from "@/utils/Auth";
 import {
-  apiClient,
-  apiClientSecondary,
+  apiClientApp,
   isHttpError,
 } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
@@ -81,7 +80,7 @@ export default function PostCreate() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await apiClient.post(
+      const response = await apiClientApp.post(
         "/api/v1/posts/image",
         formData,
         {
@@ -154,7 +153,7 @@ export default function PostCreate() {
     const toastId = toast.loading("Publishing post...");
 
     try {
-      await apiClientSecondary.post("/v1/posts", post, {
+      await apiClientApp.post("/v1/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setErrorTitle("");

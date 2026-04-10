@@ -160,8 +160,7 @@ function createClient(baseURL: string) {
 /** Main API (`NEXT_PUBLIC_API_URL`) — public posts, tags, uploads, views. */
 export const apiClient = createClient(Config.apibaseurl);
 
-/** Secondary API (`NEXT_PUBLIC_API_URL_2`) — post writes (create/update/delete). */
-export const apiClientSecondary = createClient(Config.apibaseurl2);
+
 
 /** App API (`NEXT_PUBLIC_API_URL_3`) — auth, users, chat, holdings, feed. */
 export const apiClientApp = createClient(Config.apibaseurl3);
