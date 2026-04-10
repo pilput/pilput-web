@@ -205,7 +205,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     try {
       const response = await fetch(
-        `${Config.apibaseurl3}/v1/chat/conversations/${conversationId}/messages/stream`,
+        `${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`,
         {
           method: "POST",
           headers: {

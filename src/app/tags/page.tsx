@@ -10,9 +10,13 @@ import {
   Search,
   ArrowRight,
   Tag as TagIcon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { apiClient } from "@/utils/fetch";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface TagWithStats {
   id: string;

@@ -3,10 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postsStore } from "@/stores/create-post-store";
 import { getToken } from "@/utils/Auth";
-import {
-  apiClientApp,
-  isHttpError,
-} from "@/utils/fetch";
+import { apiClientApp, isHttpError } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import { useState, useRef, useCallback } from "react";
@@ -85,7 +82,7 @@ export default function PostCreate() {
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       const photoUrl = response.data.photo_url;
@@ -101,15 +98,18 @@ export default function PostCreate() {
     }
   };
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
 
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("image/")) {
-      uploadFile(file);
-    }
-  }, [token]);
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith("image/")) {
+        uploadFile(file);
+      }
+    },
+    [token],
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -164,9 +164,13 @@ export default function PostCreate() {
       if (isHttpError(error)) {
         console.error("Publish error:", error.message);
         if (error.response?.status === 422) {
-          toast.error("Validation error. Please check your inputs.", { id: toastId });
+          toast.error("Validation error. Please check your inputs.", {
+            id: toastId,
+          });
         } else {
-          toast.error("Failed to publish post. Please try again.", { id: toastId });
+          toast.error("Failed to publish post. Please try again.", {
+            id: toastId,
+          });
         }
       }
     } finally {
@@ -241,7 +245,9 @@ export default function PostCreate() {
                 />
                 <span
                   className={`${styles.titleCounter} ${
-                    post.title.length > MAX_TITLE_LENGTH * 0.8 ? styles.warn : ""
+                    post.title.length > MAX_TITLE_LENGTH * 0.8
+                      ? styles.warn
+                      : ""
                   }`}
                 >
                   {post.title.length}/{MAX_TITLE_LENGTH}
@@ -264,10 +270,7 @@ export default function PostCreate() {
             <CardContent>
               {post.photo_url ? (
                 <div className={styles.imagePreviewWrapper}>
-                  <img
-                    src={getUrlImage(post.photo_url)}
-                    alt="Featured"
-                  />
+                  <img src={getUrlImage(post.photo_url)} alt="Featured" />
                   <div className={styles.imageOverlay}>
                     <Button
                       variant="secondary"
@@ -297,7 +300,9 @@ export default function PostCreate() {
                 >
                   <ImagePlus className="h-10 w-10 uploadIcon" />
                   <span className={styles.uploadText}>
-                    {isUploading ? "Uploading..." : "Click to upload or drag and drop"}
+                    {isUploading
+                      ? "Uploading..."
+                      : "Click to upload or drag and drop"}
                   </span>
                   <span className={styles.uploadSubtext}>
                     PNG, JPG, GIF up to 5MB
@@ -373,10 +378,7 @@ export default function PostCreate() {
             <CardContent>
               <div className={styles.tagsWrapper}>
                 {post.tags?.map((tag, index) => (
-                  <span
-                    key={`${tag}-${index}`}
-                    className={styles.tag}
-                  >
+                  <span key={`${tag}-${index}`} className={styles.tag}>
                     {tag}
                     <button
                       type="button"
@@ -409,10 +411,14 @@ export default function PostCreate() {
             <CardContent>
               <div className="flex items-center justify-between py-2">
                 <span className="text-sm text-muted-foreground">Status</span>
-                <span className="text-sm font-medium text-yellow-600">Draft</span>
+                <span className="text-sm font-medium text-yellow-600">
+                  Draft
+                </span>
               </div>
               <div className="flex items-center justify-between py-2 border-t">
-                <span className="text-sm text-muted-foreground">Visibility</span>
+                <span className="text-sm text-muted-foreground">
+                  Visibility
+                </span>
                 <span className="text-sm font-medium">Public</span>
               </div>
             </CardContent>

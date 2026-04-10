@@ -162,8 +162,8 @@ export const apiClient = createClient(Config.apibaseurl);
 
 
 
-/** App API (`NEXT_PUBLIC_API_URL_3`) — auth, users, chat, holdings, feed. */
-export const apiClientApp = createClient(Config.apibaseurl3);
+/** App API (`NEXT_PUBLIC_API_URL_2`) — auth, users, chat, holdings, feed. */
+export const apiClientApp = createClient(Config.apibaseurl2);
 
 export async function getDataExternal(
   url: string,
