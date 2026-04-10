@@ -1,29 +1,33 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { toast } from "sonner";
+import { useCallback, useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
-import { apiClient } from "@/utils/fetch";
-import type { Post } from "@/types/post";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
-import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
+import { toast } from "sonner";
 
 import BlogHero from "@/components/blog/BlogHero";
 import BlogPosts from "@/components/blog/BlogPosts";
 import BlogSidebarLeft from "@/components/blog/BlogSidebarLeft";
 import BlogSidebarRight from "@/components/blog/BlogSidebarRight";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
+import { postsPerPage } from "@/lib/blog-feed-data";
+import type { Post } from "@/types/post";
+import { apiClient } from "@/utils/fetch";
 
-interface BlogContentProps {
-  initialPosts: Post[];
-  initialTotal: number;
-  postsPerPage: number;
-  trendingTags: string[];
-}
+const FALLBACK_TRENDING_TAGS = [
+  "ai",
+  "nextjs",
+  "typescript",
+  "webdev",
+  "react",
+  "javascript",
+];
 
-const BlogContent = ({ initialPosts, initialTotal, postsPerPage, trendingTags }: BlogContentProps) => {
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [total, setTotal] = useState(initialTotal);
-  const [isLoading, setIsLoading] = useState(false);
+const BlogContent = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [total, setTotal] = useState(0);
+  const [trendingTags, setTrendingTags] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 500);
@@ -46,44 +50,70 @@ const BlogContent = ({ initialPosts, initialTotal, postsPerPage, trendingTags }:
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Fetch posts when page or search changes
   useEffect(() => {
-    // Skip initial fetch if we have initial data and no search/page changes yet
-    if (currentPage === 0 && !debouncedSearchQuery && initialPosts.length > 0) {
-      return;
+    let cancelled = false;
+    async function fetchTags() {
+      try {
+        const { data } = await apiClient.get("/v1/tags");
+        if (!cancelled && data?.data) {
+          setTrendingTags(data.data.map((tag: { name: string }) => tag.name));
+        }
+      } catch {
+        if (!cancelled) {
+          setTrendingTags(FALLBACK_TRENDING_TAGS);
+        }
+      }
     }
+    fetchTags();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
 
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const params: any = {
+        const params: Record<string, string | number> = {
           limit: postsPerPage,
           offset: currentPage * postsPerPage,
         };
-
-        if (debouncedSearchQuery.trim()) {
-          params.search = debouncedSearchQuery.trim();
+        const q = debouncedSearchQuery.trim();
+        if (q) {
+          params.search = q;
         }
 
         const { data } = await apiClient.get("/v1/posts", { params });
-        const response = data;
-        if (response.data) {
-          setPosts(response.data);
-          if (response.meta && response.meta.total_items) {
-            setTotal(response.meta.total_items);
-          } else if (response.total) {
-            setTotal(response.total);
-          }
+        if (cancelled) {
+          return;
+        }
+
+        if (data.data) {
+          setPosts(data.data);
+          const nextTotal =
+            data.meta?.total_items ?? data.total ?? 0;
+          setTotal(nextTotal);
         } else {
           toast.error("Error loading posts");
         }
-      } catch (error) {
-        toast.error("Error loading posts");
+      } catch {
+        if (!cancelled) {
+          toast.error("Error loading posts");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
-      setIsLoading(false);
     }
+
     fetchPosts();
-  }, [currentPage, debouncedSearchQuery, postsPerPage, initialPosts.length]);
+    return () => {
+      cancelled = true;
+    };
+  }, [currentPage, debouncedSearchQuery]);
 
   return (
     <div className="min-h-screen bg-background">
