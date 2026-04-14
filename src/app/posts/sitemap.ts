@@ -1,9 +1,14 @@
 import type { MetadataRoute } from "next";
 import { Config } from "@/utils/getConfig";
 
+// Constants
+const SITEMAP_REVALIDATE_SECONDS = 3600; // 1 hour
+const POST_CHANGE_FREQUENCY = "weekly" as const;
+const POST_PRIORITY = 0.7;
+
 interface PostSitemapItem {
-  slug?: string;
-  username?: string;
+  slug: string;
+  username: string;
   updated_at?: string;
   created_at?: string;
 }
@@ -15,18 +20,21 @@ interface PostsResponse {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const response = await fetch(`${Config.apibaseurl2}/v1/posts/sitemap`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: SITEMAP_REVALIDATE_SECONDS },
     });
 
     if (!response.ok) {
+      console.error(`Sitemap fetch failed with status: ${response.status}`);
       return [];
     }
 
-    const result = (await response.json()) as PostsResponse;
-    const posts = Array.isArray(result.data) ? result.data : [];
+    const postsResponse: PostsResponse = await response.json();
+    const posts = Array.isArray(postsResponse.data) ? postsResponse.data : [];
 
     return posts
-      .filter((post) => post.username && post.slug)
+      .filter((post): post is PostSitemapItem => 
+        Boolean(post.username && post.slug)
+      )
       .map((post) => ({
         url: `${Config.mainbaseurl}/${post.username}/${post.slug}`,
         lastModified: post.updated_at
@@ -34,10 +42,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           : post.created_at
             ? new Date(post.created_at)
             : new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
+        changeFrequency: POST_CHANGE_FREQUENCY,
+        priority: POST_PRIORITY,
       }));
-  } catch {
+  } catch (error) {
+    console.error("Error generating sitemap:", error);
     return [];
   }
 }
