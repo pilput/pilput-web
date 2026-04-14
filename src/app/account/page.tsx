@@ -1,42 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import * as React from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, User, Shield, AlertTriangle, Loader2 } from "lucide-react";
+import { ArrowLeft, User as UserIcon, Shield, AlertTriangle, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCookie } from "cookies-next";
+import { getToken } from "@/utils/Auth";
 import { apiClientApp } from "@/utils/fetch";
+import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
-import { toast } from "sonner";
 import Navigation from "@/components/header/Navbar";
 import Footer from "@/components/footer/Footer";
 import ProfileTab from "@/components/account/ProfileTab";
 import SecurityTab from "@/components/account/SecurityTab";
 import DangerZoneTab from "@/components/account/DangerZoneTab";
-import { User as UserType } from "@/types/user";
-
-interface UserProfile extends UserType {}
-
-interface ApiError {
-  response?: {
-    status: number;
-    data?: {
-      message: string;
-    };
-  };
-  request?: any;
-  message?: string;
-}
+import { User } from "@/types/user";
+import type { PasswordUpdateFormData } from "@/lib/validation";
 
 export default function AccountPage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [profileLoading, setProfileLoading] = React.useState(false);
+  const [passwordLoading, setPasswordLoading] = React.useState(false);
 
   const router = useRouter();
-  const token = getCookie("token");
+  const token = getToken();
 
   useEffect(() => {
     if (!token) {
@@ -51,52 +40,29 @@ export default function AccountPage() {
       const response = await apiClientApp.get("/v1/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUser(response.data.data); // API returns data.data structure
+      setUser(response.data.data);
     } catch (error) {
-      console.error("Failed to fetch user profile:", error);
-      toast.error("Failed to load profile information");
+      ErrorHandlerAPI(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const getErrorMessage = (error: ApiError): string => {
-    if (error.response) {
-      if (error.response.status === 401) {
-        return "Unauthorized. Please login again.";
-      } else if (error.response.data?.message) {
-        return error.response.data.message;
-      }
-    } else if (error.message) {
-      return error.message;
-    }
-    return "An error occurred";
-  };
-
-  const handleProfileUpdate = async (data: any) => {
+  const handleProfileUpdate = async (data: { username: string; first_name: string; last_name: string }) => {
     setProfileLoading(true);
     try {
       const response = await apiClientApp.put("/v1/auth/profile", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      setUser(response.data.data); // API returns data.data structure
-      toast.success("Profile updated successfully!");
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      const errorMessage = getErrorMessage(apiError);
-      toast.error(errorMessage);
+      setUser(response.data.data);
+    } catch (error) {
+      ErrorHandlerAPI(error);
     } finally {
       setProfileLoading(false);
     }
   };
 
-  const handlePasswordUpdate = async (data: any) => {
-    if (data.new_password !== data.confirm_password) {
-      toast.error("New passwords do not match");
-      return;
-    }
-
+  const handlePasswordUpdate = async (data: PasswordUpdateFormData) => {
     setPasswordLoading(true);
     try {
       await apiClientApp.patch(
@@ -110,12 +76,8 @@ export default function AccountPage() {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
-
-      toast.success("Password updated successfully!");
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      const errorMessage = getErrorMessage(apiError);
-      toast.error(errorMessage);
+    } catch (error) {
+      ErrorHandlerAPI(error);
     } finally {
       setPasswordLoading(false);
     }
@@ -142,13 +104,9 @@ export default function AccountPage() {
       await apiClientApp.delete("/v1/auth/account", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      toast.success("Account deleted successfully");
       router.push("/");
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      const errorMessage = getErrorMessage(apiError);
-      toast.error(errorMessage);
+    } catch (error) {
+      ErrorHandlerAPI(error);
     }
   };
 
@@ -194,7 +152,7 @@ export default function AccountPage() {
                     value="profile"
                     className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm hover:bg-muted/80 transition-all"
                   >
-                    <User className="h-4 w-4" />
+                    <UserIcon className="h-4 w-4" />
                     Profile
                   </TabsTrigger>
                   <TabsTrigger

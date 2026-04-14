@@ -151,6 +151,30 @@ export const holdingFormSchema = z.object({
   notes: z.string().optional(),
 });
 
+// Profile update validation schema
+export const profileUpdateSchema = z.object({
+  first_name: z.string().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
+  last_name: z.string().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
+  username: z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be less than 20 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  website: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+  phone: z.string().optional(),
+  location: z.string().optional(),
+});
+
+// Password update validation schema
+export const passwordUpdateSchema = z
+  .object({
+    old_password: z.string().min(1, "Current password is required"),
+    new_password: z.string().min(8, "Password must be at least 8 characters").max(100, "Password must be less than 100 characters"),
+    confirm_password: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.new_password === data.confirm_password, {
+    message: "Passwords do not match",
+    path: ["confirm_password"],
+  });
+
 // Export types
 export type PostFormData = z.infer<typeof postSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
@@ -161,3 +185,5 @@ export type ChatMessageFormData = z.infer<typeof chatMessageSchema>;
 export type CommentFormData = z.infer<typeof commentSchema>;
 export type DuplicateHoldingPayload = z.infer<typeof duplicateHoldingSchema>;
 export type HoldingFormData = z.infer<typeof holdingFormSchema>;
+export type ProfileUpdateFormData = z.infer<typeof profileUpdateSchema>;
+export type PasswordUpdateFormData = z.infer<typeof passwordUpdateSchema>;
