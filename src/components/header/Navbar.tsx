@@ -40,7 +40,7 @@ const Navbar = () => {
           : "border-border/60 bg-background/80"
       )}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto max-w-7xl px-4">
         <nav
           className={cn(
             "flex h-14 md:h-16 items-center w-full gap-3 md:gap-4",

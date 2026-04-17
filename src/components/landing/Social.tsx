@@ -60,7 +60,7 @@ export default function Social() {
     <section className="w-full border-t border-border/50 bg-linear-to-b from-background to-primary/5 py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto max-w-7xl px-4 relative z-10">
         <CardHeader className="text-center pb-12">
           <CardTitle className="text-4xl md:text-5xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-4">
             Let&apos;s Connect!

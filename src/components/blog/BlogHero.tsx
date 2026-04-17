@@ -25,7 +25,7 @@ const BlogHero = ({
       className="relative overflow-hidden border-b border-border/70 bg-background/90 backdrop-blur"
     >
       <div className="absolute inset-0 bg-grid-slate-100/[0.08] dark:bg-grid-slate-800/[0.1] bg-size-[32px_32px]" />
-      <div className="relative max-w-6xl mx-auto px-4 py-12 md:py-16">
+      <div className="relative max-w-7xl mx-auto px-4 py-12 md:py-16">
         <div className="text-center mb-10 space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold border border-primary/20 shadow-sm">
             <Sparkles className="w-4 h-4" />

@@ -40,7 +40,7 @@ const AboutContent = () => {
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
       <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-purple-500/20 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '2s' }} />
 
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10">
         <motion.div
           className="max-w-4xl mx-auto"
           initial="hidden"

@@ -110,15 +110,15 @@ const Features: React.FC = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative py-24 sm:py-32 lg:py-48 bg-background overflow-hidden"
+      className="relative py-16 sm:py-20 lg:py-24 bg-background overflow-hidden"
     >
       {/* Refined Background Decor */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/2 rounded-full blur-[120px] pointer-events-none" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row items-end justify-between gap-8 mb-20 lg:mb-32">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col lg:flex-row items-end justify-between gap-6 mb-12 lg:mb-16">
           <div className="max-w-2xl space-y-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -150,7 +150,7 @@ const Features: React.FC = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature) => (
             <motion.div
               key={feature.id}
@@ -161,7 +161,7 @@ const Features: React.FC = () => {
             >
               <FeatureCard
                 onClick={() => handleFeatureClick(feature)}
-                className="group h-[450px] lg:h-[500px]"
+                className="group h-[360px] lg:h-[400px]"
                 glowColor={feature.glowColor}
               >
                 {feature.background}

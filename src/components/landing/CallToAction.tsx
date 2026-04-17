@@ -8,11 +8,11 @@ import { Badge } from "@/components/ui/badge";
 
 const CallToAction = () => {
   return (
-    <section className="relative py-24 sm:py-32 lg:py-40 overflow-hidden bg-background">
+    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-background">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[760px] h-[760px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute inset-0 bg-grid-slate-100/[0.03] dark:bg-grid-white/[0.02] bg-size-[40px_40px]" />
 
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 24 }}

@@ -67,7 +67,7 @@ const Hero = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-32"
+      className="relative min-h-[75vh] flex items-center justify-center overflow-hidden py-16 lg:py-24"
       initial="hidden"
       animate="visible"
       variants={containerVariants}

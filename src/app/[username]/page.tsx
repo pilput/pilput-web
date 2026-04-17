@@ -63,7 +63,7 @@ export default async function page(props: {
       />
       <Navigation />
       <div className="min-h-screen bg-linear-to-br from-background via-primary/3 to-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="max-w-5xl mx-auto space-y-8">
             <Card className="overflow-hidden border-border/60 shadow-sm">
               <CardHeader className="border-b border-border/50 bg-muted/15 pb-6 pt-6 sm:pt-8">

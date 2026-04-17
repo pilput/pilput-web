@@ -82,12 +82,12 @@ const highlights = [
 
 const Highlights = () => {
   return (
-    <section className="relative py-24 sm:py-32 lg:py-40 overflow-hidden bg-background">
+    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-background">
       <div className="absolute top-0 right-0 -mr-64 -mt-64 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 -ml-64 -mb-64 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center space-y-6 mb-20">
+      <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center space-y-4 mb-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}

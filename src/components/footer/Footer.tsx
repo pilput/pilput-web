@@ -63,7 +63,7 @@ const Footer = () => {
       <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/6 rounded-full blur-[100px]" />
 
       <motion.div
-        className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16"
+        className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-16"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

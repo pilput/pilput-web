@@ -74,10 +74,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <Navigation />
-      <main
-        id="main-content"
-        className="space-y-24 sm:space-y-32 md:space-y-40 lg:space-y-48"
-      >
+      <main id="main-content">
         <Hero />
         <Highlights />
         <Features />

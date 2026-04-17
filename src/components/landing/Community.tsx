@@ -4,11 +4,11 @@ import { Sparkles } from "lucide-react";
 
 export default function Community() {
   return (
-    <section className="relative py-24 sm:py-32 lg:py-40 overflow-hidden bg-background">
+    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-background">
       <div className="absolute inset-0 bg-grid-slate-100/[0.03] dark:bg-grid-white/[0.02] bg-[length:40px_40px]" />
       
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center text-center mb-16 sm:mb-24 space-y-6">
+      <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center mb-10 sm:mb-14 space-y-4">
           <Badge variant="outline" className="px-4 py-1.5 border-primary/20 bg-primary/5 text-primary backdrop-blur-sm rounded-full">
             <Sparkles className="w-3.5 h-3.5 mr-2" />
             Discover what&apos;s new
