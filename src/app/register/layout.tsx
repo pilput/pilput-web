@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/public-metadata";
 
-export const metadata: Metadata = {
+export const metadata = publicPageMetadata({
   title: "Register",
-  description: "Create a new pilput account.",
-  alternates: {
-    canonical: "/register",
-  },
+  description:
+    "Create a free pilput account and start publishing articles on our open platform.",
+  canonicalPath: "/register",
+  keywords: ["register", "sign up", "pilput", "create account", "writers"],
+  openGraphTitle: "Register | pilput",
   robots: {
     index: false,
     follow: false,
   },
-};
+});
 
 export default function RegisterLayout({
   children,

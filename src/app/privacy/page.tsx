@@ -1,6 +1,21 @@
 import Navigation from "@/components/header/Navbar";
 import Footer from "@/components/footer/Footer";
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/public-metadata";
+
+export const metadata = publicPageMetadata({
+  title: "Privacy Policy",
+  description:
+    "Read pilput’s privacy policy: how we collect, use, and protect your data on our publishing platform.",
+  canonicalPath: "/privacy",
+  keywords: [
+    "privacy policy",
+    "pilput",
+    "data protection",
+    "user privacy",
+    "terms",
+  ],
+  openGraphTitle: "Privacy Policy | pilput",
+});
 
 export default function PrivacyPage() {
   return (
@@ -133,11 +148,3 @@ export default function PrivacyPage() {
     </>
   );
 }
-
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "Privacy policy and data protection information for pilput.",
-  alternates: {
-    canonical: "/privacy",
-  },
-};

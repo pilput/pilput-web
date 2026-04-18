@@ -1,18 +1,12 @@
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/public-metadata";
 
-export const metadata: Metadata = {
+export const metadata = publicPageMetadata({
   title: "Tags",
   description: "Browse all tags on pilput and discover articles by topic.",
-  alternates: {
-    canonical: "/tags",
-  },
-  openGraph: {
-    title: "Tags",
-    description: "Browse all tags on pilput and discover articles by topic.",
-    url: "/tags",
-    type: "website",
-  },
-};
+  canonicalPath: "/tags",
+  keywords: ["tags", "topics", "articles", "pilput", "browse"],
+  openGraphTitle: "Tags | pilput",
+});
 
 export default function TagsLayout({ children }: { children: React.ReactNode }) {
   return children;

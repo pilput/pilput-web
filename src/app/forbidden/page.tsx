@@ -2,15 +2,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ShieldX } from "lucide-react";
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/public-metadata";
 
-export const metadata: Metadata = {
+export const metadata = publicPageMetadata({
   title: "Forbidden",
   description: "You don't have permission to access this resource.",
-  alternates: {
-    canonical: "/forbidden",
-  },
-};
+  canonicalPath: "/forbidden",
+  keywords: ["403", "forbidden", "access denied", "pilput"],
+  openGraphTitle: "403 Forbidden | pilput",
+});
 
 export default function ForbiddenPage() {
   return (
