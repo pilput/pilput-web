@@ -35,261 +35,189 @@ function SceneRotation({
 
   useFrame((_, delta) => {
     if (!enabled || !group.current) return;
-    group.current.rotation.y += delta * 0.035;
+    group.current.rotation.y += delta * 0.03;
     group.current.rotation.x = THREE.MathUtils.lerp(
       group.current.rotation.x,
-      Math.sin(performance.now() * 0.00012) * 0.03,
-      0.015,
+      Math.sin(performance.now() * 0.0001) * 0.025,
+      0.012,
     );
   });
 
   return <group ref={group}>{children}</group>;
 }
 
-/** Stylized Saturn-like world */
-function RingedPlanet({
-  position,
-  reducedMotion,
-}: {
-  position: [number, number, number];
-  reducedMotion: boolean;
-}) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame((_, delta) => {
-    if (reducedMotion || !ref.current) return;
-    ref.current.rotation.y += delta * 0.12;
-  });
+/** Ruled notebook page (thin box + line accents) */
+function NotePaper({ isDark }: { isDark: boolean }) {
+  const paper = isDark ? "#44403c" : "#fefce8";
+  const line = isDark ? "#57534e" : "#e7e5e4";
+  const margin = isDark ? "#78716c" : "#d6d3d1";
+
   return (
-    <group ref={ref} position={position}>
-      <mesh>
-        <sphereGeometry args={[0.55, 28, 28]} />
+    <group position={[-0.15, -0.35, 0.35]} rotation={[0.12, -0.28, 0.06]}>
+      <mesh castShadow receiveShadow>
+        <boxGeometry args={[2.1, 2.65, 0.045]} />
         <meshStandardMaterial
-          color="#c4a574"
-          roughness={0.85}
-          metalness={0.05}
-          emissive="#6b4c1a"
-          emissiveIntensity={0.08}
+          color={paper}
+          roughness={0.88}
+          metalness={0.02}
+          emissive={isDark ? "#292524" : "#fafaf9"}
+          emissiveIntensity={isDark ? 0.08 : 0.04}
         />
       </mesh>
-      <mesh rotation={[1.25, 0.4, 0]}>
-        <torusGeometry args={[0.82, 0.04, 8, 64]} />
+      {/* Left margin */}
+      <mesh position={[-0.85, 0, 0.024]}>
+        <boxGeometry args={[0.02, 2.5, 0.002]} />
+        <meshStandardMaterial color={margin} roughness={0.9} />
+      </mesh>
+      {/* Ruled lines */}
+      {Array.from({ length: 11 }, (_, i) => {
+        const y = -1.05 + i * 0.21;
+        return (
+          <mesh key={i} position={[0.08, y, 0.024]}>
+            <boxGeometry args={[1.85, 0.008, 0.002]} />
+            <meshStandardMaterial color={line} roughness={0.95} transparent opacity={0.65} />
+          </mesh>
+        );
+      })}
+      {/* Spiral binding holes */}
+      {Array.from({ length: 8 }, (_, i) => {
+        const y = 1.05 - i * 0.28;
+        return (
+          <mesh key={i} position={[-0.98, y, 0.03]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.045, 0.045, 0.06, 16]} />
+            <meshStandardMaterial color="#78716c" metalness={0.35} roughness={0.45} />
+          </mesh>
+        );
+      })}
+    </group>
+  );
+}
+
+/** Fountain-style pen resting on the note */
+function Pen({ reducedMotion }: { reducedMotion: boolean }) {
+  const ref = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (reducedMotion || !ref.current) return;
+    const t = state.clock.elapsedTime;
+    ref.current.rotation.z = Math.sin(t * 0.85) * 0.04;
+    ref.current.position.y = 0.08 + Math.sin(t * 1.1) * 0.025;
+  });
+
+  return (
+    <group
+      ref={ref}
+      position={[0.35, 0.12, 0.95]}
+      rotation={[0.08, 0.15, -0.55]}
+      scale={1.05}
+    >
+      {/* Grip / lower barrel */}
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.055, 0.062, 0.42, 20]} />
+        <meshStandardMaterial color="#1e3a8a" metalness={0.45} roughness={0.35} />
+      </mesh>
+      {/* Upper barrel */}
+      <mesh position={[0, 0.48, 0]}>
+        <cylinderGeometry args={[0.062, 0.058, 0.38, 20]} />
+        <meshStandardMaterial color="#2563eb" metalness={0.55} roughness={0.28} />
+      </mesh>
+      {/* Cap end */}
+      <mesh position={[0, 0.82, 0]}>
+        <cylinderGeometry args={[0.065, 0.05, 0.12, 20]} />
+        <meshStandardMaterial color="#172554" metalness={0.5} roughness={0.32} />
+      </mesh>
+      {/* Clip */}
+      <mesh position={[0.07, 0.62, 0]} rotation={[0, 0, 0.15]}>
+        <boxGeometry args={[0.018, 0.38, 0.055]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.75} roughness={0.22} />
+      </mesh>
+      {/* Section / nib holder */}
+      <mesh position={[0, -0.28, 0]}>
+        <cylinderGeometry args={[0.048, 0.035, 0.14, 16]} />
+        <meshStandardMaterial color="#0f172a" metalness={0.6} roughness={0.25} />
+      </mesh>
+      {/* Nib */}
+      <mesh position={[0, -0.4, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.028, 0.09, 8]} />
+        <meshStandardMaterial color="#ca8a04" metalness={0.85} roughness={0.18} />
+      </mesh>
+      {/* Ink tip highlight */}
+      <mesh position={[0, -0.46, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.012, 0.04, 6]} />
         <meshStandardMaterial
-          color="#e8dcc8"
-          transparent
-          opacity={0.55}
-          roughness={0.6}
-          metalness={0.1}
-          side={THREE.DoubleSide}
+          color="#1e293b"
+          metalness={0.2}
+          roughness={0.4}
+          emissive="#0f172a"
+          emissiveIntensity={0.15}
         />
       </mesh>
     </group>
   );
 }
 
-/** Large gas giant with soft bands */
-function GasGiant({
-  position,
-  reducedMotion,
-}: {
-  position: [number, number, number];
-  reducedMotion: boolean;
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((_, delta) => {
-    if (reducedMotion || !ref.current) return;
-    ref.current.rotation.y += delta * 0.08;
-  });
-  return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[0.95, 36, 36]} />
-      <meshStandardMaterial
-        color="#3d4fc4"
-        roughness={0.75}
-        metalness={0.15}
-        emissive="#1a237e"
-        emissiveIntensity={0.12}
-      />
-    </mesh>
-  );
-}
-
-/** Small rocky / desert moon */
-function RockyPlanet({
-  position,
-  reducedMotion,
-}: {
-  position: [number, number, number];
-  reducedMotion: boolean;
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((_, delta) => {
-    if (reducedMotion || !ref.current) return;
-    ref.current.rotation.y += delta * 0.18;
-  });
-  return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[0.32, 20, 20]} />
-      <meshStandardMaterial
-        color="#b45309"
-        roughness={0.92}
-        metalness={0.02}
-        emissive="#451a03"
-        emissiveIntensity={0.06}
-      />
-    </mesh>
-  );
-}
-
-/** Cool ice-blue dwarf */
-function IcePlanet({
-  position,
-  reducedMotion,
-}: {
-  position: [number, number, number];
-  reducedMotion: boolean;
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((_, delta) => {
-    if (reducedMotion || !ref.current) return;
-    ref.current.rotation.y -= delta * 0.14;
-  });
-  return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[0.22, 18, 18]} />
-      <meshStandardMaterial
-        color="#38bdf8"
-        roughness={0.35}
-        metalness={0.25}
-        emissive="#0284c7"
-        emissiveIntensity={0.15}
-      />
-    </mesh>
-  );
-}
-
-/** Low-poly rocket: cone nose, body, window stripe, fins, engine glow */
-function Rocket({ reducedMotion }: { reducedMotion: boolean }) {
-  const group = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (reducedMotion || !group.current) return;
-    const t = state.clock.elapsedTime;
-    group.current.rotation.z = Math.sin(t * 0.9) * 0.06;
-    group.current.rotation.x = Math.sin(t * 0.4) * 0.04;
-  });
-
-  const floatProps = reducedMotion
-    ? { speed: 0, rotationIntensity: 0, floatIntensity: 0 }
-    : { speed: 1.2, rotationIntensity: 0.4, floatIntensity: 1.2 };
-
-  return (
-    <Float {...floatProps}>
-      <group
-        ref={group}
-        position={[1.35, 0.15, 1.2]}
-        rotation={[0.35, -0.85, -0.2]}
-        scale={0.85}
-      >
-        {/* Nose */}
-        <mesh position={[0, 0.72, 0]}>
-          <coneGeometry args={[0.2, 0.42, 10]} />
-          <meshStandardMaterial color="#f87171" metalness={0.35} roughness={0.45} />
-        </mesh>
-        {/* Body */}
-        <mesh position={[0, 0.1, 0]}>
-          <cylinderGeometry args={[0.19, 0.24, 0.78, 14]} />
-          <meshStandardMaterial color="#e2e8f0" metalness={0.55} roughness={0.28} />
-        </mesh>
-        {/* Window */}
-        <mesh position={[0, 0.22, 0.21]}>
-          <sphereGeometry args={[0.07, 12, 12]} />
-          <meshStandardMaterial
-            color="#1e3a8a"
-            metalness={0.6}
-            roughness={0.2}
-            emissive="#3b82f6"
-            emissiveIntensity={0.45}
-          />
-        </mesh>
-        {/* Fins */}
-        {[0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((angle, i) => (
-          <mesh
-            key={i}
-            position={[Math.sin(angle) * 0.2, -0.22, Math.cos(angle) * 0.2]}
-            rotation={[0.25, angle, 0]}
-          >
-            <boxGeometry args={[0.06, 0.22, 0.18]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.4} roughness={0.5} />
-          </mesh>
-        ))}
-        {/* Engine housing */}
-        <mesh position={[0, -0.32, 0]}>
-          <cylinderGeometry args={[0.14, 0.12, 0.16, 12]} />
-          <meshStandardMaterial color="#475569" metalness={0.7} roughness={0.35} />
-        </mesh>
-        {/* Thruster glow */}
-        <mesh position={[0, -0.44, 0]}>
-          <coneGeometry args={[0.1, 0.2, 12]} />
-          <meshStandardMaterial
-            color="#f97316"
-            emissive="#ea580c"
-            emissiveIntensity={1.2}
-            transparent
-            opacity={0.92}
-          />
-        </mesh>
-      </group>
-    </Float>
-  );
-}
-
-function GalaxyContent({
+function PenAndNote({
   isDark,
   reducedMotion,
 }: {
   isDark: boolean;
   reducedMotion: boolean;
 }) {
-  const sparkleColor = isDark ? "#c4b5fd" : "#818cf8";
+  const floatProps = reducedMotion
+    ? { speed: 0, rotationIntensity: 0, floatIntensity: 0 }
+    : { speed: 1.1, rotationIntensity: 0.35, floatIntensity: 1.1 };
+
+  return (
+    <Float {...floatProps}>
+      <group>
+        <NotePaper isDark={isDark} />
+        <Pen reducedMotion={reducedMotion} />
+      </group>
+    </Float>
+  );
+}
+
+function HeroSceneContent({
+  isDark,
+  reducedMotion,
+}: {
+  isDark: boolean;
+  reducedMotion: boolean;
+}) {
+  const sparkleColor = isDark ? "#c4b5fd" : "#93c5fd";
 
   return (
     <group>
       <Stars
         radius={95}
         depth={48}
-        count={isDark ? 2800 : 1400}
-        factor={isDark ? 3.2 : 2.2}
-        saturation={0.15}
+        count={isDark ? 2200 : 900}
+        factor={isDark ? 2.8 : 1.8}
+        saturation={0.12}
         fade
-        speed={reducedMotion ? 0 : 0.2}
+        speed={reducedMotion ? 0 : 0.15}
       />
 
       <Sparkles
-        count={reducedMotion ? 28 : 110}
+        count={reducedMotion ? 24 : 85}
         scale={14}
-        size={reducedMotion ? 2 : 5}
-        speed={reducedMotion ? 0 : 0.28}
-        opacity={isDark ? 0.55 : 0.35}
+        size={reducedMotion ? 2 : 4.5}
+        speed={reducedMotion ? 0 : 0.22}
+        opacity={isDark ? 0.45 : 0.28}
         color={sparkleColor}
       />
 
-      <GasGiant position={[-2.5, 0.2, -2.8]} reducedMotion={reducedMotion} />
-      <RingedPlanet position={[2.2, -0.5, -1.5]} reducedMotion={reducedMotion} />
-      <RockyPlanet position={[-0.8, -1.6, -0.2]} reducedMotion={reducedMotion} />
-      <IcePlanet position={[0.4, 1.2, -2]} reducedMotion={reducedMotion} />
+      <PenAndNote isDark={isDark} reducedMotion={reducedMotion} />
 
-      {/* Distant halo */}
-      <mesh position={[0, 0, -6]} scale={[1, 0.35, 1]}>
-        <sphereGeometry args={[3.8, 24, 24]} />
+      <mesh position={[0, 0, -5.5]} scale={[1, 0.4, 1]}>
+        <sphereGeometry args={[3.2, 20, 20]} />
         <meshBasicMaterial
-          color={isDark ? "#312e81" : "#c7d2fe"}
+          color={isDark ? "#1e1b4b" : "#e0e7ff"}
           transparent
-          opacity={isDark ? 0.12 : 0.08}
+          opacity={isDark ? 0.1 : 0.07}
           depthWrite={false}
         />
       </mesh>
-
-      <Rocket reducedMotion={reducedMotion} />
     </group>
   );
 }
@@ -301,29 +229,22 @@ function HeroScene({
   isDark: boolean;
   reducedMotion: boolean;
 }) {
-  const fogColor = isDark ? "#04030a" : "#dce3f7";
-  const fogNear = isDark ? 4 : 4.5;
-  const fogFar = isDark ? 16 : 13;
+  const fogColor = isDark ? "#0c0a12" : "#e8ecf8";
+  const fogNear = isDark ? 3.8 : 4.2;
+  const fogFar = isDark ? 15 : 12.5;
 
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 5.5]} fov={42} />
       <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
 
-      <ambientLight intensity={isDark ? 0.22 : 0.4} color="#a5b4fc" />
-      <directionalLight position={[8, 5, 4]} intensity={isDark ? 0.55 : 0.45} color="#fef3c7" />
-      <pointLight position={[-6, -2, 2]} intensity={isDark ? 0.65 : 0.35} color="#818cf8" />
-      <pointLight position={[4, -4, -3]} intensity={isDark ? 0.4 : 0.25} color="#38bdf8" />
-      <spotLight
-        position={[0, 6, 8]}
-        angle={0.45}
-        penumbra={0.85}
-        intensity={isDark ? 0.35 : 0.2}
-        color="#c4b5fd"
-      />
+      <ambientLight intensity={isDark ? 0.28 : 0.48} color="#e0e7ff" />
+      <directionalLight position={[6, 8, 5]} intensity={isDark ? 0.5 : 0.55} color="#fef9c3" />
+      <pointLight position={[-5, 2, 3]} intensity={isDark ? 0.45 : 0.3} color="#93c5fd" />
+      <pointLight position={[4, -3, 2]} intensity={isDark ? 0.35 : 0.22} color="#a5b4fc" />
 
       <SceneRotation enabled={!reducedMotion}>
-        <GalaxyContent isDark={isDark} reducedMotion={reducedMotion} />
+        <HeroSceneContent isDark={isDark} reducedMotion={reducedMotion} />
       </SceneRotation>
     </>
   );
