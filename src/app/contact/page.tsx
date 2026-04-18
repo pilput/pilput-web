@@ -4,16 +4,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/header/Navbar";
 import Footer from "@/components/footer/Footer";
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/public-metadata";
 
-export const metadata: Metadata = {
+export const metadata = publicPageMetadata({
   title: "Contact",
   description:
     "Contact pilput for support, feedback, or collaboration inquiries.",
-  alternates: {
-    canonical: "/contact",
-  },
-};
+  canonicalPath: "/contact",
+  keywords: [
+    "contact pilput",
+    "support",
+    "feedback",
+    "collaboration",
+    "publishing platform",
+  ],
+  openGraphTitle: "Contact pilput",
+});
 
 export default function ContactPage() {
   return (
