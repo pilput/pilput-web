@@ -1,92 +1,21 @@
-"use client";
-
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, ChevronDown, Globe2, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { motion, useScroll, useTransform, type Variants } from "framer-motion";
-import {
-  ArrowRight,
-  Sparkles,
-  ChevronDown,
-  ShieldCheck,
-  Zap,
-  Globe2,
-} from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import HeroBackground from "./HeroBackground";
 
 const Hero = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleChange = (e: MediaQueryListEvent) =>
-      setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: prefersReducedMotion ? 0 : 0.15,
-        duration: prefersReducedMotion ? 0.3 : 0.8,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: prefersReducedMotion
-        ? { duration: 0.3 }
-        : { type: "spring" as const, stiffness: 100, damping: 20 },
-    },
-  };
-
   return (
-    <motion.section
-      ref={containerRef}
-      className="relative min-h-[75vh] flex items-center justify-center overflow-hidden py-16 lg:py-24"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      {/* Background Layering */}
+    <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden py-16 lg:py-24">
       <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--primary-rgb),0.05),transparent_70%)]" />
       <div className="absolute inset-0 bg-grid-slate-100/[0.03] dark:bg-grid-white/[0.02] bg-size-[32px_32px]" />
 
       <HeroBackground />
 
-      <motion.div
-        className="absolute inset-0 z-1 pointer-events-none"
-        style={{ y, opacity, scale }}
-      />
-
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center space-y-8 lg:space-y-12">
-          <motion.div variants={itemVariants} className="relative">
+          <div className="relative landing-reveal">
             <Badge
               variant="outline"
               className="px-4 py-1.5 text-xs sm:text-sm font-medium bg-primary/5 text-primary border-primary/20 backdrop-blur-md rounded-full shadow-sm"
@@ -94,41 +23,27 @@ const Hero = () => {
               <Sparkles className="h-3.5 w-3.5 mr-2 animate-pulse" />
               Empowering the next generation of writers
             </Badge>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={itemVariants}
-            className="max-w-5xl space-y-4 sm:space-y-6"
-          >
+          <div className="max-w-5xl space-y-4 sm:space-y-6 landing-reveal landing-delay-1">
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] text-foreground">
               Write, publish, and <br className="hidden sm:block" />
               <span className="relative inline-block">
                 <span className="relative z-10 bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                   ship ideas
                 </span>
-                <motion.span
-                  className="absolute bottom-2 left-0 w-full h-3 bg-primary/10 -z-10 rounded-full blur-sm"
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-                />
+                <span className="absolute bottom-2 left-0 w-full h-3 bg-primary/10 -z-10 rounded-full blur-sm" />
               </span>{" "}
               without friction.
             </h1>
 
-            <motion.p
-              variants={itemVariants}
-              className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light"
-            >
+            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
               PILPUT is a modern publishing platform designed for clarity. No
-              paywalls, no clutter—just a pure focus on your creative voice.
-            </motion.p>
-          </motion.div>
+              paywalls, no clutter, just a pure focus on your creative voice.
+            </p>
+          </div>
 
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full"
-          >
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full landing-reveal landing-delay-2">
             <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
@@ -148,12 +63,9 @@ const Hero = () => {
                 Explore articles
               </Button>
             </Link>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={itemVariants}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-8 w-full max-w-4xl pt-8 lg:pt-16"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-8 w-full max-w-4xl pt-8 lg:pt-16 landing-reveal landing-delay-3">
             {[
               {
                 icon: ShieldCheck,
@@ -181,28 +93,20 @@ const Hero = () => {
                     <item.icon className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-foreground text-lg">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {item.desc}
-                    </p>
+                    <h3 className="font-bold text-foreground text-lg">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
 
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-30"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-30 landing-float">
         <ChevronDown className="w-6 h-6" />
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 };
 

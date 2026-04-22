@@ -1,10 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, PenLine, BookOpen, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { ArrowRight, BookOpen, PenLine, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
@@ -14,25 +11,20 @@ const CallToAction = () => {
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-[2.5rem] border border-border/50 bg-card/50 backdrop-blur-md px-6 py-12 sm:px-10 sm:py-16 lg:px-16 lg:py-20 text-center space-y-8"
-          >
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-border/50 bg-card/50 backdrop-blur-md px-6 py-12 sm:px-10 sm:py-16 lg:px-16 lg:py-20 text-center space-y-8 landing-reveal">
             <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
             <div className="absolute inset-0 opacity-[0.03] bg-grid-slate-100/[0.4] dark:bg-grid-white/[0.2] bg-size-[24px_24px] pointer-events-none" />
 
             <div className="relative z-10 flex flex-col items-center space-y-8">
               <Badge
                 variant="outline"
-                className="px-5 py-2 text-xs font-bold uppercase tracking-widest border-primary/30 bg-primary/10 text-primary rounded-full"
+                className="px-5 py-2 text-xs font-bold uppercase tracking-widest border-primary/30 bg-primary/10 text-primary rounded-full landing-reveal landing-delay-1"
               >
                 <Sparkles className="w-3.5 h-3.5 mr-2" />
                 Start Your Journey
               </Badge>
 
-              <div className="space-y-4">
+              <div className="space-y-4 landing-reveal landing-delay-2">
                 <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
                   Your words deserve a home.
                 </p>
@@ -42,7 +34,7 @@ const CallToAction = () => {
                 </h2>
               </div>
 
-              <div className="flex w-full flex-col sm:flex-row gap-4 justify-center items-center pt-2">
+              <div className="flex w-full flex-col sm:flex-row gap-4 justify-center items-center pt-2 landing-reveal landing-delay-3">
                 <Link href="/register" className="w-full sm:w-auto">
                   <Button
                     size="lg"
@@ -65,7 +57,7 @@ const CallToAction = () => {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

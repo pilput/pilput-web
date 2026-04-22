@@ -1,47 +1,48 @@
-"use client";
-import { motion, useInView } from "framer-motion";
-import { useRouter } from "next/navigation";
-import React, { useRef, useCallback } from "react";
+import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
   Bot,
-  LucideIcon,
   MessageCircle,
   PenTool,
   PieChart,
   Star,
   TrendingUp,
+  type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { FeatureCard } from "./FeatureCard";
+import { cn } from "@/lib/utils";
 
 interface Feature {
   id: string;
   icon: LucideIcon;
   title: string;
   description: string;
-  background: React.ReactNode;
+  background: ReactNode;
   stats: string;
   cta: string;
-  delay: number;
-  href?: string;
+  href: string;
   glowColor?: "primary" | "blue" | "purple" | "green" | "yellow";
   accentIcon?: LucideIcon;
 }
 
-const Features: React.FC = () => {
-  const router = useRouter();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+const glowClassByColor = {
+  primary: "hover:shadow-primary/20",
+  blue: "hover:shadow-blue-500/20",
+  purple: "hover:shadow-purple-500/20",
+  green: "hover:shadow-green-500/20",
+  yellow: "hover:shadow-yellow-500/20",
+} as const;
 
+const Features = () => {
   const features: Feature[] = [
     {
       id: "content-creation",
       icon: BookOpen,
       title: "Immersive Writing",
       description:
-        "Craft stories that captivate with our high-performance writing tools. Enjoy a clean space with instant formatting and media integration.",
+        "Craft stories that captivate with high-performance writing tools. Enjoy a clean space with instant formatting and media integration.",
       background: (
         <div className="absolute inset-0 overflow-hidden opacity-10">
           <div className="absolute top-0 right-0 p-8">
@@ -51,7 +52,6 @@ const Features: React.FC = () => {
       ),
       stats: "Clean & Simple",
       cta: "Start writing",
-      delay: 0.1,
       href: "/dashboard/posts/create",
       glowColor: "blue",
       accentIcon: Star,
@@ -71,7 +71,6 @@ const Features: React.FC = () => {
       ),
       stats: "Smart Assistant",
       cta: "Try Assistant",
-      delay: 0.2,
       href: "/chat",
       glowColor: "purple",
       accentIcon: TrendingUp,
@@ -91,28 +90,14 @@ const Features: React.FC = () => {
       ),
       stats: "All-in-one",
       cta: "Go to Dashboard",
-      delay: 0.3,
       href: "/dashboard/holdings",
       glowColor: "primary",
       accentIcon: PieChart,
     },
   ];
 
-  const handleFeatureClick = useCallback(
-    (feature: Feature) => {
-      if (feature.href) {
-        router.push(feature.href);
-      }
-    },
-    [router]
-  );
-
   return (
-    <motion.section
-      ref={containerRef}
-      className="relative py-16 sm:py-20 lg:py-24 bg-background overflow-hidden"
-    >
-      {/* Refined Background Decor */}
+    <section className="relative py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/2 rounded-full blur-[120px] pointer-events-none" />
       </div>
@@ -120,49 +105,38 @@ const Features: React.FC = () => {
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-end justify-between gap-6 mb-12 lg:mb-16">
           <div className="max-w-2xl space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <div className="landing-reveal">
               <Badge variant="secondary" className="px-4 py-1.5 bg-primary/10 text-primary border-none rounded-full">
                 Platform Innovation
               </Badge>
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-6xl font-black tracking-tight leading-tight"
-            >
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight landing-reveal landing-delay-1">
               Precision tools for <br />
               <span className="text-primary">exceptional results.</span>
-            </motion.h2>
+            </h2>
           </div>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-lg md:text-xl text-muted-foreground max-w-md font-light leading-relaxed mb-2"
-          >
+          <p className="text-lg md:text-xl text-muted-foreground max-w-md font-light leading-relaxed mb-2 landing-reveal landing-delay-2">
             We&apos;ve stripped away the noise to give you the most powerful,
             intuitive tools for your creative workflow.
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {features.map((feature) => (
-            <motion.div
+          {features.map((feature, index) => (
+            <Link
               key={feature.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: feature.delay, duration: 0.6 }}
+              href={feature.href}
+              className="block landing-reveal"
+              style={{ animationDelay: `${300 + index * 100}ms` }}
             >
-              <FeatureCard
-                onClick={() => handleFeatureClick(feature)}
-                className="group h-[360px] lg:h-[400px]"
-                glowColor={feature.glowColor}
+              <article
+                className={cn(
+                  "group h-[360px] lg:h-[400px] relative w-full overflow-hidden rounded-3xl",
+                  "bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10",
+                  "shadow-lg shadow-black/5 dark:shadow-white/5 transition-all duration-500",
+                  "hover:scale-[1.02] hover:shadow-2xl",
+                  feature.glowColor ? glowClassByColor[feature.glowColor] : glowClassByColor.primary
+                )}
               >
                 {feature.background}
                 <div className="relative h-full flex flex-col p-10 lg:p-12">
@@ -182,18 +156,18 @@ const Features: React.FC = () => {
                       {feature.description}
                     </p>
                   </div>
-                  
+
                   <div className="mt-8 flex items-center text-primary font-bold group/btn">
                     <span className="mr-2">{feature.cta}</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                   </div>
                 </div>
-              </FeatureCard>
-            </motion.div>
+              </article>
+            </Link>
           ))}
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

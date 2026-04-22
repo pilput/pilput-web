@@ -4,6 +4,7 @@ import Navigation from "@/components/header/Navbar";
 import Hero from "@/components/landing/Hero";
 import Highlights from "@/components/landing/Highlights";
 import Features from "@/components/landing/Features";
+import LandingMotionObserver from "@/components/landing/LandingMotionObserver";
 import CallToAction from "@/components/landing/CallToAction";
 import Community from "@/components/landing/Community";
 import Footer from "@/components/footer/Footer";
@@ -75,6 +76,7 @@ export default async function Home() {
       />
       <Navigation />
       <main id="main-content">
+        <LandingMotionObserver />
         <Hero />
         <Highlights />
         <Features />
