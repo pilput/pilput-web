@@ -1,9 +1,17 @@
 "use client";
 
+import { Paginate } from "@/components/common/Paginate";
+import { postsPerPage } from "@/lib/blog-feed-data";
 import { apiClient } from "@/utils/fetch";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PostList from "../post/PostList";
 import type { Post } from "@/types/post";
+
+interface AuthorPostsResponse {
+  data: Post[];
+  meta?: { total_items: number };
+  total?: number;
+}
 
 function Posts(props: {
   username: string;
@@ -12,24 +20,54 @@ function Posts(props: {
 }) {
   const showHeading = props.showHeading !== false;
   const [posts, setposts] = useState<Post[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function getPosts() {
       try {
         setLoading(true);
-        const { data } = await apiClient.get(
+        const { data } = await apiClient.get<AuthorPostsResponse>(
           `/v1/posts/author/${props.username}`,
+          {
+            params: {
+              limit: postsPerPage,
+              offset: currentPage * postsPerPage,
+            },
+          },
         );
-        setposts(data.data);
+        if (cancelled) {
+          return;
+        }
+        setposts(data.data ?? []);
+        setTotal(data.meta?.total_items ?? data.total ?? 0);
       } catch (error) {
         console.error(error);
+        if (!cancelled) {
+          setposts([]);
+          setTotal(0);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
     getPosts();
-  }, [props.username]);
+    return () => {
+      cancelled = true;
+    };
+  }, [props.username, currentPage]);
+
+  const postCount = Math.max(total, posts.length);
 
   if (loading) {
     return (
@@ -74,7 +112,8 @@ function Posts(props: {
               : "ml-auto text-sm font-medium text-muted-foreground"
           }
         >
-          {posts.length} {posts.length === 1 ? "post" : "posts"}
+          {postCount.toLocaleString()}{" "}
+          {postCount === 1 ? "post" : "posts"}
         </div>
       </div>
 
@@ -103,11 +142,34 @@ function Posts(props: {
           </p>
         </div>
       ) : (
-        <div className="grid gap-6">
-          {posts.map((post) => (
-            <PostList key={post.id} post={post} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-6">
+            {posts.map((post) => (
+              <PostList key={post.id} post={post} />
+            ))}
+          </div>
+          {total > postsPerPage && (
+            <div className="flex justify-center pt-2">
+              <Paginate
+                currentPage={currentPage}
+                total={total}
+                limit={postsPerPage}
+                offset={currentPage * postsPerPage}
+                prev={() => handlePageChange(Math.max(0, currentPage - 1))}
+                next={() =>
+                  handlePageChange(
+                    Math.min(
+                      Math.ceil(total / postsPerPage) - 1,
+                      currentPage + 1,
+                    ),
+                  )
+                }
+                goToPage={(page) => handlePageChange(page)}
+                length={posts.length}
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

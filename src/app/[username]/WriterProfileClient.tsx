@@ -22,7 +22,7 @@ export default function WriterProfileClient({
           </h2>
         </div>
         <div className="px-4 py-6 sm:px-8 sm:py-8">
-          <PostsUser username={username} showHeading={false} />
+          <PostsUser key={username} username={username} showHeading={false} />
         </div>
       </CardContent>
     </Card>
