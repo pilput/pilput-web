@@ -55,7 +55,7 @@ const Hero = () => {
           <div className="mt-7 max-w-5xl space-y-5 landing-reveal landing-delay-1">
             <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
               Write and publish
-              <span className="block bg-linear-to-r from-primary via-sky-500 to-cyan-500 bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-primary via-primary/85 to-primary/60 bg-clip-text text-transparent">
                 ideas worth reading.
               </span>
             </h1>
@@ -93,11 +93,11 @@ const Hero = () => {
           <div className="mt-10 w-full max-w-5xl landing-reveal landing-delay-3">
             <div className="overflow-hidden rounded-lg border border-border/70 bg-card/75 text-left shadow-2xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
               <div className="flex items-center gap-2 border-b border-border/70 px-4 py-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                <span className="h-2.5 w-2.5 rounded-full bg-primary/30" />
+                <span className="h-2.5 w-2.5 rounded-full bg-primary/45" />
+                <span className="h-2.5 w-2.5 rounded-full bg-primary/60" />
                 <span className="ml-3 text-xs font-medium text-muted-foreground">
-                  draft.pilput.net
+                  Pilput editor preview
                 </span>
               </div>
               <div className="grid gap-0 lg:grid-cols-[1.25fr_0.75fr]">

@@ -46,14 +46,14 @@ const Features = () => {
       background: (
         <div className="absolute inset-0 overflow-hidden opacity-10">
           <div className="absolute top-0 right-0 p-8">
-            <PenTool className="w-32 h-32 text-blue-500" />
+            <PenTool className="w-32 h-32 text-primary" />
           </div>
         </div>
       ),
       stats: "Clean & Simple",
       cta: "Start writing",
       href: "/dashboard/posts/create",
-      glowColor: "blue",
+      glowColor: "primary",
       accentIcon: Star,
     },
     {
@@ -65,14 +65,14 @@ const Features = () => {
       background: (
         <div className="absolute inset-0 overflow-hidden opacity-10">
           <div className="absolute bottom-0 left-0 p-8">
-            <MessageCircle className="w-32 h-32 text-purple-500" />
+            <MessageCircle className="w-32 h-32 text-primary" />
           </div>
         </div>
       ),
       stats: "Smart Assistant",
       cta: "Try Assistant",
       href: "/chat",
-      glowColor: "purple",
+      glowColor: "primary",
       accentIcon: TrendingUp,
     },
     {

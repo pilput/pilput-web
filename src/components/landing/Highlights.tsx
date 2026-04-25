@@ -11,7 +11,7 @@ const WritingVisual = () => (
             {t}
           </span>
         ))}
-        <div className="ml-auto w-16 h-1.5 bg-blue-500/30 rounded-full" />
+        <div className="ml-auto w-16 h-1.5 bg-primary/30 rounded-full" />
       </div>
       <div className="space-y-2.5">
         <div className="h-2.5 w-1/3 bg-primary/30 rounded-full" />
@@ -20,7 +20,7 @@ const WritingVisual = () => (
         <div className="h-2 w-3/4 bg-muted/60 rounded-full" />
         <div className="inline-flex items-center gap-1 mt-1">
           <div className="h-2 w-24 bg-muted/40 rounded-full" />
-          <div className="h-4 w-0.5 bg-blue-400 rounded-full animate-pulse" />
+          <div className="h-4 w-0.5 bg-primary/60 rounded-full animate-pulse" />
         </div>
       </div>
     </div>
@@ -35,14 +35,14 @@ const AIVisual = () => (
       </div>
     </div>
     <div className="flex items-end gap-1.5">
-      <div className="w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-        <Cpu className="w-2.5 h-2.5 text-purple-400" />
+      <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+        <Cpu className="w-2.5 h-2.5 text-primary" />
       </div>
       <div className="bg-muted/50 backdrop-blur-sm text-[10px] text-muted-foreground px-3 py-1.5 rounded-2xl rounded-bl-sm">
         <span className="inline-flex gap-1">
-          <span className="w-1 h-1 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-          <span className="w-1 h-1 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-          <span className="w-1 h-1 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+          <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
+          <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
+          <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
         </span>
       </div>
     </div>
@@ -52,9 +52,9 @@ const AIVisual = () => (
 const GlobalVisual = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {[
-      { top: "30%", left: "20%", color: "bg-orange-400", delay: "0s" },
-      { top: "55%", left: "65%", color: "bg-orange-300", delay: "0.4s" },
-      { top: "20%", left: "70%", color: "bg-orange-500", delay: "0.8s" },
+      { top: "30%", left: "20%", color: "bg-primary/70", delay: "0s" },
+      { top: "55%", left: "65%", color: "bg-primary/50", delay: "0.4s" },
+      { top: "20%", left: "70%", color: "bg-primary/60", delay: "0.8s" },
     ].map((dot, i) => (
       <span key={i} className="absolute" style={{ top: dot.top, left: dot.left }}>
         <span className={cn("absolute inline-flex w-3 h-3 rounded-full opacity-70 animate-ping", dot.color)} style={{ animationDelay: dot.delay }} />
@@ -62,12 +62,12 @@ const GlobalVisual = () => (
       </span>
     ))}
     <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 200 120" preserveAspectRatio="none">
-      <line x1="40" y1="36" x2="130" y2="66" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" className="text-orange-400" />
-      <line x1="130" y1="66" x2="140" y2="24" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" className="text-orange-400" />
+      <line x1="40" y1="36" x2="130" y2="66" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" className="text-primary" />
+      <line x1="130" y1="66" x2="140" y2="24" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" className="text-primary" />
     </svg>
     <div className="absolute bottom-5 right-5 flex items-center gap-1.5 bg-background/60 backdrop-blur-md border border-border/50 rounded-xl px-3 py-1.5 shadow-lg">
-      <Wifi className="w-3 h-3 text-orange-400" />
-      <span className="text-[10px] font-bold text-orange-400">12ms</span>
+      <Wifi className="w-3 h-3 text-primary" />
+      <span className="text-[10px] font-bold text-primary">12ms</span>
       <span className="text-[10px] text-muted-foreground">latency</span>
     </div>
   </div>
@@ -81,16 +81,16 @@ const InsightsVisual = () => {
         {bars.map((h, i) => (
           <div
             key={i}
-            className="flex-1 rounded-sm bg-indigo-500/30 group-hover:bg-indigo-500/50 transition-all duration-500 relative overflow-hidden"
+            className="flex-1 rounded-sm bg-primary/25 group-hover:bg-primary/40 transition-all duration-500 relative overflow-hidden"
             style={{ height: `${h}%`, transitionDelay: `${i * 60}ms` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent" />
           </div>
         ))}
       </div>
       <div className="flex items-center gap-2 mt-2">
-        <TrendingUp className="w-3 h-3 text-indigo-400" />
-        <span className="text-[10px] font-semibold text-indigo-400">+24% this week</span>
+        <TrendingUp className="w-3 h-3 text-primary" />
+        <span className="text-[10px] font-semibold text-primary">+24% this week</span>
       </div>
     </div>
   );
@@ -99,13 +99,13 @@ const InsightsVisual = () => {
 const CommunityVisual = () => (
   <div className="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-2 pointer-events-none w-[45%]">
     <div className="self-start flex items-end gap-1.5">
-      <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex-shrink-0" />
+      <div className="w-6 h-6 rounded-full bg-primary/15 flex-shrink-0" />
       <div className="bg-muted/60 backdrop-blur-sm text-[10px] text-muted-foreground px-3 py-2 rounded-2xl rounded-bl-sm leading-relaxed max-w-[85%]">
         Great post!
       </div>
     </div>
     <div className="self-end">
-      <div className="bg-emerald-500/20 text-emerald-300 text-[10px] px-3 py-2 rounded-2xl rounded-br-sm leading-relaxed">
+      <div className="bg-primary/15 text-primary text-[10px] px-3 py-2 rounded-2xl rounded-br-sm leading-relaxed">
         Thanks! More soon
       </div>
     </div>
@@ -113,9 +113,9 @@ const CommunityVisual = () => (
       <div className="w-6 h-6 rounded-full bg-teal-500/20 flex-shrink-0" />
       <div className="bg-muted/60 backdrop-blur-sm px-3 py-2 rounded-2xl rounded-bl-sm">
         <span className="inline-flex gap-1 items-center">
-          <span className="w-1 h-1 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "0ms" }} />
-          <span className="w-1 h-1 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-          <span className="w-1 h-1 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+          <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
+          <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
+          <span className="w-1 h-1 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
         </span>
       </div>
     </div>
@@ -128,8 +128,8 @@ const highlights = [
     description: "A distraction-free environment designed for deep focus and effortless creation.",
     icon: BookOpen,
     className: "lg:col-span-2 lg:row-span-2",
-    gradient: "from-blue-500/20 via-blue-500/5 to-transparent",
-    iconColor: "text-blue-500",
+    gradient: "from-primary/15 via-primary/5 to-transparent",
+    iconColor: "text-primary",
     element: <WritingVisual />,
   },
   {
@@ -137,8 +137,8 @@ const highlights = [
     description: "Refine ideas and polish your prose with smart assistance.",
     icon: Bot,
     className: "lg:col-span-1 lg:row-span-1",
-    gradient: "from-purple-500/20 via-purple-500/5 to-transparent",
-    iconColor: "text-purple-500",
+    gradient: "from-primary/15 via-primary/5 to-transparent",
+    iconColor: "text-primary",
     element: <AIVisual />,
   },
   {
@@ -146,8 +146,8 @@ const highlights = [
     description: "Available everywhere, instantly.",
     icon: Globe,
     className: "lg:col-span-1 lg:row-span-1",
-    gradient: "from-orange-500/20 via-orange-500/5 to-transparent",
-    iconColor: "text-orange-500",
+    gradient: "from-primary/15 via-primary/5 to-transparent",
+    iconColor: "text-primary",
     element: <GlobalVisual />,
   },
   {
@@ -155,8 +155,8 @@ const highlights = [
     description: "Track your growth with beautiful analytics.",
     icon: PieChart,
     className: "lg:col-span-1 lg:row-span-1",
-    gradient: "from-indigo-500/20 via-indigo-500/5 to-transparent",
-    iconColor: "text-indigo-500",
+    gradient: "from-primary/15 via-primary/5 to-transparent",
+    iconColor: "text-primary",
     element: <InsightsVisual />,
   },
   {
@@ -164,8 +164,8 @@ const highlights = [
     description: "Connect with a global audience and grow your reach through meaningful interactions.",
     icon: MessageCircle,
     className: "lg:col-span-2 lg:row-span-1",
-    gradient: "from-emerald-500/20 via-emerald-500/5 to-transparent",
-    iconColor: "text-emerald-500",
+    gradient: "from-primary/15 via-primary/5 to-transparent",
+    iconColor: "text-primary",
     element: <CommunityVisual />,
   },
 ];

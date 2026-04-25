@@ -11,7 +11,7 @@ const CallToAction = () => {
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="relative overflow-hidden rounded-lg border border-border/70 bg-card/80 px-6 py-12 text-center shadow-xl shadow-black/5 backdrop-blur-md sm:px-10 sm:py-16 lg:px-16 lg:py-18 landing-reveal">
-            <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-sky-500 to-cyan-500 pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-primary/80 to-primary/55 pointer-events-none" />
             <div className="absolute inset-0 opacity-[0.03] bg-grid-slate-100/[0.4] dark:bg-grid-white/[0.2] bg-size-[24px_24px] pointer-events-none" />
 
             <div className="relative z-10 flex flex-col items-center">
