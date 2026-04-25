@@ -7,9 +7,9 @@ export interface AppConfig {
 }
 
 export const Config: AppConfig = {
-  apibaseurl: process.env.NEXT_PUBLIC_API_URL || "https://fiber.pilput.net",
+  apibaseurl: process.env.NEXT_PUBLIC_API_URL || "https://echo.pilput.net",
   apibaseurl2: process.env.NEXT_PUBLIC_API_URL_2 || "https://hono.pilput.net",
-  storagebaseurl: process.env.NEXT_PUBLIC_STORAGE_URL || "https://d42zd71vraxqs.cloudfront.net",
+  storagebaseurl: process.env.NEXT_PUBLIC_STORAGE_URL || "https://storage.pilput.net",
   mainbaseurl: process.env.NEXT_PUBLIC_MAIN_URL || "https://pilput.net",
   maindomain: process.env.NEXT_PUBLIC_DOMAIN || "pilput.net",
 };
