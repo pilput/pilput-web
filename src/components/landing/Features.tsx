@@ -97,27 +97,22 @@ const Features = () => {
   ];
 
   return (
-    <section className="relative py-16 sm:py-20 lg:py-24 bg-background overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/2 rounded-full blur-[120px] pointer-events-none" />
-      </div>
-
+    <section className="relative overflow-hidden border-b border-border/60 bg-muted/25 py-16 sm:py-20 lg:py-24">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row items-end justify-between gap-6 mb-12 lg:mb-16">
-          <div className="max-w-2xl space-y-6">
+        <div className="mb-10 flex flex-col gap-5 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl space-y-5">
             <div className="landing-reveal">
-              <Badge variant="secondary" className="px-4 py-1.5 bg-primary/10 text-primary border-none rounded-full">
-                Platform Innovation
+              <Badge variant="secondary" className="h-8 rounded-md border-none bg-primary/10 px-3 text-xs font-semibold text-primary">
+                Platform tools
               </Badge>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight landing-reveal landing-delay-1">
-              Precision tools for <br />
-              <span className="text-primary">exceptional results.</span>
+            <h2 className="text-3xl font-black leading-tight tracking-tight landing-reveal landing-delay-1 sm:text-4xl lg:text-6xl">
+              A practical workspace for writers who ship.
             </h2>
           </div>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-md font-light leading-relaxed mb-2 landing-reveal landing-delay-2">
-            We&apos;ve stripped away the noise to give you the most powerful,
-            intuitive tools for your creative workflow.
+          <p className="max-w-md text-base leading-7 text-muted-foreground landing-reveal landing-delay-2 sm:text-lg">
+            Compose, improve, and manage your work with tools that feel fast
+            enough to disappear while you use them.
           </p>
         </div>
 
@@ -131,33 +126,33 @@ const Features = () => {
             >
               <article
                 className={cn(
-                  "group h-[360px] lg:h-[400px] relative w-full overflow-hidden rounded-3xl",
-                  "bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10",
-                  "shadow-lg shadow-black/5 dark:shadow-white/5 transition-all duration-500",
-                  "hover:scale-[1.02] hover:shadow-2xl",
+                  "group relative h-[340px] w-full overflow-hidden rounded-lg",
+                  "border border-border/70 bg-card/90 backdrop-blur-xl",
+                  "shadow-sm transition-all duration-500",
+                  "hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl",
                   feature.glowColor ? glowClassByColor[feature.glowColor] : glowClassByColor.primary
                 )}
               >
                 {feature.background}
-                <div className="relative h-full flex flex-col p-10 lg:p-12">
+                <div className="relative h-full flex flex-col p-6 sm:p-8">
                   <div className="mb-auto">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
-                        <feature.icon className="w-6 h-6" />
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-11 h-11 rounded-md bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-500">
+                        <feature.icon className="w-5 h-5" />
                       </div>
-                      <Badge variant="outline" className="border-primary/20 text-[10px] uppercase tracking-widest font-bold">
+                      <Badge variant="outline" className="rounded-md border-primary/20 text-[10px] uppercase tracking-widest font-bold">
                         {feature.stats}
                       </Badge>
                     </div>
-                    <h3 className="text-2xl lg:text-3xl font-bold mb-4 tracking-tight">
+                    <h3 className="mb-4 text-xl font-bold tracking-tight sm:text-2xl">
                       {feature.title}
                     </h3>
-                    <p className="text-muted-foreground text-base lg:text-lg font-light leading-relaxed">
+                    <p className="text-sm leading-7 text-muted-foreground sm:text-base">
                       {feature.description}
                     </p>
                   </div>
 
-                  <div className="mt-8 flex items-center text-primary font-bold group/btn">
+                  <div className="mt-8 flex items-center text-sm font-bold text-primary group/btn">
                     <span className="mr-2">{feature.cta}</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                   </div>

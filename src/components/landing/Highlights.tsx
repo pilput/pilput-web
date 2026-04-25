@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 const WritingVisual = () => (
   <div className="absolute bottom-0 left-0 right-0 h-[55%] px-6 overflow-hidden pointer-events-none">
-    <div className="w-full h-full bg-background/50 backdrop-blur-md rounded-t-2xl border-t border-x border-border/50 p-5 translate-y-3 group-hover:translate-y-0 transition-transform duration-700 ease-out shadow-2xl">
+    <div className="w-full h-full bg-background/70 backdrop-blur-md rounded-t-lg border-t border-x border-border/60 p-5 translate-y-3 group-hover:translate-y-0 transition-transform duration-700 ease-out shadow-2xl">
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/40">
         {["B", "I", "H1"].map((t) => (
           <span key={t} className="text-[10px] font-bold text-muted-foreground/60 bg-muted/40 rounded px-1.5 py-0.5">
@@ -172,23 +172,23 @@ const highlights = [
 
 const Highlights = () => {
   return (
-    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-background">
-      <div className="absolute top-0 right-0 -mr-64 -mt-64 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -ml-64 -mb-64 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-
+    <section className="relative overflow-hidden border-b border-border/60 bg-background py-16 sm:py-20 lg:py-24">
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center space-y-4 mb-12">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
           <div className="inline-flex items-center landing-reveal">
-            <Badge variant="outline" className="px-5 py-2 text-xs font-bold uppercase tracking-widest border-primary/30 bg-primary/5 text-primary backdrop-blur-md rounded-full">
+            <Badge variant="outline" className="h-8 rounded-md border-primary/25 bg-primary/5 px-3 text-xs font-semibold text-primary backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 mr-2" />
-              Core Ecosystem
+              Core workflow
             </Badge>
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-foreground landing-reveal landing-delay-1">
-            Tools designed for the <br />
-            <span className="text-muted-foreground/40">modern creative mind.</span>
+          <h2 className="mt-5 text-3xl font-black tracking-tight text-foreground landing-reveal landing-delay-1 sm:text-4xl lg:text-6xl">
+            Everything around the writing stays quiet.
           </h2>
+          <p className="mt-4 text-base leading-7 text-muted-foreground landing-reveal landing-delay-2 sm:text-lg">
+            Drafting, feedback, publishing, and discovery live in one focused
+            flow so the page stays about the idea.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 max-w-7xl mx-auto">
@@ -196,7 +196,7 @@ const Highlights = () => {
             <div
               key={item.title}
               className={cn(
-                "group relative overflow-hidden rounded-[2.5rem] border border-border/40 bg-card/40 backdrop-blur-md hover:bg-card/60 hover:border-primary/30 transition-all duration-500",
+                "group relative overflow-hidden rounded-lg border border-border/60 bg-card/70 backdrop-blur-md hover:bg-card hover:border-primary/30 transition-all duration-500",
                 item.className,
                 "min-h-[280px] landing-reveal"
               )}
@@ -206,15 +206,15 @@ const Highlights = () => {
 
               <div className="relative p-8 lg:p-10 h-full flex flex-col">
                 <div className="flex justify-between items-start mb-4">
-                  <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center bg-background/50 shadow-xl ring-1 ring-white/10", item.iconColor)}>
+                  <div className={cn("w-11 h-11 rounded-md flex items-center justify-center bg-background/70 shadow-sm ring-1 ring-border/50", item.iconColor)}>
                     <item.icon className="w-6 h-6" />
                   </div>
                   <ArrowUpRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
 
                 <div className="space-y-2 relative z-10">
-                  <h3 className="text-2xl lg:text-3xl font-bold text-foreground tracking-tight">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed text-base font-light max-w-[240px]">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground tracking-tight">{item.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed text-sm sm:text-base max-w-[260px]">
                     {item.description}
                   </p>
                 </div>

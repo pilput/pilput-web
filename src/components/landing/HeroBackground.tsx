@@ -64,25 +64,8 @@ const HeroBackground = () => {
       ctx!.clearRect(0, 0, W, H);
       tick++;
 
-      const orbAlpha = isDark ? 0.17 : 0.31;
       const lineAlpha = isDark ? 0.25 : 0.42;
       const dotAlpha = isDark ? 0.84 : 1.0;
-
-      // ── Big soft orbs ───────────────────────────────────────────────────
-      const orbs = [
-        { cx: W * 0.15, cy: H * 0.3,  r: W * 0.31 },
-        { cx: W * 0.85, cy: H * 0.65, r: W * 0.25 },
-        { cx: W * 0.5,  cy: H * 0.1,  r: W * 0.21 },
-      ];
-      for (const orb of orbs) {
-        const g = ctx!.createRadialGradient(orb.cx, orb.cy, 0, orb.cx, orb.cy, orb.r);
-        g.addColorStop(0, `hsla(${accentH},${accentS}%,${accentL}%,${orbAlpha})`);
-        g.addColorStop(1, `hsla(${accentH},${accentS}%,${accentL}%,0)`);
-        ctx!.beginPath();
-        ctx!.arc(orb.cx, orb.cy, orb.r, 0, Math.PI * 2);
-        ctx!.fillStyle = g;
-        ctx!.fill();
-      }
 
       // ── Update & draw particles ─────────────────────────────────────────
       for (const p of particles) {

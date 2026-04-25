@@ -4,26 +4,23 @@ import { Sparkles } from "lucide-react";
 
 export default function Community() {
   return (
-    <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-background">
+    <section className="relative overflow-hidden border-b border-border/60 bg-background py-16 sm:py-20 lg:py-24">
       <div className="absolute inset-0 bg-grid-slate-100/[0.03] dark:bg-grid-white/[0.02] bg-[length:40px_40px]" />
       
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center text-center mb-10 sm:mb-14 space-y-4">
-          <Badge variant="outline" className="px-4 py-1.5 border-primary/20 bg-primary/5 text-primary backdrop-blur-sm rounded-full">
+        <div className="mx-auto mb-10 flex max-w-3xl flex-col items-center text-center sm:mb-14">
+          <Badge variant="outline" className="h-8 rounded-md border-primary/20 bg-primary/5 px-3 text-xs font-semibold text-primary backdrop-blur-sm">
             <Sparkles className="w-3.5 h-3.5 mr-2" />
-            Discover what&apos;s new
+            Fresh reads
           </Badge>
           
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight">
-            Latest from our <br />
-            <span className="bg-linear-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              creative community.
-            </span>
+          <h2 className="mt-5 text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-6xl">
+            Explore what the community is publishing.
           </h2>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl font-light leading-relaxed">
-            Explore the latest stories, insights, and perspectives shared by 
-            passionate creators around the world.
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+            Read recent stories, essays, and experiments from people building
+            their voice in public.
           </p>
         </div>
         
