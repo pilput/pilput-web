@@ -6,8 +6,14 @@ import { apiClient } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import { Config } from "@/utils/getConfig";
-import { CalendarDays, Link as LinkIcon, User } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import {
+  AtSign,
+  CalendarDays,
+  ExternalLink,
+  FileText,
+  Link as LinkIcon,
+  UsersRound,
+} from "lucide-react";
 import WriterProfileClient from "./WriterProfileClient";
 import ProfileFollowActions from "@/components/writer/ProfileFollowActions";
 import type { Writer } from "@/types/writer";
@@ -35,6 +41,18 @@ const getWriter = async (username: string): Promise<Writer> => {
   }
 };
 
+const getWebsiteLabel = (website?: string | null) => {
+  if (!website) {
+    return null;
+  }
+
+  try {
+    return new URL(website).hostname.replace(/^www\./, "");
+  } catch {
+    return website.replace(/^https?:\/\//, "").replace(/^www\./, "");
+  }
+};
+
 export default async function page(props: {
   params: Promise<{ username: string }>;
 }) {
@@ -45,6 +63,32 @@ export default async function page(props: {
   const baseUrl = Config.mainbaseurl;
   const profileUrl = `${baseUrl}/${params.username}`;
   const fullName = `${writer.first_name} ${writer.last_name}`.trim();
+  const initials =
+    `${writer.first_name?.[0] ?? ""}${writer.last_name?.[0] ?? ""}` ||
+    writer.username?.[0]?.toUpperCase() ||
+    "P";
+  const joinedDate = new Date(writer.created_at).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  const websiteLabel = getWebsiteLabel(writer.profile?.website);
+  const stats = [
+    {
+      label: "Followers",
+      value: writer.followers_count ?? 0,
+      icon: UsersRound,
+    },
+    {
+      label: "Following",
+      value: writer.following_count ?? 0,
+      icon: AtSign,
+    },
+    {
+      label: "Posts",
+      value: writer.posts_count ?? 0,
+      icon: FileText,
+    },
+  ];
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -62,152 +106,141 @@ export default async function page(props: {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <Navigation />
-      <div className="min-h-screen bg-linear-to-br from-background via-primary/3 to-background">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="max-w-5xl mx-auto space-y-8">
-            <Card className="overflow-hidden border-border/60 shadow-sm">
-              <CardHeader className="border-b border-border/50 bg-muted/15 pb-6 pt-6 sm:pt-8">
-                <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex items-start gap-4 sm:gap-5">
-                    <Avatar className="h-20 w-20 shrink-0 ring-2 ring-border/60 ring-offset-2 ring-offset-background sm:h-24 sm:w-24">
-                      <AvatarImage
-                        src={
-                          writer.image ? getUrlImage(writer.image) : undefined
-                        }
-                      />
-                      <AvatarFallback className="bg-primary/10 text-lg font-semibold text-primary">
-                        {writer.first_name?.[0]}
-                        {writer.last_name?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 space-y-1">
-                      <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                        {writer.first_name} {writer.last_name}
-                      </h1>
-                      <p className="text-sm text-muted-foreground">
-                        @{writer.username}
-                      </p>
-                    </div>
-                  </div>
-
-                  <ProfileFollowActions
-                    writerId={writer.id}
-                    profileUsername={writer.username}
-                    initialIsFollowing={Boolean(writer.is_following)}
-                    redirectPath={redirectPath}
-                  />
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-6 pt-6 sm:pt-8">
-                {writer.profile?.bio && (
-                  <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
-                    {writer.profile.bio}
-                  </p>
-                )}
-
-                <div className="grid grid-cols-3 gap-4 sm:gap-8">
-                  <div className="rounded-lg bg-muted/30 px-3 py-4 text-center sm:px-4">
-                    <div className="text-xl font-bold tabular-nums text-foreground sm:text-2xl">
-                      {(writer.followers_count ?? 0).toLocaleString()}
-                    </div>
-                    <div className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
-                      Followers
-                    </div>
-                  </div>
-                  <div className="rounded-lg bg-muted/30 px-3 py-4 text-center sm:px-4">
-                    <div className="text-xl font-bold tabular-nums text-foreground sm:text-2xl">
-                      {(writer.following_count ?? 0).toLocaleString()}
-                    </div>
-                    <div className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
-                      Following
-                    </div>
-                  </div>
-                  <div className="rounded-lg bg-muted/30 px-3 py-4 text-center sm:px-4">
-                    <div className="text-xl font-bold tabular-nums text-foreground sm:text-2xl">
-                      {(writer.posts_count ?? 0).toLocaleString()}
-                    </div>
-                    <div className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">
-                      Posts
-                    </div>
-                  </div>
-                </div>
-
-                <Separator className="bg-border/60" />
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="rounded-lg border border-border/50 bg-muted/20 p-4 sm:p-5">
-                    <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
-                      <User
-                        className="h-4 w-4 text-muted-foreground"
-                        aria-hidden
-                      />
-                      Personal
-                    </h2>
-                    <dl className="space-y-3 text-sm">
-                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
-                        <dt className="text-muted-foreground">Name</dt>
-                        <dd className="font-medium text-foreground">
-                          {writer.first_name} {writer.last_name}
-                        </dd>
-                      </div>
-                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
-                        <dt className="text-muted-foreground">Username</dt>
-                        <dd className="font-medium text-foreground">
-                          @{writer.username}
-                        </dd>
-                      </div>
-                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
-                        <dt className="text-muted-foreground">Joined</dt>
-                        <dd className="flex items-center gap-1.5 font-medium text-foreground">
-                          <CalendarDays
-                            className="h-3.5 w-3.5 shrink-0 text-muted-foreground"
-                            aria-hidden
+      <main className="min-h-screen bg-background">
+        <div className="border-b border-border/60 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_30%),linear-gradient(180deg,var(--background),color-mix(in_oklab,var(--muted)_35%,transparent))]">
+          <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+            <div className="mx-auto max-w-5xl">
+              <Card className="overflow-hidden border-border/70 bg-card/90 py-0 shadow-sm backdrop-blur">
+                <CardHeader className="relative border-b border-border/60 p-0">
+                  <div className="h-24 bg-linear-to-r from-primary/20 via-chart-2/15 to-chart-4/15 sm:h-32" />
+                  <div className="px-5 pb-6 sm:px-8 sm:pb-8">
+                    <div className="-mt-10 flex flex-col gap-5 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
+                      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end">
+                        <Avatar className="h-24 w-24 shrink-0 border-4 border-card bg-card shadow-md sm:h-28 sm:w-28">
+                          <AvatarImage
+                            src={
+                              writer.image
+                                ? getUrlImage(writer.image)
+                                : undefined
+                            }
+                            alt={fullName || writer.username}
                           />
-                          {new Date(writer.created_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "long",
-                              year: "numeric",
-                            },
-                          )}
-                        </dd>
+                          <AvatarFallback className="bg-primary/10 text-2xl font-semibold text-primary">
+                            {initials}
+                          </AvatarFallback>
+                        </Avatar>
+
+                        <div className="min-w-0 space-y-2 pb-0.5">
+                          <div>
+                            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                              {fullName || writer.username}
+                            </h1>
+                            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                              <AtSign className="h-3.5 w-3.5" aria-hidden />
+                              {writer.username}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            <span className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-background/70 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                              <CalendarDays
+                                className="h-3.5 w-3.5"
+                                aria-hidden
+                              />
+                              Joined {joinedDate}
+                            </span>
+                            {writer.profile?.website && websiteLabel && (
+                              <a
+                                href={writer.profile.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border/70 bg-background/70 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
+                              >
+                                <LinkIcon
+                                  className="h-3.5 w-3.5 shrink-0"
+                                  aria-hidden
+                                />
+                                <span className="truncate">{websiteLabel}</span>
+                                <ExternalLink
+                                  className="h-3 w-3 shrink-0"
+                                  aria-hidden
+                                />
+                              </a>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </dl>
-                  </div>
 
-                  <div className="rounded-lg border border-border/50 bg-muted/20 p-4 sm:p-5">
-                    <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
-                      <LinkIcon
-                        className="h-4 w-4 text-muted-foreground"
-                        aria-hidden
-                      />
-                      Links
-                    </h2>
-                    {writer.profile?.website ? (
-                      <a
-                        href={writer.profile.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
-                      >
-                        <LinkIcon className="h-4 w-4 shrink-0" aria-hidden />
-                        Website
-                      </a>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">
-                        No link added yet.
+                      <div className="sm:pb-1">
+                        <ProfileFollowActions
+                          writerId={writer.id}
+                          profileUsername={writer.username}
+                          initialIsFollowing={Boolean(writer.is_following)}
+                          redirectPath={redirectPath}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-6 px-5 py-6 sm:px-8 sm:py-8">
+                  <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+                    <div className="space-y-3">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        About
                       </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                      {writer.profile?.bio ? (
+                        <p className="max-w-3xl text-base leading-7 text-foreground/80">
+                          {writer.profile.bio}
+                        </p>
+                      ) : (
+                        <p className="max-w-3xl text-base leading-7 text-muted-foreground">
+                          @{writer.username} has not added a bio yet.
+                        </p>
+                      )}
+                    </div>
 
-            <WriterProfileClient username={params.username} />
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-1">
+                      {stats.map((stat) => {
+                        const Icon = stat.icon;
+
+                        return (
+                          <div
+                            key={stat.label}
+                            className="rounded-lg border border-border/60 bg-muted/25 px-3 py-3 sm:px-4"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-medium text-muted-foreground">
+                                {stat.label}
+                              </span>
+                              <Icon
+                                className="h-3.5 w-3.5 text-primary/70"
+                                aria-hidden
+                              />
+                            </div>
+                            <div className="mt-2 text-2xl font-bold tabular-nums tracking-tight text-foreground">
+                              {stat.value.toLocaleString()}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <WriterProfileClient
+              username={params.username}
+              displayName={fullName || writer.username}
+            />
+          </div>
+        </div>
+      </main>
     </>
   );
 }
