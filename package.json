@@ -44,7 +44,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-hook-form": "^7.73.1",
+    "react-hook-form": "^7.74.0",
     "react-markdown": "^10.1.0",
     "recharts": "^3.8.1",
     "rehype-prism-plus": "^2.0.2",
@@ -64,7 +64,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.4",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.12",
     "tailwindcss": "^4.2.4",
     "typescript": "^5.9.3"
   },

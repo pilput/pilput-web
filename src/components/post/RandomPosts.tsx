@@ -18,7 +18,7 @@ interface SuccessResponse {
 
 const tempposts = [1, 2, 3, 4, 5, 6];
 
-const PostsRandomList = () => {
+const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
   const [posts, setposts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -49,33 +49,34 @@ const PostsRandomList = () => {
 
   return (
     <div className="py-8">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div className="space-y-2">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-            Random Posts
-          </h2>
-          <p className="text-muted-foreground text-sm md:text-base max-w-md">
-            Explore interesting posts from our community
-          </p>
-        </div>
+      {showHeader && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div className="space-y-2">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Random Posts
+            </h2>
+            <p className="text-muted-foreground text-sm md:text-base max-w-md">
+              Explore interesting posts from our community
+            </p>
+          </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          className="self-start sm:self-auto rounded-full gap-2"
-        >
-          <RefreshCw
-            className={cn(
-              "h-4 w-4 transition-transform duration-300",
-              isRefreshing && "animate-spin"
-            )}
-          />
-          Refresh
-        </Button>
-      </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="self-start sm:self-auto rounded-full gap-2"
+          >
+            <RefreshCw
+              className={cn(
+                "h-4 w-4 transition-transform duration-300",
+                isRefreshing && "animate-spin"
+              )}
+            />
+            Refresh
+          </Button>
+        </div>
+      )}
 
       {/* Posts Grid */}
       <div
