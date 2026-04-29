@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { getPostBookmarkCount, getPostLikesCount, type Post } from "@/types/post";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface TrendingPostsProps {
   posts: Post[];
@@ -14,28 +15,28 @@ interface TrendingPostsProps {
 const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsProps) => {
   if (isLoading) {
     return (
-      <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
+      <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}>
         {Array(layout === "grid" ? 3 : 5).fill(0).map((_, i) => (
-          <div key={i} className={`animate-pulse bg-card border border-border/40 rounded-xl overflow-hidden ${layout === "sidebar" ? "flex gap-3 p-3" : "h-[320px]"}`}>
+          <div key={i} className={`bg-card border border-border/40 rounded-xl overflow-hidden ${layout === "sidebar" ? "flex gap-3 p-3" : "h-[320px]"}`}>
             {layout === "sidebar" ? (
               <>
-                <div className="w-10 h-10 bg-muted rounded-full shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-3 bg-muted rounded w-1/3" />
+                <Skeleton className="size-10 rounded-full shrink-0" />
+                <div className="flex flex-1 flex-col gap-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/3" />
                 </div>
               </>
             ) : (
-              <div className="h-full flex flex-col">
-                <div className="w-full h-48 bg-muted" />
-                <div className="p-4 space-y-3 flex-1">
+              <div className="flex h-full flex-col">
+                <Skeleton className="h-48 w-full" />
+                <div className="flex flex-1 flex-col gap-3 p-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-muted" />
-                    <div className="w-24 h-3 bg-muted rounded" />
+                    <Skeleton className="size-8 rounded-full" />
+                    <Skeleton className="h-3 w-24" />
                   </div>
-                  <div className="space-y-2">
-                    <div className="h-5 bg-muted rounded w-full" />
-                    <div className="h-5 bg-muted rounded w-2/3" />
+                  <div className="flex flex-col gap-2">
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-2/3" />
                   </div>
                 </div>
               </div>

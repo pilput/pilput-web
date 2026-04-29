@@ -5,6 +5,7 @@ import { postsPerPage } from "@/lib/blog-feed-data";
 import { apiClient } from "@/utils/fetch";
 import { useCallback, useEffect, useState } from "react";
 import PostList from "../post/PostList";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Post } from "@/types/post";
 
 interface AuthorPostsResponse {
@@ -84,11 +85,11 @@ function Posts(props: {
         </div>
         <div className="grid gap-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="bg-muted rounded-lg h-48 mb-4"></div>
-              <div className="space-y-2">
-                <div className="bg-muted rounded h-4 w-3/4"></div>
-                <div className="bg-muted rounded h-4 w-1/2"></div>
+            <div key={i} className="flex flex-col gap-4">
+              <Skeleton className="h-48 rounded-lg" />
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
               </div>
             </div>
           ))}
