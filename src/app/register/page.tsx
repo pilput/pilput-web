@@ -74,7 +74,7 @@ export default function Signup() {
 
       toast.success("Account created successfully", { id });
       const expire = new Date();
-      expire.setTime(expire.getTime() + 6 * 60 * 60 * 1000);
+      expire.setTime(expire.getTime() + 3 * 60 * 60 * 1000); // 3 hours from now
 
       setCookie("token", result.data.access_token, {
         expires: expire,
