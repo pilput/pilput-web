@@ -25,7 +25,7 @@ const ActionComponent = ({
     const id = toast.loading("Updating publish...");
     try {
       const response = await apiClientApp.patch(
-        `/v1/posts/${post.id}`,
+        `/api/posts/${post.id}`,
         {
           published: !post.published,
         },
@@ -42,7 +42,7 @@ const ActionComponent = ({
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await apiClientApp.delete(`/v1/posts/${post.id}`, {
+      const response = await apiClientApp.delete(`/api/posts/${post.id}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       toast.success("Post deleted successfully", { id });

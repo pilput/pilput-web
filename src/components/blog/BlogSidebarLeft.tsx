@@ -16,7 +16,7 @@ const BlogSidebarLeft = () => {
     async function fetchTrendingPosts() {
       setIsTrendingLoading(true);
       try {
-        const { data } = await apiClient.get("/v1/posts/trending", {
+        const { data } = await apiClient.get("/api/posts/trending", {
           params: { limit: 5 },
         });
         const response = data;

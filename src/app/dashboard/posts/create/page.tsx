@@ -78,7 +78,7 @@ export default function PostCreate() {
       formData.append("image", file);
 
       const response = await apiClientApp.post(
-        "/api/v1/posts/image",
+        "/api/posts/image",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -153,7 +153,7 @@ export default function PostCreate() {
     const toastId = toast.loading("Publishing post...");
 
     try {
-      await apiClientApp.post("/v1/posts", post, {
+      await apiClientApp.post("/api/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setErrorTitle("");

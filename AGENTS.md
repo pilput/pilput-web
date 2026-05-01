@@ -45,7 +45,7 @@ Authenticated requests require `headers: { Authorization: \`Bearer ${getToken()}
 
 ### Chat Streaming
 
-`useChatStore` in `src/stores/chat-store.ts` uses raw `fetch()` for SSE streaming (not `apiClient`). The endpoint is `${Config.apibaseurl2}/v1/chat/conversations/${id}/messages/stream`.
+`useChatStore` in `src/stores/chat-store.ts` uses raw `fetch()` for SSE streaming (not `apiClient`). The endpoint is `${Config.apibaseurl2}/api/chat/conversations/${id}/messages/stream`.
 
 ### Form Validation
 

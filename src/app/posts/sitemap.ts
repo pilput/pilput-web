@@ -19,7 +19,7 @@ interface PostsResponse {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const response = await fetch(`${Config.apibaseurl}/v1/posts/sitemap`, {
+    const response = await fetch(`${Config.apibaseurl}/api/posts/sitemap`, {
       next: { revalidate: SITEMAP_REVALIDATE_SECONDS },
     });
 

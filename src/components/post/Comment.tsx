@@ -54,7 +54,7 @@ const Comment = ({ postId }: { postId: string }) => {
     try {
       setIsLoading(true);
       const response = await apiClientApp.get(
-        `/v1/comments/post/${postId}?page=${page}&limit=${COMMENTS_PER_PAGE}`
+        `/api/comments/post/${postId}?page=${page}&limit=${COMMENTS_PER_PAGE}`
       );
       console.log("Response data:", response.data);
 
@@ -146,7 +146,7 @@ const Comment = ({ postId }: { postId: string }) => {
 
     try {
       const response = await apiClientApp.post(
-        `/v1/comments`,
+        `/api/comments`,
         {
           text: comment.trim(),
           post_id: postId,

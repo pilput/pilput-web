@@ -68,7 +68,7 @@ const UserActionComponent = ({
     const toastId = toast.loading("Saving changes...");
     try {
       await apiClientApp.put(
-        `/v1/users/${user.id}`,
+        `/api/users/${user.id}`,
         { ...data, is_super_admin: user.is_super_admin },
         {
           headers: {
@@ -90,7 +90,7 @@ const UserActionComponent = ({
     setIsDeleting(true);
     const toastid = toast.loading("Deleting user...");
     try {
-      const response = await apiClientApp.delete("/v1/users/" + user.id, {
+      const response = await apiClientApp.delete("/api/users/" + user.id, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

@@ -29,7 +29,7 @@ const getWriter = async (username: string): Promise<Writer> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const { data } = await apiClient.get(`/v1/users/username/${username}`, {
+    const { data } = await apiClient.get(`/api/users/username/${username}`, {
       ...(token && {
         headers: { Authorization: `Bearer ${token}` },
       }),

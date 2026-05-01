@@ -18,7 +18,7 @@ export function useTrendingTags() {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const response = await apiClient.get("/v1/tags");
+        const response = await apiClient.get("/api/tags");
         setTrendingTags(response.data.data.map((tag: { name: string }) => tag.name));
       } catch (error) {
         console.error("Error fetching tags:", error);

@@ -193,7 +193,7 @@ export async function getDataExternal(
 
 export async function forgotPassword(email: string) {
   try {
-    const response = await apiClientApp.post("/v1/auth/forgot-password", {
+    const response = await apiClientApp.post("/api/auth/forgot-password", {
       email,
     });
     return response.data;
@@ -204,7 +204,7 @@ export async function forgotPassword(email: string) {
 
 export async function resetPassword(token: string, password: string) {
   try {
-    const response = await apiClientApp.post("/v1/auth/reset-password", {
+    const response = await apiClientApp.post("/api/auth/reset-password", {
       token,
       password,
     });
@@ -216,7 +216,7 @@ export async function resetPassword(token: string, password: string) {
 
 export function followUser(userId: string) {
   return apiClientApp.post(
-    `/v1/users/${userId}/follow`,
+    `/api/users/${userId}/follow`,
     {},
     {
       headers: { Authorization: `Bearer ${getToken()}` },
@@ -225,12 +225,12 @@ export function followUser(userId: string) {
 }
 
 export function unfollowUser(userId: string) {
-  return apiClientApp.delete(`/v1/users/${userId}/follow`, {
+  return apiClientApp.delete(`/api/users/${userId}/follow`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
 
-/** Like record from `POST /v1/likes/:post_id` (toggle). */
+/** Like record from `POST /api/likes/:post_id` (toggle). */
 export type PostLikeRecord = {
   id: string;
   post_id: string;
@@ -256,7 +256,7 @@ export async function togglePostLike(postId: string): Promise<{
     throw new Error("AUTH_REQUIRED");
   }
   const { data } = await apiClientApp.post<LikesToggleEnvelope>(
-    `/v1/likes/${postId}`,
+    `/api/likes/${postId}`,
     undefined,
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -276,7 +276,7 @@ export async function getPostLikes(postId: string) {
   const { data } = await apiClientApp.get<{
     success?: boolean;
     data: Array<{ id: string; created_at: string; user_id?: string }>;
-  }>(`/v1/likes/${postId}`, {
+  }>(`/api/likes/${postId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return data?.data ?? [];

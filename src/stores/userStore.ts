@@ -26,7 +26,7 @@ export const authStore = create<authDataState>()((set) => ({
   },
   fetch: async () => {
     try {
-      const { data } = await apiClientApp.get("/v1/users/me", {
+      const { data } = await apiClientApp.get("/api/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const response = data as responseSuccess;

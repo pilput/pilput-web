@@ -94,7 +94,7 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<LoginFormData> = async (form) => {
     setLoginWait(true);
     try {
-      const { data } = await apiClientApp.post("/v1/auth/login", form);
+      const { data } = await apiClientApp.post("/api/auth/login", form);
       const result = data as AuthResponse;
 
       if (!result.success) {
@@ -284,7 +284,7 @@ export default function LoginPage() {
             </div>
 
             <Link
-              href={`${Config.apibaseurl2}/v1/auth/oauth/github`}
+              href={`${Config.apibaseurl2}/api/auth/oauth/github`}
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
               aria-label="Sign in with GitHub"
             >

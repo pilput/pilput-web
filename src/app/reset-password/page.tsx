@@ -97,7 +97,7 @@ function ResetPasswordForm() {
 
     setIsLoading(true);
     try {
-      const { data } = await apiClientApp.post("/v1/auth/reset-password", {
+      const { data } = await apiClientApp.post("/api/auth/reset-password", {
         token,
         new_password: form.password,
       });

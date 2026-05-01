@@ -16,7 +16,7 @@ const ViewRecorder = ({ postId }: ViewRecorderProps) => {
         const token = await getToken();
         
         if (token) {
-          await apiClient.post(`/v1/posts/${postId}/view`, null, {
+          await apiClient.post(`/api/posts/${postId}/view`, null, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

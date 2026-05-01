@@ -92,7 +92,7 @@ export default function ManageUser() {
   async function refetchUsers(fetchOffset: number = 0) {
     setIsLoading(true);
     try {
-      const { data } = await apiClientApp.get("/v1/users", {
+      const { data } = await apiClientApp.get("/api/users", {
         params: { limit: limit, offset: fetchOffset },
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -153,7 +153,7 @@ export default function ManageUser() {
     const toastId = toast.loading("Creating user...");
     try {
       const response = await apiClientApp.post(
-        "/v1/users",
+        "/api/users",
         {
           username: data.username,
           email: data.email,

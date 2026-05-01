@@ -6,7 +6,7 @@ export function toggleBookmark(
   postId: string,
   body?: { folder_id?: string | null; name?: string; notes?: string },
 ) {
-  return apiClientApp.post(`/v1/bookmarks/${postId}`, body ?? {}, {
+  return apiClientApp.post(`/api/bookmarks/${postId}`, body ?? {}, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
@@ -17,7 +17,7 @@ export function getBookmarks(folderId?: string | null) {
     folderId === undefined
       ? undefined
       : { folder_id: folderId === null ? "null" : folderId };
-  return apiClientApp.get(`/v1/bookmarks`, {
+  return apiClientApp.get(`/api/bookmarks`, {
     ...(params ? { params } : {}),
     headers: { Authorization: `Bearer ${getToken()}` },
   });
@@ -27,13 +27,13 @@ export function createBookmarkFolder(body: {
   name: string;
   description?: string;
 }) {
-  return apiClientApp.post(`/v1/bookmarks/folders`, body, {
+  return apiClientApp.post(`/api/bookmarks/folders`, body, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
 
 export function getBookmarkFolders() {
-  return apiClientApp.get(`/v1/bookmarks/folders`, {
+  return apiClientApp.get(`/api/bookmarks/folders`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }

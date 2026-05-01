@@ -108,7 +108,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const token = getToken();
     set(() => ({ loading: true, error: false }));
     try {
-      const response = await apiClientApp.get(`/v1/posts/me/${id}`, {
+      const response = await apiClientApp.get(`/api/posts/me/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const postData = response.data.data;
@@ -146,7 +146,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     set(() => ({ isUpdating: true, error: false }));
 
     try {
-      await apiClientApp.patch(`/v1/posts/${postId}`, post, {
+      await apiClientApp.patch(`/api/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

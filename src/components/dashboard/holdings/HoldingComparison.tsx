@@ -59,7 +59,7 @@ export default function HoldingComparison({
         success: boolean;
         data: ComparisonSummary;
         message: string;
-      }>("/v1/holdings/compare", {
+      }>("/api/holdings/compare", {
         params: params as Record<string, unknown>,
         headers: {
           Authorization: `Bearer ${token}`,

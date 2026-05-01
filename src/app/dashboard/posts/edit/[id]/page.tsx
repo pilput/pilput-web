@@ -93,7 +93,7 @@ export default function PostEdit() {
       formData.append("image", file);
 
       const response = await apiClient.post(
-        "/api/v1/posts/image",
+        "/api/posts/image",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -93,7 +93,7 @@ const BlogContent = () => {
     let cancelled = false;
     async function fetchTags() {
       try {
-        const { data } = await apiClient.get("/v1/tags");
+        const { data } = await apiClient.get("/api/tags");
         if (!cancelled && data?.data) {
           setTrendingTags(data.data.map((tag: { name: string }) => tag.name));
         }
@@ -124,7 +124,7 @@ const BlogContent = () => {
           params.search = q;
         }
 
-        const { data } = await apiClient.get("/v1/posts", { params });
+        const { data } = await apiClient.get("/api/posts", { params });
         if (cancelled) {
           return;
         }

@@ -96,7 +96,7 @@ export default function LikeChart() {
       setIsLoading(true)
       try {
         const { data } = await apiClientApp.get<MyLikesByMonthResponse>(
-          "/v1/posts/charts/my-likes-by-month",
+          "/api/posts/charts/my-likes-by-month",
           {
             params: { months },
             headers: {

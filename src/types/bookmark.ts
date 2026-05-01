@@ -10,7 +10,7 @@ export interface BookmarkFolder {
   updated_at: string;
 }
 
-/** Bookmark row from GET /v1/bookmarks */
+/** Bookmark row from GET /api/bookmarks */
 export interface BookmarkRecord {
   id: string;
   post_id: string;

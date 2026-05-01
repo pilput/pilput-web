@@ -205,7 +205,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     try {
       const response = await fetch(
-        `${Config.apibaseurl2}/v1/chat/conversations/${conversationId}/messages/stream`,
+        `${Config.apibaseurl2}/api/chat/conversations/${conversationId}/messages/stream`,
         {
           method: "POST",
           headers: {
@@ -326,7 +326,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }));
 
       const response = await apiClientApp.get<ConversationsResponse>(
-        "/v1/chat/conversations",
+        "/api/chat/conversations",
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -422,7 +422,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }));
 
       const response = await apiClientApp.get<GetConversationResponse>(
-        `/v1/chat/conversations/${conversationId}`,
+        `/api/chat/conversations/${conversationId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -487,7 +487,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           (sanitizedMessage.length > 50 ? "..." : "");
 
       const response = await apiClientApp.post<CreateConversationResponse>(
-        "/v1/chat/conversations",
+        "/api/chat/conversations",
         {
           title: conversationTitle,
           message: sanitizedMessage,
@@ -622,7 +622,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }));
 
       const response = await apiClientApp.delete(
-        `/v1/chat/conversations/${conversationId}`,
+        `/api/chat/conversations/${conversationId}`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,

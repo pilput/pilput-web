@@ -26,7 +26,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
   const fetchRandomPosts = async () => {
     try {
       setIsLoading(true);
-      const response = await apiClient.get("/v1/posts/random?limit=6");
+      const response = await apiClient.get("/api/posts/random?limit=6");
       const result = response.data as SuccessResponse;
       setposts(result.data);
     } catch {

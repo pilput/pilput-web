@@ -17,7 +17,7 @@ interface TagsResponse {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
-    const response = await fetch(`${Config.apibaseurl}/v1/tags`, {
+    const response = await fetch(`${Config.apibaseurl}/api/tags`, {
       next: { revalidate: SITEMAP_REVALIDATE_SECONDS },
     });
 

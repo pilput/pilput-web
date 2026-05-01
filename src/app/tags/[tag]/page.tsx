@@ -15,7 +15,7 @@ interface PostsResponse {
 
 async function fetchPostsByTag(tag: string): Promise<{ posts: Post[]; total: number }> {
   try {
-    const { data } = await apiClientApp.get<PostsResponse>(`/v1/posts/tag/${tag}`, {
+    const { data } = await apiClientApp.get<PostsResponse>(`/api/posts/tag/${tag}`, {
       params: { limit: postsPerPage, offset: 0 },
     });
     return {
@@ -30,7 +30,7 @@ async function fetchPostsByTag(tag: string): Promise<{ posts: Post[]; total: num
 
 async function fetchAllTags(): Promise<string[]> {
   try {
-    const response = await apiClientApp.get("/v1/tags");
+    const response = await apiClientApp.get("/api/tags");
     return response.data.data.map((tagItem: { name: string }) => tagItem.name);
   } catch (error) {
     console.error("Error fetching tags:", error);

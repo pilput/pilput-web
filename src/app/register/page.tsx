@@ -65,7 +65,7 @@ export default function Signup() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     try {
-      const response = await apiClientApp.post("/v1/auth/register", data);
+      const response = await apiClientApp.post("/api/auth/register", data);
       const result = response.data as RegisterResponse;
 
       if (!result.success) {
@@ -114,7 +114,7 @@ export default function Signup() {
     const currentRequestId = ++requestIdRef.current;
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await apiClientApp.post("/v1/auth/check-username", {
+        const res = await apiClientApp.post("/api/auth/check-username", {
           username: username.trim(),
         });
         if (currentRequestId !== requestIdRef.current) return; // stale
@@ -287,7 +287,7 @@ export default function Signup() {
           </div>
 
           <Link
-            href={`${Config.apibaseurl2}/v1/auth/oauth/github`}
+            href={`${Config.apibaseurl2}/api/auth/oauth/github`}
             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
             aria-label="Sign up with GitHub"
           >

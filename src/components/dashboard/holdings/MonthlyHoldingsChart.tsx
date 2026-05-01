@@ -129,7 +129,7 @@ export default function MonthlyHoldingsChart({
         if (filter.endYear != null) params.endYear = filter.endYear;
 
         const response = await apiClientApp.get<MonthlyHoldingResponse>(
-          "/v1/holdings/monthly",
+          "/api/holdings/monthly",
           {
             ...(Object.keys(params).length > 0 && { params }),
             ...(token && { headers: { Authorization: `Bearer ${token}` } }),

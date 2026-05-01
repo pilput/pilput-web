@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
     try {
       const { data } = await apiClientApp.post(
-        "/v1/auth/forgot-password",
+        "/api/auth/forgot-password",
         form
       );
       const result = data as ForgotPasswordResponse;

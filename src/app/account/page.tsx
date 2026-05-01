@@ -37,7 +37,7 @@ export default function AccountPage() {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await apiClientApp.get("/v1/auth/profile", {
+      const response = await apiClientApp.get("/api/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.data);
@@ -51,7 +51,7 @@ export default function AccountPage() {
   const handleProfileUpdate = async (data: { username: string; first_name: string; last_name: string }) => {
     setProfileLoading(true);
     try {
-      const response = await apiClientApp.put("/v1/auth/profile", data, {
+      const response = await apiClientApp.put("/api/auth/profile", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.data);
@@ -66,7 +66,7 @@ export default function AccountPage() {
     setPasswordLoading(true);
     try {
       await apiClientApp.patch(
-        "/v1/auth/password",
+        "/api/auth/password",
         {
           old_password: data.old_password,
           new_password: data.new_password,
@@ -101,7 +101,7 @@ export default function AccountPage() {
     }
 
     try {
-      await apiClientApp.delete("/v1/auth/account", {
+      await apiClientApp.delete("/api/auth/account", {
         headers: { Authorization: `Bearer ${token}` },
       });
       router.push("/");

@@ -46,7 +46,7 @@ export default function TagContent({
       setIsLoading(true);
       try {
         const { data } = await apiClientApp.get<PostsResponse>(
-          `/v1/posts/tag/${tag}`,
+          `/api/posts/tag/${tag}`,
           {
             params: { limit: postsPerPage, offset: currentPage * postsPerPage },
           }

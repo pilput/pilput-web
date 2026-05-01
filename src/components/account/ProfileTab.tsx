@@ -77,7 +77,7 @@ export default function ProfileTab({ user, onSubmit, loading, onProfileUpdate }:
       const formData = new FormData();
       formData.append("avatar", file);
 
-      const response = await apiClientApp.post("/v1/users/me/image", formData, {
+      const response = await apiClientApp.post("/api/users/me/image", formData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

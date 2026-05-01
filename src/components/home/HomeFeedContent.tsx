@@ -82,7 +82,7 @@ const HomeFeedContent = ({
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await apiClientApp.get("/v1/posts/feed/for-you", {
+        const { data } = await apiClientApp.get("/api/posts/feed/for-you", {
           params: {
             limit: postsPerPage,
             offset: currentPage * postsPerPage,

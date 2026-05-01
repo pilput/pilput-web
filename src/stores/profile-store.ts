@@ -38,7 +38,7 @@ export const profileStore = create<Store>()((set) => ({
     }
 
     try {
-      const response = await apiClientApp.get("/v1/auth/profile", {
+      const response = await apiClientApp.get("/api/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

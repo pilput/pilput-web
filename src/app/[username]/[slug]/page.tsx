@@ -28,7 +28,7 @@ const getPostSummary = (html: string, maxLength = 160): string => {
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
   try {
-    const response = await apiClient.get(`/v1/posts/u/${username}/${postSlug}`);
+    const response = await apiClient.get(`/api/posts/u/${username}/${postSlug}`);
     const result = response.data as SuccessResponse;
     return result.data;
   } catch (error) {
