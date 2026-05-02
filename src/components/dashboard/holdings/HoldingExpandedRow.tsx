@@ -1,6 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { Holding } from "@/types/holding";
-import { formatCurrency, formatNumber } from "@/lib/utils";
+import { formatCurrency, formatUnits } from "@/lib/utils";
 
 interface HoldingExpandedRowProps {
   holding: Holding;
@@ -53,7 +53,7 @@ export default function HoldingExpandedRow({ holding, hideValues = false }: Hold
                 {hideValues
                   ? maskValue()
                   : holding.units
-                  ? formatNumber(holding.units, 4)
+                  ? formatUnits(holding.units)
                   : <span className="text-muted-foreground italic">Not set</span>}
               </div>
             </div>

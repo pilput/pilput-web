@@ -90,6 +90,19 @@ export function formatNumber(
   });
 }
 
+export function formatUnits(value: number | string): string {
+  const numValue = typeof value === "string" ? parseFloat(value) : value;
+
+  if (isNaN(numValue)) {
+    return "-";
+  }
+
+  return numValue.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  });
+}
+
 /**
  * Format raw number string with thousand separators for input display (e.g. "1000000" -> "1,000,000").
  * Preserves trailing dot and decimal part for typing.
