@@ -25,6 +25,7 @@ import {
   Eye,
   EyeOff,
   Download,
+  RefreshCw,
 } from "lucide-react";
 
 const DEFAULT_CURRENCY = "IDR";
@@ -36,6 +37,8 @@ type HeaderActionsProps = {
   onOpenAdd: () => void;
   onExportCsv: () => void;
   canExport: boolean;
+  onSyncPrices: () => void;
+  isSyncing: boolean;
 };
 
 const HeaderActions = ({
@@ -45,9 +48,24 @@ const HeaderActions = ({
   onOpenAdd,
   onExportCsv,
   canExport,
+  onSyncPrices,
+  isSyncing,
 }: HeaderActionsProps) => {
   return (
     <div className="flex flex-wrap items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
+        onClick={onSyncPrices}
+        disabled={isSyncing}
+        title="Fetch latest prices for holdings with symbols (current calendar month)"
+      >
+        <RefreshCw
+          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSyncing ? "animate-spin" : ""}`}
+        />
+        <span className="hidden sm:inline">Sync prices</span>
+      </Button>
       <Button
         variant="outline"
         size="icon"
@@ -95,9 +113,11 @@ export default function HoldingsPage() {
     holdings,
     holdingTypes,
     isLoading,
+    isSyncing,
     expandedRows,
     fetchHoldings,
     fetchHoldingTypes,
+    syncHoldings,
     toggleExpand,
     duplicateHoldings,
   } = useHoldingsStore();
@@ -255,6 +275,14 @@ export default function HoldingsPage() {
     [fetchHoldings, filterMonth, filterYear]
   );
 
+  const handleSyncPrices = useCallback(async () => {
+    try {
+      await syncHoldings();
+    } catch {
+      // Toasts handled in store
+    }
+  }, [syncHoldings]);
+
   const filteredHoldings = useMemo(() => {
     const month = parseInt(filterMonth, 10);
     const year = parseInt(filterYear, 10);
@@ -340,6 +368,8 @@ export default function HoldingsPage() {
             onOpenAdd={openAddModal}
             onExportCsv={handleExportCsv}
             canExport={!isLoading && filteredHoldings.length > 0}
+            onSyncPrices={handleSyncPrices}
+            isSyncing={isSyncing}
           />
         </div>
 

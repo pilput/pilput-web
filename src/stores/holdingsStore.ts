@@ -119,7 +119,13 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading("Syncing prices...");
     set({ isSyncing: true });
     try {
-      await apiClientApp.post(
+      const { data: body } = await apiClientApp.post<{
+        success: boolean;
+        data:
+          | { syncedCount: number; month: number; year: number }
+          | unknown[];
+        message?: string;
+      }>(
         "/api/holdings/sync",
         {},
         {
@@ -128,7 +134,40 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
           },
         }
       );
-      toast.success("Prices synced", { id: toastId });
+
+      if (!body.success) {
+        toast.error(body.message ?? "Failed to sync prices", { id: toastId });
+        return;
+      }
+
+      const payload = body.data;
+      if (
+        payload &&
+        typeof payload === "object" &&
+        !Array.isArray(payload) &&
+        "syncedCount" in payload
+      ) {
+        const { syncedCount, month, year } = payload as {
+          syncedCount: number;
+          month: number;
+          year: number;
+        };
+        if (syncedCount === 0) {
+          toast.success(
+            body.message ??
+              "No holdings with symbols to sync for the current month",
+            { id: toastId }
+          );
+        } else {
+          toast.success(
+            `Synced ${syncedCount} holding price(s) (${year}-${String(month).padStart(2, "0")})`,
+            { id: toastId }
+          );
+        }
+      } else {
+        toast.success(body.message ?? "Prices synced", { id: toastId });
+      }
+
       await get().fetchHoldings();
     } catch (error) {
       if (isHttpError(error) && error.response?.status === 401) {
