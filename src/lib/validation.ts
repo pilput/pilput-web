@@ -128,27 +128,174 @@ export const duplicateHoldingSchema = z.object({
   overwrite: z.boolean().optional().default(false),
 });
 
+/** Max lengths for holdings form (Zod + optional `maxLength` on inputs). */
+export const HOLDING_FORM_LIMITS = {
+  nameMax: 200,
+  symbolMax: 32,
+  platformMax: 64,
+  currencyMax: 10,
+  notesMax: 2000,
+  /** Max chars for stored money string (no commas). */
+  moneyRawMax: 24,
+  /** Max chars typed in money fields including thousand separators. */
+  moneyInputDisplayMax: 40,
+  moneyDecimalsMax: 8,
+  optionalNumericRawMax: 24,
+  optionalNumericDecimalsMax: 8,
+  holdingTypeIdDigitsMax: 10,
+} as const;
+
+const decimalPattern = /^-?(?:\d+\.?\d*|\.\d+)$/;
+
+function holdingRequiredDecimal(label: string) {
+  return z
+    .union([z.string(), z.number()])
+    .transform((v) => (typeof v === "number" ? String(v) : v.trim()))
+    .pipe(
+      z
+        .string()
+        .min(1, `${label} is required`)
+        .max(HOLDING_FORM_LIMITS.moneyRawMax, `${label} is too long`)
+        .refine((s) => decimalPattern.test(s), {
+          message: `${label} must be a valid number`,
+        })
+        .refine((s) => {
+          const dot = s.indexOf(".");
+          if (dot === -1) return true;
+          return s.length - dot - 1 <= HOLDING_FORM_LIMITS.moneyDecimalsMax;
+        }, {
+          message: `${label} must have at most ${HOLDING_FORM_LIMITS.moneyDecimalsMax} decimal places`,
+        })
+        .refine((s) => Number.isFinite(Number(s)), {
+          message: `${label} must be a valid number`,
+        })
+    );
+}
+
+function holdingOptionalDecimal(label: string) {
+  return z
+    .union([z.string(), z.number()])
+    .transform((v) => (typeof v === "number" ? String(v) : v.trim()))
+    .pipe(
+      z
+        .string()
+        .max(
+          HOLDING_FORM_LIMITS.optionalNumericRawMax,
+          `${label} is too long`
+        )
+        .refine((s) => s === "" || decimalPattern.test(s), {
+          message: `${label} must be a valid number`,
+        })
+        .refine((s) => {
+          if (s === "") return true;
+          const dot = s.indexOf(".");
+          if (dot === -1) return true;
+          return (
+            s.length - dot - 1 <= HOLDING_FORM_LIMITS.optionalNumericDecimalsMax
+          );
+        }, {
+          message: `${label} must have at most ${HOLDING_FORM_LIMITS.optionalNumericDecimalsMax} decimal places`,
+        })
+        .refine((s) => s === "" || Number.isFinite(Number(s)), {
+          message: `${label} must be a valid number`,
+        })
+    );
+}
+
 // Add/update holding form validation schema
 export const holdingFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  symbol: z.string().optional(),
-  platform: z.string().min(1, "Platform is required"),
-  holding_type_id: z.union([z.string().min(1), z.number()]),
-  currency: z.string().min(1, "Currency is required"),
-  invested_amount: z.union([
-    z.string().min(1, "Invested amount is required"),
-    z.number(),
-  ]),
-  current_value: z.union([
-    z.string().min(1, "Current value is required"),
-    z.number(),
-  ]),
-  month: z.union([z.string().min(1, "Month is required"), z.number()]),
-  year: z.union([z.string().min(1, "Year is required"), z.number()]),
-  units: z.string().optional(),
-  avg_buy_price: z.string().optional(),
-  current_price: z.string().optional(),
-  notes: z.string().optional(),
+  name: z
+    .string()
+    .transform((s) => s.trim())
+    .pipe(
+      z
+        .string()
+        .min(1, "Name is required")
+        .max(HOLDING_FORM_LIMITS.nameMax, `Name must be at most ${HOLDING_FORM_LIMITS.nameMax} characters`)
+    ),
+  symbol: z
+    .string()
+    .transform((s) => s.trim())
+    .pipe(
+      z
+        .string()
+        .max(
+          HOLDING_FORM_LIMITS.symbolMax,
+          `Symbol must be at most ${HOLDING_FORM_LIMITS.symbolMax} characters`
+        )
+    ),
+  platform: z
+    .string()
+    .transform((s) => s.trim())
+    .pipe(
+      z
+        .string()
+        .min(1, "Platform is required")
+        .max(
+          HOLDING_FORM_LIMITS.platformMax,
+          `Platform must be at most ${HOLDING_FORM_LIMITS.platformMax} characters`
+        )
+    ),
+  holding_type_id: z
+    .string()
+    .transform((s) => s.trim())
+    .refine((s) => /^\d+$/.test(s) && parseInt(s, 10) > 0, {
+      message: "Please select a holding type",
+    })
+    .refine((s) => s.length <= HOLDING_FORM_LIMITS.holdingTypeIdDigitsMax, {
+      message: "Invalid holding type",
+    }),
+  currency: z
+    .string()
+    .transform((s) => s.trim())
+    .pipe(
+      z
+        .string()
+        .min(1, "Currency is required")
+        .max(
+          HOLDING_FORM_LIMITS.currencyMax,
+          `Currency must be at most ${HOLDING_FORM_LIMITS.currencyMax} characters`
+        )
+    ),
+  invested_amount: holdingRequiredDecimal("Invested amount"),
+  current_value: holdingRequiredDecimal("Current value"),
+  month: z
+    .union([z.string(), z.number()])
+    .transform((v) => String(v).trim())
+    .pipe(
+      z
+        .string()
+        .min(1, "Month is required")
+        .max(2, "Month is invalid")
+        .refine((s) => /^\d{1,2}$/.test(s), "Month is invalid")
+        .refine((s) => {
+          const n = parseInt(s, 10);
+          return n >= 1 && n <= 12;
+        }, "Month must be between 1 and 12")
+    ),
+  year: z
+    .union([z.string(), z.number()])
+    .transform((v) => String(v).trim())
+    .pipe(
+      z
+        .string()
+        .min(1, "Year is required")
+        .max(4, "Year is invalid")
+        .refine((s) => /^\d{4}$/.test(s), "Year must be a 4-digit year")
+        .refine((s) => {
+          const n = parseInt(s, 10);
+          return n >= 1900 && n <= 2100;
+        }, "Year must be between 1900 and 2100")
+    ),
+  units: holdingOptionalDecimal("Units"),
+  avg_buy_price: holdingOptionalDecimal("Average buy price"),
+  current_price: holdingOptionalDecimal("Current price"),
+  notes: z
+    .string()
+    .max(
+      HOLDING_FORM_LIMITS.notesMax,
+      `Notes must be at most ${HOLDING_FORM_LIMITS.notesMax} characters`
+    ),
 });
 
 // Profile update validation schema

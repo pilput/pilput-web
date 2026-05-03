@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatThousandsForInput, parseThousandsFromInput } from "@/lib/utils";
+import { HOLDING_FORM_LIMITS } from "@/lib/validation";
 import type { Holding, HoldingType } from "@/types/holding";
 
 interface HoldingFormModalProps {
@@ -148,6 +149,7 @@ export default function HoldingFormModal({
                   id="name"
                   placeholder="e.g., Apple Inc., Bitcoin"
                   value={formData.name}
+                  maxLength={HOLDING_FORM_LIMITS.nameMax}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
@@ -182,6 +184,7 @@ export default function HoldingFormModal({
                   id="symbol"
                   placeholder="e.g., AAPL, BTC"
                   value={formData.symbol}
+                  maxLength={HOLDING_FORM_LIMITS.symbolMax}
                   onChange={(e) =>
                     setFormData({ ...formData, symbol: e.target.value.toUpperCase() })
                   }
@@ -192,7 +195,7 @@ export default function HoldingFormModal({
                   Type <span className="text-red-500">*</span>
                 </Label>
                 <Select
-                  value={formData.holding_type_id}
+                  value={formData.holding_type_id || undefined}
                   onValueChange={(value) =>
                     setFormData({ ...formData, holding_type_id: value })
                   }
@@ -240,6 +243,7 @@ export default function HoldingFormModal({
                   type="text"
                   inputMode="decimal"
                   placeholder="0.00"
+                  maxLength={HOLDING_FORM_LIMITS.moneyInputDisplayMax}
                   value={formatThousandsForInput(formData.invested_amount)}
                   onChange={(e) =>
                     setFormData({
@@ -259,6 +263,7 @@ export default function HoldingFormModal({
                   type="text"
                   inputMode="decimal"
                   placeholder="0.00"
+                  maxLength={HOLDING_FORM_LIMITS.moneyInputDisplayMax}
                   value={formatThousandsForInput(formData.current_value)}
                   onChange={(e) =>
                     setFormData({
@@ -275,6 +280,7 @@ export default function HoldingFormModal({
                   id="notes"
                   placeholder="Optional notes about this holding..."
                   value={formData.notes}
+                  maxLength={HOLDING_FORM_LIMITS.notesMax}
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })
                   }
@@ -318,9 +324,10 @@ export default function HoldingFormModal({
                       <Label htmlFor="units">Units</Label>
                       <Input
                         id="units"
-                        type="number"
-                        step="0.00000001"
+                        type="text"
+                        inputMode="decimal"
                         placeholder="0"
+                        maxLength={HOLDING_FORM_LIMITS.optionalNumericRawMax}
                         value={formData.units}
                         onChange={(e) =>
                           setFormData({ ...formData, units: e.target.value })
@@ -334,9 +341,10 @@ export default function HoldingFormModal({
                         </Label>
                         <Input
                           id="avg_buy_price"
-                          type="number"
-                          step="0.00000001"
+                          type="text"
+                          inputMode="decimal"
                           placeholder="0.00"
+                          maxLength={HOLDING_FORM_LIMITS.optionalNumericRawMax}
                           value={formData.avg_buy_price}
                           onChange={(e) =>
                             setFormData({
@@ -352,9 +360,10 @@ export default function HoldingFormModal({
                         </Label>
                         <Input
                           id="current_price"
-                          type="number"
-                          step="0.00000001"
+                          type="text"
+                          inputMode="decimal"
                           placeholder="0.00"
+                          maxLength={HOLDING_FORM_LIMITS.optionalNumericRawMax}
                           value={formData.current_price}
                           onChange={(e) =>
                             setFormData({
@@ -386,8 +395,9 @@ export default function HoldingFormModal({
                 <Input
                   id="month"
                   type="number"
-                  min="1"
-                  max="12"
+                  min={1}
+                  max={12}
+                  maxLength={2}
                   value={formData.month}
                   onChange={(e) =>
                     setFormData({ ...formData, month: e.target.value })
@@ -402,8 +412,9 @@ export default function HoldingFormModal({
                 <Input
                   id="year"
                   type="number"
-                  min="1900"
-                  max="2100"
+                  min={1900}
+                  max={2100}
+                  maxLength={4}
                   value={formData.year}
                   onChange={(e) =>
                     setFormData({ ...formData, year: e.target.value })
