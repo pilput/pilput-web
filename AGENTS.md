@@ -3,72 +3,55 @@
 ## Commands
 
 ```bash
-bun install          # install deps (use bun, not npm)
-bun run dev          # dev server (Next.js + Turbopack)
-bun run build        # production build
-bun run lint         # eslint (config: eslint.config.mjs, next/core-web-vitals)
-bunx tsc --noEmit    # typecheck (run after lint, before committing)
+bun run dev       # dev server (http://localhost:3000)
+bun run build     # production build
+bun run lint      # ESLint (next/core-web-vitals)
+bunx tsc --noEmit # type-check (no script in package.json)
 ```
 
-Verification order: **lint → typecheck**. No test framework is configured.
-
-## Environment Setup
-
-Copy `.env.local.example` to `.env.local`. All env vars are `NEXT_PUBLIC_*` (client-side). Defaults in `src/utils/getConfig.ts` point to `*.pilput.net` so the app works without a local API.
+No test runner is configured.
 
 ## Architecture
 
-- **Next.js 16 App Router** — all pages under `src/app/` (route groups: `[username]`, `blog/`, `chat/`, `dashboard/`, `posts/`, `profile/`)
-- **Not a monorepo** — single package, single Next.js app
-- **Path alias**: `@/` → `src/` (tsconfig.json)
-- **CSS**: Tailwind CSS 4 with oklch color tokens in `src/app/global.css`; Shadcn UI (new-york style) in `src/components/ui/`
-- **State**: Zustand stores in `src/stores/` — each file is `*Store.ts` exporting a named store (`authStore`, `postsStore`, `useChatStore`, etc.)
+- **Next.js 16+ App Router** — all routes under `src/app/` using the app directory convention
+- **Two separate API backends**:
+  - `apiClient` → `NEXT_PUBLIC_API_URL` (posts, tags, uploads, views)
+  - `apiClientApp` → `NEXT_PUBLIC_API_URL_2` (auth, users, chat, holdings, feed)
+  - Both are thin wrappers around native `fetch` (in `src/utils/fetch.ts`), not Axios
+- **Auth**: JWT token stored in cookies via `cookies-next`; see `src/utils/Auth.ts`
+- **State**: Zustand stores in `src/stores/`
+- **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
+- **Rich text**: TipTap editor (extensions in `src/lib/` for code highlighting with Prism)
+- **UI components**: Shadcn UI (new-york style, `src/components/ui/`); add new ones via `npx shadcn@latest add <name>`
 
-### Two API Clients
+## Conventions
 
-`src/utils/fetch.ts` defines two clients — choosing the wrong one is a common mistake:
+- Path alias: `@/*` maps to `./src/*`
+- Tailwind CSS **v4** syntax: `@import "tailwindcss"`, `@plugin`, `@custom-variant` — do not use v3 `@tailwind` directives or `tailwind.config.*`
+- Dark mode: `.dark` class on ancestor (via `@custom-variant dark`), managed by `next-themes`
+- Global styles: `src/app/global.css`
+- Style utilities: `cn()` from `@/lib/utils` (clsx + tailwind-merge)
+- Form validation schemas must be defined in `src/lib/validation.ts` with Zod, not inline
 
-- `apiClient` → `NEXT_PUBLIC_API_URL` (Echo API: public posts, tags, uploads, views)
-- `apiClientApp` → `NEXT_PUBLIC_API_URL_2` (Hono/App API: auth, users, chat, holdings, feed, likes)
+## Environment
 
-Authenticated requests require `headers: { Authorization: \`Bearer ${getToken()}\` }` — there is no automatic interceptor.
+Copy `.env.local.example` to `.env.local`. Required vars:
 
-### Error Handling
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | Main API (public content) |
+| `NEXT_PUBLIC_API_URL_2` | App API (auth, users, chat, holdings) |
+| `NEXT_PUBLIC_STORAGE_URL` | Storage/image base URL |
+| `NEXT_PUBLIC_MAIN_URL` | App base URL |
+| `NEXT_PUBLIC_DOMAIN` | Domain for cookie scoping |
 
-`ErrorHandlerAPI` in `src/utils/ErrorHandler.ts` handles network errors and 401 (auto-logout + redirect). Wrap try/catch around API calls and call `ErrorHandlerAPI(error)` in the catch block — it returns `error.response` for further handling.
+Defaults are set in `src/utils/getConfig.ts` and will work without `.env.local` for development against the production APIs.
 
-### Auth
+## Docker
 
-- JWT token stored in cookie `token` (domain `.pilput.net`, set via `cookies-next`)
-- `getToken()` / `RemoveToken()` in `src/utils/Auth.ts`
-- `ErrorHandlerAPI` handles 401 by clearing cookie and redirecting to `/login`
-
-### Chat Streaming
-
-`useChatStore` in `src/stores/chat-store.ts` uses raw `fetch()` for SSE streaming (not `apiClient`). The endpoint is `${Config.apibaseurl2}/api/chat/conversations/${id}/messages/stream`.
-
-### Form Validation
-
-Zod schemas in `src/lib/validation.ts`. Export both the schema and inferred type:
-```typescript
-export const loginSchema = z.object({ ... });
-export type LoginFormData = z.infer<typeof loginSchema>;
+```bash
+docker build -t pilput -f Dockerfile-bun .
+docker run -p 3000:3000 pilput
 ```
-Use with `zodResolver(loginSchema)` from `@hookform/resolvers`.
 
-## Key Conventions
-
-- **Import order**: React → external libs → `@/` internals. Never use relative paths when `@/` works.
-- **Shadcn UI**: add new primitives via `npx shadcn@latest add <component>` (configured in `components.json`); they land in `src/components/ui/`
-- **Comments**: do not add comments unless asked
-- **Types**: `src/types/` — `you.ts` is the auth/user type, `post.ts` is the post type
-- **Utility helpers in `src/lib/utils.ts`**: `cn()`, `formatCurrency()`, `formatNumber()`, `formatThousandsForInput()`, `parseThousandsFromInput()`, `getPlatformColor()`, `getHoldingTypeColor()`
-- **Dark mode**: uses `next-themes` with `ThemeProvider` in root layout; dark variant is `.dark` class on `<html>`
-
-## Gotchas
-
-- `apiClient` and `apiClientApp` are native `fetch` wrappers (not Axios). They throw `HttpError` with a `.response` shape — not Axios error shape.
-- `ErrorHandlerAPI` checks `error.response` (Axios-style), but the actual clients throw `HttpError`. Both patterns coexist; be aware when reading error properties.
-- Store files use `create<...>()((set) => ({ ... }))` Zustand pattern — note the double parentheses.
-- `src/components/ui/` is Shadcn-managed — don't manually edit these unless intentionally customizing.
-- Cookie domain is hardcoded to `.${Config.maindomain}` — for local dev this resolves to `.pilput.net`.
+Requires `output: 'standalone'` in `next.config.ts` (currently not set — add it before Docker builds will work).
