@@ -65,15 +65,34 @@ bun run start
 npm run start
 ```
 
-### Docker (Production-Ready)
+## 🌐 Deployment
 
-```bash
-# Build Docker image
-docker build -t pilput -f Dockerfile-bun .
+Aplikasi ini bisa di-deploy ke berbagai platform:
 
-# Run container
-docker run -p 3000:3000 pilput
-```
+### Vercel (Recommended)
+
+Cara paling mudah untuk deploy Next.js app:
+
+1. Push repository ke GitHub/GitLab
+2. Import project di [vercel.com](https://vercel.com)
+3. Set environment variables di dashboard Vercel
+4. Deploy otomatis setiap push ke branch `main`
+
+### Netlify
+
+1. Push repository ke GitHub/GitLab
+2. Import project di [netlify.com](https://netlify.com)
+3. Set build command: `bun run build`
+4. Set publish directory: `.next`
+5. Tambahkan environment variables di dashboard Netlify
+
+### AWS (Amplify / EC2 / ECS)
+
+- **AWS Amplify** – Import repo, set build settings, dan deploy otomatis
+- **EC2** – Jalankan `bun run build && bun run start` di instance
+- **ECS/Fargate** – Gunakan `Dockerfile-bun` untuk containerized deployment
+
+Pastikan semua environment variables sudah di-set di platform yang dipilih.
 
 ## 📁 Project Structure
 
@@ -113,7 +132,7 @@ src/
 | **State** | Zustand |
 | **Forms** | React Hook Form + Zod |
 | **Editor** | TipTap with custom extensions |
-| **HTTP** | Axios with custom instances |
+| **HTTP** | Native fetch with custom wrappers |
 | **Charts** | Recharts |
 | **Theme** | next-themes |
 
