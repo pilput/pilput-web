@@ -14,6 +14,7 @@ import PostContent from "@/components/post/PostContent";
 import { PostDetailEngagementRow } from "@/components/post/PostDetailEngagementRow";
 import styles from "@/components/post/post-content.module.scss";
 import { Config } from "@/utils/getConfig";
+import { Calendar, Clock } from "lucide-react";
 
 interface SuccessResponse {
   data: Post;
@@ -24,6 +25,19 @@ interface SuccessResponse {
 const getPostSummary = (html: string, maxLength = 160): string => {
   const plain = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   return plain.length > maxLength ? `${plain.slice(0, maxLength - 1)}...` : plain;
+};
+
+const getReadingTime = (html: string): number => {
+  const words = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().split(" ").length;
+  return Math.max(1, Math.ceil(words / 200));
+};
+
+const formatDate = (dateStr: string): string => {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
 
 const getPost = async (username: string, postSlug: string): Promise<Post> => {
@@ -145,6 +159,9 @@ export default async function Page(props: {
     ],
   };
 
+  const readingTime = getReadingTime(post.body);
+  const authorName = [post.user.first_name, post.user.last_name].filter(Boolean).join(" ") || post.user.username;
+
   return (
     <>
       <script
@@ -157,39 +174,68 @@ export default async function Page(props: {
       />
       <ViewRecorder postId={post.id} />
       <Navigation />
+
       <div className={styles.postViewWrapper}>
+        {/* Featured Image — full-bleed hero above the container */}
+        {post.photo_url && (
+          <div className={styles.heroImageWrapper}>
+            <Image
+              className={styles.heroImage}
+              priority
+              src={getUrlImage(post.photo_url)}
+              alt={post.title}
+              fill
+              sizes="100vw"
+            />
+            <div className={styles.heroOverlay} aria-hidden />
+          </div>
+        )}
+
         <div className={styles.postViewContainer}>
           <article>
             {/* Header */}
             <header className={styles.postHeader}>
+              {/* Breadcrumb */}
+              <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+                <Link href={`/${post.user.username}`} className={styles.breadcrumbLink}>
+                  @{post.user.username}
+                </Link>
+                <span className={styles.breadcrumbSep} aria-hidden>/</span>
+                <span className={styles.breadcrumbCurrent}>{post.title}</span>
+              </nav>
+
               <h1>{post.title}</h1>
 
-              {/* Author and Meta Information */}
+              {/* Reading time + date strip */}
+              <div className={styles.postDateStrip}>
+                <span className={styles.postDateItem}>
+                  <Calendar className="w-3.5 h-3.5" aria-hidden />
+                  {formatDate(post.created_at)}
+                </span>
+                <span className={styles.postDateDot} aria-hidden>·</span>
+                <span className={styles.postDateItem}>
+                  <Clock className="w-3.5 h-3.5" aria-hidden />
+                  {readingTime} min read
+                </span>
+              </div>
+
+              {/* Author and engagement row */}
               <div className={styles.postMeta}>
-                <div className={styles.authorSection}>
-                  <Link href={`/${post.user.username}`} className="shrink-0">
-                    <Avatar className="w-12 h-12 ring-2 ring-gray-100 dark:ring-gray-800">
-                      <AvatarImage
-                        src={getProfilePicture(post.user.image)}
-                        alt={`@${post.user.username}`}
-                      />
-                      <AvatarFallback className="bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">
-                        {post.user.username[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Link>
+                <Link href={`/${post.user.username}`} className={styles.authorSection}>
+                  <Avatar className="w-11 h-11 ring-2 ring-border shrink-0">
+                    <AvatarImage
+                      src={getProfilePicture(post.user.image)}
+                      alt={`@${post.user.username}`}
+                    />
+                    <AvatarFallback className="bg-muted text-muted-foreground text-sm font-semibold">
+                      {post.user.username[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className={styles.authorInfo}>
-                    <Link
-                      href={`/${post.user.username}`}
-                      className={styles.authorName}
-                    >
-                      {post.user.first_name} {post.user.last_name}
-                    </Link>
-                    <span className={styles.authorUsername}>
-                      @{post.user.username}
-                    </span>
+                    <span className={styles.authorName}>{authorName}</span>
+                    <span className={styles.authorUsername}>@{post.user.username}</span>
                   </div>
-                </div>
+                </Link>
 
                 <PostDetailEngagementRow
                   postId={post.id}
@@ -202,27 +248,13 @@ export default async function Page(props: {
               </div>
             </header>
 
-            {/* Featured Image */}
-            {post.photo_url && (
-              <div className={styles.featuredImage}>
-                <Image
-                  className="w-full h-auto object-cover"
-                  priority={true}
-                  src={getUrlImage(post.photo_url)}
-                  alt={post.title}
-                  width={800}
-                  height={400}
-                />
-              </div>
-            )}
-
-            {/* Article Content - Using shared SCSS styles */}
+            {/* Article Content */}
             <PostContent html={post.body} className={styles.postContent} />
 
             {/* Tags Section */}
             {post.tags && post.tags.length > 0 && (
               <div className={styles.tagsSection}>
-                <h3>Tags</h3>
+                <p className={styles.tagsSectionLabel}>Tagged in</p>
                 <div className={styles.tagsList}>
                   {post.tags.map((tag) => (
                     <Link
@@ -236,15 +268,22 @@ export default async function Page(props: {
                 </div>
               </div>
             )}
+
           </article>
 
           {/* Comments Section */}
           <section id="comments" className={styles.commentsSection}>
-            <h2>Comments</h2>
+            <div className={styles.commentsSectionHeader}>
+              <h2>Comments</h2>
+              {post.comments_count != null && post.comments_count > 0 && (
+                <span className={styles.commentsCount}>{post.comments_count}</span>
+              )}
+            </div>
             <Comment postId={post.id} />
           </section>
         </div>
       </div>
+
       <Footer />
     </>
   );

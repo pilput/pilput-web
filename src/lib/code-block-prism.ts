@@ -23,5 +23,5 @@ export const CodeBlockPrism = CodeBlock.extend({
     ];
   },
 }).configure({
-  defaultLanguage: "typescript",
+  defaultLanguage: "bash",
 });
