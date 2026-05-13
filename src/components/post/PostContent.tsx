@@ -36,7 +36,7 @@ const PostContent = ({ html, className }: PostContentProps) => {
         return;
       }
 
-      highlightCodeElement(code);
+      highlightCodeElement(code, "typescript");
 
       const wrapper = document.createElement("div");
       wrapper.className = styles.codeBlockShell;

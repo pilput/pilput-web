@@ -86,13 +86,28 @@ export function extractRawLanguageSlug(
 
 /**
  * Highlight a `<code>` element inside `<pre>` (post HTML hydration).
+ *
+ * `fallbackLanguage` is used when the `<code>` element has no
+ * `language-xxx` / `lang-xxx` marker on its class or `data-language`
+ * attribute. This makes legacy posts — which were saved before the
+ * editor attached a default language — still render with highlighting.
  */
-export function highlightCodeElement(code: HTMLElement): void {
+export function highlightCodeElement(
+  code: HTMLElement,
+  fallbackLanguage: string = "plaintext"
+): void {
   if (code.dataset.prismHighlighted === "true") {
     return;
   }
 
-  const lang = resolveHighlightLanguage(code.className, code.getAttribute("data-language"));
+  const detected = resolveHighlightLanguage(
+    code.className,
+    code.getAttribute("data-language")
+  );
+  const lang =
+    detected === "plaintext" && fallbackLanguage
+      ? LANG_ALIASES[fallbackLanguage.toLowerCase()] ?? fallbackLanguage.toLowerCase()
+      : detected;
   const source = code.textContent ?? "";
 
   if (!source.trim()) {
@@ -106,6 +121,13 @@ export function highlightCodeElement(code: HTMLElement): void {
     code.textContent = source;
     code.dataset.prismHighlighted = "true";
     return;
+  }
+
+  // Surface the resolved language back onto the element so the header label
+  // + any downstream consumers can read it, even when the original HTML
+  // didn't carry a `language-xxx` class.
+  if (!/(?:language|lang)-/i.test(code.className)) {
+    code.classList.add(`language-${grammarLang}`);
   }
 
   try {

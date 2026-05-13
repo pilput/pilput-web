@@ -6,6 +6,11 @@ import { PrismPlugin } from "@/lib/tiptap-prism-plugin";
 
 /**
  * Code block with Prism-based syntax highlighting (inline decorations), compatible with Tiptap v3.
+ *
+ * Default language is set to `typescript` so freshly-created code blocks are
+ * serialized as `<pre><code class="language-typescript">...</code></pre>`,
+ * which lets the viewer (PostContent) actually run Prism highlighting on them.
+ * Authors can still override the language per-block via the editor UI.
  */
 export const CodeBlockPrism = CodeBlock.extend({
   addProseMirrorPlugins() {
@@ -17,4 +22,6 @@ export const CodeBlockPrism = CodeBlock.extend({
       }),
     ];
   },
+}).configure({
+  defaultLanguage: "typescript",
 });
