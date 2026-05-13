@@ -120,7 +120,7 @@ export default function HoldingFilter({
           <ChevronLeft className="w-4 h-4" />
         </Button>
 
-        <div className="flex items-center gap-1 bg-background rounded-md border border-input px-2 h-9">
+        <div className="flex items-center gap-1 bg-background rounded-md border border-input px-2 h-9 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-none">
           <CalendarDays className="w-4 h-4 text-muted-foreground shrink-0 ml-1" />
           <Select value={month} onValueChange={handleMonthChange}>
             <SelectTrigger
@@ -174,17 +174,21 @@ export default function HoldingFilter({
           type="button"
           variant="ghost"
           size="sm"
-          className="h-9 px-3 text-xs sm:text-sm flex-1 sm:flex-initial gap-1.5 text-muted-foreground hover:text-foreground"
+          className="h-9 px-3 text-xs sm:text-sm flex-1 sm:flex-initial gap-1.5 text-muted-foreground hover:text-foreground disabled:opacity-60"
           onClick={handleCurrentMonth}
           disabled={isCurrentPeriod}
         >
-          <span className="hidden sm:inline">Current Period</span>
-          <span className="sm:hidden">Current</span>
+          <span className="hidden sm:inline">
+            {isCurrentPeriod ? "Viewing current period" : "Jump to current"}
+          </span>
+          <span className="sm:hidden">
+            {isCurrentPeriod ? "Current" : "Jump"}
+          </span>
         </Button>
-        <Button 
-          type="submit" 
-          size="sm" 
-          className="h-9 px-4 text-xs sm:text-sm font-medium flex-1 sm:flex-initial gap-1.5"
+        <Button
+          type="submit"
+          size="sm"
+          className="h-9 px-4 text-xs sm:text-sm font-medium flex-1 sm:flex-initial gap-1.5 shadow-sm"
         >
           <Filter className="w-3.5 h-3.5" />
           Apply

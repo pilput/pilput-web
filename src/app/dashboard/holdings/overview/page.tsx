@@ -352,6 +352,16 @@ export default function HoldingOverviewPage() {
 
   const mask = () => "••••••";
 
+  const monthLabel = useMemo(() => {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ];
+    const m = parseInt(filterMonth, 10);
+    if (m >= 1 && m <= 12) return `${months[m - 1]} ${filterYear}`;
+    return `${filterMonth}/${filterYear}`;
+  }, [filterMonth, filterYear]);
+
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
 
@@ -359,15 +369,20 @@ export default function HoldingOverviewPage() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <Button variant="ghost" size="icon" className="shrink-0" asChild>
-              <Link href="/dashboard/holdings">
+            <Button variant="ghost" size="icon" className="shrink-0 -ml-2" asChild>
+              <Link href="/dashboard/holdings" aria-label="Back to holdings">
                 <ArrowLeft className="w-4 h-4" />
               </Link>
             </Button>
             <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
-                Portfolio Overview
-              </h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
+                  Portfolio Overview
+                </h1>
+                <span className="inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-2.5 py-0.5 text-[10px] sm:text-xs font-medium tracking-wide text-muted-foreground">
+                  {monthLabel}
+                </span>
+              </div>
               <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 hidden sm:block">
                 Analyze your investment performance across all assets.
               </p>
@@ -398,6 +413,78 @@ export default function HoldingOverviewPage() {
             onFilter={handleFilter}
           />
         </div>
+
+        {/* Hero metrics */}
+        {statistics && (
+          <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-primary/[0.04] via-card to-card p-4 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:bg-gradient-to-br dark:from-primary/5 dark:via-card dark:to-card dark:shadow-none">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+              <div>
+                <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">
+                  Portfolio Value
+                </p>
+                <div className="mt-1.5 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight tabular-nums">
+                  {hideValues
+                    ? mask()
+                    : formatCurrency(statistics.totalCurrent, statistics.primaryCurrency)}
+                </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  {statistics.totalAssets} asset{statistics.totalAssets === 1 ? "" : "s"} across {statistics.totalPlatforms} platform{statistics.totalPlatforms === 1 ? "" : "s"}
+                </p>
+              </div>
+
+              <div className="sm:border-l sm:border-border/50 sm:pl-6">
+                <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">
+                  Total Invested
+                </p>
+                <div className="mt-1.5 text-xl sm:text-2xl font-semibold tracking-tight tabular-nums text-foreground/90">
+                  {hideValues
+                    ? mask()
+                    : formatCurrency(statistics.totalInvested, statistics.primaryCurrency)}
+                </div>
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  Cost basis
+                </p>
+              </div>
+
+              <div className="sm:border-l sm:border-border/50 sm:pl-6">
+                <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">
+                  Total Return
+                </p>
+                <div
+                  className={cn(
+                    "mt-1.5 flex items-baseline gap-2 tabular-nums",
+                    statistics.totalReturn >= 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-destructive"
+                  )}
+                >
+                  <span className="text-xl sm:text-2xl font-bold tracking-tight">
+                    {hideValues
+                      ? mask()
+                      : `${statistics.totalReturn >= 0 ? "+" : ""}${formatCurrency(Math.abs(statistics.totalReturn), statistics.primaryCurrency)}`}
+                  </span>
+                </div>
+                <p
+                  className={cn(
+                    "mt-1 inline-flex items-center gap-1 text-[11px] font-semibold",
+                    statistics.totalReturnPercent >= 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-destructive"
+                  )}
+                >
+                  {statistics.totalReturnPercent >= 0 ? (
+                    <ArrowUpRight className="h-3 w-3" />
+                  ) : (
+                    <ArrowDownRight className="h-3 w-3" />
+                  )}
+                  {hideValues
+                    ? mask()
+                    : `${statistics.totalReturnPercent >= 0 ? "+" : ""}${statistics.totalReturnPercent.toFixed(2)}%`}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quick-stat chips */}
         {statistics && (

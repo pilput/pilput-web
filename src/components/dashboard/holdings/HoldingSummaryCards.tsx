@@ -101,12 +101,18 @@ export default function HoldingSummaryCards({
       value: hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency),
       icon: Wallet,
       valueColor: "text-foreground",
+      helper: `${holdings.length} asset${holdings.length === 1 ? "" : "s"} tracked`,
     },
     {
       title: "Current Value",
       value: hideValues ? maskValue() : formatCurrency(totalCurrent, primaryCurrency),
       icon: DollarSign,
       valueColor: "text-foreground",
+      helper: hideValues
+        ? "—"
+        : totalInvested > 0
+          ? `${((totalCurrent / totalInvested - 1) * 100).toFixed(2)}% vs invested`
+          : "—",
     },
     {
       title: "Profit / Loss",
@@ -121,6 +127,7 @@ export default function HoldingSummaryCards({
             ? "text-emerald-600 dark:text-emerald-400"
             : "text-destructive",
       iconSemantic: totalRealized >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive",
+      helper: primaryCurrency,
     },
     {
       title: "Return Rate",
@@ -133,6 +140,12 @@ export default function HoldingSummaryCards({
             ? "text-emerald-600 dark:text-emerald-400"
             : "text-destructive",
       iconSemantic: totalPercent >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-destructive",
+      helper:
+        hideValues
+          ? "—"
+          : totalPercent >= 0
+            ? "Gaining ground"
+            : "Losing ground",
     },
   ];
 
@@ -151,12 +164,12 @@ export default function HoldingSummaryCards({
             : "text-muted-foreground";
         return (
           <motion.div key={card.title} variants={cardVariants}>
-            <Card className="relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:hover:shadow-none dark:border-border transition-all duration-300 group h-full">
+            <Card className="relative overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] dark:hover:shadow-none dark:border-border transition-all duration-300 group h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-5 pt-4 sm:pt-5 relative">
                 <CardTitle className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate pr-1 text-muted-foreground">
                   {card.title}
                 </CardTitle>
-                <div className="p-2 rounded-xl bg-muted transition-transform duration-300 group-hover:scale-105">
+                <div className="p-2 rounded-xl bg-muted/70 ring-1 ring-border/40 transition-transform duration-300 group-hover:scale-105">
                   <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${iconColor} shrink-0`} />
                 </div>
               </CardHeader>
@@ -167,6 +180,11 @@ export default function HoldingSummaryCards({
                 >
                   {card.value}
                 </div>
+                {card.helper && (
+                  <p className="mt-1.5 text-[11px] text-muted-foreground truncate">
+                    {card.helper}
+                  </p>
+                )}
               </CardContent>
             </Card>
           </motion.div>

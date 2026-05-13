@@ -200,27 +200,27 @@ export default function HoldingTable({
   };
 
   return (
-    <div className="rounded-lg border bg-card overflow-hidden">
+    <div className="bg-card">
       {/* Filter Tabs */}
-      <div className="p-3 sm:p-4 border-b bg-linear-to-r from-muted/30 via-muted/20 to-muted/30 space-y-3">
+      <div className="p-3 sm:p-4 border-b border-border/60 bg-muted/20 space-y-3">
         {/* Main Filter Tabs: ALL, Platform, Type */}
         <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
-          <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-muted/50 p-1">
+          <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-background/70 p-1 border border-border/60 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-none">
             <TabsTrigger 
               value="all" 
-              className="text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
             >
               All Holdings
             </TabsTrigger>
             <TabsTrigger 
               value="platform" 
-              className="text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
             >
               By Platform
             </TabsTrigger>
             <TabsTrigger 
               value="type" 
-              className="text-xs sm:text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
             >
               By Type
             </TabsTrigger>
@@ -301,8 +301,8 @@ export default function HoldingTable({
       <div className="overflow-x-auto">
         <Table className="min-w-[900px]">
           <TableHeader>
-            <TableRow className="bg-muted/40 hover:bg-muted/50 border-b-2">
-              <TableHead className="w-10 sm:w-12 font-semibold text-xs sm:text-sm text-center">#</TableHead>
+            <TableRow className="bg-muted/30 hover:bg-muted/30 border-b border-border/70">
+              <TableHead className="w-10 sm:w-12 font-semibold text-xs sm:text-sm text-center text-muted-foreground">#</TableHead>
               <HeaderCell
                 label="Name"
                 columnKey="name"

@@ -53,51 +53,54 @@ const HeaderActions = ({
 }: HeaderActionsProps) => {
   return (
     <div className="flex flex-wrap items-center gap-2">
+      <div className="inline-flex items-center gap-1 rounded-lg border border-border/70 bg-card/60 p-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:bg-muted/20 dark:shadow-none">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 gap-1.5 text-xs sm:text-sm"
+          onClick={onSyncPrices}
+          disabled={isSyncing}
+          title="Fetch latest prices for holdings with symbols (current calendar month)"
+        >
+          <RefreshCw
+            className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin" : ""}`}
+          />
+          <span className="hidden md:inline">Sync</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 gap-1.5 text-xs sm:text-sm"
+          onClick={onOpenDuplicate}
+        >
+          <Copy className="w-3.5 h-3.5" />
+          <span className="hidden md:inline">Duplicate</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 gap-1.5 text-xs sm:text-sm"
+          onClick={onExportCsv}
+          disabled={!canExport}
+        >
+          <Download className="w-3.5 h-3.5" />
+          <span className="hidden md:inline">Export</span>
+        </Button>
+        <div className="mx-0.5 h-5 w-px bg-border/70" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 shrink-0"
+          onClick={onToggleHide}
+          title={hideValues ? "Show values" : "Hide values"}
+          aria-label={hideValues ? "Show values" : "Hide values"}
+        >
+          {hideValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </Button>
+      </div>
       <Button
-        variant="outline"
         size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
-        onClick={onSyncPrices}
-        disabled={isSyncing}
-        title="Fetch latest prices for holdings with symbols (current calendar month)"
-      >
-        <RefreshCw
-          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSyncing ? "animate-spin" : ""}`}
-        />
-        <span className="hidden sm:inline">Sync prices</span>
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        className="shrink-0"
-        onClick={onToggleHide}
-        title={hideValues ? "Show values" : "Hide values"}
-        aria-label={hideValues ? "Show values" : "Hide values"}
-      >
-        {hideValues ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
-        onClick={onOpenDuplicate}
-      >
-        <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        <span className="hidden sm:inline">Duplicate</span>
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
-        onClick={onExportCsv}
-        disabled={!canExport}
-      >
-        <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        <span className="hidden sm:inline">Export CSV</span>
-      </Button>
-      <Button 
-        size="sm"
-        className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold" 
+        className="h-9 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold shadow-sm"
         onClick={onOpenAdd}
       >
         <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -355,12 +358,15 @@ export default function HoldingsPage() {
     URL.revokeObjectURL(url);
   }, [filterMonth, filterYear, filteredHoldings]);
 
+  const activeMonth = parseInt(filterMonth, 10);
+  const activeYear = parseInt(filterYear, 10);
+
   return (
-    <div className="container mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
+    <div className="container mx-auto space-y-6 sm:space-y-8">
       {/* Header Section */}
-      <div className="flex flex-col gap-3 sm:gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
-          <HoldingHeader />
+      <div className="flex flex-col gap-4 sm:gap-5">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+          <HoldingHeader month={activeMonth} year={activeYear} />
           <HeaderActions
             hideValues={hideValues}
             onToggleHide={() => setHideValues(!hideValues)}
@@ -374,7 +380,7 @@ export default function HoldingsPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="rounded-2xl border border-border/80 bg-card/80 p-3 sm:p-4 lg:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none dark:bg-muted/20 backdrop-blur-sm">
+        <div className="rounded-xl border border-border/70 bg-card/60 px-3 py-2.5 sm:px-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:bg-muted/20 dark:shadow-none">
           <HoldingFilter
             month={filterMonth}
             year={filterYear}
@@ -386,25 +392,36 @@ export default function HoldingsPage() {
       </div>
 
       {/* Portfolio Summary */}
-      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-        <div>
-          <h2 className="text-base sm:text-lg font-semibold tracking-tight mb-3 sm:mb-4 px-1">
+      <section>
+        <div className="flex items-center gap-3 mb-3 sm:mb-4">
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">
             Portfolio Summary
           </h2>
-          <HoldingSummaryCards holdings={holdings} isLoading={isLoading} hideValues={hideValues} />
+          <div className="flex-1 h-px bg-border/50" />
         </div>
-      </div>
+        <HoldingSummaryCards holdings={holdings} isLoading={isLoading} hideValues={hideValues} />
+      </section>
 
       {/* Holdings Table Card */}
-      <Card className="overflow-hidden rounded-2xl border-border/80 shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none dark:border-border">
-        <CardHeader className="border-b border-border/60 bg-muted/5 py-3 sm:py-4 lg:py-5 px-3 sm:px-4 lg:px-6">
-          <div className="flex items-center justify-between">
+      <Card className="overflow-hidden rounded-2xl border-border/70 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
+        <CardHeader className="border-b border-border/60 bg-gradient-to-b from-muted/30 to-muted/5 py-4 sm:py-5 px-4 sm:px-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">Holdings Inventory</CardTitle>
-              <CardDescription className="mt-1.5 text-xs sm:text-sm text-muted-foreground/90">
-                Review your investment performance for the selected period.
+              <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">
+                Holdings Inventory
+              </CardTitle>
+              <CardDescription className="mt-1 text-xs sm:text-sm text-muted-foreground/90">
+                {filteredHoldings.length === 0
+                  ? "No holdings for the selected period yet."
+                  : `${filteredHoldings.length} holding${filteredHoldings.length === 1 ? "" : "s"} tracked for this period.`}
               </CardDescription>
             </div>
+            {filteredHoldings.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Live view
+              </span>
+            )}
           </div>
         </CardHeader>
         <CardContent className="p-0">
