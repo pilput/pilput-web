@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { apiClientApp } from '@/utils/fetch'
+import { apiClient } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
 import type { Post } from '@/types/post'
 
@@ -15,7 +15,7 @@ export const postsStore = create<PostsState>()((set) => ({
     posts: [],
     fetch: async (limit = 10, offset = 0) => {
         try {
-            const { data } = await apiClientApp.get("/api/posts/me", {
+            const { data } = await apiClient.get("/api/posts/me", {
                 params: { limit: limit, offset: offset },
                 headers: { "Authorization": `Bearer ${getToken()}` }
             })
@@ -32,7 +32,7 @@ export const postsStore = create<PostsState>()((set) => ({
     },
     fetchPublic: async (limit = 10, offset = 0) => {
         try {
-            const { data } = await apiClientApp.get("/api/posts", {
+            const { data } = await apiClient.get("/api/posts", {
                 params: { limit: limit, offset: offset }
             })
             const response = data

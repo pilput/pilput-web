@@ -10,7 +10,7 @@ import { User } from "@/types/user";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getProfilePicture } from "@/utils/getImage";
 import { toast } from "sonner";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getCookie } from "cookies-next";
 
 interface ProfileFormData {
@@ -77,7 +77,7 @@ export default function ProfileTab({ user, onSubmit, loading, onProfileUpdate }:
       const formData = new FormData();
       formData.append("avatar", file);
 
-      const response = await apiClientApp.post("/api/users/me/image", formData, {
+      const response = await apiClient.post("/api/users/me/image", formData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

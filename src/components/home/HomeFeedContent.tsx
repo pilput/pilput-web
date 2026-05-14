@@ -11,7 +11,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowUp } from "lucide-react";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { parseBlogPageQueryParam } from "@/lib/blog-feed-data";
 import type { Post } from "@/types/post";
@@ -82,7 +82,7 @@ const HomeFeedContent = ({
     async function fetchPosts() {
       setIsLoading(true);
       try {
-        const { data } = await apiClientApp.get("/api/posts/feed/for-you", {
+        const { data } = await apiClient.get("/api/posts/feed/for-you", {
           params: {
             limit: postsPerPage,
             offset: currentPage * postsPerPage,

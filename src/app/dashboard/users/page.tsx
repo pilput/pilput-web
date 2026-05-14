@@ -41,7 +41,7 @@ import UserActionComponent from "@/components/user/action";
 import { Paginate } from "@/components/common/Paginate";
 import { authStore } from "@/stores/userStore";
 import { getToken, RemoveToken } from "@/utils/Auth";
-import { apiClientApp, isHttpError } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { addUserSchema, type AddUserFormData } from "@/lib/validation";
 
@@ -92,7 +92,7 @@ export default function ManageUser() {
   async function refetchUsers(fetchOffset: number = 0) {
     setIsLoading(true);
     try {
-      const { data } = await apiClientApp.get("/api/users", {
+      const { data } = await apiClient.get("/api/users", {
         params: { limit: limit, offset: fetchOffset },
         headers: {
           Authorization: `Bearer ${getToken()}`,
@@ -152,7 +152,7 @@ export default function ManageUser() {
     setIsCreating(true);
     const toastId = toast.loading("Creating user...");
     try {
-      const response = await apiClientApp.post(
+      const response = await apiClient.post(
         "/api/users",
         {
           username: data.username,

@@ -1,5 +1,5 @@
 import Navigation from "@/components/header/Navbar";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import type { Post } from "@/types/post";
 import TagContent from "./TagContent";
 
@@ -15,7 +15,7 @@ interface PostsResponse {
 
 async function fetchPostsByTag(tag: string): Promise<{ posts: Post[]; total: number }> {
   try {
-    const { data } = await apiClientApp.get<PostsResponse>(`/api/posts/tag/${tag}`, {
+    const { data } = await apiClient.get<PostsResponse>(`/api/posts/tag/${tag}`, {
       params: { limit: postsPerPage, offset: 0 },
     });
     return {
@@ -30,7 +30,7 @@ async function fetchPostsByTag(tag: string): Promise<{ posts: Post[]; total: num
 
 async function fetchAllTags(): Promise<string[]> {
   try {
-    const response = await apiClientApp.get("/api/tags");
+    const response = await apiClient.get("/api/tags");
     return response.data.data.map((tagItem: { name: string }) => tagItem.name);
   } catch (error) {
     console.error("Error fetching tags:", error);

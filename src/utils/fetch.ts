@@ -193,7 +193,7 @@ export async function getDataExternal(
 
 export async function forgotPassword(email: string) {
   try {
-    const response = await apiClientApp.post("/api/auth/forgot-password", {
+    const response = await apiClient.post("/api/auth/forgot-password", {
       email,
     });
     return response.data;
@@ -204,7 +204,7 @@ export async function forgotPassword(email: string) {
 
 export async function resetPassword(token: string, password: string) {
   try {
-    const response = await apiClientApp.post("/api/auth/reset-password", {
+    const response = await apiClient.post("/api/auth/reset-password", {
       token,
       password,
     });
@@ -215,7 +215,7 @@ export async function resetPassword(token: string, password: string) {
 }
 
 export function followUser(userId: string) {
-  return apiClientApp.post(
+  return apiClient.post(
     `/api/users/${userId}/follow`,
     {},
     {
@@ -225,7 +225,7 @@ export function followUser(userId: string) {
 }
 
 export function unfollowUser(userId: string) {
-  return apiClientApp.delete(`/api/users/${userId}/follow`, {
+  return apiClient.delete(`/api/users/${userId}/follow`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
@@ -255,7 +255,7 @@ export async function togglePostLike(postId: string): Promise<{
   if (!token) {
     throw new Error("AUTH_REQUIRED");
   }
-  const { data } = await apiClientApp.post<LikesToggleEnvelope>(
+  const { data } = await apiClient.post<LikesToggleEnvelope>(
     `/api/likes/${postId}`,
     undefined,
     {
@@ -273,7 +273,7 @@ export async function getPostLikes(postId: string) {
   if (!token) {
     return null;
   }
-  const { data } = await apiClientApp.get<{
+  const { data } = await apiClient.get<{
     success?: boolean;
     data: Array<{ id: string; created_at: string; user_id?: string }>;
   }>(`/api/likes/${postId}`, {

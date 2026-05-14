@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
 import { getToken } from "@/utils/Auth";
 import type { Post } from "@/types/post";
@@ -24,7 +24,7 @@ const ActionComponent = ({
   const onPublish = async () => {
     const id = toast.loading("Updating publish...");
     try {
-      const response = await apiClientApp.patch(
+      const response = await apiClient.patch(
         `/api/posts/${post.id}`,
         {
           published: !post.published,
@@ -42,7 +42,7 @@ const ActionComponent = ({
   const onDelete = async () => {
     const id = toast.loading("Deleting...");
     try {
-      const response = await apiClientApp.delete(`/api/posts/${post.id}`, {
+      const response = await apiClient.delete(`/api/posts/${post.id}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       toast.success("Post deleted successfully", { id });

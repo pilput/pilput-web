@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { type Message } from "@/components/chat/chat-message";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 
@@ -325,7 +325,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await apiClientApp.get<ConversationsResponse>(
+      const response = await apiClient.get<ConversationsResponse>(
         "/api/chat/conversations",
         {
           headers: {
@@ -421,7 +421,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await apiClientApp.get<GetConversationResponse>(
+      const response = await apiClient.get<GetConversationResponse>(
         `/api/chat/conversations/${conversationId}`,
         {
           headers: {
@@ -486,7 +486,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         : sanitizedMessage.slice(0, 50) +
           (sanitizedMessage.length > 50 ? "..." : "");
 
-      const response = await apiClientApp.post<CreateConversationResponse>(
+      const response = await apiClient.post<CreateConversationResponse>(
         "/api/chat/conversations",
         {
           title: conversationTitle,
@@ -621,7 +621,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: null,
       }));
 
-      const response = await apiClientApp.delete(
+      const response = await apiClient.delete(
         `/api/chat/conversations/${conversationId}`,
         {
           headers: {

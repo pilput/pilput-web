@@ -1,12 +1,12 @@
 import { getToken } from "./Auth";
-import { apiClientApp } from "./fetch";
+import { apiClient } from "./fetch";
 
 /** Toggle bookmark for a post (add / remove). */
 export function toggleBookmark(
   postId: string,
   body?: { folder_id?: string | null; name?: string; notes?: string },
 ) {
-  return apiClientApp.post(`/api/bookmarks/${postId}`, body ?? {}, {
+  return apiClient.post(`/api/bookmarks/${postId}`, body ?? {}, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
@@ -17,7 +17,7 @@ export function getBookmarks(folderId?: string | null) {
     folderId === undefined
       ? undefined
       : { folder_id: folderId === null ? "null" : folderId };
-  return apiClientApp.get(`/api/bookmarks`, {
+  return apiClient.get(`/api/bookmarks`, {
     ...(params ? { params } : {}),
     headers: { Authorization: `Bearer ${getToken()}` },
   });
@@ -27,13 +27,13 @@ export function createBookmarkFolder(body: {
   name: string;
   description?: string;
 }) {
-  return apiClientApp.post(`/api/bookmarks/folders`, body, {
+  return apiClient.post(`/api/bookmarks/folders`, body, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
 
 export function getBookmarkFolders() {
-  return apiClientApp.get(`/api/bookmarks/folders`, {
+  return apiClient.get(`/api/bookmarks/folders`, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
 }
