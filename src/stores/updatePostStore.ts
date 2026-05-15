@@ -1,6 +1,6 @@
 import type { Post, PostCreate } from "@/types/post";
 import { create } from "zustand";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 
 const DEFAULT_BODY = `
@@ -108,7 +108,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const token = getToken();
     set(() => ({ loading: true, error: false }));
     try {
-      const response = await apiClient.get(`/api/posts/me/${id}`, {
+      const response = await apiClientApp.get(`/api/posts/me/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const postData = response.data.data;
@@ -146,7 +146,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     set(() => ({ isUpdating: true, error: false }));
 
     try {
-      await apiClient.patch(`/api/posts/${postId}`, post, {
+      await apiClientApp.patch(`/api/posts/${postId}`, post, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -172,3 +172,4 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
   error: false,
   total: 0,
 }));
+

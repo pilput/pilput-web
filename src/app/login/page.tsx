@@ -25,7 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { Config } from "@/utils/getConfig";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
@@ -94,7 +94,7 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<LoginFormData> = async (form) => {
     setLoginWait(true);
     try {
-      const { data } = await apiClient.post("/api/auth/login", form);
+      const { data } = await apiClientApp.post("/api/auth/login", form);
       const result = data as AuthResponse;
 
       if (!result.success) {
@@ -307,3 +307,4 @@ export default function LoginPage() {
     </ErrorBoundary>
   );
 }
+

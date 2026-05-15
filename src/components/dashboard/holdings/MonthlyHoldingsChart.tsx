@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { cn } from "@/lib/utils";
 
@@ -128,7 +128,7 @@ export default function MonthlyHoldingsChart({
         if (filter.endMonth != null) params.endMonth = filter.endMonth;
         if (filter.endYear != null) params.endYear = filter.endYear;
 
-        const response = await apiClient.get<MonthlyHoldingResponse>(
+        const response = await apiClientApp.get<MonthlyHoldingResponse>(
           "/api/holdings/monthly",
           {
             ...(Object.keys(params).length > 0 && { params }),
@@ -397,4 +397,5 @@ export default function MonthlyHoldingsChart({
     </Card>
   );
 }
+
 

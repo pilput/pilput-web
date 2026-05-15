@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface ResetPasswordFormData {
@@ -97,7 +97,7 @@ function ResetPasswordForm() {
 
     setIsLoading(true);
     try {
-      const { data } = await apiClient.post("/api/auth/reset-password", {
+      const { data } = await apiClientApp.post("/api/auth/reset-password", {
         token,
         new_password: form.password,
       });
@@ -335,3 +335,4 @@ export default function ResetPasswordPage() {
     </ErrorBoundary>
   );
 }
+

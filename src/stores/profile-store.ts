@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { getToken } from "@/utils/Auth";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 
 interface Profile {
   id: string;
@@ -38,7 +38,7 @@ export const profileStore = create<Store>()((set) => ({
     }
 
     try {
-      const response = await apiClient.get("/api/auth/profile", {
+      const response = await apiClientApp.get("/api/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,3 +60,4 @@ export const profileStore = create<Store>()((set) => ({
     }
   },
 }));
+

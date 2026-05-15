@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getToken, RemoveToken } from "@/utils/Auth"
-import { apiClient, isHttpError } from "@/utils/fetch"
+import { apiClientApp, isHttpError } from "@/utils/fetch"
 import { toast } from "sonner"
 
 type MyLikesByMonthItem = {
@@ -95,7 +95,7 @@ export default function LikeChart() {
     async function load() {
       setIsLoading(true)
       try {
-        const { data } = await apiClient.get<MyLikesByMonthResponse>(
+        const { data } = await apiClientApp.get<MyLikesByMonthResponse>(
           "/api/posts/charts/my-likes-by-month",
           {
             params: { months },
@@ -231,3 +231,4 @@ export default function LikeChart() {
     </Card>
   )
 }
+

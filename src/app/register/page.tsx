@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { toast } from "sonner";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -65,7 +65,7 @@ export default function Signup() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const id = toast.loading("Loading...");
     try {
-      const response = await apiClient.post("/api/auth/register", data);
+      const response = await apiClientApp.post("/api/auth/register", data);
       const result = response.data as RegisterResponse;
 
       if (!result.success) {
@@ -114,7 +114,7 @@ export default function Signup() {
     const currentRequestId = ++requestIdRef.current;
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await apiClient.post("/api/auth/check-username", {
+        const res = await apiClientApp.post("/api/auth/check-username", {
           username: username.trim(),
         });
         if (currentRequestId !== requestIdRef.current) return; // stale
@@ -309,3 +309,4 @@ export default function Signup() {
     </main>
   );
 }
+

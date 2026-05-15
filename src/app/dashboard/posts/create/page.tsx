@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { postsStore } from "@/stores/create-post-store";
 import { getToken } from "@/utils/Auth";
-import { apiClient, isHttpError } from "@/utils/fetch";
+import { apiClientApp, isHttpError } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import { useState, useRef, useCallback } from "react";
@@ -77,7 +77,7 @@ export default function PostCreate() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await apiClient.post(
+      const response = await apiClientApp.post(
         "/api/posts/image",
         formData,
         {
@@ -153,7 +153,7 @@ export default function PostCreate() {
     const toastId = toast.loading("Publishing post...");
 
     try {
-      await apiClient.post("/api/posts", post, {
+      await apiClientApp.post("/api/posts", post, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setErrorTitle("");
@@ -428,3 +428,4 @@ export default function PostCreate() {
     </div>
   );
 }
+

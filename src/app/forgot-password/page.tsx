@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface ForgotPasswordFormData {
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
   const onSubmit: SubmitHandler<ForgotPasswordFormData> = async (form) => {
     setIsLoading(true);
     try {
-      const { data } = await apiClient.post(
+      const { data } = await apiClientApp.post(
         "/api/auth/forgot-password",
         form
       );
@@ -217,3 +217,4 @@ export default function ForgotPasswordPage() {
     </ErrorBoundary>
   );
 }
+
