@@ -23,17 +23,8 @@ interface Feature {
   stats: string;
   cta: string;
   href: string;
-  glowColor?: "primary" | "blue" | "purple" | "green" | "yellow";
   accentIcon?: LucideIcon;
 }
-
-const glowClassByColor = {
-  primary: "hover:shadow-primary/20",
-  blue: "hover:shadow-blue-500/20",
-  purple: "hover:shadow-purple-500/20",
-  green: "hover:shadow-green-500/20",
-  yellow: "hover:shadow-yellow-500/20",
-} as const;
 
 const Features = () => {
   const features: Feature[] = [
@@ -53,7 +44,6 @@ const Features = () => {
       stats: "Clean & Simple",
       cta: "Start writing",
       href: "/dashboard/posts/create",
-      glowColor: "primary",
       accentIcon: Star,
     },
     {
@@ -72,7 +62,6 @@ const Features = () => {
       stats: "Smart Assistant",
       cta: "Try Assistant",
       href: "/chat",
-      glowColor: "primary",
       accentIcon: TrendingUp,
     },
     {
@@ -91,13 +80,13 @@ const Features = () => {
       stats: "All-in-one",
       cta: "Go to Dashboard",
       href: "/dashboard/holdings",
-      glowColor: "primary",
       accentIcon: PieChart,
     },
   ];
 
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-muted/25 py-16 sm:py-20 lg:py-24">
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-10 flex flex-col gap-5 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl space-y-5">
@@ -129,8 +118,7 @@ const Features = () => {
                   "group relative h-[340px] w-full overflow-hidden rounded-lg",
                   "border border-border/70 bg-card/90 backdrop-blur-xl",
                   "shadow-sm transition-all duration-500",
-                  "hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl",
-                  feature.glowColor ? glowClassByColor[feature.glowColor] : glowClassByColor.primary
+                  "hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/20"
                 )}
               >
                 {feature.background}

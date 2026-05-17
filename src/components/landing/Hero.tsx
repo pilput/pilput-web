@@ -35,7 +35,7 @@ const Hero = () => {
   return (
     <section className="relative flex min-h-[78vh] items-center justify-center overflow-hidden border-b border-border/60 py-14 sm:py-18 lg:py-22">
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent,rgba(0,0,0,0.02))] dark:bg-[linear-gradient(to_bottom,transparent,rgba(255,255,255,0.02))]" />
+      <div className="absolute inset-0 bg-linear-to-b from-muted/45 via-background to-background dark:from-muted/20" />
       <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
 
       <HeroBackground />
@@ -45,7 +45,7 @@ const Hero = () => {
           <div className="landing-reveal">
             <Badge
               variant="outline"
-              className="h-8 rounded-md border-primary/25 bg-background/70 px-3 text-xs font-semibold text-primary shadow-sm backdrop-blur-md"
+              className="h-8 rounded-md border-primary/25 bg-background/80 px-3 text-xs font-semibold text-primary shadow-sm backdrop-blur-md"
             >
               <Sparkles className="mr-2 h-3.5 w-3.5" />
               Built for focused publishing
@@ -55,7 +55,7 @@ const Hero = () => {
           <div className="mt-7 max-w-5xl space-y-5 landing-reveal landing-delay-1">
             <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
               Write and publish
-              <span className="block bg-linear-to-r from-primary via-primary/85 to-primary/60 bg-clip-text text-transparent">
+              <span className="block text-primary">
                 ideas worth reading.
               </span>
             </h1>
@@ -70,7 +70,7 @@ const Hero = () => {
             <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="group h-12 w-full rounded-md px-6 text-sm font-semibold shadow-lg shadow-primary/20 sm:min-w-48"
+                className="group h-12 w-full rounded-md px-6 text-sm font-semibold shadow-md shadow-primary/15 sm:min-w-48"
               >
                 <PenLine className="mr-2 h-4 w-4" />
                 Start writing
@@ -91,7 +91,7 @@ const Hero = () => {
           </div>
 
           <div className="mt-10 w-full max-w-5xl landing-reveal landing-delay-3">
-            <div className="overflow-hidden rounded-lg border border-border/70 bg-card/75 text-left shadow-2xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+            <div className="overflow-hidden rounded-lg border border-border/70 bg-card/90 text-left shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
               <div className="flex items-center gap-2 border-b border-border/70 px-4 py-3">
                 <span className="h-2.5 w-2.5 rounded-full bg-primary/30" />
                 <span className="h-2.5 w-2.5 rounded-full bg-primary/45" />
@@ -121,7 +121,7 @@ const Hero = () => {
                     {["Outline", "Media", "Tags"].map((label) => (
                       <div
                         key={label}
-                        className="rounded-md border border-border/70 bg-background/60 px-3 py-2 text-xs font-medium text-muted-foreground"
+                        className="rounded-md border border-border/70 bg-background/80 px-3 py-2 text-xs font-medium text-muted-foreground"
                       >
                         {label}
                       </div>
@@ -134,7 +134,7 @@ const Hero = () => {
                   </div>
                   <div className="space-y-3">
                     {trustItems.map((item) => (
-                      <div key={item.title} className="flex gap-3 rounded-md bg-background/70 p-3">
+                      <div key={item.title} className="flex gap-3 rounded-md border border-border/50 bg-background/80 p-3">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                           <item.icon className="h-4 w-4" />
                         </div>

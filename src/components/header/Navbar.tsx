@@ -26,18 +26,13 @@ const Navbar = () => {
     setshowmenu((prev) => !prev);
   }
 
-  // Close mobile menu when pathname changes (navigation occurs)
-  React.useEffect(() => {
-    setshowmenu(false);
-  }, [pathname]);
-
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b backdrop-blur-xl",
+        "sticky top-0 z-50 w-full border-b shadow-sm shadow-black/[0.02] backdrop-blur-xl",
         loggedIn
-          ? "border-border/30 bg-background/95 supports-backdrop-filter:bg-background/75"
-          : "border-border/60 bg-background/80"
+          ? "border-border/50 bg-background/95 supports-backdrop-filter:bg-background/80"
+          : "border-border/70 bg-background/90"
       )}
     >
       <div className="container mx-auto max-w-7xl px-4">
@@ -51,7 +46,7 @@ const Navbar = () => {
           {!loggedIn && (
             <Link
               href="/"
-              className="text-xl font-semibold tracking-tight bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent hover:from-primary/90 hover:to-primary/60 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md shrink-0"
+              className="rounded-md text-xl font-bold tracking-tight text-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0"
               aria-label="Pilput home"
             >
               pilput
@@ -80,9 +75,10 @@ const Navbar = () => {
                       href={item.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
+                        "rounded-md",
                         loggedIn && "h-8 px-3 text-[13px] font-medium",
                         pathname === item.href
-                          ? "bg-primary/10 text-primary border border-primary/30 shadow-sm"
+                          ? "bg-primary/10 text-primary ring-1 ring-primary/25 shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
                       )}
                     >
@@ -104,7 +100,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-lg border border-border/70 bg-background/70 hover:bg-accent/60 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0"
+            className="md:hidden rounded-md border border-border/70 bg-background/80 p-2 shadow-sm transition-colors hover:bg-accent/70 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0"
             aria-label={showmenu ? "Close menu" : "Open menu"}
             aria-expanded={showmenu}
           >
@@ -115,7 +111,7 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {showmenu && (
           <div
-            className="md:hidden mt-2 rounded-xl sm:rounded-2xl border border-border/70 bg-background/95 backdrop-blur-md shadow-lg"
+            className="md:hidden mt-2 rounded-lg border border-border/70 bg-background/95 backdrop-blur-md shadow-lg"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation menu"

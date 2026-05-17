@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Eye, Heart, Bookmark, Calendar, User } from "lucide-react";
+import { Bookmark, Calendar, Eye, Heart } from "lucide-react";
 import { getPostBookmarkCount, getPostLikesCount, type Post } from "@/types/post";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
 
   return (
     <Link href={`/${post.user.username}/${post.slug}`} className="block h-full">
-      <Card className="h-full border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group flex flex-col overflow-hidden">
+      <Card className="group flex h-full flex-col overflow-hidden border-border/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
@@ -24,7 +24,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
               <time dateTime={post.created_at}>{formattedDate}</time>
             </div>
             {post.tags?.[0] && (
-              <Badge variant="secondary" className="text-[10px] px-2 py-0 h-5 font-normal bg-primary/5 text-primary border-primary/10 hover:bg-primary/10">
+              <Badge variant="secondary" className="h-5 rounded-md border border-primary/10 bg-primary/8 px-2 py-0 text-[10px] font-semibold text-primary hover:bg-primary/10">
                 {post.tags[0].name}
               </Badge>
             )}
@@ -41,7 +41,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
           </p>
         </CardContent>
 
-        <CardFooter className="pt-3 border-t border-border/30 flex items-center justify-between text-xs text-muted-foreground">
+        <CardFooter className="flex items-center justify-between border-t border-border/50 pt-3 text-xs text-muted-foreground">
           <div className="flex items-center space-x-2">
             <Avatar className="h-5 w-5 border border-border/50">
               <AvatarImage src={getProfilePicture(post.user?.image)} alt={post.user.username} />
@@ -49,7 +49,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
                 {post.user.first_name?.[0] || post.user.username[0]}
               </AvatarFallback>
             </Avatar>
-            <span className="font-medium hover:text-foreground transition-colors">
+            <span className="font-medium transition-colors group-hover:text-foreground">
               {post.user.username}
             </span>
           </div>

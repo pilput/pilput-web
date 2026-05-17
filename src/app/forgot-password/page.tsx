@@ -96,24 +96,26 @@ export default function ForgotPasswordPage() {
   return (
     <ErrorBoundary>
       <main
-        className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary/5 to-background p-4"
+        className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4"
         role="main"
       >
+        <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-muted/70 to-transparent dark:from-muted/25" />
+        <div className="absolute inset-y-0 right-0 hidden w-1/2 border-l border-border/60 bg-muted/25 lg:block" />
         <Link
-          className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-card/80 backdrop-blur-md rounded-lg shadow-sm hover:shadow-lg hover:bg-primary/5 border border-border/70 transition-all duration-200 hover:scale-105 group focus:outline-none focus:ring-2 focus:ring-primary"
+          className="fixed left-4 top-4 z-10 flex items-center gap-2 rounded-md border border-border/70 bg-background/85 px-3 py-2 text-sm font-medium shadow-sm backdrop-blur-md transition-colors hover:bg-accent/70 focus:outline-none focus:ring-2 focus:ring-ring sm:left-6 sm:top-6"
           href="/login"
           aria-label="Back to login page"
         >
-          <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
-          <span className="text-sm font-medium">Back to login</span>
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to login</span>
         </Link>
 
-        <Card className="w-full max-w-md border border-border/70 shadow-xl shadow-primary/5">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
+        <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+          <CardHeader className="space-y-2 pb-5 text-center">
+            <CardTitle className="text-2xl font-bold tracking-tight">
               {isSent ? "Check your email" : "Forgot password?"}
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription>
               {isSent
                 ? "We've sent a password reset link to your email address."
                 : "Enter your email address and we'll send you a link to reset your password."}
@@ -122,8 +124,8 @@ export default function ForgotPasswordPage() {
           <CardContent>
             {isSent ? (
               <div className="flex flex-col items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                  <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-md border border-emerald-200 bg-emerald-50 dark:border-emerald-900/60 dark:bg-emerald-950/30">
+                  <CheckCircle className="h-7 w-7 text-emerald-600 dark:text-emerald-300" />
                 </div>
                 <p className="text-sm text-muted-foreground text-center">
                   Please check your inbox and follow the instructions to reset
@@ -146,7 +148,7 @@ export default function ForgotPasswordPage() {
                 <div className="space-y-2">
                   <Label htmlFor="email">Email address</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"

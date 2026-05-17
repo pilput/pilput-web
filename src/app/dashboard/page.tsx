@@ -13,24 +13,27 @@ function Page() {
 
   return (
     <div className="flex flex-col gap-4 md:gap-6">
-      {/* Top Row */}
+      <div className="flex flex-col gap-1 border-b border-border/70 pb-4">
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">
+          A quick view of publishing activity and platform performance.
+        </p>
+      </div>
+
       <div>
         <UserChart />
       </div>
 
-      {/* Second Row */}
       <div>
         <LikeChart />
       </div>
 
-      {/* Third Row - Engagement (Super Admin Only) */}
       {isSuperAdmin && (
         <div>
           <EngagementChart />
         </div>
       )}
 
-      {/* Fourth Row - Monthly Holdings */}
       <div>
         <MonthlyHoldingsChart />
       </div>

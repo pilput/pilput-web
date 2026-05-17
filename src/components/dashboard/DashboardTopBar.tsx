@@ -15,7 +15,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getProfilePicture } from "@/utils/getImage";
-import { useEffect } from "react";
 import { useTheme } from "next-themes";
 import { logOut } from "@/utils/Auth";
 import { authStore } from "@/stores/userStore";
@@ -24,7 +23,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Settings, User, LogOut, Home, Moon, Sun } from "lucide-react";
 
 const DashboardTopBar = () => {
-  const yourstore = authStore();
+  const user = authStore((state) => state.data);
+  const fetchUser = authStore((state) => state.fetch);
   const { theme, setTheme } = useTheme();
 
   function logout() {
@@ -37,8 +37,8 @@ const DashboardTopBar = () => {
   };
 
   useEffect(() => {
-    yourstore.fetch();
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
 
   return (
     <TooltipProvider>
@@ -47,10 +47,10 @@ const DashboardTopBar = () => {
         <div className="hidden sm:flex items-center">
           <div className="flex flex-col">
             <h1 className="text-base md:text-lg font-semibold text-foreground truncate max-w-[200px] md:max-w-[300px] lg:max-w-none">
-              Welcome back, {yourstore.data.first_name}!
+              Welcome back, {user.first_name || user.username || "there"}
             </h1>
-            <p className="text-xs md:text-sm text-muted-foreground hidden md:block">
-              Here&#39;s what&#39;s happening with your dashboard today.
+            <p className="hidden text-xs text-muted-foreground md:block">
+              Manage publishing, readers, and account activity.
             </p>
           </div>
         </div>
@@ -60,7 +60,7 @@ const DashboardTopBar = () => {
           {/* Theme Toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" onClick={toggleTheme}>
+              <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-md">
                 {theme === "dark" ? (
                   <Sun className="h-4 w-4" />
                 ) : (
@@ -82,10 +82,10 @@ const DashboardTopBar = () => {
               >
                 <Avatar className="h-10 w-10">
                   <AvatarImage
-                    src={getProfilePicture(yourstore.data.image)}
-                    alt={`@${yourstore.data.username}`}
+                    src={getProfilePicture(user.image)}
+                    alt={`@${user.username}`}
                   />
-                  <AvatarFallback>{yourstore.data.username[0]}</AvatarFallback>
+                  <AvatarFallback>{user.username?.[0] || "U"}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -93,17 +93,17 @@ const DashboardTopBar = () => {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {yourstore.data.first_name} {yourstore.data.last_name}
+                    {user.first_name} {user.last_name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {yourstore.data.email || "admin@pilput.net"}
+                    {user.email || "admin@pilput.net"}
                   </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/${yourstore.data.username}`}
+                  href={`/${user.username}`}
                   className="cursor-pointer"
                 >
                   <User className="mr-2 h-4 w-4" />
@@ -136,3 +136,4 @@ const DashboardTopBar = () => {
 };
 
 export default DashboardTopBar;
+import { useEffect } from "react";

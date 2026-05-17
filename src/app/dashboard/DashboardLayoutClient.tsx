@@ -4,7 +4,6 @@ import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
@@ -94,13 +93,14 @@ function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <img src="/pilput.png" alt="pilput" className="h-6 w-6" />
-                </div>
+              <Link href="/" className="px-1">
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Pilput</span>
-                  <span className="truncate text-xs">Dashboard</span>
+                  <span className="truncate text-base font-bold tracking-tight">
+                    pilput
+                  </span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    Dashboard
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -152,7 +152,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/80 backdrop-blur-md px-2 transition-[width,height] ease-linear">
+        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/90 px-2 shadow-sm shadow-black/[0.02] backdrop-blur-xl transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4 flex-1">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -161,12 +161,10 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="flex-1 rounded-xl border border-border/60 bg-card/70 shadow-[0_24px_60px_-40px_rgba(0,0,0,0.45)]">
-            <Card className="border-0 shadow-none bg-transparent">
-              <CardContent className="p-6">{children}</CardContent>
-            </Card>
-          </div>
+        <div className="flex flex-1 flex-col gap-4 bg-muted/25 p-4 md:p-6">
+          <main className="flex-1 rounded-lg border border-border/70 bg-background p-4 shadow-sm md:p-6">
+            {children}
+          </main>
         </div>
       </SidebarInset>
     </SidebarProvider>

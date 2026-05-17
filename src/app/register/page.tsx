@@ -143,21 +143,23 @@ export default function Signup() {
   }, [username]);
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary/5 to-background p-4">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
+      <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-muted/70 to-transparent dark:from-muted/25" />
+      <div className="absolute inset-y-0 right-0 hidden w-1/2 border-l border-border/60 bg-muted/25 lg:block" />
       <Link
-        className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-card/80 backdrop-blur-md rounded-lg shadow-sm hover:shadow-lg hover:bg-primary/5 border border-border/70 transition-all duration-200 hover:scale-105 group"
+        className="fixed left-4 top-4 z-10 flex items-center gap-2 rounded-md border border-border/70 bg-background/85 px-3 py-2 text-sm font-medium shadow-sm backdrop-blur-md transition-colors hover:bg-accent/70 focus:outline-none focus:ring-2 focus:ring-ring sm:left-6 sm:top-6"
         href="/"
       >
-        <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
-        <span className="text-sm font-medium">Back to home</span>
+        <ArrowLeft className="h-4 w-4" />
+        <span>Back to home</span>
       </Link>
 
-      <Card className="w-full max-w-md border border-border/70 shadow-xl shadow-primary/5">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+      <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+        <CardHeader className="space-y-2 pb-5 text-center">
+          <CardTitle className="text-2xl font-bold tracking-tight">
             Create an account
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription>
             Enter your information to create your account
           </CardDescription>
         </CardHeader>
@@ -166,7 +168,7 @@ export default function Signup() {
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                 <Input
                   id="username"
                   placeholder="Enter your username"
@@ -205,10 +207,10 @@ export default function Signup() {
                 <p
                   className={`rounded-md border px-3 py-2 text-sm ${
                     usernameStatus === "available"
-                      ? "border-green-200 bg-green-50 text-green-700"
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300"
                       : usernameStatus === "checking"
                       ? "border-border bg-muted/50 text-muted-foreground"
-                      : "border-red-200 bg-red-50 text-red-600"
+                      : "border-red-200 bg-red-50 text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
                   }`}
                   aria-live="polite"
                   role="status"
@@ -221,7 +223,7 @@ export default function Signup() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                 <Input
                   id="email"
                   type="email"
@@ -243,7 +245,7 @@ export default function Signup() {
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                 <Input
                   id="password"
                   type="password"
@@ -280,7 +282,7 @@ export default function Signup() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white dark:bg-gray-800 px-2 text-muted-foreground">
+              <span className="bg-card px-2 text-muted-foreground">
                 Or continue with
               </span>
             </div>

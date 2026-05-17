@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchRandomPosts = async () => {
+  const fetchRandomPosts = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await apiClient.get("/api/posts/random?limit=6");
@@ -34,7 +34,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -44,8 +44,12 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
   };
 
   useEffect(() => {
-    fetchRandomPosts();
-  }, []);
+    const timer = window.setTimeout(() => {
+      void fetchRandomPosts();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [fetchRandomPosts]);
 
   return (
     <div className="py-8">
@@ -65,7 +69,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="self-start sm:self-auto rounded-full gap-2"
+            className="self-start gap-2 rounded-md sm:self-auto"
           >
             <RefreshCw
               className={cn(
@@ -94,7 +98,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <p className="text-muted-foreground text-sm mb-4">No posts found</p>
           <Link href="/blog">
-            <Button size="sm" variant="outline" className="rounded-full gap-2">
+            <Button size="sm" variant="outline" className="gap-2 rounded-md">
               Browse Blog
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -109,7 +113,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
             <Button
               variant="outline"
               size="lg"
-              className="rounded-full px-8 gap-2"
+              className="gap-2 rounded-md px-8"
             >
               Explore More Posts
               <ArrowRight className="h-4 w-4" />

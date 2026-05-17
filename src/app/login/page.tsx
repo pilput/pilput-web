@@ -137,24 +137,26 @@ export default function LoginPage() {
   return (
     <ErrorBoundary>
       <main
-        className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary/5 to-background p-4"
+        className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4"
         role="main"
       >
+        <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-muted/70 to-transparent dark:from-muted/25" />
+        <div className="absolute inset-y-0 right-0 hidden w-1/2 border-l border-border/60 bg-muted/25 lg:block" />
         <Link
-          className="fixed top-6 left-6 flex items-center gap-2 px-4 py-2.5 bg-card/80 backdrop-blur-md rounded-lg shadow-sm hover:shadow-lg hover:bg-primary/5 border border-border/70 transition-all duration-200 hover:scale-105 group focus:outline-none focus:ring-2 focus:ring-primary"
+          className="fixed left-4 top-4 z-10 flex items-center gap-2 rounded-md border border-border/70 bg-background/85 px-3 py-2 text-sm font-medium shadow-sm backdrop-blur-md transition-colors hover:bg-accent/70 focus:outline-none focus:ring-2 focus:ring-ring sm:left-6 sm:top-6"
           href="/"
           aria-label="Back to home page"
         >
-          <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
-          <span className="text-sm font-medium">Back to home</span>
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to home</span>
         </Link>
 
-        <Card className="w-full max-w-md border border-border/70 shadow-xl shadow-primary/5">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
+        <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+          <CardHeader className="space-y-2 pb-5 text-center">
+            <CardTitle className="text-2xl font-bold tracking-tight">
               Welcome back
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription>
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
@@ -167,7 +169,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <Label htmlFor="identifier">Username or Email</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="identifier"
                     type="text"
@@ -202,7 +204,7 @@ export default function LoginPage() {
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -222,7 +224,7 @@ export default function LoginPage() {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    className="absolute right-3 top-3 text-muted-foreground transition-colors hover:text-foreground focus:outline-none"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
@@ -277,7 +279,7 @@ export default function LoginPage() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-gray-800 px-2 text-muted-foreground">
+                <span className="bg-card px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>

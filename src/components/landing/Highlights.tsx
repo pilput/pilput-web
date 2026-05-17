@@ -173,10 +173,11 @@ const highlights = [
 const Highlights = () => {
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-background py-16 sm:py-20 lg:py-24">
+      <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-muted/45 to-transparent dark:from-muted/20" />
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">
           <div className="inline-flex items-center landing-reveal">
-            <Badge variant="outline" className="h-8 rounded-md border-primary/25 bg-primary/5 px-3 text-xs font-semibold text-primary backdrop-blur-md">
+            <Badge variant="outline" className="h-8 rounded-md border-primary/25 bg-background/80 px-3 text-xs font-semibold text-primary backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5 mr-2" />
               Core workflow
             </Badge>
@@ -196,7 +197,7 @@ const Highlights = () => {
             <div
               key={item.title}
               className={cn(
-                "group relative overflow-hidden rounded-lg border border-border/60 bg-card/70 backdrop-blur-md hover:bg-card hover:border-primary/30 transition-all duration-500",
+                "group relative overflow-hidden rounded-lg border border-border/70 bg-card/90 shadow-sm backdrop-blur-md hover:bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-500",
                 item.className,
                 "min-h-[280px] landing-reveal"
               )}
