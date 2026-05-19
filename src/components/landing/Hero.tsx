@@ -8,6 +8,16 @@ import {
   ShieldCheck,
   Sparkles,
   Zap,
+  Bold,
+  Italic,
+  Underline,
+  Heading1,
+  Heading2,
+  List,
+  AlignLeft,
+  Code,
+  Image as ImageIcon,
+  Quote,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,31 +111,73 @@ const Hero = () => {
                 </span>
               </div>
               <div className="grid gap-0 lg:grid-cols-[1.25fr_0.75fr]">
-                <div className="space-y-5 p-5 sm:p-7">
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <span className="rounded-md bg-primary/10 px-2 py-1 font-semibold text-primary">
-                      Draft
-                    </span>
-                    <span>7 min read</span>
-                    <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-                    <span>Ready to publish</span>
+                <div className="flex flex-col">
+                  <div className="flex flex-wrap items-center gap-1.5 border-b border-border/70 px-4 py-2 bg-muted/20">
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Bold"><Bold className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Italic"><Italic className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Underline"><Underline className="w-3.5 h-3.5" /></button>
+                    <span className="h-4 w-px bg-border mx-1" />
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Heading 1"><Heading1 className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Heading 2"><Heading2 className="w-3.5 h-3.5" /></button>
+                    <span className="h-4 w-px bg-border mx-1" />
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Bullet List"><List className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Align Left"><AlignLeft className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Code"><Code className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Add Image"><ImageIcon className="w-3.5 h-3.5" /></button>
+                    <button type="button" className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer" title="Quote"><Quote className="w-3.5 h-3.5" /></button>
                   </div>
-                  <div className="space-y-3">
-                    <div className="h-5 w-4/5 rounded bg-foreground/90" />
-                    <div className="h-5 w-2/3 rounded bg-foreground/80" />
-                    <div className="mt-4 h-3 w-full rounded bg-muted" />
-                    <div className="h-3 w-[92%] rounded bg-muted" />
-                    <div className="h-3 w-[76%] rounded bg-muted" />
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 pt-2">
-                    {["Outline", "Media", "Tags"].map((label) => (
-                      <div
-                        key={label}
-                        className="rounded-md border border-border/70 bg-background/80 px-3 py-2 text-xs font-medium text-muted-foreground"
-                      >
-                        {label}
+                  
+                  <div className="relative space-y-4 p-5 sm:p-7 min-h-[300px] flex flex-col justify-between">
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 font-semibold text-emerald-600 dark:text-emerald-400">
+                          Saved
+                        </span>
+                        <span>5 min read</span>
+                        <span className="h-1 w-1 rounded-full bg-muted-foreground/30" />
+                        <span>Ready to publish</span>
                       </div>
-                    ))}
+
+                      <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground">
+                        The Future of Developer Platforms
+                      </h2>
+
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        Publishing should be simple. Writers deserve a clean workspace that focuses purely on content creation. That&apos;s why we built a markdown-first editor with zero distractions.
+                      </p>
+
+                      <div className="relative">
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          With Pilput, you get{" "}
+                          <span className="bg-primary/15 text-foreground px-1 py-0.5 rounded cursor-pointer relative group/hl font-semibold">
+                            lightning-fast loading speeds
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 hidden group-hover/hl:flex items-center gap-1.5 bg-card text-foreground border border-border rounded-lg px-2.5 py-1.5 shadow-lg z-30 whitespace-nowrap text-[11px] transition-all">
+                              <span className="font-bold text-primary">Bold</span>
+                              <span className="text-border">|</span>
+                              <span className="font-semibold hover:text-primary">Link</span>
+                              <span className="text-border">|</span>
+                              <span className="font-semibold hover:text-primary">Comment</span>
+                            </span>
+                          </span>{" "}
+                          out of the box. No bloated scripts, just clean HTML and dynamic layouts.
+                        </p>
+                      </div>
+
+                      <div className="border-l-2 border-primary pl-4 my-4 italic text-xs sm:text-sm text-muted-foreground/90 bg-muted/20 py-2.5 pr-2 rounded-r">
+                        &ldquo;The best writing happens when the tool fades into the background, leaving you alone with your thoughts.&rdquo;
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-border/40">
+                      {["Markdown", "WebDev", "Writing"].map((tag) => (
+                        <div
+                          key={tag}
+                          className="rounded bg-primary/10 border border-primary/20 px-2 py-0.5 text-[10px] font-semibold text-primary"
+                        >
+                          #{tag}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="border-t border-border/70 bg-muted/30 p-5 sm:p-7 lg:border-l lg:border-t-0">
