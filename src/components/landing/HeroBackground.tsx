@@ -19,6 +19,7 @@ const PARTICLE_COUNT = 98;
 const HeroBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { resolvedTheme } = useTheme();
+  const mouseRef = useRef({ x: -1000, y: -1000, active: false });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -37,6 +38,20 @@ const HeroBackground = () => {
     const accentH = 217;
     const accentS = 91;
     const accentL = 60;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current.x = e.clientX - rect.left;
+      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current.active = true;
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current.active = false;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseleave", handleMouseLeave);
 
     function resize() {
       const dpr = window.devicePixelRatio || 1;
@@ -64,13 +79,50 @@ const HeroBackground = () => {
       ctx!.clearRect(0, 0, W, H);
       tick++;
 
-      const lineAlpha = isDark ? 0.25 : 0.42;
-      const dotAlpha = isDark ? 0.84 : 1.0;
+      const lineAlpha = isDark ? 0.22 : 0.38;
+      const dotAlpha = isDark ? 0.8 : 1.0;
+
+      // ── Draw cursor glow ─────────────────────────────────────────
+      if (mouseRef.current.active) {
+        const { x, y } = mouseRef.current;
+        const glowRadius = isDark ? 280 : 200;
+        const glow = ctx!.createRadialGradient(x, y, 0, x, y, glowRadius);
+        if (isDark) {
+          glow.addColorStop(0, `hsla(${accentH}, ${accentS}%, ${accentL}%, 0.12)`);
+          glow.addColorStop(0.5, `hsla(${accentH}, ${accentS}%, ${accentL}%, 0.04)`);
+          glow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        } else {
+          glow.addColorStop(0, `hsla(${accentH}, ${accentS}%, ${accentL}%, 0.08)`);
+          glow.addColorStop(0.5, `hsla(${accentH}, ${accentS}%, ${accentL}%, 0.02)`);
+          glow.addColorStop(1, "rgba(255, 255, 255, 0)");
+        }
+        ctx!.beginPath();
+        ctx!.arc(x, y, glowRadius, 0, Math.PI * 2);
+        ctx!.fillStyle = glow;
+        ctx!.fill();
+      }
 
       // ── Update & draw particles ─────────────────────────────────────────
       for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
+        let vx = p.vx;
+        let vy = p.vy;
+
+        if (mouseRef.current.active) {
+          const dx = p.x - mouseRef.current.x;
+          const dy = p.y - mouseRef.current.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const pushRadius = 160;
+          if (dist < pushRadius) {
+            const force = (1 - dist / pushRadius) * 0.45;
+            const angle = Math.atan2(dy, dx);
+            vx += Math.cos(angle) * force;
+            vy += Math.sin(angle) * force;
+          }
+        }
+
+        p.x += vx;
+        p.y += vy;
+
         if (p.x < 0) p.x = W;
         if (p.x > W) p.x = 0;
         if (p.y < 0) p.y = H;
@@ -130,6 +182,8 @@ const HeroBackground = () => {
     return () => {
       cancelAnimationFrame(animId);
       ro.disconnect();
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [resolvedTheme]);
 

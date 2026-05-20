@@ -53,10 +53,14 @@ export default function BookmarkButton({
 
   const [busy, setBusy] = useState(false);
   const [count, setCount] = useState(() => normalizeBookmarkCount(initialCount));
+  const [prevPostId, setPrevPostId] = useState(postId);
+  const [prevInitialCount, setPrevInitialCount] = useState(initialCount);
 
-  useEffect(() => {
+  if (postId !== prevPostId || initialCount !== prevInitialCount) {
+    setPrevPostId(postId);
+    setPrevInitialCount(initialCount);
     setCount(normalizeBookmarkCount(initialCount));
-  }, [initialCount, postId]);
+  }
 
   useEffect(() => {
     if (!getToken()) {

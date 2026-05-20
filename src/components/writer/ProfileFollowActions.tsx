@@ -36,11 +36,13 @@ export default function ProfileFollowActions({
 
   const [authChecked, setAuthChecked] = useState(false);
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+  const [prevInitialIsFollowing, setPrevInitialIsFollowing] = useState(initialIsFollowing);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  if (initialIsFollowing !== prevInitialIsFollowing) {
+    setPrevInitialIsFollowing(initialIsFollowing);
     setIsFollowing(initialIsFollowing);
-  }, [initialIsFollowing]);
+  }
 
   useEffect(() => {
     const run = async () => {

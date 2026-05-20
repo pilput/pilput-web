@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
 import {
@@ -23,7 +25,8 @@ interface Feature {
   stats: string;
   cta: string;
   href: string;
-  accentIcon?: LucideIcon;
+  glow: string;
+  accentColor: string;
 }
 
 const Features = () => {
@@ -35,8 +38,10 @@ const Features = () => {
       description:
         "Craft stories that captivate with high-performance writing tools. Enjoy a clean space with instant formatting and media integration.",
       background: (
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute top-0 right-0 p-8">
+        <div className="absolute inset-0 overflow-hidden opacity-5 dark:opacity-[0.08] transition-opacity duration-500 group-hover:opacity-12">
+          {/* Subtle grid pattern background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.05)_1px,transparent_1px)] bg-[size:14px_24px]" />
+          <div className="absolute top-0 right-0 p-8 transform translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
             <PenTool className="w-32 h-32 text-primary" />
           </div>
         </div>
@@ -44,7 +49,8 @@ const Features = () => {
       stats: "Clean & Simple",
       cta: "Start writing",
       href: "/dashboard/posts/create",
-      accentIcon: Star,
+      glow: "from-primary/10 to-transparent",
+      accentColor: "border-primary/20 text-primary bg-primary/10",
     },
     {
       id: "ai-chat",
@@ -53,16 +59,18 @@ const Features = () => {
       description:
         "Never stare at a blank page again. Our smart assistant helps you brainstorm topics, outline ideas, and refine your tone as you write.",
       background: (
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute bottom-0 left-0 p-8">
-            <MessageCircle className="w-32 h-32 text-primary" />
+        <div className="absolute inset-0 overflow-hidden opacity-5 dark:opacity-[0.08] transition-opacity duration-500 group-hover:opacity-12">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.05)_1px,transparent_1px)] bg-[size:14px_24px]" />
+          <div className="absolute bottom-0 left-0 p-8 transform -translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
+            <MessageCircle className="w-32 h-32 text-purple-500" />
           </div>
         </div>
       ),
       stats: "Smart Assistant",
       cta: "Try Assistant",
       href: "/chat",
-      accentIcon: TrendingUp,
+      glow: "from-purple-500/10 to-transparent",
+      accentColor: "border-purple-500/20 text-purple-600 dark:text-purple-400 bg-purple-500/10",
     },
     {
       id: "holdings",
@@ -71,16 +79,18 @@ const Features = () => {
       description:
         "Stay organized and track your progress. Manage your stories and get clear insights into how your content is performing.",
       background: (
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute top-0 left-0 p-8">
-            <TrendingUp className="w-32 h-32 text-primary" />
+        <div className="absolute inset-0 overflow-hidden opacity-5 dark:opacity-[0.08] transition-opacity duration-500 group-hover:opacity-12">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.05)_1px,transparent_1px)] bg-[size:14px_24px]" />
+          <div className="absolute top-0 left-0 p-8 transform -translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
+            <TrendingUp className="w-32 h-32 text-indigo-500" />
           </div>
         </div>
       ),
       stats: "All-in-one",
       cta: "Go to Dashboard",
       href: "/dashboard/holdings",
-      accentIcon: PieChart,
+      glow: "from-indigo-500/10 to-transparent",
+      accentColor: "border-indigo-500/20 text-indigo-600 dark:text-indigo-400 bg-indigo-500/10",
     },
   ];
 
@@ -118,21 +128,24 @@ const Features = () => {
                   "group relative h-[340px] w-full overflow-hidden rounded-lg",
                   "border border-border/70 bg-card/90 backdrop-blur-xl",
                   "shadow-sm transition-all duration-500",
-                  "hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/20"
+                  "hover:-translate-y-1 hover:border-primary/45 hover:shadow-2xl hover:shadow-primary/5"
                 )}
               >
+                {/* Custom glow gradient on hover */}
+                <div className={cn("absolute -inset-px bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg -z-10", feature.glow)} />
+                
                 {feature.background}
-                <div className="relative h-full flex flex-col p-6 sm:p-8">
+                <div className="relative h-full flex flex-col p-6 sm:p-8 z-10">
                   <div className="mb-auto">
-                    <div className="flex items-center gap-3 mb-5">
-                      <div className="w-11 h-11 rounded-md bg-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-500">
+                    <div className="flex items-center justify-between mb-5">
+                      <div className={cn("w-11 h-11 rounded-md flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-xs", feature.accentColor)}>
                         <feature.icon className="w-5 h-5" />
                       </div>
-                      <Badge variant="outline" className="rounded-md border-primary/20 text-[10px] uppercase tracking-widest font-bold">
+                      <Badge variant="outline" className="rounded-md border-primary/20 text-[10px] uppercase tracking-widest font-bold bg-background/80">
                         {feature.stats}
                       </Badge>
                     </div>
-                    <h3 className="mb-4 text-xl font-bold tracking-tight sm:text-2xl">
+                    <h3 className="mb-4 text-xl font-bold tracking-tight sm:text-2xl group-hover:text-primary transition-colors duration-300">
                       {feature.title}
                     </h3>
                     <p className="text-sm leading-7 text-muted-foreground sm:text-base">
@@ -141,8 +154,11 @@ const Features = () => {
                   </div>
 
                   <div className="mt-8 flex items-center text-sm font-bold text-primary group/btn">
-                    <span className="mr-2">{feature.cta}</span>
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                    <span className="mr-2 relative overflow-hidden inline-block pb-0.5">
+                      {feature.cta}
+                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover/btn:w-full" />
+                    </span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1.5" />
                   </div>
                 </div>
               </article>

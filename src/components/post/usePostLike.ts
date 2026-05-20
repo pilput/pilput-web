@@ -28,13 +28,17 @@ export function usePostLike(
   );
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    setLiked(initialLiked);
-  }, [initialLiked, postId]);
+  const [prevPostId, setPrevPostId] = useState(postId);
+  const [prevInitialLiked, setPrevInitialLiked] = useState(initialLiked);
+  const [prevInitialCount, setPrevInitialCount] = useState(initialCount);
 
-  useEffect(() => {
+  if (postId !== prevPostId || initialLiked !== prevInitialLiked || initialCount !== prevInitialCount) {
+    setPrevPostId(postId);
+    setPrevInitialLiked(initialLiked);
+    setPrevInitialCount(initialCount);
+    setLiked(initialLiked);
     setCount(normalizeLikeCount(initialCount));
-  }, [initialCount, postId]);
+  }
 
   const onToggle = useCallback(
     async (e: MouseEvent) => {
