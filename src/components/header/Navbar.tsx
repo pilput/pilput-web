@@ -26,10 +26,10 @@ const Navbar = () => {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/85 backdrop-blur-md shadow-xs">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+    <header className="sticky top-0 z-50 w-full transition-all duration-300">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 py-3">
         <nav
-          className="flex h-15 sm:h-16 items-center justify-between w-full gap-4"
+          className="flex h-14 items-center justify-between w-full gap-4 px-5 sm:px-6 rounded-2xl border border-border/45 bg-background/70 backdrop-blur-md shadow-premium hover:border-primary/20 transition-all duration-300"
           aria-label="Main navigation"
         >
           {/* Logo Branding - Always visible for consistency */}
@@ -39,14 +39,14 @@ const Navbar = () => {
             aria-label="Pilput home"
           >
             <span className="text-xl font-black tracking-tight text-foreground group-hover:text-primary transition-colors duration-200">
-              pilput
+              pilput<span className="text-primary font-black animate-pulse-slow">.</span>
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex flex-1 justify-center max-w-lg mx-auto">
             <NavigationMenu className="w-full">
-              <NavigationMenuList className="flex gap-1">
+              <NavigationMenuList className="flex gap-1.5">
                 {navigation.map((item) => {
                   const active = pathname === item.href;
                   return (
@@ -54,9 +54,9 @@ const Navbar = () => {
                       <Link
                         href={item.href}
                         className={cn(
-                          "px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer",
+                          "px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer border border-transparent",
                           active
-                            ? "bg-primary/10 text-primary border border-primary/10 shadow-xs"
+                            ? "bg-primary/8 text-primary ring-1 ring-primary/10 shadow-xs"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                         )}
                       >
@@ -79,7 +79,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={toggleMenu}
-            className="md:hidden rounded-lg border border-border/60 bg-background/80 p-2 shadow-xs transition-colors hover:bg-muted/65 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0 cursor-pointer"
+            className="md:hidden rounded-xl border border-border/50 bg-background/80 p-2 shadow-xs transition-colors hover:bg-muted/65 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0 cursor-pointer"
             aria-label={showmenu ? "Close menu" : "Open menu"}
             aria-expanded={showmenu}
           >
@@ -90,7 +90,7 @@ const Navbar = () => {
         {/* Mobile Expandable Navigation Menu */}
         {showmenu && (
           <div
-            className="md:hidden mt-1.5 mb-3 rounded-xl border border-border/50 bg-background/95 backdrop-blur-md shadow-lg"
+            className="md:hidden mt-2 rounded-2xl border border-border/50 bg-background/90 backdrop-blur-xl shadow-premium p-1.5"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation menu"
@@ -104,9 +104,9 @@ const Navbar = () => {
                     href={item.href}
                     onClick={() => setshowmenu(false)}
                     className={cn(
-                      "block mx-2 px-3 py-2 text-sm font-semibold rounded-lg transition-all",
+                      "block mx-2 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all",
                       active
-                        ? "bg-primary/10 text-primary border border-primary/10"
+                        ? "bg-primary/10 text-primary border-l-2 border-primary pl-4.5"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                     )}
                     aria-current={active ? "page" : undefined}
@@ -115,7 +115,7 @@ const Navbar = () => {
                   </Link>
                 );
               })}
-              <div className="flex items-center justify-between mx-2 px-3 pt-3 pb-1.5 border-t border-border/50">
+              <div className="flex items-center justify-between mx-2 px-3 pt-3.5 pb-1.5 border-t border-border/50">
                 <DarkModeButton />
                 <ButtonLogged />
               </div>

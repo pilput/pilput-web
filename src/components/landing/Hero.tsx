@@ -82,8 +82,6 @@ const Hero = () => {
   const [selectedTag, setSelectedTag] = useState("Markdown");
   const [titleText, setTitleText] = useState("");
   const [isTitleTyped, setIsTitleTyped] = useState(false);
-  const [tiltStyle, setTiltStyle] = useState("");
-  const cardRef = useRef<HTMLDivElement>(null);
 
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
@@ -129,35 +127,12 @@ const Hero = () => {
     };
   }, [selectedTag]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-
-    const angleX = (yc - y) / 32; // subtle tilt
-    const angleY = (x - xc) / 32;
-
-    setTiltStyle(
-      `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale3d(1.005, 1.005, 1.005)`
-    );
-  };
-
-  const handleMouseLeave = () => {
-    setTiltStyle(
-      "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)"
-    );
-  };
-
   return (
-    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/60 py-16 sm:py-20 lg:py-24">
+    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/40 py-16 sm:py-20 lg:py-24">
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute inset-0 bg-linear-to-b from-muted/45 via-background to-background dark:from-muted/20" />
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background/50 to-background dark:from-muted/10" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-60" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
 
       <HeroBackground />
 
@@ -166,7 +141,7 @@ const Hero = () => {
           <div className="landing-reveal">
             <Badge
               variant="outline"
-              className="h-8 rounded-md border-primary/25 bg-primary/5 hover:bg-primary/10 px-3 text-xs font-semibold text-primary shadow-xs backdrop-blur-md transition-all duration-300 animate-pulse-slow cursor-default"
+              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 animate-pulse-slow cursor-default shadow-xs"
             >
               <Sparkles className="mr-2 h-3.5 w-3.5" />
               Built for focused publishing
@@ -174,9 +149,9 @@ const Hero = () => {
           </div>
 
           <div className="mt-7 max-w-5xl space-y-5 landing-reveal landing-delay-1">
-            <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+            <h1 className="text-4xl font-extrabold leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
               Write and publish
-              <span className="block bg-linear-to-r from-primary via-primary/90 to-purple-500 bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-primary via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 ideas worth reading.
               </span>
             </h1>
@@ -191,11 +166,11 @@ const Hero = () => {
             <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="group h-12 w-full rounded-md px-6 text-sm font-semibold shadow-md shadow-primary/20 bg-linear-to-r from-primary to-primary/95 text-primary-foreground hover:brightness-110 hover:shadow-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer"
+                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold shadow-md shadow-primary/10 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/20 hover:brightness-105 transition-all duration-300 sm:min-w-48 cursor-pointer border-0"
               >
                 <PenLine className="mr-2 h-4 w-4" />
                 Start writing
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-350 group-hover:translate-x-1" />
               </Button>
             </Link>
 
@@ -203,7 +178,7 @@ const Hero = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-12 w-full rounded-md border-border/70 bg-background/70 px-6 text-sm font-semibold backdrop-blur-md hover:bg-muted/30 transition-colors sm:min-w-48 cursor-pointer"
+                className="h-12 w-full rounded-xl border-border/80 bg-background/55 px-6 text-sm font-semibold backdrop-blur-md hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer shadow-xs"
               >
                 <BookOpenText className="mr-2 h-4 w-4" />
                 Read articles
@@ -216,33 +191,23 @@ const Hero = () => {
             <div className="absolute -top-12 -left-12 w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-blob-float pointer-events-none" />
             <div className="absolute -bottom-12 -right-12 w-72 h-72 rounded-full bg-purple-500/25 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-8s" }} />
 
-            {/* Interactive macOS styled window preview */}
-            <div
-              ref={cardRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                transform: tiltStyle,
-                transition: "transform 0.15s ease-out",
-              }}
-              className="overflow-hidden rounded-lg border border-border/70 bg-card/90 text-left shadow-2xl shadow-black/5 backdrop-blur-xl dark:shadow-black/25 relative z-10"
-            >
-              <div className="flex items-center gap-2 border-b border-border/70 px-4 py-3 bg-muted/10">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
-                <span className="ml-3 text-xs font-semibold text-muted-foreground select-none">
+            <div className="overflow-hidden rounded-2xl border border-border/45 bg-card/85 text-left shadow-premium backdrop-blur-xl relative z-10 transition-all duration-500 border-glow-hover">
+              <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3.5 bg-muted/20 select-none">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
+                <span className="ml-3 text-[10px] font-bold tracking-widest uppercase text-muted-foreground/80">
                   Pilput editor preview
                 </span>
               </div>
               <div className="grid gap-0 lg:grid-cols-[1.25fr_0.75fr]">
-                <div className="flex flex-col border-b border-border/70 lg:border-b-0">
-                  <div className="flex flex-wrap items-center gap-1.5 border-b border-border/70 px-4 py-2 bg-muted/20 select-none">
+                <div className="flex flex-col border-b border-border/40 lg:border-b-0">
+                  <div className="flex flex-wrap items-center gap-1.5 border-b border-border/45 px-5 py-2.5 bg-muted/10 select-none">
                     <button
                       type="button"
                       onClick={() => toggleFormat("bold")}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.bold &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -254,7 +219,7 @@ const Hero = () => {
                       type="button"
                       onClick={() => toggleFormat("italic")}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.italic &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -266,7 +231,7 @@ const Hero = () => {
                       type="button"
                       onClick={() => toggleFormat("underline")}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.underline &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -284,7 +249,7 @@ const Hero = () => {
                         }));
                       }}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.heading === 1 &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -301,7 +266,7 @@ const Hero = () => {
                         }));
                       }}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.heading === 2 &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -312,7 +277,7 @@ const Hero = () => {
                     <span className="h-4 w-px bg-border mx-1" />
                     <button
                       type="button"
-                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-not-allowed opacity-50"
+                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-not-allowed opacity-50"
                       title="Bullet List"
                       disabled
                     >
@@ -320,7 +285,7 @@ const Hero = () => {
                     </button>
                     <button
                       type="button"
-                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-not-allowed opacity-50"
+                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-not-allowed opacity-50"
                       title="Align Left"
                       disabled
                     >
@@ -330,7 +295,7 @@ const Hero = () => {
                       type="button"
                       onClick={() => toggleFormat("code")}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.code &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -340,7 +305,7 @@ const Hero = () => {
                     </button>
                     <button
                       type="button"
-                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-not-allowed opacity-50"
+                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-not-allowed opacity-50"
                       title="Add Image"
                       disabled
                     >
@@ -350,7 +315,7 @@ const Hero = () => {
                       type="button"
                       onClick={() => toggleFormat("quote")}
                       className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded transition cursor-pointer",
+                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
                         activeFormats.quote &&
                           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
                       )}
@@ -360,10 +325,10 @@ const Hero = () => {
                     </button>
                   </div>
 
-                  <div className="relative space-y-4 p-5 sm:p-7 min-h-[300px] flex flex-col justify-between">
+                  <div className="relative space-y-5 p-6 sm:p-8 min-h-[320px] flex flex-col justify-between">
                     <div className="space-y-4">
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 font-semibold text-emerald-600 dark:text-emerald-400">
+                      <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                        <span className="rounded bg-emerald-500/10 px-2 py-0.5 font-bold text-emerald-600 dark:text-emerald-400">
                           Saved
                         </span>
                         <span>{articlesData[selectedTag].readTime}</span>
@@ -373,7 +338,7 @@ const Hero = () => {
 
                       <h2
                         className={cn(
-                          "text-xl sm:text-2xl font-black tracking-tight text-foreground transition-all duration-300",
+                          "text-xl sm:text-2xl font-black tracking-tight text-foreground transition-all duration-300 leading-tight",
                           activeFormats.heading === 1 && "text-2xl sm:text-4xl",
                           activeFormats.heading === 2 && "text-lg sm:text-xl",
                           activeFormats.bold && "font-black scale-102 origin-left",
@@ -400,7 +365,7 @@ const Hero = () => {
                             activeFormats.italic && "italic",
                             activeFormats.underline && "underline",
                             activeFormats.code &&
-                              "font-mono bg-muted/65 p-2 rounded border border-border"
+                              "font-mono bg-muted/65 p-2.5 rounded-xl border border-border"
                           )}
                         >
                           {articlesData[selectedTag].body1}
@@ -419,7 +384,7 @@ const Hero = () => {
                           className={cn(
                             "text-xs sm:text-sm text-muted-foreground leading-relaxed transition-all duration-300",
                             activeFormats.code &&
-                              "font-mono bg-muted/65 p-2 rounded border border-border"
+                              "font-mono bg-muted/65 p-2.5 rounded-xl border border-border"
                           )}
                         >
                           With Pilput, you get{" "}
@@ -486,10 +451,10 @@ const Hero = () => {
                           type="button"
                           onClick={() => handleTagChange(tag)}
                           className={cn(
-                            "rounded px-2.5 py-0.5 text-[10px] font-bold transition-all cursor-pointer border",
+                            "rounded-full px-3 py-1 text-[10px] font-bold transition-all cursor-pointer border",
                             selectedTag === tag
                               ? "bg-primary text-primary-foreground border-primary shadow-xs"
-                              : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
+                              : "bg-primary/5 border-primary/10 text-primary hover:bg-primary/15"
                           )}
                         >
                           #{tag}
@@ -498,21 +463,21 @@ const Hero = () => {
                     </div>
                   </div>
                 </div>
-                <div className="border-t border-border/70 bg-muted/30 p-5 sm:p-7 lg:border-l lg:border-t-0 select-none">
-                  <div className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <div className="border-t border-border/40 bg-muted/20 p-6 sm:p-8 lg:border-l lg:border-t-0 select-none">
+                  <div className="mb-5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                     Publishing flow
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {trustItems.map((item) => (
                       <div
                         key={item.title}
-                        className="flex gap-3 rounded-md border border-border/50 bg-background/80 p-3 shadow-xs hover:border-primary/20 hover:shadow-md transition-all duration-300"
+                        className="flex gap-3.5 rounded-xl border border-border/40 bg-background/50 p-4 shadow-sm hover:border-primary/30 hover:bg-background/80 hover:shadow-premium transition-all duration-300"
                       >
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                          <item.icon className="h-4 w-4" />
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300">
+                          <item.icon className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground">
+                          <h3 className="text-sm font-bold text-foreground">
                             {item.title}
                           </h3>
                           <p className="mt-0.5 text-xs leading-5 text-muted-foreground">

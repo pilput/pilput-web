@@ -26,22 +26,23 @@ const PostList = ({ post }: { post: Post }) => {
 
   return (
     <motion.article 
-      className="group relative bg-card border border-border/70 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:border-primary/20 transition-all duration-300"
-      whileHover={{ y: -2 }}
+      className="group relative glass-card border-glow-hover rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-350"
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       layout
     >
       {/* Cover Image */}
       {post.photo_url && (
-        <div className="relative overflow-hidden aspect-video">
+        <div className="relative overflow-hidden aspect-[16/9.5] border-b border-border/40">
           <img
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+            className="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-500"
             src={getUrlImage(post.photo_url)}
             alt={post.title}
           />
         </div>
       )}
 
-      <div className="p-6 space-y-5">
+      <div className="p-6 sm:p-7 space-y-6">
         {/* Author Info */}
         <div className="flex items-center gap-3">
           <motion.div 
@@ -49,12 +50,12 @@ const PostList = ({ post }: { post: Post }) => {
             whileHover={{ scale: 1.05 }}
           >
             <Link href={`/${post.user.username}`}>
-              <Avatar className="h-9 w-9 border-2 border-border">
+              <Avatar className="h-9 w-9 border border-primary/20 shadow-xs">
                 <AvatarImage
                   src={getProfilePicture(post.user?.image)}
                   alt={post.user?.first_name || post.user.username || "Author"}
                 />
-                <AvatarFallback className="text-xs font-semibold">
+                <AvatarFallback className="text-xs font-bold bg-primary/5 text-primary">
                   {post.user?.first_name?.[0] || post.user.username[0]}
                 </AvatarFallback>
               </Avatar>
@@ -63,32 +64,32 @@ const PostList = ({ post }: { post: Post }) => {
           <div className="min-w-0 flex-1">
             <Link
               href={`/${post.user.username}`}
-              className="block font-semibold text-sm hover:text-primary transition-colors"
+              className="block font-bold text-sm hover:text-primary transition-colors"
             >
               {post.user?.first_name} {post.user?.last_name}
             </Link>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Clock className="w-3 h-3" />
-              {format(post.created_at, "MMM d, yyyy")}
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Clock className="w-3.5 h-3.5 opacity-70" />
+              <span>{format(post.created_at, "MMM d, yyyy")}</span>
             </div>
           </div>
         </div>
 
         {/* Title & Content */}
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           <Link
             href={`/${post.user.username}/${post.slug}`}
             className="block group"
           >
             <motion.h2
-              className="font-bold text-xl md:text-2xl leading-tight line-clamp-3 group-hover:text-primary transition-colors"
+              className="font-extrabold text-xl md:text-2xl leading-snug line-clamp-2 tracking-tight group-hover:text-primary transition-colors duration-300"
               whileHover={{ x: 2 }}
             >
               {post.title}
             </motion.h2>
           </Link>
 
-          <p className="text-muted-foreground leading-relaxed line-clamp-3">
+          <p className="text-xs sm:text-sm text-muted-foreground/90 leading-relaxed line-clamp-3">
             {plaintext.slice(0, 150)}{plaintext.length > 150 ? '...' : ''}
           </p>
         </div>
@@ -106,7 +107,7 @@ const PostList = ({ post }: { post: Post }) => {
               >
                 <Link
                   href={`/tags/${tag.name}`}
-                  className="inline-flex items-center px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full border border-primary/20 hover:bg-primary/20 transition-colors"
+                  className="inline-flex items-center px-3 py-1 text-[11px] font-bold tracking-wide text-primary bg-primary/5 rounded-full border border-primary/20 hover:bg-primary/10 hover:border-primary/30 transition-all duration-200"
                 >
                   #{tag.name}
                 </Link>
@@ -139,8 +140,8 @@ const PostList = ({ post }: { post: Post }) => {
           </div>
         )}
 
-        {/* Engagement — satu baris stat minimal, tanpa kotak per aksi */}
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        {/* Engagement */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-1 border-t border-border/40">
           <div className="flex items-center gap-0.5 sm:gap-1">
             <LikeButton
               postId={post.id}

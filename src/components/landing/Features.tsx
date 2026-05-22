@@ -95,21 +95,24 @@ const Features = () => {
   ];
 
   return (
-    <section className="relative overflow-hidden border-b border-border/60 bg-muted/25 py-16 sm:py-20 lg:py-24">
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
+    <section className="relative overflow-hidden border-b border-border/40 py-20 sm:py-24 lg:py-28 bg-linear-to-b from-transparent to-muted/20">
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/20 to-transparent" />
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-10 flex flex-col gap-5 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl space-y-5">
+        <div className="mb-12 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl space-y-4">
             <div className="landing-reveal">
-              <Badge variant="secondary" className="h-8 rounded-md border-none bg-primary/10 px-3 text-xs font-semibold text-primary">
+              <Badge
+                variant="outline"
+                className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300"
+              >
                 Platform tools
               </Badge>
             </div>
-            <h2 className="text-3xl font-black leading-tight tracking-tight landing-reveal landing-delay-1 sm:text-4xl lg:text-6xl">
+            <h2 className="text-3xl font-black leading-tight tracking-tight landing-reveal landing-delay-1 sm:text-4xl lg:text-5xl">
               A practical workspace for writers who ship.
             </h2>
           </div>
-          <p className="max-w-md text-base leading-7 text-muted-foreground landing-reveal landing-delay-2 sm:text-lg">
+          <p className="max-w-md text-base leading-relaxed text-muted-foreground landing-reveal landing-delay-2 sm:text-lg">
             Compose, improve, and manage your work with tools that feel fast
             enough to disappear while you use them.
           </p>
@@ -125,30 +128,42 @@ const Features = () => {
             >
               <article
                 className={cn(
-                  "group relative h-[340px] w-full overflow-hidden rounded-lg",
-                  "border border-border/70 bg-card/90 backdrop-blur-xl",
-                  "shadow-sm transition-all duration-500",
-                  "hover:-translate-y-1 hover:border-primary/45 hover:shadow-2xl hover:shadow-primary/5"
+                  "group relative h-[350px] w-full overflow-hidden rounded-2xl",
+                  "glass-card border-glow-hover shadow-premium hover:shadow-premium-hover",
+                  "transition-all duration-500 ease-out hover:-translate-y-1.5"
                 )}
               >
                 {/* Custom glow gradient on hover */}
-                <div className={cn("absolute -inset-px bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg -z-10", feature.glow)} />
-                
+                <div
+                  className={cn(
+                    "absolute -inset-px bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl -z-10",
+                    feature.glow
+                  )}
+                />
+
                 {feature.background}
                 <div className="relative h-full flex flex-col p-6 sm:p-8 z-10">
                   <div className="mb-auto">
-                    <div className="flex items-center justify-between mb-5">
-                      <div className={cn("w-11 h-11 rounded-md flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-xs", feature.accentColor)}>
+                    <div className="flex items-center justify-between mb-6">
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-xs border",
+                          feature.accentColor
+                        )}
+                      >
                         <feature.icon className="w-5 h-5" />
                       </div>
-                      <Badge variant="outline" className="rounded-md border-primary/20 text-[10px] uppercase tracking-widest font-bold bg-background/80">
+                      <Badge
+                        variant="outline"
+                        className="rounded-full border-primary/20 text-[10px] uppercase tracking-widest font-bold bg-background/80 px-2.5 py-0.5"
+                      >
                         {feature.stats}
                       </Badge>
                     </div>
-                    <h3 className="mb-4 text-xl font-bold tracking-tight sm:text-2xl group-hover:text-primary transition-colors duration-300">
+                    <h3 className="mb-3 text-xl font-bold tracking-tight sm:text-2xl group-hover:text-primary transition-colors duration-300">
                       {feature.title}
                     </h3>
-                    <p className="text-sm leading-7 text-muted-foreground sm:text-base">
+                    <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
                       {feature.description}
                     </p>
                   </div>
