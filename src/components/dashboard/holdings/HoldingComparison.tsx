@@ -26,15 +26,26 @@ export default function HoldingComparison({
   targetYear,
   hideValues = false,
 }: HoldingComparisonProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(isOpen);
   const [data, setData] = useState<ComparisonSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [prevProps, setPrevProps] = useState({ targetMonth, targetYear, isOpen });
+
+  if (
+    targetMonth !== prevProps.targetMonth ||
+    targetYear !== prevProps.targetYear ||
+    isOpen !== prevProps.isOpen
+  ) {
+    setPrevProps({ targetMonth, targetYear, isOpen });
+    if (isOpen) {
+      setIsLoading(true);
+      setError(null);
+    }
+  }
+
   const fetchComparison = useCallback(async () => {
     if (!isOpen) return;
-
-    setIsLoading(true);
-    setError(null);
 
     try {
       // Calculate previous month
@@ -79,7 +90,9 @@ export default function HoldingComparison({
   }, [isOpen, targetMonth, targetYear]);
 
   useEffect(() => {
-    fetchComparison();
+    Promise.resolve().then(() => {
+      fetchComparison();
+    });
   }, [fetchComparison]);
 
   if (!isOpen) return null;

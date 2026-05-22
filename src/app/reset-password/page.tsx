@@ -72,6 +72,7 @@ function ResetPasswordForm() {
     mode: "onBlur",
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const password = watch("password");
 
   const getErrorMessage = (error: ApiError): string => {

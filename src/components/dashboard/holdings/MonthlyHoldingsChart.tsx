@@ -84,6 +84,60 @@ type DateFilter = {
   endYear?: number;
 };
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+  hideValues: boolean;
+}
+
+const CustomTooltip = ({ active, payload, label, hideValues }: CustomTooltipProps) => {
+  if (active && payload && payload.length) {
+    const point = payload[0]?.payload as MonthlyHoldingApiItem & {
+      label: string;
+    };
+
+    return (
+      <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
+        <div className="space-y-1">
+          <div className="font-medium text-foreground">
+            {formatMonthLabel(label ?? "")}
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-muted-foreground text-[0.7rem] uppercase">
+              Current Value
+            </span>
+            <span className="font-semibold">
+              {hideValues
+                ? maskValue()
+                : point.totalCurrentValue.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-muted-foreground text-[0.7rem] uppercase">
+              Invested
+            </span>
+            <span className="font-semibold">
+              {hideValues
+                ? maskValue()
+                : point.totalInvested.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-muted-foreground text-[0.7rem] uppercase">
+              Holdings
+            </span>
+            <span className="font-semibold">
+              {point.holdingsCount.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function MonthlyHoldingsChart({
   hideValues = false,
   startMonth: startMonthProp,
@@ -106,13 +160,21 @@ export default function MonthlyHoldingsChart({
   );
 
   const [appliedFilter, setAppliedFilter] = React.useState<DateFilter>(() => propsFilter);
+  const [prevPropsFilter, setPrevPropsFilter] = React.useState<DateFilter>(propsFilter);
   const [draft, setDraft] = React.useState({ startDate: "", endDate: "" });
 
-  const filter = Object.keys(propsFilter).length > 0 ? propsFilter : appliedFilter;
+  const isFilterDifferent =
+    propsFilter.startMonth !== prevPropsFilter.startMonth ||
+    propsFilter.startYear !== prevPropsFilter.startYear ||
+    propsFilter.endMonth !== prevPropsFilter.endMonth ||
+    propsFilter.endYear !== prevPropsFilter.endYear;
 
-  React.useEffect(() => {
-    setAppliedFilter((prev) => (Object.keys(propsFilter).length > 0 ? propsFilter : prev));
-  }, [propsFilter]);
+  if (isFilterDifferent) {
+    setPrevPropsFilter(propsFilter);
+    setAppliedFilter(Object.keys(propsFilter).length > 0 ? propsFilter : appliedFilter);
+  }
+
+  const filter = Object.keys(propsFilter).length > 0 ? propsFilter : appliedFilter;
 
   React.useEffect(() => {
     let isCancelled = false;
@@ -188,52 +250,7 @@ export default function MonthlyHoldingsChart({
     [data]
   );
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const point = payload[0]?.payload as MonthlyHoldingApiItem & {
-        label: string;
-      };
 
-      return (
-        <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
-          <div className="space-y-1">
-            <div className="font-medium text-foreground">
-                {formatMonthLabel(label)}
-              </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-muted-foreground text-[0.7rem] uppercase">
-                Current Value
-              </span>
-              <span className="font-semibold">
-                {hideValues
-                  ? maskValue()
-                  : point.totalCurrentValue.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-muted-foreground text-[0.7rem] uppercase">
-                Invested
-              </span>
-              <span className="font-semibold">
-                {hideValues
-                  ? maskValue()
-                  : point.totalInvested.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-muted-foreground text-[0.7rem] uppercase">
-                Holdings
-              </span>
-              <span className="font-semibold">
-                {point.holdingsCount.toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   const renderLegendContent = () => (
     <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
@@ -355,7 +372,7 @@ export default function MonthlyHoldingsChart({
                   />
                   <YAxis yAxisId="value" domain={[0, "auto"]} hide />
                   <YAxis yAxisId="count" domain={[0, "auto"]} orientation="right" hide />
-                  <RechartsTooltip content={<CustomTooltip />} />
+                  <RechartsTooltip content={<CustomTooltip hideValues={hideValues} />} />
                   <Legend content={renderLegendContent} verticalAlign="bottom" />
                   <Line
                     yAxisId="value"

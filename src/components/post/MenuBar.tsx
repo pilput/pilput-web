@@ -13,7 +13,7 @@ import {
   ListOrdered,
   Quote,
   Minus,
-  Image,
+  Image as ImageIcon,
   Link,
   AlignLeft,
   AlignCenter,
@@ -242,7 +242,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           <Link />
         </button>
         <button onClick={addImage} className={styles.menuButton} title="Insert Image">
-          <Image />
+          <ImageIcon />
         </button>
         <button onClick={addYoutubeVideo} className={styles.menuButton} title="Insert YouTube Video">
           <svg

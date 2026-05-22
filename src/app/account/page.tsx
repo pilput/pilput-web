@@ -27,15 +27,7 @@ export default function AccountPage() {
   const router = useRouter();
   const token = getToken();
 
-  useEffect(() => {
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-    fetchUserProfile();
-  }, [token, router]);
-
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = React.useCallback(async () => {
     try {
       const response = await apiClientApp.get("/api/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
@@ -46,7 +38,17 @@ export default function AccountPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+    Promise.resolve().then(() => {
+      fetchUserProfile();
+    });
+  }, [token, router, fetchUserProfile]);
 
   const handleProfileUpdate = async (data: { username: string; first_name: string; last_name: string }) => {
     setProfileLoading(true);

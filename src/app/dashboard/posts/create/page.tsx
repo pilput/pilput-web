@@ -9,6 +9,7 @@ import { convertToSlug } from "@/utils/slug";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 const MyEditor = dynamic(() => import("@/components/post/Editor"), {
   ssr: false,
@@ -98,18 +99,15 @@ export default function PostCreate() {
     }
   };
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
 
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith("image/")) {
-        uploadFile(file);
-      }
-    },
-    [token],
-  );
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      uploadFile(file);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -270,7 +268,12 @@ export default function PostCreate() {
             <CardContent>
               {post.photo_url ? (
                 <div className={styles.imagePreviewWrapper}>
-                  <img src={getUrlImage(post.photo_url)} alt="Featured" />
+                  <Image
+                    src={getUrlImage(post.photo_url)}
+                    alt="Featured preview"
+                    fill
+                    className="object-cover"
+                  />
                   <div className={styles.imageOverlay}>
                     <Button
                       variant="secondary"

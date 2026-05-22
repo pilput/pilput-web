@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -33,11 +34,14 @@ const PostList = ({ post }: { post: Post }) => {
     >
       {/* Cover Image */}
       {post.photo_url && (
-        <div className="relative overflow-hidden aspect-[16/9.5] border-b border-border/40">
-          <img
-            className="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-500"
+        <div className="relative overflow-hidden aspect-[16/9.5] border-b border-border/40 w-full">
+          <Image
+            className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
             src={getUrlImage(post.photo_url)}
             alt={post.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
           />
         </div>
       )}

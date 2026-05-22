@@ -249,6 +249,7 @@ export function Markdown({ content, className }: MarkdownProps) {
             const { alt, src, className = "", ...rest } = props;
             return (
               <div className="my-6 overflow-hidden rounded-xl border border-muted-foreground/10 shadow-md bg-background/80">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
                   alt={alt}

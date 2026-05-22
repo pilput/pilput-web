@@ -50,7 +50,7 @@ const Comment = ({ postId }: { postId: string }) => {
   const COMMENTS_PER_PAGE = 20;
 
   // Fetch comments from API with pagination
-  const fetchComments = async (page: number = currentPage) => {
+  const fetchComments = React.useCallback(async (page: number = currentPage) => {
     try {
       setIsLoading(true);
       const response = await apiClient.get(
@@ -82,7 +82,7 @@ const Comment = ({ postId }: { postId: string }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [postId, currentPage]);
 
   useEffect(() => {
     const fetchTokenAndComments = async () => {
@@ -102,7 +102,7 @@ const Comment = ({ postId }: { postId: string }) => {
     };
 
     fetchTokenAndComments();
-  }, [postId, currentPage]);
+  }, [currentPage, fetchComments]);
 
   // Manual refresh handler
   const handleRefresh = async () => {

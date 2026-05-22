@@ -46,12 +46,3 @@ Copy `.env.local.example` to `.env.local`. Required vars:
 | `NEXT_PUBLIC_DOMAIN` | Domain for cookie scoping |
 
 Defaults are set in `src/utils/getConfig.ts` and will work without `.env.local` for development against the production APIs.
-
-## Docker
-
-```bash
-docker build -t pilput -f Dockerfile-bun .
-docker run -p 3000:3000 pilput
-```
-
-Requires `output: 'standalone'` in `next.config.ts` (currently not set — add it before Docker builds will work).

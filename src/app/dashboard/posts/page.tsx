@@ -41,11 +41,12 @@ export default function Posts() {
   const debouncedSearch = useDebouncedValue(search, 300);
   const [status, setStatus] = useState("all");
   const poststore = postsStore();
+  const { fetch: fetchPosts } = poststore;
   const currentPage = Math.floor(offset / limit) + 1;
 
   useEffect(() => {
-    poststore.fetch(limit, offset);
-  }, [offset]);
+    fetchPosts(limit, offset);
+  }, [offset, fetchPosts, limit]);
 
   function changeOffset(newOffset: number) {
     if (newOffset >= 0 && newOffset < poststore.total) {

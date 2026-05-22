@@ -39,6 +39,7 @@ export default function SecurityTab({ onSubmit, loading }: SecurityTabProps) {
     mode: "onBlur",
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const new_password = watch("new_password");
 
   const onFormSubmit: SubmitHandler<PasswordFormData> = async (data) => {

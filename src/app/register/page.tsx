@@ -90,6 +90,7 @@ export default function Signup() {
   };
 
   // Username availability (debounced inline feedback)
+  // eslint-disable-next-line react-hooks/incompatible-library
   const username = watch("username");
   const [usernameStatus, setUsernameStatus] = useState<
     "idle" | "checking" | "available" | "taken" | "error"
