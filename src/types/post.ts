@@ -74,8 +74,11 @@ export function getPostBookmarkCount(
 
 export interface Comment {
   id: string;
+  post_id: string;
+  parent_comment_id: string | null;
   text: string;
-  replies: Comment[];
-  created_at: string;
-  user: User;
+  user: User | null;
+  created_at: string | null;
+  updated_at: string | null;
+  replies?: Comment[];
 }

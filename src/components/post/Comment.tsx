@@ -14,20 +14,18 @@ import { toast } from "sonner";
 
 interface CommentData {
   id: string;
-  text: string;
   post_id: string;
-  parent_comment_id: number | null;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
+  parent_comment_id: string | null;
+  text: string;
   user: {
     id: string;
     username: string;
     first_name: string;
     last_name: string;
     image: string;
-  };
+  } | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 interface PaginationMeta {
@@ -53,12 +51,21 @@ const Comment = ({ postId }: { postId: string }) => {
   const fetchComments = React.useCallback(async (page: number = currentPage) => {
     try {
       setIsLoading(true);
+      const offset = (page - 1) * COMMENTS_PER_PAGE;
       const response = await apiClient.get(
-        `/api/comments/post/${postId}?page=${page}&limit=${COMMENTS_PER_PAGE}`
+        `/api/posts/${postId}/comments`,
+        {
+          params: {
+            limit: COMMENTS_PER_PAGE,
+            offset: offset,
+            page: page,
+          }
+        }
       );
       console.log("Response data:", response.data);
 
-      if (response.data.success) {
+      const isSuccess = response.data.success || response.status === 200;
+      if (isSuccess) {
         // Ensure data is an array
         const commentsData = Array.isArray(response.data.data)
           ? response.data.data
@@ -68,7 +75,26 @@ const Comment = ({ postId }: { postId: string }) => {
         
         // Set pagination metadata
         if (response.data.meta) {
-          setPagination(response.data.meta);
+          const meta = response.data.meta;
+          const totalItems = meta.total_items ?? meta.total ?? meta.totalItems ?? commentsData.length;
+          const limitVal = meta.limit ?? COMMENTS_PER_PAGE;
+          const offsetVal = meta.offset ?? (page - 1) * limitVal;
+          const calculatedPage = meta.page ?? (Math.floor(offsetVal / limitVal) + 1);
+          const totalPages = meta.totalPages ?? meta.total_pages ?? Math.max(1, Math.ceil(totalItems / limitVal));
+
+          setPagination({
+            page: calculatedPage,
+            limit: limitVal,
+            total: totalItems,
+            totalPages: totalPages,
+          });
+        } else {
+          setPagination({
+            page: page,
+            limit: COMMENTS_PER_PAGE,
+            total: commentsData.length,
+            totalPages: 1,
+          });
         }
       } else {
         setcomments([]);
@@ -146,10 +172,9 @@ const Comment = ({ postId }: { postId: string }) => {
 
     try {
       const response = await apiClient.post(
-        `/api/comments`,
+        `/api/posts/${postId}/comments`,
         {
           text: comment.trim(),
-          post_id: postId,
         },
         {
           headers: {
@@ -158,7 +183,8 @@ const Comment = ({ postId }: { postId: string }) => {
         }
       );
 
-      if (response.data.success) {
+      const isSuccess = response.data.success || response.status === 201 || response.status === 200;
+      if (isSuccess) {
         toast.success("Comment posted successfully");
         setcomment("");
         // Reset to page 1 and refresh comments to show the new comment
@@ -257,8 +283,8 @@ const Comment = ({ postId }: { postId: string }) => {
                   {/* Avatar */}
                   <Avatar className="shrink-0">
                     <AvatarImage
-                      src={getProfilePicture(data.user?.image)}
-                      alt={`${data.user?.first_name} ${data.user?.last_name}`}
+                      src={getProfilePicture(data.user?.image ?? "")}
+                      alt={data.user ? `${data.user.first_name} ${data.user.last_name}` : "Anonymous User"}
                     />
                     <AvatarFallback>
                       <User className="w-5 h-5" />
@@ -274,9 +300,9 @@ const Comment = ({ postId }: { postId: string }) => {
                           : "Anonymous User"}
                       </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {formatDistanceToNow(new Date(data.created_at), {
+                        {data.created_at ? formatDistanceToNow(new Date(data.created_at), {
                           addSuffix: true,
-                        })}
+                        }) : "Just now"}
                       </span>
                     </div>
                     <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
