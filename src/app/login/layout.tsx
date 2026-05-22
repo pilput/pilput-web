@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { publicPageMetadata } from "@/lib/public-metadata";
 
 export const metadata = publicPageMetadata({
@@ -13,10 +15,16 @@ export const metadata = publicPageMetadata({
   },
 });
 
-export default function LoginLayout({
+export default async function LoginLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const token = (await cookies()).get("token")?.value;
+
+  if (token) {
+    redirect("/");
+  }
+
   return children;
 }
