@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowLeft, User as UserIcon, Shield, AlertTriangle, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getToken } from "@/utils/Auth";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import Navigation from "@/components/header/Navbar";
@@ -29,7 +29,7 @@ export default function AccountPage() {
 
   const fetchUserProfile = React.useCallback(async () => {
     try {
-      const response = await apiClientApp.get("/api/auth/profile", {
+      const response = await apiClient.get("/api/auth/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.data);
@@ -53,7 +53,7 @@ export default function AccountPage() {
   const handleProfileUpdate = async (data: { username: string; first_name: string; last_name: string }) => {
     setProfileLoading(true);
     try {
-      const response = await apiClientApp.put("/api/auth/profile", data, {
+      const response = await apiClient.put("/api/auth/profile", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.data);
@@ -67,7 +67,7 @@ export default function AccountPage() {
   const handlePasswordUpdate = async (data: PasswordUpdateFormData) => {
     setPasswordLoading(true);
     try {
-      await apiClientApp.patch(
+      await apiClient.patch(
         "/api/auth/password",
         {
           old_password: data.old_password,
@@ -103,7 +103,7 @@ export default function AccountPage() {
     }
 
     try {
-      await apiClientApp.delete("/api/auth/account", {
+      await apiClient.delete("/api/auth/account", {
         headers: { Authorization: `Bearer ${token}` },
       });
       router.push("/");

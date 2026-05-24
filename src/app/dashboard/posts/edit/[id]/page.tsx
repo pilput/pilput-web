@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { updatePostStore } from "@/stores/updatePostStore";
 import { getToken } from "@/utils/Auth";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -93,7 +93,7 @@ export default function PostEdit() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await apiClientApp.post(
+      const response = await apiClient.post(
         "/api/posts/image",
         formData,
         {

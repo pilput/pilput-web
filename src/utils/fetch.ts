@@ -193,7 +193,7 @@ export async function getDataExternal(
 
 export async function forgotPassword(email: string) {
   try {
-    const response = await apiClientApp.post("/api/auth/forgot-password", {
+    const response = await apiClient.post("/api/auth/forgot-password", {
       email,
     });
     return response.data;
@@ -204,7 +204,7 @@ export async function forgotPassword(email: string) {
 
 export async function resetPassword(token: string, password: string) {
   try {
-    const response = await apiClientApp.post("/api/auth/reset-password", {
+    const response = await apiClient.post("/api/auth/reset-password", {
       token,
       password,
     });

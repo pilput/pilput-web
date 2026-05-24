@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { apiClientApp, isHttpError } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 import { getToken, RemoveToken } from "@/utils/Auth";
 import type { Auth } from "@/types/you";
 
@@ -26,7 +26,7 @@ export const authStore = create<authDataState>()((set) => ({
   },
   fetch: async () => {
     try {
-      const { data } = await apiClientApp.get("/api/users/me", {
+      const { data } = await apiClient.get("/api/users/me", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const response = data as responseSuccess;
