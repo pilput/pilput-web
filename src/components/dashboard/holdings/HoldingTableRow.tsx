@@ -10,8 +10,8 @@ import { formatCurrency, getPlatformColor, getHoldingTypeColor, cn } from "@/lib
 interface HoldingTableRowProps {
   holding: Holding;
   index: number;
-  expandedRows: Set<bigint>;
-  toggleExpand: (id: bigint) => void;
+  expandedRows: Set<number>;
+  toggleExpand: (id: number) => void;
   onEdit: (holding: Holding) => void;
   hideValues?: boolean;
 }
@@ -69,15 +69,19 @@ export default function HoldingTableRow({
         </Badge>
       </TableCell>
       <TableCell>
-        <Badge
-          variant="secondary"
-          className={cn(
-            getHoldingTypeColor(holding.holding_type.name),
-            "rounded-md font-semibold tracking-wide text-[9px] sm:text-[10px] px-2 py-0.5 border shadow-sm"
-          )}
-        >
-          {holding.holding_type.name}
-        </Badge>
+        {holding.holding_type ? (
+          <Badge
+            variant="secondary"
+            className={cn(
+              getHoldingTypeColor(holding.holding_type.name),
+              "rounded-md font-semibold tracking-wide text-[9px] sm:text-[10px] px-2 py-0.5 border shadow-sm"
+            )}
+          >
+            {holding.holding_type.name}
+          </Badge>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        )}
       </TableCell>
       <TableCell className="font-mono text-right text-sm">
         {hideValues ? maskValue() : formatCurrency(invested, holding.currency, { showSymbol: false })}

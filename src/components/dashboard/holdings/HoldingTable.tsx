@@ -18,8 +18,8 @@ import { cn, getPlatformColor, getHoldingTypeColor } from "@/lib/utils";
 interface HoldingTableProps {
   holdings: Holding[];
   isLoading: boolean;
-  expandedRows: Set<bigint>;
-  toggleExpand: (id: bigint) => void;
+  expandedRows: Set<number>;
+  toggleExpand: (id: number) => void;
   onEdit: (holding: Holding) => void;
   hideValues?: boolean;
 }
@@ -105,7 +105,8 @@ export default function HoldingTable({
 
   const uniqueTypes = useMemo(() => {
     const types = holdings.reduce((acc, h) => {
-      if (!acc.find((t) => t.id === h.holding_type.id)) {
+      if (!h.holding_type) return acc;
+      if (!acc.find((t) => t.id === h.holding_type!.id)) {
         acc.push({ id: h.holding_type.id, name: h.holding_type.name });
       }
       return acc;
@@ -127,7 +128,9 @@ export default function HoldingTable({
       return holdings.filter((h) => h.platform === selectedPlatform);
     }
     if (filterType === "type" && selectedType !== "all") {
-      return holdings.filter((h) => h.holding_type.id.toString() === selectedType);
+      return holdings.filter(
+        (h) => h.holding_type?.id.toString() === selectedType,
+      );
     }
     return holdings;
   }, [holdings, filterType, selectedPlatform, selectedType]);
@@ -140,8 +143,8 @@ export default function HoldingTable({
       let bValue: any;
 
       if (key === "holding_type") {
-        aValue = a.holding_type.name;
-        bValue = b.holding_type.name;
+        aValue = a.holding_type?.name ?? "";
+        bValue = b.holding_type?.name ?? "";
       } else if (key === "realized_value") {
         aValue =
           a.gain_amount != null && a.gain_amount !== ""

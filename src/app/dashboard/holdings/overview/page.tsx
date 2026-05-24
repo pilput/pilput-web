@@ -35,6 +35,7 @@ import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHolding
 import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
 import { cn, formatCurrency } from "@/lib/utils";
+import { parseDecimal } from "@/types/holding";
 
 function holdingsChartColorVar(index: number) {
   return `var(--chart-${(index % 5) + 1})`;
@@ -142,7 +143,7 @@ function AllocationBreakdown({
 }
 
 export default function HoldingOverviewPage() {
-  const { holdings, isLoading, fetchHoldings, fetchHoldingTypes } =
+  const { holdings, summary, isLoading, fetchHoldings, fetchHoldingTypes } =
     useHoldingsStore();
 
   const [filterMonth, setFilterMonth] = useState(
@@ -190,22 +191,27 @@ export default function HoldingOverviewPage() {
   const statistics = useMemo(() => {
     if (!holdings || holdings.length === 0) return null;
 
-    const totalInvested = holdings.reduce(
-      (sum, h) => sum + parseFloat(h.invested_amount),
-      0
-    );
-    const totalCurrent = holdings.reduce(
-      (sum, h) => sum + parseFloat(h.current_value),
-      0
-    );
-    const hasGainAmounts = holdings.every(
-      (h) => h.gain_amount != null && h.gain_amount !== ""
-    );
-    const totalReturn = hasGainAmounts
-      ? holdings.reduce((sum, h) => sum + parseFloat(h.gain_amount ?? "0"), 0)
-      : totalCurrent - totalInvested;
-    const totalReturnPercent =
-      totalInvested > 0 ? (totalReturn / totalInvested) * 100 : 0;
+    const totalInvested = summary
+      ? parseDecimal(summary.totalInvested)
+      : holdings.reduce((sum, h) => sum + parseDecimal(h.invested_amount), 0);
+    const totalCurrent = summary
+      ? parseDecimal(summary.totalCurrentValue)
+      : holdings.reduce((sum, h) => sum + parseDecimal(h.current_value), 0);
+    const totalReturn = summary
+      ? parseDecimal(summary.totalProfitLoss)
+      : (() => {
+          const hasGainAmounts = holdings.every(
+            (h) => h.gain_amount != null && h.gain_amount !== "",
+          );
+          return hasGainAmounts
+            ? holdings.reduce((sum, h) => sum + parseDecimal(h.gain_amount), 0)
+            : totalCurrent - totalInvested;
+        })();
+    const totalReturnPercent = summary
+      ? parseDecimal(summary.totalProfitLossPercentage)
+      : totalInvested > 0
+        ? (totalReturn / totalInvested) * 100
+        : 0;
 
     const currencyBreakdown = holdings.reduce((acc, h) => {
       const currency = h.currency || "Unknown";
@@ -342,13 +348,13 @@ export default function HoldingOverviewPage() {
       bestAssetType: assetTypeEntries[0],
       worstAssetType: assetTypeEntries[assetTypeEntries.length - 1],
       primaryCurrency: mostCommonCurrency,
-      totalAssets: holdings.length,
+      totalAssets: summary?.holdingsCount ?? holdings.length,
       totalPlatforms: new Set(holdings.map((h) => h.platform)).size,
       totalAssetTypes: new Set(holdings.map((h) => h.holding_type?.name)).size,
       platformDistribution,
       assetTypeDistribution,
     };
-  }, [holdings]);
+  }, [holdings, summary]);
 
   const mask = () => "••••••";
 
@@ -513,6 +519,7 @@ export default function HoldingOverviewPage() {
       <CollapsibleSection id="summary" label="Summary" collapsed={!!collapsed.summary} onToggle={toggleSection}>
         <HoldingSummaryCards
           holdings={holdings}
+          summary={summary}
           isLoading={isLoading}
           hideValues={hideValues}
         />

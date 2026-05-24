@@ -115,6 +115,7 @@ export default function HoldingsPage() {
   const {
     holdings,
     holdingTypes,
+    summary,
     isLoading,
     isSyncing,
     expandedRows,
@@ -196,7 +197,7 @@ export default function HoldingsPage() {
 
   const openEditModal = useCallback((holding: Holding) => {
     // Check if this is a duplicate (id = 0) - treat as new holding
-    const isDuplicate = holding.id === BigInt(0);
+    const isDuplicate = holding.id === 0;
     setEditingHolding(isDuplicate ? null : holding);
     setFormData({
       name: holding.name,
@@ -228,16 +229,19 @@ export default function HoldingsPage() {
 
     try {
       const payload = {
-        ...formData,
+        name: formData.name,
         symbol: formData.symbol?.trim() || null,
+        platform: formData.platform,
         holding_type_id: parseInt(formData.holding_type_id, 10),
-        invested_amount: parseFloat(formData.invested_amount),
-        current_value: parseFloat(formData.current_value),
-        units: formData.units ? parseFloat(formData.units) : null,
-        avg_buy_price: formData.avg_buy_price ? parseFloat(formData.avg_buy_price) : null,
-        current_price: formData.current_price ? parseFloat(formData.current_price) : null,
+        currency: formData.currency,
+        invested_amount: formData.invested_amount,
+        current_value: formData.current_value,
+        units: formData.units?.trim() || null,
+        avg_buy_price: formData.avg_buy_price?.trim() || null,
+        current_price: formData.current_price?.trim() || null,
         month: parseInt(formData.month, 10),
         year: parseInt(formData.year, 10),
+        notes: formData.notes?.trim() || null,
       };
 
       if (editingHolding) {
@@ -399,7 +403,12 @@ export default function HoldingsPage() {
           </h2>
           <div className="flex-1 h-px bg-border/50" />
         </div>
-        <HoldingSummaryCards holdings={holdings} isLoading={isLoading} hideValues={hideValues} />
+        <HoldingSummaryCards
+          holdings={holdings}
+          summary={summary}
+          isLoading={isLoading}
+          hideValues={hideValues}
+        />
       </section>
 
       {/* Holdings Table Card */}

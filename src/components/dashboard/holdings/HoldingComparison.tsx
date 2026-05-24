@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import ComparisonSummaryCards from "./ComparisonSummaryCards";
 import ComparisonChart from "./ComparisonChart";
@@ -66,7 +66,7 @@ export default function HoldingComparison({
 
       const token = getToken();
 
-      const response = await apiClient.get<{
+      const response = await apiClientApp.get<{
         success: boolean;
         data: ComparisonSummary;
         message: string;

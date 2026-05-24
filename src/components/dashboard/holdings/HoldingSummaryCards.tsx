@@ -1,13 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDownRight, ArrowUpRight, DollarSign, Wallet, TrendingUp } from "lucide-react";
-import type { Holding } from "@/types/holding";
+import type { Holding, HoldingSummaryResponse } from "@/types/holding";
+import { parseDecimal } from "@/types/holding";
 import { formatCurrency } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 interface HoldingSummaryCardsProps {
   holdings: Holding[];
+  summary?: HoldingSummaryResponse | null;
   isLoading: boolean;
   hideValues?: boolean;
+  primaryCurrency?: string;
 }
 
 const containerVariants = {
@@ -34,45 +37,58 @@ const cardVariants = {
 
 export default function HoldingSummaryCards({
   holdings,
+  summary,
   isLoading,
   hideValues = false,
+  primaryCurrency: primaryCurrencyProp,
 }: HoldingSummaryCardsProps) {
-  const totalInvested = holdings.reduce(
-    (sum, holding) => sum + parseFloat(holding.invested_amount),
-    0
-  );
-  const totalCurrent = holdings.reduce(
-    (sum, holding) => sum + parseFloat(holding.current_value),
-    0
-  );
-  const hasGainAmounts = holdings.every(
-    (h) => h.gain_amount != null && h.gain_amount !== ""
-  );
-  const totalRealized = hasGainAmounts
-    ? holdings.reduce(
-        (sum, holding) => sum + parseFloat(holding.gain_amount ?? "0"),
-        0
-      )
-    : totalCurrent - totalInvested;
-  const totalPercent =
-    totalInvested > 0
-      ? hasGainAmounts
-        ? (totalRealized / totalInvested) * 100
-        : ((totalCurrent - totalInvested) / totalInvested) * 100
+  const totalInvested = summary
+    ? parseDecimal(summary.totalInvested)
+    : holdings.reduce(
+        (sum, holding) => sum + parseDecimal(holding.invested_amount),
+        0,
+      );
+  const totalCurrent = summary
+    ? parseDecimal(summary.totalCurrentValue)
+    : holdings.reduce(
+        (sum, holding) => sum + parseDecimal(holding.current_value),
+        0,
+      );
+  const totalRealized = summary
+    ? parseDecimal(summary.totalProfitLoss)
+    : (() => {
+        const hasGainAmounts = holdings.every(
+          (h) => h.gain_amount != null && h.gain_amount !== "",
+        );
+        return hasGainAmounts
+          ? holdings.reduce(
+              (sum, holding) => sum + parseDecimal(holding.gain_amount),
+              0,
+            )
+          : totalCurrent - totalInvested;
+      })();
+  const totalPercent = summary
+    ? parseDecimal(summary.totalProfitLossPercentage)
+    : totalInvested > 0
+      ? (totalRealized / totalInvested) * 100
       : 0;
+  const holdingsCount = summary?.holdingsCount ?? holdings.length;
 
-  // Get the most common currency from holdings, default to IDR
   const mostCommonCurrency =
     holdings.length > 0
-      ? holdings.reduce((acc, holding) => {
-          acc[holding.currency] = (acc[holding.currency] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>)
+      ? holdings.reduce(
+          (acc, holding) => {
+            acc[holding.currency] = (acc[holding.currency] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>,
+        )
       : {};
   const primaryCurrency =
-    Object.keys(mostCommonCurrency).length > 0
+    primaryCurrencyProp ??
+    (Object.keys(mostCommonCurrency).length > 0
       ? Object.entries(mostCommonCurrency).sort((a, b) => b[1] - a[1])[0][0]
-      : "IDR";
+      : "IDR");
 
   const maskValue = () => "••••••";
 
@@ -101,7 +117,7 @@ export default function HoldingSummaryCards({
       value: hideValues ? maskValue() : formatCurrency(totalInvested, primaryCurrency),
       icon: Wallet,
       valueColor: "text-foreground",
-      helper: `${holdings.length} asset${holdings.length === 1 ? "" : "s"} tracked`,
+      helper: `${holdingsCount} asset${holdingsCount === 1 ? "" : "s"} tracked`,
     },
     {
       title: "Current Value",

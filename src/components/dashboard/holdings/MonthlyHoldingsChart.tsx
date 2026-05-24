@@ -21,9 +21,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/utils/fetch";
+import { apiClientApp } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { cn } from "@/lib/utils";
+import type { HoldingMonthlyDataResponse } from "@/types/holding";
+import { parseDecimal } from "@/types/holding";
 
 /** "YYYY-MM" from input type="month" -> { month, year } */
 function parseMonthValue(value: string): { month: number; year: number } | null {
@@ -33,17 +35,14 @@ function parseMonthValue(value: string): { month: number; year: number } | null 
   return { month: m, year: y };
 }
 
-type MonthlyHoldingApiItem = {
+type MonthlyChartPoint = {
   month: number;
   year: number;
   date: string;
   totalCurrentValue: number;
   totalInvested: number;
   holdingsCount: number;
-};
-
-type MonthlyHoldingResponse = {
-  data: MonthlyHoldingApiItem[];
+  label: string;
 };
 
 interface MonthlyHoldingsChartProps {
@@ -93,9 +92,7 @@ interface CustomTooltipProps {
 
 const CustomTooltip = ({ active, payload, label, hideValues }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const point = payload[0]?.payload as MonthlyHoldingApiItem & {
-      label: string;
-    };
+    const point = payload[0]?.payload as MonthlyChartPoint;
 
     return (
       <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
@@ -145,7 +142,7 @@ export default function MonthlyHoldingsChart({
   endMonth: endMonthProp,
   endYear: endYearProp,
 }: MonthlyHoldingsChartProps) {
-  const [data, setData] = React.useState<MonthlyHoldingApiItem[]>([]);
+  const [data, setData] = React.useState<MonthlyChartPoint[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -190,15 +187,30 @@ export default function MonthlyHoldingsChart({
         if (filter.endMonth != null) params.endMonth = filter.endMonth;
         if (filter.endYear != null) params.endYear = filter.endYear;
 
-        const response = await apiClient.get<MonthlyHoldingResponse>(
-          "/api/holdings/monthly",
-          {
-            ...(Object.keys(params).length > 0 && { params }),
-            ...(token && { headers: { Authorization: `Bearer ${token}` } }),
-          }
-        );
+        const response = await apiClientApp.get<{
+          success: boolean;
+          data: HoldingMonthlyDataResponse[];
+        }>("/api/holdings/monthly", {
+          ...(Object.keys(params).length > 0 && { params }),
+          ...(token && { headers: { Authorization: `Bearer ${token}` } }),
+        });
         if (!isCancelled) {
-          setData(response.data?.data ?? []);
+          const items = response.data?.success ? response.data.data : [];
+          setData(
+            items.map((item) => ({
+              month: item.month,
+              year: item.year,
+              date:
+                item.date ??
+                `${item.year}-${String(item.month).padStart(2, "0")}`,
+              totalCurrentValue: parseDecimal(item.totalCurrentValue),
+              totalInvested: parseDecimal(item.totalInvested),
+              holdingsCount: item.holdingsCount,
+              label:
+                item.date ??
+                `${item.year}-${String(item.month).padStart(2, "0")}`,
+            })),
+          );
         }
       } catch (err) {
         if (!isCancelled) {
@@ -239,16 +251,7 @@ export default function MonthlyHoldingsChart({
     filter.endYear != null;
   const canUseFilterUI = Object.keys(propsFilter).length === 0;
 
-  const chartData = React.useMemo(
-    () =>
-      data.map((item) => ({
-        ...item,
-        label:
-          item.date ||
-          `${item.year}-${String(item.month).padStart(2, "0")}`,
-      })),
-    [data]
-  );
+  const chartData = data;
 
 
 

@@ -35,7 +35,7 @@ const HoldingActionComponent = ({
     // Create a duplicate holding without the ID and timestamps
     const duplicatedHolding: Holding = {
       ...holding,
-      id: BigInt(0), // Will be set by the backend
+      id: 0,
       name: `${holding.name} (Copy)`,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
