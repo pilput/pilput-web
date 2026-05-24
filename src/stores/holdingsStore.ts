@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { getToken, RemoveToken } from "@/utils/Auth";
-import { apiClientApp, isHttpError } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 import { toast } from "sonner";
 import type {
   Holding,
@@ -92,7 +92,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
         orderDir,
       });
 
-      const { data } = await apiClientApp.get("/api/holdings", {
+      const { data } = await apiClient.get("/api/holdings", {
         headers: authHeaders(),
         params: {
           month,
@@ -128,7 +128,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
     set({ isSummaryLoading: true });
     try {
-      const { data } = await apiClientApp.get("/api/holdings/summary", {
+      const { data } = await apiClient.get("/api/holdings/summary", {
         headers: authHeaders(),
         params: { month, year },
       });
@@ -150,7 +150,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
   fetchHoldingTypes: async () => {
     try {
-      const { data } = await apiClientApp.get("/api/holding-types", {
+      const { data } = await apiClient.get("/api/holding-types", {
         headers: authHeaders(),
       });
 
@@ -165,7 +165,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
 
   fetchHoldingById: async (id) => {
     try {
-      const { data } = await apiClientApp.get(`/api/holdings/${id}`, {
+      const { data } = await apiClient.get(`/api/holdings/${id}`, {
         headers: authHeaders(),
       });
 
@@ -184,7 +184,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading("Syncing prices...");
     set({ isSyncing: true });
     try {
-      const { data: body } = await apiClientApp.post<
+      const { data: body } = await apiClient.post<
         ApiEnvelope<{ syncedCount: number; month: number; year: number }>
       >("/api/holdings/sync", {}, { headers: authHeaders() });
 
@@ -230,7 +230,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   addHolding: async (payload) => {
     const toastId = toast.loading("Creating...");
     try {
-      await apiClientApp.post("/api/holdings", payload, {
+      await apiClient.post("/api/holdings", payload, {
         headers: authHeaders(),
       });
       toast.success("Holding created", { id: toastId });
@@ -244,7 +244,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   updateHolding: async (id, payload) => {
     const toastId = toast.loading("Updating...");
     try {
-      await apiClientApp.put(`/api/holdings/${id}`, payload, {
+      await apiClient.put(`/api/holdings/${id}`, payload, {
         headers: authHeaders(),
       });
       toast.success("Holding updated", { id: toastId });
@@ -258,7 +258,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
   deleteHolding: async (id) => {
     const toastId = toast.loading("Deleting...");
     try {
-      await apiClientApp.delete(`/api/holdings/${id}`, {
+      await apiClient.delete(`/api/holdings/${id}`, {
         headers: authHeaders(),
       });
       toast.success("Holding deleted", { id: toastId });
@@ -273,7 +273,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     const toastId = toast.loading("Duplicating...");
     try {
       const validatedPayload = duplicateHoldingSchema.parse(payload);
-      await apiClientApp.post("/api/holdings/duplicate", validatedPayload, {
+      await apiClient.post("/api/holdings/duplicate", validatedPayload, {
         headers: authHeaders(),
       });
       toast.success("Holdings duplicated", { id: toastId });

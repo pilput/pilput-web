@@ -157,13 +157,8 @@ function createClient(baseURL: string) {
   };
 }
 
-/** Main API (`NEXT_PUBLIC_API_URL`) — public posts, tags, uploads, views. */
+/** API client (`NEXT_PUBLIC_API_URL`). */
 export const apiClient = createClient(Config.apibaseurl);
-
-
-
-/** App API (`NEXT_PUBLIC_API_URL_2`) — auth, users, chat, holdings, feed. */
-export const apiClientApp = createClient(Config.apibaseurl2);
 
 export async function getDataExternal(
   url: string,

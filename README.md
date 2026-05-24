@@ -152,7 +152,6 @@ Configure the following environment variables in `.env.local`:
 
 ```env
 NEXT_PUBLIC_API_URL=<your-api-url>
-NEXT_PUBLIC_API_URL_2=<app-api-url>
 NEXT_PUBLIC_STORAGE_URL=<storage-url>
 NEXT_PUBLIC_MAIN_URL=<main-url>
 NEXT_PUBLIC_DOMAIN=<domain>

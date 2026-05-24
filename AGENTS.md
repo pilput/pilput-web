@@ -14,10 +14,7 @@ No test runner is configured.
 ## Architecture
 
 - **Next.js 16+ App Router** — all routes under `src/app/` using the app directory convention
-- **Two separate API backends**:
-  - `apiClient` → `NEXT_PUBLIC_API_URL` (posts, tags, uploads, views)
-  - `apiClientApp` → `NEXT_PUBLIC_API_URL_2` (auth, users, chat, holdings, feed)
-  - Both are thin wrappers around native `fetch` (in `src/utils/fetch.ts`), not Axios
+- **API client**: `apiClient` → `NEXT_PUBLIC_API_URL` (thin wrapper around native `fetch` in `src/utils/fetch.ts`, not Axios)
 - **Auth**: JWT token stored in cookies via `cookies-next`; see `src/utils/Auth.ts`
 - **State**: Zustand stores in `src/stores/`
 - **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
@@ -39,8 +36,7 @@ Copy `.env.local.example` to `.env.local`. Required vars:
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_API_URL` | Main API (public content) |
-| `NEXT_PUBLIC_API_URL_2` | App API (auth, users, chat, holdings) |
+| `NEXT_PUBLIC_API_URL` | Backend API |
 | `NEXT_PUBLIC_STORAGE_URL` | Storage/image base URL |
 | `NEXT_PUBLIC_MAIN_URL` | App base URL |
 | `NEXT_PUBLIC_DOMAIN` | Domain for cookie scoping |

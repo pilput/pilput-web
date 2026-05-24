@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { apiClientApp } from "@/utils/fetch";
+import { apiClient } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { cn } from "@/lib/utils";
 import type { HoldingMonthlyDataResponse } from "@/types/holding";
@@ -187,7 +187,7 @@ export default function MonthlyHoldingsChart({
         if (filter.endMonth != null) params.endMonth = filter.endMonth;
         if (filter.endYear != null) params.endYear = filter.endYear;
 
-        const response = await apiClientApp.get<{
+        const response = await apiClient.get<{
           success: boolean;
           data: HoldingMonthlyDataResponse[];
         }>("/api/holdings/monthly", {
