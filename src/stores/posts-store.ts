@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { apiClient } from '@/utils/fetch'
 import { getToken } from '@/utils/Auth'
-import type { Post } from '@/types/post'
+import type { Post, PostAnalyticsData } from '@/types/post'
 
 interface PostsState {
     posts: Post[]
@@ -9,6 +9,9 @@ interface PostsState {
     fetchPublic: (limit: number, offset: number) => void
     error: boolean
     total: number;
+    analytics: PostAnalyticsData | null;
+    analyticsLoading: boolean;
+    fetchAnalytics: (startDate?: string, endDate?: string) => Promise<void>;
 }
 
 export const postsStore = create<PostsState>()((set) => ({
@@ -51,6 +54,32 @@ export const postsStore = create<PostsState>()((set) => ({
         }
     },
     error: false,
-    total: 0
+    total: 0,
+    analytics: null,
+    analyticsLoading: false,
+    fetchAnalytics: async (startDate, endDate) => {
+        set({ analyticsLoading: true });
+        try {
+            const params: Record<string, string> = {};
+            if (startDate) params.start_date = startDate;
+            if (endDate) params.end_date = endDate;
+
+            const { data } = await apiClient.get("/api/posts/me/analytics", {
+                params,
+                headers: { "Authorization": `Bearer ${getToken()}` }
+            });
+            const response = data as { data: PostAnalyticsData; success: boolean };
+            if (response.success && response.data) {
+                set({ analytics: response.data, error: false });
+            } else {
+                set({ error: true });
+            }
+        } catch (error) {
+            console.error("Failed to fetch post analytics:", error);
+            set({ error: true });
+        } finally {
+            set({ analyticsLoading: false });
+        }
+    }
 }))
 

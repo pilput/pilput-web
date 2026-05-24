@@ -82,3 +82,24 @@ export interface Comment {
   updated_at: string | null;
   replies?: Comment[];
 }
+
+export interface PostAnalyticsData {
+  summary: {
+    total_posts: number;
+    published_posts: number;
+    total_views: number;
+    total_likes: number;
+  };
+  view_trend: {
+    date: string;
+    views: number;
+    cumulative_views: number;
+  }[];
+  top_posts: {
+    id: string;
+    title: string;
+    slug: string;
+    view_count: number;
+    like_count: number;
+  }[];
+}

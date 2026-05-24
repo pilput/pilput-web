@@ -25,15 +25,19 @@ import { getToken, RemoveToken } from "@/utils/Auth"
 import { apiClient, isHttpError } from "@/utils/fetch"
 import { toast } from "sonner"
 
-type MyLikesByMonthItem = {
+type LikesByMonthItem = {
   month: string
-  count: number
+  likes: number
 }
 
-type MyLikesByMonthResponse = {
+type LikesByMonthResponse = {
   success: boolean
   message?: string
-  data: MyLikesByMonthItem[]
+  data: {
+    months: number
+    series: LikesByMonthItem[]
+    total: number
+  }
 }
 
 function monthKeysForWindow(months: number): string[] {
@@ -95,8 +99,8 @@ export default function LikeChart() {
     async function load() {
       setIsLoading(true)
       try {
-        const { data } = await apiClient.get<MyLikesByMonthResponse>(
-          "/api/posts/charts/my-likes-by-month",
+        const { data } = await apiClient.get<LikesByMonthResponse>(
+          "/api/posts/me/analytics/likes-by-month",
           {
             params: { months },
             headers: {
@@ -107,16 +111,16 @@ export default function LikeChart() {
 
         if (cancelled) return
 
-        if (!data.success || !Array.isArray(data.data)) {
+        if (!data.success || !data.data || !Array.isArray(data.data.series)) {
           toast.error("Could not load likes chart")
           setChartData([])
           return
         }
 
         const byMonth = new Map<string, number>()
-        for (const row of data.data) {
+        for (const row of data.data.series) {
           if (row?.month) {
-            byMonth.set(row.month, row.count ?? 0)
+            byMonth.set(row.month, row.likes ?? 0)
           }
         }
 
@@ -158,8 +162,8 @@ export default function LikeChart() {
   const totalLikes = chartData.reduce((sum, row) => sum + row.count, 0)
 
   return (
-    <Card>
-      <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-center sm:justify-between">
+    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
+      <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-center sm:justify-between border-b border-border/50 py-5">
         <div className="space-y-1">
           <CardTitle className="flex items-center gap-2">
             <Heart className="h-5 w-5 text-rose-500" aria-hidden />
@@ -186,7 +190,7 @@ export default function LikeChart() {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         {isLoading ? (
           <div className="flex h-[300px] items-center justify-center">
             <Skeleton className="h-[260px] w-[95%] rounded-lg" />

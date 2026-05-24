@@ -112,13 +112,13 @@ export default function HoldingComparison({
       {isLoading ? (
         <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="bg-muted/5 animate-pulse border-dashed">
+            <Card key={i} className="animate-pulse overflow-hidden glass-card border-glow-hover shadow-premium rounded-2xl">
               <div className="h-24 sm:h-32" />
             </Card>
           ))}
         </div>
       ) : error ? (
-        <Card className="border-red-200 bg-red-50/50 dark:bg-red-950/20 dark:border-red-800">
+        <Card className="glass-card border-red-500/20 bg-red-500/5 dark:bg-red-950/20 dark:border-red-900 shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
           <CardContent className="flex items-center justify-center py-4 sm:py-6 gap-2 text-red-600 dark:text-red-400 text-xs sm:text-sm px-4">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span className="break-words">{error}</span>
@@ -137,7 +137,7 @@ export default function HoldingComparison({
           </div>
         </>
       ) : (
-        <Card className="border-dashed bg-muted/5">
+        <Card className="glass-card border-dashed border-muted bg-muted/5 shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
           <CardContent className="flex items-center justify-center py-8 sm:py-10 text-muted-foreground text-xs sm:text-sm px-4">
             No comparison data available for this period.
           </CardContent>

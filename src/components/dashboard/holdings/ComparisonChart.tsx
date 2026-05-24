@@ -92,7 +92,7 @@ export default function ComparisonChart({
   ];
 
   return (
-    <Card>
+    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="px-3 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
         <CardTitle className="text-base sm:text-lg">Comparison Overview</CardTitle>
         <CardDescription className="text-xs sm:text-sm mt-1">

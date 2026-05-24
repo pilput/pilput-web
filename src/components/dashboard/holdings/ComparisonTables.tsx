@@ -25,7 +25,7 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
 
   return (
     <Accordion type="multiple" defaultValue={["type-breakdown", "platform-breakdown"]} className="w-full space-y-3 sm:space-y-4">
-      <AccordionItem value="type-breakdown" className="border rounded-lg bg-card px-3 sm:px-4">
+      <AccordionItem value="type-breakdown" className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300 px-3 sm:px-4">
         <AccordionTrigger className="hover:no-underline py-3 sm:py-4">
           <div className="flex items-center gap-2">
             <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
@@ -80,7 +80,7 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
         </AccordionContent>
       </AccordionItem>
 
-      <AccordionItem value="platform-breakdown" className="border rounded-lg bg-card px-3 sm:px-4">
+      <AccordionItem value="platform-breakdown" className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300 px-3 sm:px-4">
         <AccordionTrigger className="hover:no-underline py-3 sm:py-4">
           <div className="flex items-center gap-2">
             <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />

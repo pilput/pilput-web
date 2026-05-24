@@ -31,7 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { Search, UserPlus } from "lucide-react";
+import { Search, UserPlus, Users, Shield, User as UserIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -199,130 +199,177 @@ export default function ManageUser() {
   }
 
   return (
-    <div className="mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
-      <Card className="">
-        <CardHeader className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <CardTitle className="text-xl sm:text-2xl font-bold">User Management</CardTitle>
-            <Dialog open={modaluser} onOpenChange={setmodaluser}>
-              <DialogTrigger asChild>
-                <Button className="flex items-center gap-2 w-full sm:w-auto">
-                  <UserPlus className="h-4 w-4" />
-                  Add new user
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Add new user</DialogTitle>
-                  <DialogDescription>
-                    Create a new account with username, email, and password.
-                  </DialogDescription>
-                </DialogHeader>
-                <form
-                  onSubmit={addUserForm.handleSubmit(submitAddUser)}
-                  className="space-y-4"
+    <div className="flex flex-col gap-6 w-full">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
+            User Management
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Manage system users, administrators, and permissions.
+          </p>
+        </div>
+        <Dialog open={modaluser} onOpenChange={setmodaluser}>
+          <DialogTrigger asChild>
+            <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shadow-sm shrink-0">
+              <UserPlus className="h-4 w-4" />
+              Add new user
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add new user</DialogTitle>
+              <DialogDescription>
+                Create a new account with username, email, and password.
+              </DialogDescription>
+            </DialogHeader>
+            <form
+              onSubmit={addUserForm.handleSubmit(submitAddUser)}
+              className="space-y-4"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="first_name">First name</Label>
+                  <Input
+                    id="first_name"
+                    {...addUserForm.register("first_name")}
+                    placeholder="First name"
+                  />
+                  {addUserForm.formState.errors.first_name && (
+                    <p className="text-sm text-destructive">
+                      {addUserForm.formState.errors.first_name.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="last_name">Last name</Label>
+                  <Input
+                    id="last_name"
+                    {...addUserForm.register("last_name")}
+                    placeholder="Last name"
+                  />
+                  {addUserForm.formState.errors.last_name && (
+                    <p className="text-sm text-destructive">
+                      {addUserForm.formState.errors.last_name.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  {...addUserForm.register("username")}
+                  placeholder="Enter username"
+                />
+                {addUserForm.formState.errors.username && (
+                  <p className="text-sm text-destructive">
+                    {addUserForm.formState.errors.username.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  {...addUserForm.register("email")}
+                  placeholder="Enter email"
+                />
+                {addUserForm.formState.errors.email && (
+                  <p className="text-sm text-destructive">
+                    {addUserForm.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  {...addUserForm.register("password")}
+                  placeholder="Enter password"
+                />
+                {addUserForm.formState.errors.password && (
+                  <p className="text-sm text-destructive">
+                    {addUserForm.formState.errors.password.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  {...addUserForm.register("confirmPassword")}
+                  placeholder="Confirm password"
+                />
+                {addUserForm.formState.errors.confirmPassword && (
+                  <p className="text-sm text-destructive">
+                    {addUserForm.formState.errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={closeModaluser}
+                  disabled={isCreating}
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="first_name">First name</Label>
-                      <Input
-                        id="first_name"
-                        {...addUserForm.register("first_name")}
-                        placeholder="First name"
-                      />
-                      {addUserForm.formState.errors.first_name && (
-                        <p className="text-sm text-destructive">
-                          {addUserForm.formState.errors.first_name.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="last_name">Last name</Label>
-                      <Input
-                        id="last_name"
-                        {...addUserForm.register("last_name")}
-                        placeholder="Last name"
-                      />
-                      {addUserForm.formState.errors.last_name && (
-                        <p className="text-sm text-destructive">
-                          {addUserForm.formState.errors.last_name.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
-                    <Input
-                      id="username"
-                      {...addUserForm.register("username")}
-                      placeholder="Enter username"
-                    />
-                    {addUserForm.formState.errors.username && (
-                      <p className="text-sm text-destructive">
-                        {addUserForm.formState.errors.username.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      {...addUserForm.register("email")}
-                      placeholder="Enter email"
-                    />
-                    {addUserForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
-                        {addUserForm.formState.errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      {...addUserForm.register("password")}
-                      placeholder="Enter password"
-                    />
-                    {addUserForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
-                        {addUserForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm password</Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      {...addUserForm.register("confirmPassword")}
-                      placeholder="Confirm password"
-                    />
-                    {addUserForm.formState.errors.confirmPassword && (
-                      <p className="text-sm text-destructive">
-                        {addUserForm.formState.errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={closeModaluser}
-                      disabled={isCreating}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={isCreating}>
-                      {isCreating ? "Creating..." : "Create user"}
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isCreating}>
+                  {isCreating ? "Creating..." : "Create user"}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* KPI Stats cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+          <div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Users</span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">{total}</div>
           </div>
-          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+            <Users className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+          <div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Administrators</span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
+              {users.filter(u => u.is_super_admin).length}
+            </div>
+          </div>
+          <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+            <Shield className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+          <div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Standard Users</span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
+              {total - users.filter(u => u.is_super_admin).length}
+            </div>
+          </div>
+          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+            <UserIcon className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Main card wrapper for search filters and list */}
+      <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
+        <CardHeader className="p-5 border-b border-border/60">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input

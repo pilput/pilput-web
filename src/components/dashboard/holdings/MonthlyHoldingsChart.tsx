@@ -284,14 +284,14 @@ export default function MonthlyHoldingsChart({
   );
 
   return (
-    <Card className="border-border/60 bg-card">
-      <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
+    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden h-full flex flex-col justify-between transition-all duration-300">
+      <CardHeader className="px-4 py-5 sm:px-5 border-b border-border/50">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <CardTitle className="text-sm font-semibold">
+            <CardTitle className="text-xl font-bold">
               Monthly Holdings Performance
             </CardTitle>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-sm">
               Total invested vs current value per month
             </CardDescription>
           </div>
@@ -343,7 +343,7 @@ export default function MonthlyHoldingsChart({
           )}
         </div>
       </CardHeader>
-      <CardContent className="px-4 pb-4 sm:px-5">
+      <CardContent className="px-4 pb-4 sm:px-5 pt-6 flex-1 flex flex-col justify-between">
         {isLoading ? (
           <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-border/60 bg-muted/10 text-xs text-muted-foreground sm:text-sm">
             Loading monthly holdings...

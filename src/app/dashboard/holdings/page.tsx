@@ -53,11 +53,11 @@ const HeaderActions = ({
 }: HeaderActionsProps) => {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="inline-flex items-center gap-1 rounded-lg border border-border/70 bg-card/60 p-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:bg-muted/20 dark:shadow-none">
+      <div className="inline-flex items-center gap-1 rounded-xl border border-border/60 bg-card/60 p-1 shadow-sm dark:bg-muted/20">
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 gap-1.5 text-xs sm:text-sm"
+          className="h-8 gap-1.5 text-xs sm:text-sm hover:bg-muted/80 rounded-lg transition-colors"
           onClick={onSyncPrices}
           disabled={isSyncing}
           title="Fetch latest prices for holdings with symbols (current calendar month)"
@@ -70,7 +70,7 @@ const HeaderActions = ({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 gap-1.5 text-xs sm:text-sm"
+          className="h-8 gap-1.5 text-xs sm:text-sm hover:bg-muted/80 rounded-lg transition-colors"
           onClick={onOpenDuplicate}
         >
           <Copy className="w-3.5 h-3.5" />
@@ -79,7 +79,7 @@ const HeaderActions = ({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 gap-1.5 text-xs sm:text-sm"
+          className="h-8 gap-1.5 text-xs sm:text-sm hover:bg-muted/80 rounded-lg transition-colors"
           onClick={onExportCsv}
           disabled={!canExport}
         >
@@ -90,7 +90,7 @@ const HeaderActions = ({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 shrink-0"
+          className="h-8 w-8 shrink-0 hover:bg-muted/80 rounded-lg transition-colors"
           onClick={onToggleHide}
           title={hideValues ? "Show values" : "Hide values"}
           aria-label={hideValues ? "Show values" : "Hide values"}
@@ -366,7 +366,7 @@ export default function HoldingsPage() {
   const activeYear = parseInt(filterYear, 10);
 
   return (
-    <div className="container mx-auto space-y-6 sm:space-y-8">
+    <div className="flex flex-col gap-6 w-full">
       {/* Header Section */}
       <div className="flex flex-col gap-4 sm:gap-5">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
@@ -412,8 +412,8 @@ export default function HoldingsPage() {
       </section>
 
       {/* Holdings Table Card */}
-      <Card className="overflow-hidden rounded-2xl border-border/70 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
-        <CardHeader className="border-b border-border/60 bg-gradient-to-b from-muted/30 to-muted/5 py-4 sm:py-5 px-4 sm:px-6">
+      <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
+        <CardHeader className="border-b border-border/60 py-5 px-4 sm:px-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <CardTitle className="text-base sm:text-lg font-semibold tracking-tight">

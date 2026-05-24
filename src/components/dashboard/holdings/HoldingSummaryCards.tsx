@@ -96,7 +96,7 @@ export default function HoldingSummaryCards({
     return (
       <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="animate-pulse overflow-hidden rounded-2xl border border-border/80 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+          <Card key={i} className="animate-pulse overflow-hidden glass-card border-glow-hover shadow-premium rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-5 pt-4 sm:pt-5">
               <div className="h-3 sm:h-4 w-16 sm:w-24 bg-muted/80 rounded-md" />
               <div className="h-8 w-8 bg-muted/80 rounded-lg" />
@@ -180,7 +180,7 @@ export default function HoldingSummaryCards({
             : "text-muted-foreground";
         return (
           <motion.div key={card.title} variants={cardVariants}>
-            <Card className="relative overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] dark:hover:shadow-none dark:border-border transition-all duration-300 group h-full">
+            <Card className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-5 pt-4 sm:pt-5 relative">
                 <CardTitle className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate pr-1 text-muted-foreground">
                   {card.title}

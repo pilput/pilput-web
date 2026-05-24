@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -136,4 +137,3 @@ const DashboardTopBar = () => {
 };
 
 export default DashboardTopBar;
-import { useEffect } from "react";

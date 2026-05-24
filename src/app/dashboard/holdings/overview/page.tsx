@@ -99,7 +99,7 @@ function AllocationBreakdown({
   const items = platformDistribution.map((d) => ({ label: d.platform, percent: d.percent }));
 
   return (
-    <Card className="border-border/60 bg-card">
+    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
         <CardTitle className="text-sm font-semibold flex items-center gap-2">
           <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
@@ -422,7 +422,8 @@ export default function HoldingOverviewPage() {
 
         {/* Hero metrics */}
         {statistics && (
-          <div className="rounded-2xl border border-border/70 bg-gradient-to-br from-primary/[0.04] via-card to-card p-4 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:bg-gradient-to-br dark:from-primary/5 dark:via-card dark:to-card dark:shadow-none">
+          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/10 via-card to-card p-4 sm:p-6 shadow-premium dark:bg-gradient-to-br dark:from-primary/5 dark:via-card dark:to-card">
+            <div className="absolute -top-16 -right-16 w-32 h-32 bg-primary/15 rounded-full blur-2xl pointer-events-none" />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
               <div>
                 <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">
@@ -528,7 +529,7 @@ export default function HoldingOverviewPage() {
       {/* ── Section: Allocation ─────────────────────────── */}
       <CollapsibleSection id="allocation" label="Allocation" collapsed={!!collapsed.allocation} onToggle={toggleSection}>
         {statistics?.currencyCount && statistics.currencyCount > 1 ? (
-          <Card className="border-border/60 bg-card">
+          <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
             <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Info className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
@@ -566,7 +567,7 @@ export default function HoldingOverviewPage() {
 
         {/* Currency breakdown (only shown when multiple currencies) */}
         {statistics && Object.keys(statistics.currencyBreakdown).length > 1 && (
-          <Card className="mt-4 border-border/60 bg-card md:mt-5">
+          <Card className="mt-4 md:mt-5 glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
             <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
@@ -641,7 +642,7 @@ export default function HoldingOverviewPage() {
           <div className="grid gap-4 md:gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
             {/* Top Performers */}
-            <Card className="border-border/60">
+            <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
               <CardHeader className="pb-3 pt-4 px-4 sm:px-5">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2">
                   <TrendingUp className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -689,7 +690,7 @@ export default function HoldingOverviewPage() {
             </Card>
 
             {/* Worst Performers */}
-            <Card className="border-border/60">
+            <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
               <CardHeader className="pb-3 pt-4 px-4 sm:px-5">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2">
                   <TrendingDown className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
@@ -739,7 +740,7 @@ export default function HoldingOverviewPage() {
             {/* Asset Type Performance + Strategy */}
             <div className="space-y-4">
               {statistics.bestAssetType && statistics.worstAssetType && (
-                <Card className="border-border/60">
+                <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
                   <CardHeader className="pb-3 pt-4 px-4 sm:px-5">
                     <CardTitle className="text-sm font-semibold flex items-center gap-2">
                       <Coins className="h-3.5 w-3.5 text-muted-foreground" />
@@ -790,7 +791,7 @@ export default function HoldingOverviewPage() {
               )}
 
               {/* Strategy Insights */}
-              <Card className="border-border/60">
+              <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
                 <CardHeader className="pb-2 pt-4 px-4 sm:px-5">
                   <CardTitle className="text-sm font-semibold flex items-center gap-2">
                     <Info className="h-3.5 w-3.5 text-muted-foreground" />
@@ -838,7 +839,7 @@ export default function HoldingOverviewPage() {
       <CollapsibleSection id="trends" label="Trends" collapsed={!!collapsed.trends} onToggle={toggleSection}>
         <div className="space-y-4 md:space-y-5">
           <MonthlyHoldingsChart />
-          <div className="rounded-2xl border border-border/70 bg-card/80 p-3 sm:p-4 lg:p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none dark:bg-muted/20 backdrop-blur-sm">
+          <div className="glass-card border-glow-hover shadow-premium rounded-2xl p-3 sm:p-4 lg:p-5 transition-all duration-300">
             <HoldingComparison
               isOpen={true}
               targetMonth={parseInt(filterMonth)}

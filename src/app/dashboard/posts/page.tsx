@@ -16,7 +16,7 @@ import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Eye, Bookmark, BookOpen, FileCheck, FileEdit, FileText } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -72,19 +72,66 @@ export default function Posts() {
   }, [poststore.posts, debouncedSearch, status]);
 
   return (
-    <div className="mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
-      <Card className="">
-        <CardHeader className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <CardTitle className="text-xl sm:text-2xl font-bold">Posts</CardTitle>
-            <Link href="/dashboard/posts/create" className="w-full sm:w-auto">
-              <Button className="flex items-center gap-2 w-full sm:w-auto">
-                <Plus className="h-4 w-4" />
-                Add new post
-              </Button>
-            </Link>
+    <div className="flex flex-col gap-6 w-full">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
+            Posts Management
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Create, edit, and organize your articles and drafts.
+          </p>
+        </div>
+        <Link href="/dashboard/posts/create" className="w-full sm:w-auto">
+          <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shadow-sm">
+            <Plus className="h-4 w-4" />
+            Add new post
+          </Button>
+        </Link>
+      </div>
+
+      {/* KPI Stats cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+          <div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Posts</span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">{poststore.total}</div>
           </div>
-          <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+            <BookOpen className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+          <div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Published</span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
+              {poststore.posts.filter((p) => p.published).length}
+            </div>
+          </div>
+          <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+            <FileCheck className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+          <div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Drafts</span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
+              {poststore.posts.filter((p) => !p.published).length}
+            </div>
+          </div>
+          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+            <FileEdit className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Main Card Wrapper */}
+      <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
+        <CardHeader className="p-5 border-b border-border/60">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -106,12 +153,12 @@ export default function Posts() {
             </Select>
           </div>
         </CardHeader>
-        <CardContent className="p-2 sm:p-4 md:p-6">
-          <div className="overflow-x-auto -mx-2 sm:-mx-4 md:-mx-6">
-            <div className="min-w-[880px] px-2 sm:px-4 md:px-6">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <div className="min-w-[880px] px-4 py-2">
               <TooltipProvider>
               <Table>
-                <TableCaption>Total {poststore.total} posts found</TableCaption>
+                <TableCaption className="pb-4">Total {poststore.total} posts found</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12">#</TableHead>
@@ -120,8 +167,18 @@ export default function Posts() {
                     <TableHead className="hidden md:table-cell">Slug</TableHead>
                     <TableHead className="hidden lg:table-cell">Created</TableHead>
                     <TableHead className="hidden lg:table-cell">Updated</TableHead>
-                    <TableHead className="text-center">Views</TableHead>
-                    <TableHead className="text-center">Bookmarks</TableHead>
+                    <TableHead className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span>Views</span>
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <Bookmark className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span>Bookmarks</span>
+                      </div>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -163,7 +220,7 @@ export default function Posts() {
                       <TableCell className="hidden md:table-cell">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <code className="block max-w-[150px] lg:max-w-[280px] truncate rounded bg-muted px-1.5 py-0.5 text-xs">
+                            <code className="block max-w-[150px] lg:max-w-[280px] truncate rounded bg-muted px-1.5 py-0.5 text-[11px] font-mono text-muted-foreground">
                               /{post.slug}
                             </code>
                           </TooltipTrigger>

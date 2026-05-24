@@ -122,7 +122,7 @@ export default function OverviewChart({
   )
 
   return (
-    <Card className="flex flex-col border-border/60 bg-card">
+    <Card className="flex flex-col glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
         <CardTitle className="text-sm font-semibold">Asset Allocation</CardTitle>
         <CardDescription className="text-xs">

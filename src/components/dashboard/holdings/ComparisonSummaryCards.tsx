@@ -33,7 +33,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
 
   return (
     <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-5">
-      <Card>
+      <Card className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
           <CardTitle className="text-xs sm:text-sm font-medium truncate pr-1">Total Invested</CardTitle>
           <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
@@ -54,7 +54,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
           <CardTitle className="text-xs sm:text-sm font-medium truncate pr-1">Total Current Value</CardTitle>
           <DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
@@ -75,7 +75,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
           <CardTitle className="text-xs sm:text-sm font-medium truncate pr-1">Total Profit/Loss</CardTitle>
           {summary.to.totalProfitLoss > 0 ? (
@@ -102,7 +102,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
           <CardTitle className="text-xs sm:text-sm font-medium truncate pr-1">Return on Investment</CardTitle>
           {summary.to.totalProfitLossPercentage >= 0 ? (
@@ -129,7 +129,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
           <CardTitle className="text-xs sm:text-sm font-medium truncate pr-1">Active Holdings</CardTitle>
           <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />

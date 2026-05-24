@@ -152,17 +152,17 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/90 px-2 shadow-sm shadow-black/[0.02] backdrop-blur-xl transition-[width,height] ease-linear">
+        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 glass-navbar px-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4 flex-1">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
+            <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
+            <Separator orientation="vertical" className="mr-2 h-4 opacity-50" />
             <div className="flex-1">
               <DashboardTopBar />
             </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 bg-muted/25 p-4 md:p-6">
-          <main className="flex-1 rounded-lg border border-border/70 bg-background p-4 shadow-sm md:p-6">
+        <div className="flex flex-1 flex-col gap-6 bg-muted/10 p-4 md:p-6">
+          <main className="flex-1 rounded-2xl glass-card p-4 shadow-premium md:p-6">
             {children}
           </main>
         </div>
