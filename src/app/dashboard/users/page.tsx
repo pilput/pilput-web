@@ -66,6 +66,7 @@ export default function ManageUser() {
   });
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [deletedFilter, setDeletedFilter] = useState<string>("false");
   const limit = 15;
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
@@ -87,13 +88,13 @@ export default function ManageUser() {
   useEffect(() => {
     fetchAuth();
     refetchUsers(offset);
-  }, [fetchAuth, offset]);
+  }, [fetchAuth, offset, deletedFilter]);
 
   async function refetchUsers(fetchOffset: number = 0) {
     setIsLoading(true);
     try {
       const { data } = await apiClient.get("/api/users", {
-        params: { limit: limit, offset: fetchOffset },
+        params: { limit: limit, offset: fetchOffset, deleted: deletedFilter },
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -384,9 +385,25 @@ export default function ManageUser() {
                 <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All users</SelectItem>
+                <SelectItem value="all">All roles</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="user">User</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={deletedFilter}
+              onValueChange={(val) => {
+                setDeletedFilter(val);
+                setOffset(0);
+              }}
+            >
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="false">Active Only</SelectItem>
+                <SelectItem value="true">Deleted Only</SelectItem>
+                <SelectItem value="all">All Users</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -485,21 +502,31 @@ export default function ManageUser() {
                               {user.email}
                             </TableCell>
                             <TableCell>
-                              {user.is_super_admin ? (
-                                <Badge
-                                  variant="default"
-                                  className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
-                                >
-                                  Admin
-                                </Badge>
-                              ) : (
-                                <Badge
-                                  variant="outline"
-                                  className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
-                                >
-                                  User
-                                </Badge>
-                              )}
+                              <div className="flex flex-wrap gap-1.5">
+                                {user.is_super_admin ? (
+                                  <Badge
+                                    variant="default"
+                                    className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
+                                  >
+                                    Admin
+                                  </Badge>
+                                ) : (
+                                  <Badge
+                                    variant="outline"
+                                    className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
+                                  >
+                                    User
+                                  </Badge>
+                                )}
+                                {user.deleted_at && (
+                                  <Badge
+                                    variant="destructive"
+                                    className="bg-red-600/10 text-red-600 border border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900"
+                                  >
+                                    Deleted
+                                  </Badge>
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
                               {format(user.created_at, "MMM dd, yyyy")}
@@ -512,7 +539,7 @@ export default function ManageUser() {
                             <TableCell className="text-right">
                               <UserActionComponent
                                 user={user}
-                                auth={undefined}
+                                auth={auth}
                                 refetchUsers={refetchUsers}
                               />
                             </TableCell>

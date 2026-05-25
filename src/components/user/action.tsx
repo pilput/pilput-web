@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { MoreHorizontal, Eye, Trash, Edit, AlertTriangle } from "lucide-react";
+import { MoreHorizontal, Eye, Trash, Edit, AlertTriangle, RefreshCw } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,13 +34,15 @@ const UserActionComponent = ({
   refetchUsers,
 }: {
   user: User;
-  auth?: User;
+  auth?: { username: string } | null;
   refetchUsers: (offset?: number) => void;
 }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showRestoreDialog, setShowRestoreDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
 
   const editForm = useForm<EditUserFormData>({
     resolver: zodResolver(editUserSchema),
@@ -111,6 +113,34 @@ const UserActionComponent = ({
     }
   };
 
+  const onRestore = async () => {
+    setIsRestoring(true);
+    const toastid = toast.loading("Restoring user...");
+    try {
+      const response = await apiClient.post(`/api/users/${user.id}/restore`, {}, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("User restored successfully", { id: toastid });
+        setShowRestoreDialog(false);
+        refetchUsers();
+      } else {
+        toast.error("Failed to restore user", { id: toastid });
+      }
+    } catch (error) {
+      if (isHttpError(error)) {
+        const msg = (error.response?.data as { message?: string })?.message ?? "Failed to restore user";
+        toast.error(msg, { id: toastid });
+      } else {
+        toast.error("Failed to restore user", { id: toastid });
+      }
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
   const handleDeleteClick = () => {
     setShowDeleteDialog(true);
   };
@@ -126,31 +156,48 @@ const UserActionComponent = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <Link
-              href={`/${user.username}`}
-              className="flex items-center"
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              <span>View Profile</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={() => setShowEditDialog(true)}
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            <span>Edit</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="cursor-pointer text-red-600"
-            onClick={handleDeleteClick}
-            disabled={user.id === auth?.id}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            <span>Delete</span>
-          </DropdownMenuItem>
+          {!user.deleted_at && (
+            <DropdownMenuItem>
+              <Link
+                href={`/${user.username}`}
+                className="flex items-center"
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                <span>View Profile</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
+          {!user.deleted_at ? (
+            <>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setShowEditDialog(true)}
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer text-red-600"
+                onClick={handleDeleteClick}
+                disabled={user.username === auth?.username}
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </>
+          ) : (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer text-emerald-600"
+                onClick={() => setShowRestoreDialog(true)}
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                <span>Restore</span>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -190,6 +237,47 @@ const UserActionComponent = ({
               disabled={isDeleting}
             >
               {isDeleting ? "Deleting..." : "Delete User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Restore Confirmation Dialog */}
+      <Dialog open={showRestoreDialog} onOpenChange={setShowRestoreDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-emerald-600">
+              <RefreshCw className="h-5 w-5" />
+              Restore User
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to restore this user? This will make the user account active again.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="rounded-lg border bg-muted/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
+                  <p className="font-medium">{user.username}</p>
+                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowRestoreDialog(false)}
+              disabled={isRestoring}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              onClick={onRestore}
+              disabled={isRestoring}
+            >
+              {isRestoring ? "Restoring..." : "Restore User"}
             </Button>
           </DialogFooter>
         </DialogContent>
