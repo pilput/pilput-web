@@ -44,7 +44,6 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
     messages,
     fetchMessages,
     sendMessage,
-    createConversation,
     isNewConversation,
     loadingStates,
   } = useChatStore();
@@ -75,11 +74,9 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
 
   const handleSendMessage = async (content: string) => {
     if (!currentConversation) {
-      const conversationId = await createConversation("", content);
-      if (conversationId) {
-        router.replace("/chat/" + conversationId);
-        sendMessage(content, conversationId);
-      }
+      await sendMessage(content, "", (id) => {
+        router.replace("/chat/" + id);
+      });
     } else {
       await sendMessage(content, currentConversation);
     }

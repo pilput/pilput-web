@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Plus, MessageSquare, PanelLeftClose, PanelLeftOpen, Trash2, Sparkles } from "lucide-react";
+import { Plus, MessageSquare, PanelLeftClose, PanelLeftOpen, Trash2, Sparkles, Pin, Edit, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useChatStore, type Conversation } from "@/stores/chat-store";
 import {
@@ -40,14 +40,37 @@ export function ChatSidebar() {
     loadMoreConversations,
     isNewConversation,
     deleteConversation,
+    updateConversation,
   } = useChatStore();
   const { toggleSidebar, state } = useSidebar();
   const { fetch: fetchUser, data: userData } = authStore();
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
 
   useEffect(() => {
     fetchConversations(0, 15);
     fetchUser();
   }, [isNewConversation, fetchConversations, fetchUser]);
+
+  const handleSaveRename = async (id: string) => {
+    if (editTitle.trim()) {
+      const originalTitle = conversations.find((c) => c.id === id)?.title;
+      if (editTitle.trim() !== originalTitle) {
+        await updateConversation(id, { title: editTitle.trim() });
+      }
+    }
+    setEditingId(null);
+  };
+
+  const sortedConversations = [...conversations].sort((a, b) => {
+    if (a.is_pinned && !b.is_pinned) return -1;
+    if (!a.is_pinned && b.is_pinned) return 1;
+    return (
+      new Date(b.updated_at || b.created_at).getTime() -
+      new Date(a.updated_at || a.created_at).getTime()
+    );
+  });
 
   return (
     <Sidebar
@@ -128,7 +151,7 @@ export function ChatSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {conversations.length === 0 ? (
+              {sortedConversations.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-10 px-3 text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
                     <MessageSquare className="h-5 w-5 text-muted-foreground/50" />
@@ -138,58 +161,100 @@ export function ChatSidebar() {
                 </div>
               ) : (
                 <>
-                  {conversations.map((chat: Conversation) => {
+                  {sortedConversations.map((chat: Conversation) => {
                     const isActive = chat.id === currentConversationId;
                     return (
                       <SidebarMenuItem key={chat.id}>
-                        <div className="group/item relative flex items-center">
-                          <SidebarMenuButton
-                            asChild
-                            isActive={isActive}
-                            className={cn(
-                              "h-9 w-full flex-1 rounded-lg px-3 text-sm transition-colors",
-                              isActive
-                                ? "bg-primary/10 text-primary font-medium"
-                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-normal"
-                            )}
-                            tooltip={chat.title}
-                          >
-                            <Link href={`/chat/${chat.id}`} className="flex items-center gap-2.5 pr-6">
-                              <MessageSquare
-                                className={cn(
-                                  "h-3.5 w-3.5 shrink-0",
-                                  isActive ? "text-primary" : "text-muted-foreground/60"
+                        {editingId === chat.id ? (
+                          <div className="px-2 py-0.5 flex w-full">
+                            <input
+                              type="text"
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                              onBlur={() => handleSaveRename(chat.id)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSaveRename(chat.id);
+                                if (e.key === "Escape") setEditingId(null);
+                              }}
+                              className="h-8 w-full rounded-md border border-primary/50 bg-background px-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary/30"
+                              autoFocus
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        ) : (
+                          <div className="group/item relative flex items-center">
+                            <SidebarMenuButton
+                              asChild
+                              isActive={isActive}
+                              className={cn(
+                                "h-9 w-full flex-1 rounded-lg px-3 text-sm transition-colors",
+                                isActive
+                                  ? "bg-primary/10 text-primary font-medium"
+                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-normal"
+                              )}
+                              tooltip={chat.title}
+                            >
+                              <Link href={`/chat/${chat.id}`} className="flex items-center gap-2.5 pr-10 w-full">
+                                <MessageSquare
+                                  className={cn(
+                                    "h-3.5 w-3.5 shrink-0",
+                                    isActive ? "text-primary" : "text-muted-foreground/60"
+                                  )}
+                                />
+                                <span className="truncate flex-1">{chat.title}</span>
+                                {chat.is_pinned && (
+                                  <Pin className="h-3.5 w-3.5 shrink-0 text-primary rotate-45" />
                                 )}
-                              />
-                              <span className="truncate">{chat.title}</span>
-                            </Link>
-                          </SidebarMenuButton>
+                              </Link>
+                            </SidebarMenuButton>
 
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md opacity-0 group-hover/item:opacity-100 hover:bg-destructive/10 hover:text-destructive transition-all"
-                                title="Delete conversation"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-44">
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteConversation(chat.id);
-                                }}
-                                className="text-destructive focus:text-destructive focus:bg-destructive/10"
-                              >
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete conversation
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md opacity-0 group-hover/item:opacity-100 hover:bg-accent text-muted-foreground hover:text-foreground transition-all"
+                                  title="Options"
+                                >
+                                  <MoreHorizontal className="h-3.5 w-3.5" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateConversation(chat.id, { is_pinned: !chat.is_pinned });
+                                  }}
+                                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                                >
+                                  <Pin className="h-4 w-4 mr-2" />
+                                  {chat.is_pinned ? "Unpin" : "Pin"} conversation
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingId(chat.id);
+                                    setEditTitle(chat.title);
+                                  }}
+                                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                                >
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  Rename conversation
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteConversation(chat.id);
+                                  }}
+                                  className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete conversation
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        )}
                       </SidebarMenuItem>
                     );
                   })}

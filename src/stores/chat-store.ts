@@ -8,9 +8,12 @@ import { Config } from "@/utils/getConfig";
 export interface Conversation {
   id: string;
   title: string;
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
+  user_id: string;
+  is_pinned: boolean;
+  pinned_at: string | null;
+  message_count: number;
+  created_at: string;
+  updated_at: string;
 }
 
 interface PaginationMeta {
@@ -27,36 +30,27 @@ interface ConversationsResponse {
 }
 
 interface CreateConversationResponse {
-  data: {
-    id: string;
-    title: string;
-    createdAt: string;
-  };
+  data: Conversation;
+}
+
+export interface ChatMessageResponse {
+  id: string;
+  conversation_id: string;
+  user_id: string;
+  role: string;
+  content: string;
+  model: string | null;
+  prompt_tokens: number | null;
+  completion_tokens: number | null;
+  total_tokens: number | null;
+  created_at: string;
+  updated_at: string;
 }
 
 /** API response for get conversation endpoint */
 interface GetConversationResponse {
-  success: boolean;
-  data: {
-    id: string;
-    created_at: string;
-    updated_at: string;
-    deleted_at: string | null;
-    title: string;
-    user_id: string;
-    chatMessages: Array<{
-      id: string;
-      created_at: string;
-      updated_at: string;
-      conversation_id: string;
-      user_id: string;
-      role: "user" | "assistant";
-      content: string;
-      model: string | null;
-      prompt_tokens: number | null;
-      completion_tokens: number | null;
-      total_tokens: number | null;
-    }>;
+  data: Conversation & {
+    chat_messages: ChatMessageResponse[];
   };
 }
 
@@ -138,7 +132,15 @@ interface ChatState {
     message: string,
   ) => Promise<string | null>;
   resetPagination: () => void;
-  sendMessage: (content: string, conversationId: string) => Promise<void>;
+  sendMessage: (
+    content: string,
+    conversationId?: string,
+    onConversationCreated?: (id: string) => void,
+  ) => Promise<void>;
+  updateConversation: (
+    id: string,
+    updates: { title?: string; is_pinned?: boolean },
+  ) => Promise<boolean>;
   deleteConversation: (conversationId: string) => Promise<boolean>;
   setMessages: (messages: Message[]) => void;
   editMessage: (id: string, content: string) => void;
@@ -146,9 +148,10 @@ interface ChatState {
   loadMoreConversations: () => Promise<void>;
   clearError: () => void;
   streamMessage: (
-    conversationId: string,
+    conversationId: string | undefined | null,
     content: string,
     assistantMessageId: string,
+    onConversationCreated?: (id: string) => void,
   ) => Promise<void>;
 }
 
@@ -193,32 +196,33 @@ export const useChatStore = create<ChatState>((set, get) => ({
   setSelectedModel: (model) => set({ selectedModel: model }),
   clearError: () => set({ error: null }),
 
-  // Helper function for streaming messages
   streamMessage: async (
-    conversationId: string,
+    conversationId: string | undefined | null,
     content: string,
     assistantMessageId: string,
+    onConversationCreated?: (id: string) => void,
   ) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000);
     let updateTimeout: number | null = null;
 
     try {
-      const response = await fetch(
-        `${Config.apibaseurl}/api/chat/conversations/${conversationId}/messages/stream`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getToken()}`,
-          },
-          body: JSON.stringify({
-            content,
-            model: get().selectedModel,
-          }),
-          signal: controller.signal,
+      const url = conversationId
+        ? `${Config.apibaseurl}/api/chat/conversations/${conversationId}/messages/stream`
+        : `${Config.apibaseurl}/api/chat/conversations/stream`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
         },
-      );
+        body: JSON.stringify({
+          content,
+          model: get().selectedModel,
+        }),
+        signal: controller.signal,
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -232,6 +236,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }
 
       let accumulatedContent = "";
+      let buffer = "";
+      let currentEvent = "";
 
       const batchedUpdate = () => {
         set((state) => ({
@@ -248,12 +254,21 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
 
         for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = line.slice(6).trim();
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          if (trimmed.startsWith("event: ")) {
+            currentEvent = trimmed.slice(7).trim();
+            continue;
+          }
+
+          if (trimmed.startsWith("data: ")) {
+            const data = trimmed.slice(6).trim();
 
             if (data === "[DONE]") {
               if (updateTimeout) {
@@ -272,18 +287,74 @@ export const useChatStore = create<ChatState>((set, get) => ({
             }
 
             try {
-              const parsed = JSON.parse(data);
-              const chunkText =
-                parsed.type === "ai_chunk" && typeof parsed.data === "string"
-                  ? parsed.data
-                  : (parsed.content as string | undefined);
-              if (chunkText) {
-                accumulatedContent += chunkText;
+              let parsed: any = null;
+              try {
+                parsed = JSON.parse(data);
+              } catch {
+                parsed = data; // Keep as string
+              }
 
-                if (updateTimeout) {
-                  clearTimeout(updateTimeout);
+              // Determine actual event type
+              const eventType = currentEvent || (parsed && parsed.type) || "";
+
+              if (eventType === "conversation_created") {
+                const id = parsed.conversation_id || (parsed.data && parsed.data.conversation_id);
+                if (id) {
+                  onConversationCreated?.(id);
+
+                  // Update sidebar conversation list locally for instant UI update
+                  const newConv: Conversation = {
+                    id,
+                    title: content.slice(0, 50) + (content.length > 50 ? "..." : ""),
+                    user_id: "",
+                    is_pinned: false,
+                    pinned_at: null,
+                    message_count: 2,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                  };
+                  set((state) => ({
+                    conversations: [newConv, ...state.conversations],
+                    isNewConversation: true,
+                  }));
                 }
-                updateTimeout = window.setTimeout(batchedUpdate, 16);
+              } else if (eventType === "ai_chunk") {
+                const chunkText = typeof parsed === "string" ? parsed : (parsed.data || parsed.content || "");
+                if (chunkText) {
+                  accumulatedContent += chunkText;
+                  if (updateTimeout) {
+                    clearTimeout(updateTimeout);
+                  }
+                  updateTimeout = window.setTimeout(batchedUpdate, 16);
+                }
+              } else if (eventType === "ai_complete") {
+                // Done streaming the message
+                const completeMsg = parsed.data || parsed;
+                if (completeMsg && completeMsg.content) {
+                  accumulatedContent = completeMsg.content;
+                  if (updateTimeout) {
+                    clearTimeout(updateTimeout);
+                  }
+                  batchedUpdate();
+                }
+              } else if (eventType === "error") {
+                const errMsg = typeof parsed === "string" ? parsed : (parsed.message || "An error occurred during streaming");
+                throw new Error(errMsg);
+              } else {
+                // Fallback for generic or old style SSE
+                const chunkText = typeof parsed === "string"
+                  ? parsed
+                  : (parsed.type === "ai_chunk" && typeof parsed.data === "string"
+                      ? parsed.data
+                      : (parsed.content || ""));
+
+                if (chunkText) {
+                  accumulatedContent += chunkText;
+                  if (updateTimeout) {
+                    clearTimeout(updateTimeout);
+                  }
+                  updateTimeout = window.setTimeout(batchedUpdate, 16);
+                }
               }
             } catch (parseError) {
               console.warn("Failed to parse streaming data:", parseError);
@@ -298,7 +369,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       clearTimeout(timeoutId);
       set({ isNewConversation: false });
     } catch (error) {
-      throw error; // Re-throw to be handled by caller
+      throw error;
     } finally {
       if (updateTimeout) {
         clearTimeout(updateTimeout);
@@ -431,11 +502,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
         },
       );
 
-      const chatMessages = response.data.data.chatMessages ?? [];
+      const chatMessages = response.data.data.chat_messages ?? [];
       const messages: Message[] = chatMessages.map((msg) => ({
         id: msg.id,
         content: msg.content,
-        role: msg.role,
+        role: msg.role as "user" | "assistant",
         createdAt: new Date(msg.created_at),
         isStreaming: false,
       }));
@@ -455,20 +526,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
   /**
    * Create a new conversation and return its ID.
-   * Navigation and initial message sending are handled by the caller.
-   * @param title - Optional conversation title (auto-generated from message if empty)
-   * @param message - Initial message content used for title generation
+   * @param title - Conversation title
    * @returns Conversation ID or null on failure
    */
-  createConversation: async (title, message) => {
+  createConversation: async (title) => {
     const { isLoading } = get();
-
-    // Input validation
-    const messageValidation = validateMessage(message);
-    if (!messageValidation.isValid) {
-      set({ error: { message: messageValidation.error! } });
-      return null;
-    }
 
     if (isLoading) return null;
 
@@ -480,17 +542,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     try {
-      const sanitizedMessage = sanitizeString(message);
-      const conversationTitle = title
-        ? sanitizeString(title)
-        : sanitizedMessage.slice(0, 50) +
-          (sanitizedMessage.length > 50 ? "..." : "");
+      const conversationTitle = title ? sanitizeString(title) : "New Chat";
 
       const response = await apiClient.post<CreateConversationResponse>(
         "/api/chat/conversations",
         {
           title: conversationTitle,
-          message: sanitizedMessage,
         },
         {
           headers: {
@@ -534,10 +591,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
   /**
    * Send a message and stream the AI response
    * @param content - Message content to send
-   * @param conversationId - ID of the conversation
+   * @param conversationId - Optional ID of the conversation (empty for new conversations)
+   * @param onConversationCreated - Optional callback triggered when new conversation is created
    */
-  sendMessage: async (content, conversationId) => {
-    const { isLoading, messages, selectedModel } = get();
+  sendMessage: async (content, conversationId, onConversationCreated) => {
+    const { isLoading, messages } = get();
 
     // Input validation
     const messageValidation = validateMessage(content);
@@ -546,7 +604,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return;
     }
 
-    if (!validateConversationId(conversationId)) {
+    if (conversationId && !validateConversationId(conversationId)) {
       set({ error: { message: "Invalid conversation ID" } });
       return;
     }
@@ -582,6 +640,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         conversationId,
         sanitizedContent,
         assistantMessage.id,
+        onConversationCreated,
       );
     } catch (err: any) {
       const error = extractError(err, "Failed to send message");
@@ -607,6 +666,40 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set((state) => ({
         loadingStates: { ...state.loadingStates, sendingMessage: false },
       }));
+    }
+  },
+  updateConversation: async (id, updates) => {
+    if (!validateConversationId(id)) {
+      set({ error: { message: "Invalid conversation ID" } });
+      return false;
+    }
+
+    try {
+      const response = await apiClient.put<CreateConversationResponse>(
+        `/api/chat/conversations/${id}`,
+        updates,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        set((state) => ({
+          conversations: state.conversations.map((conv) =>
+            conv.id === id ? { ...conv, ...response.data.data } : conv
+          ),
+        }));
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      const error = extractError(err, "Failed to update conversation");
+      set({ error: { message: error.message, code: error.code } });
+      console.error("Error updating conversation:", error);
+      return false;
     }
   },
   deleteConversation: async (conversationId) => {
