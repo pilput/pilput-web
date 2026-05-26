@@ -153,7 +153,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     }
 
     try {
-      await apiClient.patch(`/api/posts/${postId}`, updatedPost, {
+      await apiClient.put(`/api/posts/me/${postId}`, updatedPost, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -37,7 +37,7 @@ function Posts(props: {
       try {
         setLoading(true);
         const { data } = await apiClient.get<AuthorPostsResponse>(
-          `/api/posts/author/${props.username}`,
+          `/api/posts/username/${props.username}`,
           {
             params: {
               limit: postsPerPage,
