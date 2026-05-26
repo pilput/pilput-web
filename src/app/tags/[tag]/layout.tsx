@@ -6,7 +6,12 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const rawTag = params.tag;
-  const decodedTag = decodeURIComponent(rawTag);
+  let decodedTag = rawTag;
+  try {
+    decodedTag = decodeURIComponent(rawTag);
+  } catch {
+    // Fallback if rawTag is already decoded or contains invalid URI sequences
+  }
   const normalizedTag = decodedTag.replace(/-/g, " ");
   const canonicalPath = `/tags/${encodeURIComponent(rawTag)}`;
   const description = `Read posts tagged with #${normalizedTag} on pilput.`;

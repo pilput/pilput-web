@@ -26,7 +26,7 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
                   trendingTags.slice(0, 7).map((tag, index) => (
                     <div key={index}>
                       <Link
-                        href={`/tags/${tag}`}
+                        href={`/tags/${encodeURIComponent(tag)}`}
                         className="px-3 py-1.5 bg-muted rounded-full text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-colors border border-border/60 block"
                       >
                         #{tag}

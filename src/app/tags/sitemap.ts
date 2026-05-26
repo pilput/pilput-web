@@ -32,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return tags
       .filter((tag): tag is TagSitemapItem => Boolean(tag.name))
       .map((tag) => ({
-        url: `${Config.mainbaseurl}/tags/${tag.name}`,
+        url: `${Config.mainbaseurl}/tags/${encodeURIComponent(tag.name)}`,
         lastModified: tag.created_at ? new Date(tag.created_at) : new Date(),
         changeFrequency: TAG_CHANGE_FREQUENCY,
         priority: TAG_PRIORITY,

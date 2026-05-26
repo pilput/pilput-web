@@ -53,24 +53,24 @@ const PostList = ({ post }: { post: Post }) => {
             className="shrink-0 relative"
             whileHover={{ scale: 1.05 }}
           >
-            <Link href={`/${post.user.username}`}>
+            <Link href={`/${post.user?.username || "anonymous"}`}>
               <Avatar className="h-9 w-9 border border-primary/20 shadow-xs">
                 <AvatarImage
                   src={getProfilePicture(post.user?.image)}
-                  alt={post.user?.first_name || post.user.username || "Author"}
+                  alt={post.user?.first_name || post.user?.username || "Author"}
                 />
                 <AvatarFallback className="text-xs font-bold bg-primary/5 text-primary">
-                  {post.user?.first_name?.[0] || post.user.username[0]}
+                  {post.user?.first_name?.[0] || post.user?.username?.[0] || "A"}
                 </AvatarFallback>
               </Avatar>
             </Link>
           </motion.div>
           <div className="min-w-0 flex-1">
             <Link
-              href={`/${post.user.username}`}
+              href={`/${post.user?.username || "anonymous"}`}
               className="block font-bold text-sm hover:text-primary transition-colors"
             >
-              {post.user?.first_name} {post.user?.last_name}
+              {post.user ? `${post.user.first_name || ""} ${post.user.last_name || ""}`.trim() || post.user.username : "Anonymous"}
             </Link>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Clock className="w-3.5 h-3.5 opacity-70" />
@@ -82,7 +82,7 @@ const PostList = ({ post }: { post: Post }) => {
         {/* Title & Content */}
         <div className="space-y-2.5">
           <Link
-            href={`/${post.user.username}/${post.slug}`}
+            href={`/${post.user?.username || "anonymous"}/${post.slug}`}
             className="block group"
           >
             <motion.h2
@@ -110,7 +110,7 @@ const PostList = ({ post }: { post: Post }) => {
                 whileHover={{ scale: 1.02 }}
               >
                 <Link
-                  href={`/tags/${tag.name}`}
+                  href={`/tags/${encodeURIComponent(tag.name)}`}
                   className="inline-flex items-center px-3 py-1 text-[11px] font-bold tracking-wide text-primary bg-primary/5 rounded-full border border-primary/20 hover:bg-primary/10 hover:border-primary/30 transition-all duration-200"
                 >
                   #{tag.name}
@@ -160,7 +160,7 @@ const PostList = ({ post }: { post: Post }) => {
               variant="compact"
             />
             <Link
-              href={`/${post.user.username}/${post.slug}#comments`}
+              href={`/${post.user?.username || "anonymous"}/${post.slug}#comments`}
               className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
               aria-label={`${post.comments_count || 0} comments — open post`}
             >

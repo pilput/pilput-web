@@ -258,7 +258,7 @@ export default async function Page(props: {
                 <div className={styles.tagsList}>
                   {post.tags.map((tag) => (
                     <Link
-                      href={`/tags/${tag.name}`}
+                      href={`/tags/${encodeURIComponent(tag.name)}`}
                       key={tag.id}
                       className={styles.tagLink}
                     >

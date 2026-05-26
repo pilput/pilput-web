@@ -150,7 +150,7 @@ const TagsPage = () => {
           ) : sortedTags.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {sortedTags.map((tag) => (
-                <Link key={tag.id} href={`/tags/${tag.name}`}>
+                <Link key={tag.id} href={`/tags/${encodeURIComponent(tag.name)}`}>
                   <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer group">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-3">
@@ -221,7 +221,7 @@ const TagsPage = () => {
                     {sortedTags.slice(0, 10).map((tag) => (
                       <Link
                         key={tag.id}
-                        href={`/tags/${tag.name}`}
+                        href={`/tags/${encodeURIComponent(tag.name)}`}
                         className="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800/50 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/60 transition-all duration-300 hover:scale-105 flex items-center gap-1"
                       >
                         #{tag.name}

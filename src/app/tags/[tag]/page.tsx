@@ -15,8 +15,8 @@ interface PostsResponse {
 
 async function fetchPostsByTag(tag: string): Promise<{ posts: Post[]; total: number }> {
   try {
-    const { data } = await apiClient.get<PostsResponse>(`/api/posts/tag/${tag}`, {
-      params: { limit: postsPerPage, offset: 0 },
+    const { data } = await apiClient.get<PostsResponse>("/api/posts", {
+      params: { tags: tag, limit: postsPerPage, offset: 0 },
     });
     return {
       posts: data.data || [],
