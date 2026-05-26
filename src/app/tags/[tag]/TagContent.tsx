@@ -11,7 +11,6 @@ import { ArrowLeft, Hash, TrendingUp, Grid, List, Eye } from "lucide-react";
 import { Paginate } from "@/components/common/Paginate";
 import { apiClient } from "@/utils/fetch";
 import type { Post } from "@/types/post";
-import TrendingPosts from "@/components/post/TrendingPosts";
 
 interface TagContentProps {
   tag: string;
@@ -39,26 +38,6 @@ export default function TagContent({
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [trendingPosts, setTrendingPosts] = useState<Post[]>([]);
-  const [isTrendingLoading, setIsTrendingLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchTrendingPosts() {
-      try {
-        const { data } = await apiClient.get("/api/posts/trending", {
-          params: { limit: 5 },
-        });
-        if (data.data) {
-          setTrendingPosts(data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching trending posts:", error);
-      } finally {
-        setIsTrendingLoading(false);
-      }
-    }
-    fetchTrendingPosts();
-  }, []);
 
   useEffect(() => {
     if (currentPage === 0) return;
@@ -180,17 +159,6 @@ export default function TagContent({
                   </CardContent>
                 </Card>
               )}
-
-              {/* Trending Posts Widget */}
-              <Card className="glass-card shadow-premium border-glow-hover">
-                <CardContent className="p-4">
-                  <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-primary" />
-                    Trending Posts
-                  </h3>
-                  <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />
-                </CardContent>
-              </Card>
             </div>
           </div>
 

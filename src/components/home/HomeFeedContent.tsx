@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowUp, Rss, Grid, List, Eye, TrendingUp } from "lucide-react";
+import { ArrowUp, Rss, Grid, List, TrendingUp } from "lucide-react";
 import { apiClient } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { parseBlogPageQueryParam } from "@/lib/blog-feed-data";
@@ -191,34 +191,6 @@ const HomeFeedContent = ({
           {/* Sidebar */}
           <div className="lg:w-80 shrink-0">
             <div className="sticky top-24 space-y-6">
-              {/* Feed Insights */}
-              <Card className="glass-card shadow-premium border-glow-hover">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                    <Eye className="w-5 h-5 text-primary" />
-                    Feed Insights
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">
-                        Total Stories
-                      </span>
-                      <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 font-semibold">
-                        {total}
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">
-                        Current Page
-                      </span>
-                      <Badge className="bg-muted text-foreground border border-border/40 hover:bg-muted font-semibold">
-                        Page {currentPage + 1}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Trending Topics */}
               {tags.length > 0 && (
                 <Card className="glass-card shadow-premium border-glow-hover">
