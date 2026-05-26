@@ -33,8 +33,9 @@ import {
   ArrowLeft,
   Eye,
   Loader2,
+  Send,
 } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import styles from "@/components/post/post-editor.module.scss";
 
 const MAX_TITLE_LENGTH = 150;
@@ -50,6 +51,7 @@ export default function PostEdit() {
   const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const token = getToken();
+  const router = useRouter();
 
   const {
     post,
@@ -149,7 +151,7 @@ export default function PostEdit() {
     }
   };
 
-  async function updateHandler() {
+  async function updateHandler(published: boolean) {
     if (!post.title.trim()) {
       setErrorTitle("Title is required");
       toast.error("Title is required");
@@ -161,15 +163,26 @@ export default function PostEdit() {
       return;
     }
 
-    const toastId = toast.loading("Updating post...");
-    const success = await updatePost();
+    const toastId = toast.loading(published ? "Publishing post..." : "Saving draft...");
+    const success = await updatePost(published);
 
     if (success) {
       setErrorTitle("");
       setErrorImage("");
-      toast.success("Post updated successfully!", { id: toastId });
+      toast.success(
+        published ? "Post published successfully!" : "Draft saved successfully!",
+        { id: toastId }
+      );
+      setTimeout(() => {
+        router.push("/dashboard/posts");
+      }, 1000);
     } else {
-      toast.error("Failed to update post. Please try again.", { id: toastId });
+      toast.error(
+        published
+          ? "Failed to publish post. Please try again."
+          : "Failed to save draft. Please try again.",
+        { id: toastId }
+      );
     }
   }
 
@@ -207,15 +220,12 @@ export default function PostEdit() {
             </p>
           </div>
         </div>
-        <div className="flex gap-3 sm:ml-auto">
-          <Button variant="outline" disabled className="gap-2 hidden sm:flex">
-            <Eye className="h-4 w-4" />
-            Preview
-          </Button>
+        <div className="flex gap-3 sm:ml-auto w-full sm:w-auto justify-end">
           <Button
-            onClick={updateHandler}
+            variant="outline"
+            onClick={() => updateHandler(false)}
             disabled={isUpdating}
-            className="w-full sm:w-auto min-w-[120px] gap-2"
+            className="w-1/2 sm:w-auto min-w-[120px] gap-2"
           >
             {isUpdating ? (
               <>
@@ -225,7 +235,24 @@ export default function PostEdit() {
             ) : (
               <>
                 <Save className="h-4 w-4" />
-                Save Changes
+                Save Draft
+              </>
+            )}
+          </Button>
+          <Button
+            onClick={() => updateHandler(true)}
+            disabled={isUpdating}
+            className="w-1/2 sm:w-auto min-w-[120px] gap-2"
+          >
+            {isUpdating ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                Publish
               </>
             )}
           </Button>
@@ -423,7 +450,11 @@ export default function PostEdit() {
             <CardContent>
               <div className="flex items-center justify-between py-2">
                 <span className="text-sm text-muted-foreground">Status</span>
-                <span className="text-sm font-medium text-green-600">Published</span>
+                {post.published ? (
+                  <span className="text-sm font-medium text-green-600">Published</span>
+                ) : (
+                  <span className="text-sm font-medium text-yellow-600">Draft</span>
+                )}
               </div>
               <div className="flex items-center justify-between py-2 border-t">
                 <span className="text-sm text-muted-foreground">Visibility</span>

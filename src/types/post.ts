@@ -27,6 +27,7 @@ export interface PostCreate {
   photo_url: string;
   /** Tag names only, e.g. `['coding', 'history']` */
   tags: string[];
+  published?: boolean;
 }
 
 export interface ErrorCreatePost {

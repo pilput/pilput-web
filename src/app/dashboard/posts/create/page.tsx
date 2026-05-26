@@ -10,6 +10,7 @@ import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const MyEditor = dynamic(() => import("@/components/post/Editor"), {
   ssr: false,
@@ -32,6 +33,7 @@ import {
   Send,
   ArrowLeft,
   Eye,
+  Save,
 } from "lucide-react";
 import styles from "@/components/post/post-editor.module.scss";
 
@@ -47,6 +49,7 @@ export default function PostCreate() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const token = getToken();
+  const router = useRouter();
 
   const {
     post,
@@ -134,7 +137,7 @@ export default function PostCreate() {
     }
   };
 
-  async function publishHandler() {
+  async function submitHandler(published: boolean) {
     // Validation
     if (!post.title.trim()) {
       setErrorTitle("Title is required");
@@ -148,27 +151,40 @@ export default function PostCreate() {
     }
 
     setIsSubmitting(true);
-    const toastId = toast.loading("Publishing post...");
+    const toastId = toast.loading(published ? "Publishing post..." : "Saving draft...");
 
     try {
-      await apiClient.post("/api/posts", post, {
+      const payload = {
+        ...post,
+        published,
+      };
+      await apiClient.post("/api/posts", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setErrorTitle("");
       setErrorImage("");
-      toast.success("Post published successfully!", { id: toastId });
-      // Reset form or redirect
+      toast.success(
+        published ? "Post published successfully!" : "Draft saved successfully!",
+        { id: toastId }
+      );
+      
+      setTimeout(() => {
+        router.push("/dashboard/posts");
+      }, 1000);
     } catch (error) {
       if (isHttpError(error)) {
-        console.error("Publish error:", error.message);
+        console.error("Submit error:", error.message);
         if (error.response?.status === 422) {
           toast.error("Validation error. Please check your inputs.", {
             id: toastId,
           });
         } else {
-          toast.error("Failed to publish post. Please try again.", {
-            id: toastId,
-          });
+          toast.error(
+            published
+              ? "Failed to publish post. Please try again."
+              : "Failed to save draft. Please try again.",
+            { id: toastId }
+          );
         }
       }
     } finally {
@@ -197,15 +213,29 @@ export default function PostCreate() {
             </p>
           </div>
         </div>
-        <div className="flex gap-3 sm:ml-auto">
-          <Button variant="outline" disabled className="gap-2 hidden sm:flex">
-            <Eye className="h-4 w-4" />
-            Preview
+        <div className="flex gap-3 sm:ml-auto w-full sm:w-auto justify-end">
+          <Button
+            variant="outline"
+            onClick={() => submitHandler(false)}
+            disabled={isSubmitting}
+            className="w-1/2 sm:w-auto min-w-[120px] gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4" />
+                Save Draft
+              </>
+            )}
           </Button>
           <Button
-            onClick={publishHandler}
+            onClick={() => submitHandler(true)}
             disabled={isSubmitting}
-            className="w-full sm:w-auto min-w-[120px] gap-2"
+            className="w-1/2 sm:w-auto min-w-[120px] gap-2"
           >
             {isSubmitting ? (
               <>

@@ -44,7 +44,7 @@ interface UpdatePostState {
   removeTagAt: (index: number) => void;
   updatePostId: (id: string) => void;
   fetchPostById: (id: string) => Promise<Post | null>;
-  updatePost: () => Promise<boolean>;
+  updatePost: (published?: boolean) => Promise<boolean>;
   resetStore: () => void;
   error: boolean;
   total: number;
@@ -58,6 +58,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     slug: "",
     photo_url: "",
     tags: [],
+    published: false,
   },
   loading: false,
   isUpdating: false,
@@ -126,6 +127,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
           slug: postData.slug,
           photo_url: postData.photo_url,
           tags,
+          published: postData.published ?? false,
         },
         loading: false,
       }));
@@ -137,7 +139,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
       return null;
     }
   },
-  updatePost: async () => {
+  updatePost: async (published?: boolean) => {
     const { postId, post } = get();
     const token = getToken();
 
@@ -145,12 +147,20 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
 
     set(() => ({ isUpdating: true, error: false }));
 
+    const updatedPost = { ...post };
+    if (typeof published === "boolean") {
+      updatedPost.published = published;
+    }
+
     try {
-      await apiClient.patch(`/api/posts/${postId}`, post, {
+      await apiClient.patch(`/api/posts/${postId}`, updatedPost, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      set(() => ({ isUpdating: false }));
+      set((state) => ({
+        post: { ...state.post, published: published ?? state.post.published },
+        isUpdating: false,
+      }));
       return true;
     } catch (error) {
       console.error("Error updating post:", error);
@@ -167,6 +177,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
         slug: "",
         photo_url: "",
         tags: [],
+        published: false,
       },
     })),
   error: false,

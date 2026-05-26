@@ -47,7 +47,8 @@ export const postsStore = create<PostsState>()((set, get) => ({
     body: DEFAULT_BODY,
     slug: '',
     photo_url: '',
-    tags: []
+    tags: [],
+    published: false
   },
   updateTitle: (title) => 
     set((state) => ({ 
