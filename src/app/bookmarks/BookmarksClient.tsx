@@ -114,7 +114,7 @@ export default function BookmarksClient() {
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col max-w-3xl mx-auto px-4 py-10">
+    <div className="flex-1 w-full flex flex-col max-w-3xl mx-auto px-4 pt-3 pb-10">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground">Reading list</h1>

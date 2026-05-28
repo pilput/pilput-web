@@ -26,10 +26,10 @@ const Navbar = () => {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+    <header className="sticky top-0 z-50 w-full glass-navbar transition-all duration-300">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav
-          className="flex h-14 items-center justify-between w-full gap-4 px-5 sm:px-6 rounded-2xl border border-border/45 bg-background/70 backdrop-blur-md shadow-premium hover:border-primary/20 transition-all duration-300"
+          className="flex h-16 items-center justify-between w-full gap-4 transition-all duration-300"
           aria-label="Main navigation"
         >
           {/* Logo Branding - Always visible for consistency */}
@@ -90,7 +90,7 @@ const Navbar = () => {
         {/* Mobile Expandable Navigation Menu */}
         {showmenu && (
           <div
-            className="md:hidden mt-2 rounded-2xl border border-border/50 bg-background/90 backdrop-blur-xl shadow-premium p-1.5"
+            className="md:hidden border-t border-border/45 bg-background/95 backdrop-blur-xl py-3 px-2 space-y-1"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation menu"

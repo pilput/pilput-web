@@ -25,22 +25,22 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-background pt-4 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white text-center mb-4">
+          <h1 className="text-4xl font-extrabold text-foreground text-center mb-4">
             Contact Us
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 text-center mb-8">
+          <p className="text-lg text-muted-foreground text-center mb-8">
             Have a question, comment, or feedback? We&apos;d love to hear from
             you.
           </p>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+          <div className="bg-card border border-border/60 rounded-xl shadow-premium p-8 glass-card">
             <form className="space-y-6">
               <div>
                 <Label
                   htmlFor="name"
-                  className="text-gray-700 dark:text-gray-200"
+                  className="text-foreground font-medium"
                 >
                   Your Name
                 </Label>
@@ -58,7 +58,7 @@ export default function ContactPage() {
               <div>
                 <Label
                   htmlFor="email"
-                  className="text-gray-700 dark:text-gray-200"
+                  className="text-foreground font-medium"
                 >
                   Email Address
                 </Label>
@@ -76,7 +76,7 @@ export default function ContactPage() {
               <div>
                 <Label
                   htmlFor="message"
-                  className="text-gray-700 dark:text-gray-200"
+                  className="text-foreground font-medium"
                 >
                   Message
                 </Label>

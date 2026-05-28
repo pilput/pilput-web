@@ -128,7 +128,7 @@ const Hero = () => {
   }, [selectedTag]);
 
   return (
-    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/40 py-16 sm:py-20 lg:py-24">
+    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/40 pt-6 pb-16 sm:pt-8 sm:pb-20 lg:pt-10 lg:pb-24">
       <div className="absolute inset-0 bg-background" />
       <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background/50 to-background dark:from-muted/10" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-60" />

@@ -33,7 +33,7 @@ const AboutContent = () => {
   };
 
   return (
-    <section className="py-20 md:py-32 bg-background relative overflow-hidden">
+    <section className="pt-6 pb-20 md:pt-8 md:pb-32 bg-background relative overflow-hidden">
       {/* Enhanced background decoration */}
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse" />

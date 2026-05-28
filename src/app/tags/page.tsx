@@ -84,27 +84,27 @@ const TagsPage = () => {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-zinc-50 dark:from-gray-900 dark:via-slate-900 dark:to-zinc-950">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="border-b border-gray-200 dark:border-gray-800">
+        <div className="border-b border-border/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="mb-3">
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors mb-2"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-2"
               >
                 ← Back to Blog
               </Link>
             </div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 bg-gray-900 dark:bg-gray-100 rounded flex items-center justify-center">
-                <TagIcon className="w-4 h-4 text-white dark:text-gray-900" />
+              <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+                <TagIcon className="w-4 h-4 text-primary-foreground" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
                 All Tags
               </h1>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-muted-foreground">
               Explore topics and discover content by tags
             </p>
           </div>
@@ -115,22 +115,22 @@ const TagsPage = () => {
           {/* Search and Stats */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div className="flex items-center gap-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-foreground">
                 Browse Tags
               </h2>
-              <Badge className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+              <Badge className="bg-muted text-muted-foreground border border-border/40 font-semibold">
                 {filteredTags.length} tags
               </Badge>
             </div>
 
             <div className="relative w-full sm:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 type="text"
                 placeholder="Search tags..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                className="pl-10 bg-background border-border/80"
               />
             </div>
           </div>
@@ -141,8 +141,8 @@ const TagsPage = () => {
               {Array.from({ length: 12 }).map((_, index) => (
                 <Card key={index} className="animate-pulse">
                   <CardContent className="p-6">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+                    <div className="h-4 bg-muted rounded mb-2"></div>
+                    <div className="h-3 bg-muted rounded w-2/3"></div>
                   </CardContent>
                 </Card>
               ))}
@@ -151,31 +151,31 @@ const TagsPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {sortedTags.map((tag) => (
                 <Link key={tag.id} href={`/tags/${encodeURIComponent(tag.name)}`}>
-                  <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer group">
+                  <Card className="glass-card border-border/60 hover:shadow-premium hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                             <Hash className="w-4 h-4 text-white" />
                           </div>
-                          <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                          <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                             #{tag.name}
                           </h3>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                       </div>
                       
                       {tag.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                           {tag.description}
                         </p>
                       )}
                       
                       <div className="flex items-center justify-between">
-                        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 font-semibold">
                           {tag.post_count || 0} posts
                         </Badge>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-muted-foreground">
                           {new Date(tag.created_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -186,13 +186,13 @@ const TagsPage = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-gray-400" />
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 No tags found
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-muted-foreground mb-6">
                 {searchTerm
                   ? `No tags match "${searchTerm}". Try a different search term.`
                   : "No tags are available at the moment."}
@@ -200,7 +200,7 @@ const TagsPage = () => {
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                 >
                   Clear Search
                 </button>
@@ -211,9 +211,9 @@ const TagsPage = () => {
           {/* Popular Tags Section */}
           {!searchTerm && sortedTags.length > 0 && (
             <div className="mt-12">
-              <Card className="bg-white/90 dark:bg-gray-800/90 border border-gray-200/60 dark:border-gray-700/60">
+              <Card className="glass-card border-border/60 shadow-premium">
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-orange-500" />
                     Most Popular Tags
                   </h3>
@@ -222,10 +222,10 @@ const TagsPage = () => {
                       <Link
                         key={tag.id}
                         href={`/tags/${encodeURIComponent(tag.name)}`}
-                        className="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800/50 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-zinc-700/60 transition-all duration-300 hover:scale-105 flex items-center gap-1"
+                        className="px-3 py-1.5 bg-muted hover:bg-primary/10 rounded-full text-sm font-medium text-foreground hover:text-primary transition-all duration-300 hover:scale-[1.02] flex items-center gap-1 border border-border/40"
                       >
                         #{tag.name}
-                        <Badge className="ml-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs">
+                        <Badge className="ml-1 bg-primary/10 text-primary border border-primary/20 text-xs font-semibold">
                           {tag.post_count}
                         </Badge>
                       </Link>
