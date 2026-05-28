@@ -27,7 +27,7 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 py-3">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
         <nav
           className="flex h-14 items-center justify-between w-full gap-4 px-5 sm:px-6 rounded-2xl border border-border/45 bg-background/70 backdrop-blur-md shadow-premium hover:border-primary/20 transition-all duration-300"
           aria-label="Main navigation"

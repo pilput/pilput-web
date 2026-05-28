@@ -15,59 +15,120 @@ import {
 } from "@/components/ui/card";
 import { Config } from "@/utils/getConfig";
 import { authStore } from "@/stores/userStore";
+import { apiClient } from "@/utils/fetch";
+
+// Map backend error types to user-friendly messages
+const ERROR_MESSAGES: Record<string, string> = {
+  missing_code: "Authorization code is missing from the callback request.",
+  invalid_state: "Security validation (CSRF state) failed. Please try again.",
+  github_token_failed: "Failed to exchange authorization code with GitHub.",
+  github_user_failed: "Failed to retrieve your profile information from GitHub.",
+  oauth_login_failed: "Failed to register or login with your GitHub account.",
+  oauth_exchange_failed: "Failed to generate local authorization tokens.",
+};
 
 export function OAuthCallback() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const accessToken = searchParams.get("access_token");
+  const code = searchParams.get("code");
+  const errorType = searchParams.get("error");
   const redirectUrl = searchParams.get("redirect") || "/";
 
+  const getInitialErrorMessage = () => {
+    if (errorType) {
+      return ERROR_MESSAGES[errorType] || `Authentication failed: ${errorType}`;
+    }
+    if (!code) {
+      return "No authorization code provided from the authentication provider.";
+    }
+    return "";
+  };
+
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    accessToken ? "loading" : "error"
+    code && !errorType ? "loading" : "error"
   );
-  const [errorMessage, setErrorMessage] = useState(
-    accessToken ? "" : "No access token provided from the authentication provider."
-  );
+  const [errorMessage, setErrorMessage] = useState(getInitialErrorMessage());
 
   useEffect(() => {
-    if (!accessToken) {
-      // Trigger error toast on mount if token is missing
-      toast.error("Authentication failed: Missing access token");
+    if (errorType) {
+      toast.error(`Authentication failed: ${ERROR_MESSAGES[errorType] || errorType}`);
       return;
     }
 
-    try {
-      // Set expiration: 3 hours from now (matching login page)
-      const expire = new Date();
-      expire.setTime(expire.getTime() + 3 * 60 * 60 * 1000);
-
-      // Save token in cookie
-      setCookie("token", accessToken, {
-        expires: expire,
-        path: "/",
-        domain: `.${Config.maindomain}`,
-        sameSite: "none",
-        secure: true,
-      });
-
-      // Update auth store with user info
-      authStore.getState().fetch();
-
-      toast.success("Successfully authenticated!");
-
-      // Redirect user to the specified redirect url or default page
-      router.push(redirectUrl);
-    } catch (err) {
-      console.error("OAuth Callback Error:", err);
-      // Use setTimeout to make state updates asynchronous, avoiding synchronous cascading renders
-      setTimeout(() => {
-        setStatus("error");
-        setErrorMessage("An unexpected error occurred during authentication setup.");
-        toast.error("Authentication setup failed.");
-      }, 0);
+    if (!code) {
+      toast.error("Authentication failed: Missing authorization code");
+      return;
     }
-  }, [accessToken, redirectUrl, router]);
+
+    let isSubscribed = true;
+
+    const exchangeCode = async () => {
+      try {
+        const response = await apiClient.post<{
+          success: boolean;
+          message: string;
+          data: {
+            access_token: string;
+            refresh_token: string;
+            user: {
+              id: string;
+              email: string;
+              username: string;
+            };
+          };
+        }>("/api/auth/oauth/exchange", { code });
+
+        if (!isSubscribed) return;
+
+        const result = response.data;
+        if (!result.success || !result.data?.access_token) {
+          throw new Error(result.message || "Failed to exchange OAuth code.");
+        }
+
+        // Set expiration: 3 hours from now (matching login page)
+        const expire = new Date();
+        expire.setTime(expire.getTime() + 3 * 60 * 60 * 1000);
+
+        // Save token in cookie
+        setCookie("token", result.data.access_token, {
+          expires: expire,
+          path: "/",
+          domain: `.${Config.maindomain}`,
+          sameSite: "none",
+          secure: true,
+        });
+
+        // Update auth store with user info
+        await authStore.getState().fetch();
+
+        toast.success("Successfully authenticated!");
+
+        // Redirect user to the specified redirect url or default page
+        router.push(redirectUrl);
+      } catch (err: any) {
+        console.error("OAuth Callback Error:", err);
+        if (!isSubscribed) return;
+
+        let message = "An unexpected error occurred during authentication setup.";
+        if (err.response?.data?.message) {
+          message = err.response.data.message;
+        } else if (err.message) {
+          message = err.message;
+        }
+
+        setStatus("error");
+        setErrorMessage(message);
+        toast.error(message);
+      }
+    };
+
+    exchangeCode();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [code, errorType, redirectUrl, router]);
 
   if (status === "error") {
     return (

@@ -108,7 +108,7 @@ export default async function page(props: {
       <Navigation />
       <main className="min-h-screen bg-background">
         <div className="border-b border-border/60 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_30%),linear-gradient(180deg,var(--background),color-mix(in_oklab,var(--muted)_35%,transparent))]">
-          <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
             <div className="mx-auto max-w-5xl">
               <Card className="overflow-hidden border-border/70 bg-card/90 py-0 shadow-sm backdrop-blur">
                 <CardHeader className="relative border-b border-border/60 p-0">
@@ -232,7 +232,7 @@ export default async function page(props: {
           </div>
         </div>
 
-        <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <WriterProfileClient
               username={params.username}

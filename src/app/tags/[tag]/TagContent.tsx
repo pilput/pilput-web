@@ -79,7 +79,7 @@ export default function TagContent({
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="border-b border-border/60">
-        <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
           <div className="mb-3">
             <Link
               href="/blog"
@@ -104,7 +104,7 @@ export default function TagContent({
       </div>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 pb-16 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 mt-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-80 shrink-0">
