@@ -13,7 +13,6 @@ import { toast } from "sonner";
 
 import BlogHero from "@/components/blog/BlogHero";
 import BlogPosts from "@/components/blog/BlogPosts";
-import BlogSidebarLeft from "@/components/blog/BlogSidebarLeft";
 import BlogSidebarRight from "@/components/blog/BlogSidebarRight";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useScrollTopVisibility } from "@/hooks/useScrollTopVisibility";
@@ -193,9 +192,7 @@ const BlogContent = () => {
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col xl:flex-row gap-8">
-          <BlogSidebarLeft />
-
+        <div className="flex flex-col lg:flex-row gap-10">
           <BlogPosts
             posts={posts}
             isLoading={isLoading}
