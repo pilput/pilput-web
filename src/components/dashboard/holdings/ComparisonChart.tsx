@@ -54,7 +54,7 @@ function CustomTooltip({
             <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
               Value
             </span>
-            <span className="font-bold text-xs sm:text-sm wrap-break-word">
+            <span className="font-bold text-xs sm:text-sm break-words">
               {hideValues ? "••••••" : payload[0].value.toLocaleString()}
             </span>
           </div>
@@ -62,7 +62,7 @@ function CustomTooltip({
             <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
               {payload[1].name}
             </span>
-            <span className="font-bold text-xs sm:text-sm wrap-break-word">
+            <span className="font-bold text-xs sm:text-sm break-words">
               {hideValues ? "••••••" : payload[1].value.toLocaleString()}
             </span>
           </div>
@@ -72,6 +72,13 @@ function CustomTooltip({
   }
 
   return null;
+}
+
+function formatCompactValue(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
+  }).format(value);
 }
 
 export default function ComparisonChart({
@@ -104,7 +111,7 @@ export default function ComparisonChart({
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
-              margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
+              margin={{ top: 10, right: 10, left: 12, bottom: 5 }}
               barSize={30}
             >
               <CartesianGrid
@@ -123,9 +130,9 @@ export default function ComparisonChart({
                 hide={hideValues}
                 axisLine={false}
                 tickLine={false}
-                tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+                tickFormatter={formatCompactValue}
                 tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
-                width={50}
+                width={60}
               />
               <Tooltip
                 content={<CustomTooltip hideValues={hideValues} />}

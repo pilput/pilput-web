@@ -39,7 +39,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
           <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
         </CardHeader>
         <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
-          <div className="text-lg sm:text-xl lg:text-2xl font-bold wrap-break-word">
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold break-words">
             {formatNumber(summary.to.totalInvested)}
           </div>
           <div className="flex items-center gap-1 mt-1 flex-wrap">
@@ -48,7 +48,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
               {formatNumber(summary.investedDiff)} ({formatPercentage(summary.investedDiffPercentage)})
             </span>
           </div>
-          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 wrap-break-word">
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 break-words">
             Previous: {formatNumber(summary.from.totalInvested)}
           </p>
         </CardContent>

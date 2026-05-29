@@ -192,7 +192,7 @@ export default function HoldingSummaryCards({
 
               <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5 relative">
                 <div
-                  className={`text-lg sm:text-xl lg:text-2xl font-bold tracking-tight wrap-break-word ${card.valueColor}`}
+                  className={`text-lg sm:text-xl lg:text-2xl font-bold tracking-tight break-words ${card.valueColor}`}
                 >
                   {card.value}
                 </div>

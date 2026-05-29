@@ -358,7 +358,7 @@ export default function MonthlyHoldingsChart({
           </div>
         ) : (
           <div className="rounded-xl bg-muted/10 p-1 sm:p-2">
-            <div className="h-[260px] w-full sm:h-[300px]">
+            <div className="h-[210px] w-full sm:h-[260px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={chartData}
@@ -376,7 +376,6 @@ export default function MonthlyHoldingsChart({
                   <YAxis yAxisId="value" domain={[0, "auto"]} hide />
                   <YAxis yAxisId="count" domain={[0, "auto"]} orientation="right" hide />
                   <RechartsTooltip content={<CustomTooltip hideValues={hideValues} />} />
-                  <Legend content={renderLegendContent} verticalAlign="bottom" />
                   <Line
                     yAxisId="value"
                     type="monotone"
@@ -411,6 +410,7 @@ export default function MonthlyHoldingsChart({
                 </LineChart>
               </ResponsiveContainer>
             </div>
+            {renderLegendContent()}
           </div>
         )}
       </CardContent>

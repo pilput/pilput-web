@@ -102,7 +102,7 @@ export default function OverviewChart({
         return (
           <div
             key={index}
-            className={`inline-flex items-center gap-2 rounded-full border border-border/50 bg-muted/20 px-2.5 py-1 text-xs transition-all ${
+            className={`inline-flex items-center gap-2 rounded-full border border-border/50 bg-muted/20 px-2.5 py-1 text-xs transition-all cursor-pointer ${
               isHidden ? "opacity-40 line-through" : "opacity-100"
             }`}
             onClick={() => handleTypeToggle(entry.name)}
@@ -130,38 +130,40 @@ export default function OverviewChart({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 px-3 pb-4 sm:px-5">
-        <div className="h-[280px] sm:h-[300px] w-full">
-          {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={70}
-                  outerRadius={130}
-                  paddingAngle={2}
-                  dataKey="value"
-                  strokeWidth={0}
-                >
-                  {chartData.map((_, index) => (
-                    <Cell
-                      key={index}
-                      fill={getAllocationColor(index)}
-                      className="hover:opacity-80 transition-opacity cursor-pointer"
-                    />
-                  ))}
-                </Pie>
-                <RechartsTooltip content={renderTooltipContent} cursor={false} />
-                <Legend content={renderLegendContent} verticalAlign="bottom" />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground text-sm italic">
-              No data available
+        {chartData.length > 0 ? (
+          <>
+            <div className="h-[200px] sm:h-[240px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius="50%"
+                    outerRadius="80%"
+                    paddingAngle={2}
+                    dataKey="value"
+                    strokeWidth={0}
+                  >
+                    {chartData.map((_, index) => (
+                      <Cell
+                        key={index}
+                        fill={getAllocationColor(index)}
+                        className="hover:opacity-80 transition-opacity cursor-pointer"
+                      />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip content={renderTooltipContent} cursor={false} />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
-          )}
-        </div>
+            {renderLegendContent()}
+          </>
+        ) : (
+          <div className="flex h-[200px] sm:h-[240px] items-center justify-center text-muted-foreground text-sm italic">
+            No data available
+          </div>
+        )}
       </CardContent>
     </Card>
   )
