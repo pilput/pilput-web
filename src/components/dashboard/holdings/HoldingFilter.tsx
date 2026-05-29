@@ -149,7 +149,7 @@ export default function HoldingFilter({
             inputMode="numeric"
             value={year}
             onChange={(e) => handleYearChange(e.target.value)}
-            className="w-14 h-8 border-0 bg-transparent text-center focus-visible:ring-0 text-sm font-medium shrink-0 px-1"
+            className="w-20 h-8 border-0 bg-transparent text-center focus-visible:ring-0 text-sm font-medium shrink-0 px-1"
             placeholder="Year"
             aria-label="Filter year"
           />
