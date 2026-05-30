@@ -41,3 +41,24 @@ export interface ApiEnvelope<T> {
   data: T;
   message?: string;
 }
+
+export interface ToggleBookmarkRequest {
+  folder_id?: string;
+  name?: string;
+  notes?: string;
+}
+
+export interface UpdateBookmarkRequest {
+  name?: string;
+  notes?: string;
+}
+
+export interface CreateBookmarkFolderRequest {
+  name: string;
+  description?: string;
+}
+
+export interface UpdateBookmarkFolderRequest {
+  name?: string;
+  description?: string;
+}

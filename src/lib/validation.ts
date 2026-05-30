@@ -334,3 +334,29 @@ export type DuplicateHoldingPayload = z.infer<typeof duplicateHoldingSchema>;
 export type HoldingFormData = z.infer<typeof holdingFormSchema>;
 export type ProfileUpdateFormData = z.infer<typeof profileUpdateSchema>;
 export type PasswordUpdateFormData = z.infer<typeof passwordUpdateSchema>;
+
+// Bookmark folder validation schema
+export const bookmarkFolderSchema = z.object({
+  name: z.string()
+    .min(1, "Folder name is required")
+    .max(100, "Folder name must be less than 100 characters"),
+  description: z.string()
+    .max(1000, "Description must be less than 1000 characters")
+    .optional()
+    .or(z.literal("")),
+});
+
+// Bookmark annotation/details validation schema
+export const bookmarkSchema = z.object({
+  name: z.string()
+    .max(255, "Custom name must be less than 255 characters")
+    .optional()
+    .or(z.literal("")),
+  notes: z.string()
+    .max(2000, "Notes must be less than 2000 characters")
+    .optional()
+    .or(z.literal("")),
+});
+
+export type BookmarkFolderFormData = z.infer<typeof bookmarkFolderSchema>;
+export type BookmarkFormData = z.infer<typeof bookmarkSchema>;
