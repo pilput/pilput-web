@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { postsStore } from "@/stores/posts-store"
+import { authStore } from "@/stores/userStore"
 
 export default function TopPostsWidget() {
   const { analytics, analyticsLoading } = postsStore()
+  const username = authStore((state) => state.data.username)
 
   const topPosts = React.useMemo(() => {
     if (!analytics || !analytics.top_posts) return []
@@ -67,7 +69,7 @@ export default function TopPostsWidget() {
                   <div className="flex justify-between items-start gap-4">
                     <div className="min-w-0">
                       <Link 
-                        href={`/posts/${post.slug}`}
+                        href={`/${username}/${post.slug}`}
                         target="_blank"
                         className="font-medium text-sm text-foreground hover:text-primary transition-colors flex items-center gap-1 group-hover:underline"
                       >

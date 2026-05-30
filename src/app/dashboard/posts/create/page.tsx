@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { authStore } from "@/stores/userStore";
 
 const MyEditor = dynamic(() => import("@/components/post/Editor"), {
   ssr: false,
@@ -41,6 +42,7 @@ const MAX_TITLE_LENGTH = 150;
 const MAX_SLUG_LENGTH = 200;
 
 export default function PostCreate() {
+  const username = authStore((state) => state.data.username);
   const [errorTitle, setErrorTitle] = useState("");
   const [errorImage, setErrorImage] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -385,7 +387,7 @@ export default function PostCreate() {
             </CardHeader>
             <CardContent>
               <div className={styles.slugWrapper}>
-                <span className={styles.slugPrefix}>/posts/</span>
+                <span className={styles.slugPrefix}>/{username}/</span>
                 <input
                   value={post.slug}
                   onChange={(e) => updateSlug(e.target.value)}

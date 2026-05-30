@@ -36,12 +36,14 @@ import {
   Send,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { authStore } from "@/stores/userStore";
 import styles from "@/components/post/post-editor.module.scss";
 
 const MAX_TITLE_LENGTH = 150;
 const MAX_SLUG_LENGTH = 200;
 
 export default function PostEdit() {
+  const username = authStore((state) => state.data.username);
   const params = useParams();
   const id = params?.id as string;
   const [errorTitle, setErrorTitle] = useState("");
@@ -388,7 +390,7 @@ export default function PostEdit() {
             </CardHeader>
             <CardContent>
               <div className={styles.slugWrapper}>
-                <span className={styles.slugPrefix}>/posts/</span>
+                <span className={styles.slugPrefix}>/{username}/</span>
                 <input
                   value={post.slug}
                   onChange={(e) => updateSlug(e.target.value)}
