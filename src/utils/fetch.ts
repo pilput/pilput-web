@@ -225,7 +225,6 @@ export function unfollowUser(userId: string) {
   });
 }
 
-/** Like record from `POST /api/likes/:post_id` (toggle). */
 export type PostLikeRecord = {
   id: string;
   post_id: string;
@@ -233,16 +232,7 @@ export type PostLikeRecord = {
   created_at: string;
 };
 
-type LikesToggleEnvelope = {
-  success?: boolean;
-  data: PostLikeRecord | null | undefined;
-};
-
-/**
- * Toggle like on a post. Requires a Bearer token.
- * When the like is removed, `data` may be null — treat that as unliked.
- */
-export async function togglePostLike(postId: string): Promise<{
+export async function togglePostLike(postId: string, wasLiked?: boolean): Promise<{
   liked: boolean;
   record: PostLikeRecord | undefined;
 }> {
@@ -250,30 +240,52 @@ export async function togglePostLike(postId: string): Promise<{
   if (!token) {
     throw new Error("AUTH_REQUIRED");
   }
-  const { data } = await apiClient.post<LikesToggleEnvelope>(
-    `/api/likes/${postId}`,
-    undefined,
-    {
+
+  let shouldUnlike = wasLiked;
+  if (shouldUnlike === undefined) {
+    const { data } = await apiClient.get<{
+      data?: { has_liked: boolean };
+    }>(`/api/posts/${postId}/liked`, {
       headers: { Authorization: `Bearer ${token}` },
-    },
-  );
-  const record = data?.data ?? undefined;
-  const liked = record != null;
-  return { liked, record };
+    });
+    shouldUnlike = data?.data?.has_liked ?? false;
+  }
+
+  if (shouldUnlike) {
+    await apiClient.delete(`/api/posts/${postId}/like`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return { liked: false, record: undefined };
+  } else {
+    const { data } = await apiClient.post<{
+      data?: PostLikeRecord;
+    }>(
+      `/api/posts/${postId}/like`,
+      undefined,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    const record = data?.data ?? undefined;
+    return { liked: true, record };
+  }
 }
 
-/** List likes for a post (auth required per API). */
+/** List likes for a post (no auth required per API). */
 export async function getPostLikes(postId: string) {
   const token = getToken();
-  if (!token) {
-    return null;
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
   const { data } = await apiClient.get<{
-    success?: boolean;
-    data: Array<{ id: string; created_at: string; user_id?: string }>;
-  }>(`/api/likes/${postId}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    data?: {
+      likes: Array<{ id: string; created_at: string; user_id?: string; user?: any }>;
+    };
+  }>(`/api/posts/${postId}/likes`, {
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
   });
-  return data?.data ?? [];
+  return data?.data?.likes ?? [];
 }
+
 

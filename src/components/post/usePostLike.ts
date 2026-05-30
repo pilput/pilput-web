@@ -53,7 +53,7 @@ export function usePostLike(
       setBusy(true);
       const wasLiked = liked;
       try {
-        const { liked: nextLiked } = await togglePostLike(postId);
+        const { liked: nextLiked } = await togglePostLike(postId, wasLiked);
         setLiked(nextLiked);
         setCount((c) => {
           if (nextLiked && !wasLiked) return c + 1;
