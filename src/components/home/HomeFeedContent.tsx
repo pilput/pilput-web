@@ -22,6 +22,7 @@ import { Paginate } from "@/components/common/Paginate";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import TrendingPosts from "@/components/post/TrendingPosts";
+import ReadingListCard from "@/components/blog/ReadingListCard";
 
 interface HomeFeedContentProps {
   initialPosts: Post[];
@@ -224,6 +225,9 @@ const HomeFeedContent = ({
                   <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />
                 </CardContent>
               </Card>
+
+              {/* Reading List */}
+              <ReadingListCard />
             </div>
           </div>
 

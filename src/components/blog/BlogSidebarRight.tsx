@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, Sparkles, Hash } from "lucide-react";
 import TrendingPosts from "@/components/post/TrendingPosts";
-import ReadingListCard from "@/components/blog/ReadingListCard";
 import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
 import type { Post } from "@/types/post";
@@ -81,9 +80,6 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Reading List */}
-        <ReadingListCard />
       </div>
     </div>
   );
