@@ -122,7 +122,7 @@ const HomeFeedContent = ({
   useEffect(() => {
     async function fetchTags() {
       try {
-        const { data } = await apiClient.get("/api/tags");
+        const { data } = await apiClient.get("/api/tags/trending");
         if (data?.data) {
           setTags(data.data.map((t: { name: string }) => t.name));
         }
