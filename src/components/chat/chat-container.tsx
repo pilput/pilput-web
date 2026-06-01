@@ -47,6 +47,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
     isNewConversation,
     loadingStates,
     resetChat,
+    abortActiveStream,
   } = useChatStore();
 
   const isSending =
@@ -74,13 +75,15 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
     }
     if (isNewConversation) return;
 
+    abortActiveStream();
+
     const controller = new AbortController();
     fetchMessages(currentConversation, controller.signal);
 
     return () => {
       controller.abort();
     };
-  }, [currentConversation, isNewConversation, fetchMessages, resetChat]);
+  }, [currentConversation, isNewConversation, fetchMessages, resetChat, abortActiveStream]);
 
   const handleSendMessage = async (content: string) => {
     if (!currentConversation) {

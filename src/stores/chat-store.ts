@@ -103,6 +103,7 @@ interface ChatState {
   conversations: Conversation[];
   selectedModel: string;
   availableModels: { id: string; name: string }[];
+  activeStreamController: AbortController | null;
 
   // UI State
   isLoading: boolean;
@@ -148,6 +149,7 @@ interface ChatState {
   setSelectedModel: (model: string) => void;
   loadMoreConversations: () => Promise<void>;
   clearError: () => void;
+  abortActiveStream: () => void;
   streamMessage: (
     conversationId: string | undefined | null,
     content: string,
@@ -178,6 +180,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   isLoading: false,
   isNewConversation: false,
   error: null,
+  activeStreamController: null,
   loadingStates: {
     fetchingChats: false,
     fetchingMessages: false,
@@ -204,6 +207,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     onConversationCreated?: (id: string) => void,
   ) => {
     const controller = new AbortController();
+    set({ activeStreamController: controller });
     const timeoutId = setTimeout(() => controller.abort(), 60000);
     let updateTimeout: number | null = null;
 
@@ -301,6 +305,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
               if (eventType === "conversation_created") {
                 const id = parsed.conversation_id || (parsed.data && parsed.data.conversation_id);
                 if (id) {
+                  set({ isNewConversation: true });
                   onConversationCreated?.(id);
 
                   // Update sidebar conversation list locally for instant UI update
@@ -316,7 +321,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
                   };
                   set((state) => ({
                     conversations: [newConv, ...state.conversations],
-                    isNewConversation: true,
                   }));
                 }
               } else if (eventType === "ai_chunk") {
@@ -375,7 +379,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         clearTimeout(updateTimeout);
       }
       clearTimeout(timeoutId);
-      set({ isNewConversation: false });
+      set((state) => ({
+        isNewConversation: false,
+        activeStreamController: state.activeStreamController === controller ? null : state.activeStreamController,
+      }));
     }
   },
   editMessage: (id, content) => {
@@ -481,7 +488,15 @@ export const useChatStore = create<ChatState>((set, get) => ({
       conversations: [],
     });
   },
+  abortActiveStream: () => {
+    const { activeStreamController } = get();
+    if (activeStreamController) {
+      activeStreamController.abort();
+    }
+    set({ activeStreamController: null });
+  },
   resetChat: () => {
+    get().abortActiveStream();
     set({
       messages: [],
       isNewConversation: false,
