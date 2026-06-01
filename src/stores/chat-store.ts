@@ -169,12 +169,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
   selectedModel: "openrouter/free",
   availableModels: [
     { id: "openrouter/free", name: "OpenRouter Free" },
-    { id: "stepfun/step-3.5-flash:free", name: "StepFun 3.5 Flash" },
-    { id: "z-ai/glm-4.5-air:free", name: "GLM 4.5 Air" },
-    { id: "tngtech/deepseek-r1t2-chimera:free", name: "DeepSeek R1T2 Chimera" },
     {
-      id: "mistralai/mistral-small-3.1-24b-instruct:free",
-      name: "Mistral Small 3.1 24B",
+      id: "nvidia/nemotron-3-super-120b-a12b:free",
+      name: "Nvidia Nemotron-3 Super 120B",
+    },
+    {
+      id: "google/gemma-4-31b-it:free",
+      name: "Google Gemma 4 31B IT",
     },
   ],
   isLoading: false,

@@ -68,11 +68,16 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
     }
   }, [messages, scrollToBottom]);
 
+  // Reset chat state when entering a new empty conversation
   useEffect(() => {
     if (!currentConversation) {
       resetChat();
-      return;
     }
+  }, [currentConversation, resetChat]);
+
+  // Fetch messages when entering an existing conversation
+  useEffect(() => {
+    if (!currentConversation) return;
     if (isNewConversation) return;
 
     abortActiveStream();
@@ -83,7 +88,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
     return () => {
       controller.abort();
     };
-  }, [currentConversation, isNewConversation, fetchMessages, resetChat, abortActiveStream]);
+  }, [currentConversation, isNewConversation, fetchMessages, abortActiveStream]);
 
   const handleSendMessage = async (content: string) => {
     if (!currentConversation) {
