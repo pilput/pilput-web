@@ -126,7 +126,8 @@ interface ChatState {
 
   // Actions
   fetchConversations: (page?: number, limit?: number) => Promise<void>;
-  fetchMessages: (conversationId: string) => Promise<void>;
+  fetchMessages: (conversationId: string, signal?: AbortSignal) => Promise<void>;
+  resetChat: () => void;
   createConversation: (
     title: string,
     message: string,
@@ -367,7 +368,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
         clearTimeout(updateTimeout);
       }
       clearTimeout(timeoutId);
-      set({ isNewConversation: false });
     } catch (error) {
       throw error;
     } finally {
@@ -375,6 +375,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         clearTimeout(updateTimeout);
       }
       clearTimeout(timeoutId);
+      set({ isNewConversation: false });
     }
   },
   editMessage: (id, content) => {
@@ -480,7 +481,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
       conversations: [],
     });
   },
-  fetchMessages: async (conversationId) => {
+  resetChat: () => {
+    set({
+      messages: [],
+      isNewConversation: false,
+      error: null,
+    });
+  },
+  fetchMessages: async (conversationId, signal) => {
     if (!validateConversationId(conversationId)) {
       set({ error: { message: "Invalid conversation ID" } });
       return;
@@ -499,6 +507,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
             "Content-Type": "application/json",
             Authorization: `Bearer ${getToken()}`,
           },
+          signal,
         },
       );
 
@@ -516,6 +525,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
         loadingStates: { ...state.loadingStates, fetchingMessages: false },
       }));
     } catch (err: any) {
+      if (err?.name === "AbortError") {
+        return;
+      }
       const error = extractError(err, "Failed to fetch messages");
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingMessages: false },

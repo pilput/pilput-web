@@ -46,6 +46,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
     sendMessage,
     isNewConversation,
     loadingStates,
+    resetChat,
   } = useChatStore();
 
   const isSending =
@@ -67,10 +68,19 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
   }, [messages, scrollToBottom]);
 
   useEffect(() => {
-    if (!currentConversation) return;
+    if (!currentConversation) {
+      resetChat();
+      return;
+    }
     if (isNewConversation) return;
-    fetchMessages(currentConversation);
-  }, [currentConversation, isNewConversation, fetchMessages]);
+
+    const controller = new AbortController();
+    fetchMessages(currentConversation, controller.signal);
+
+    return () => {
+      controller.abort();
+    };
+  }, [currentConversation, isNewConversation, fetchMessages, resetChat]);
 
   const handleSendMessage = async (content: string) => {
     if (!currentConversation) {
