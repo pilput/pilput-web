@@ -192,6 +192,9 @@ const HomeFeedContent = ({
           {/* Sidebar */}
           <div className="lg:w-80 shrink-0">
             <div className="sticky top-24 space-y-6">
+              {/* Reading List */}
+              <ReadingListCard />
+
               {/* Trending Topics */}
               {tags.length > 0 && (
                 <Card className="glass-card shadow-premium border-glow-hover">
@@ -225,9 +228,6 @@ const HomeFeedContent = ({
                   <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />
                 </CardContent>
               </Card>
-
-              {/* Reading List */}
-              <ReadingListCard />
             </div>
           </div>
 
