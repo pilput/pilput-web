@@ -188,49 +188,7 @@ const HomeFeedContent = ({
 
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 mt-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className="lg:w-80 shrink-0">
-            <div className="sticky top-24 space-y-6">
-              {/* Reading List */}
-              <ReadingListCard />
-
-              {/* Trending Topics */}
-              {tags.length > 0 && (
-                <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
-                  <CardContent className="p-5">
-                    <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-primary" />
-                      Trending Topics
-                    </h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {tags.slice(0, 10).map((tag, index) => (
-                        <Link
-                          key={index}
-                          href={`/tags/${encodeURIComponent(tag)}`}
-                          className="px-2.5 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/85 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all duration-200 hover:scale-102 border border-border/50 block"
-                        >
-                          #{tag}
-                        </Link>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Trending Posts Widget */}
-              <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
-                <CardContent className="p-5">
-                  <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-primary" />
-                    Trending Posts
-                  </h3>
-                  <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
+        <div className="flex flex-col lg:flex-row gap-10">
           {/* Main Content */}
           <div className="flex-1 min-w-0">
             {/* Controls */}
@@ -322,6 +280,48 @@ const HomeFeedContent = ({
                   />
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:w-80 shrink-0">
+            <div className="sticky top-24 space-y-6">
+              {/* Reading List */}
+              <ReadingListCard />
+
+              {/* Trending Topics */}
+              {tags.length > 0 && (
+                <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
+                  <CardContent className="p-5">
+                    <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-primary" />
+                      Trending Topics
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {tags.slice(0, 10).map((tag, index) => (
+                        <Link
+                          key={index}
+                          href={`/tags/${encodeURIComponent(tag)}`}
+                          className="px-2.5 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/85 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all duration-200 hover:scale-102 border border-border/50 block"
+                        >
+                          #{tag}
+                        </Link>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Trending Posts Widget */}
+              <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
+                <CardContent className="p-5">
+                  <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-primary" />
+                    Trending Posts
+                  </h3>
+                  <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
