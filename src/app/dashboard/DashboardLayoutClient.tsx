@@ -152,7 +152,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 glass-navbar px-2 transition-[width,height] ease-linear">
+        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 glass-navbar px-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4 flex-1">
             <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
             <Separator orientation="vertical" className="mr-2 h-4 opacity-50" />

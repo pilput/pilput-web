@@ -526,7 +526,7 @@
   flex-direction: column;
   gap: 16px;
   position: sticky;
-  top: 80px;
+  top: 9rem; // 144px, sits below the sticky site header (64px) + action header (64px) + 16px gap
 
   @media (max-width: 1024px) {
     position: static;
@@ -803,3 +803,68 @@
     }
   }
 }
+
+// ===========================
+// Inline Editor Overrides
+// ===========================
+.inlineEditorWrapper {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+
+  &:focus-within {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .menuBar {
+    position: sticky;
+    top: 8rem; // sits right below the sticky site header (64px) + action header (64px)
+    background: color-mix(in oklch, var(--background) 95%, transparent);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    box-shadow: 
+      0 4px 12px color-mix(in oklch, black 8%, transparent),
+      0 1px 0 color-mix(in oklch, white 5%, transparent) inset;
+    z-index: 40;
+    transition: all 0.2s ease;
+  }
+}
+
+.inlineEditorContent {
+  padding: 0;
+  min-height: 400px;
+  cursor: text;
+
+  :global(.ProseMirror) {
+    outline: none;
+    min-height: 380px;
+  }
+}
+
+// ===========================
+// Floating Sidebar Widgets
+// ===========================
+.floatingWidget {
+  background: color-mix(in oklch, var(--card) 65%, transparent) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklch, var(--border) 45%, transparent) !important;
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 8px 30px color-mix(in oklch, black 4%, transparent),
+    0 1px 0 color-mix(in oklch, white 5%, transparent) inset !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow: 
+      0 12px 35px color-mix(in oklch, black 7%, transparent),
+      0 1px 0 color-mix(in oklch, white 8%, transparent) inset !important;
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--primary) 25%, var(--border)) !important;
+  }
+}
+

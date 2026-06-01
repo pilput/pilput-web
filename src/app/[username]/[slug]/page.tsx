@@ -176,21 +176,6 @@ export default async function Page(props: {
       <Navigation />
 
       <div className={styles.postViewWrapper}>
-        {/* Featured Image — full-bleed hero above the container */}
-        {post.photo_url && (
-          <div className={styles.heroImageWrapper}>
-            <Image
-              className={styles.heroImage}
-              priority
-              src={getUrlImage(post.photo_url)}
-              alt={post.title}
-              fill
-              sizes="100vw"
-            />
-            <div className={styles.heroOverlay} aria-hidden />
-          </div>
-        )}
-
         <div className={styles.postViewContainer}>
           <article>
             {/* Header */}
@@ -247,6 +232,20 @@ export default async function Page(props: {
                 />
               </div>
             </header>
+
+            {/* Featured Image — standard post image inside the column */}
+            {post.photo_url && (
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 border border-border shadow-xs">
+                <Image
+                  src={getUrlImage(post.photo_url)}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  priority
+                />
+              </div>
+            )}
 
             {/* Article Content */}
             <PostContent html={post.body} className={styles.postContent} />

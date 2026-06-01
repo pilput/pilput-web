@@ -14,11 +14,14 @@ import FloatingTextMenu from "./FloatingTextMenu";
 import SlashCommandMenu from "./SlashCommandMenu";
 import styles from "./post-editor.module.scss";
 
+import contentStyles from "./post-content.module.scss";
+
 interface TiptapProps {
   content: string;
   onchange: (data: string) => void;
   placeholder?: string;
   maxLength?: number;
+  isInline?: boolean;
 }
 
 const Tiptap = ({
@@ -26,6 +29,7 @@ const Tiptap = ({
   onchange,
   placeholder = "Start writing your amazing post...",
   maxLength = 50000,
+  isInline = false,
 }: TiptapProps) => {
   const editor = useEditor({
     extensions: [
@@ -71,7 +75,9 @@ const Tiptap = ({
     },
     editorProps: {
       attributes: {
-        class: "prose prose-lg max-w-none",
+        class: isInline
+          ? "focus:outline-none"
+          : "prose prose-lg max-w-none",
       },
     },
     immediatelyRender: false,
@@ -85,26 +91,28 @@ const Tiptap = ({
   const percentage = Math.round((characterCount.characters() / maxLength) * 100);
 
   return (
-    <div className={styles.editorWrapper}>
+    <div className={isInline ? styles.inlineEditorWrapper : styles.editorWrapper}>
       <MenuBar editor={editor} />
       <FloatingTextMenu editor={editor} />
       <SlashCommandMenu editor={editor} />
-      <div className={styles.editorContent}>
+      <div className={isInline ? `${styles.inlineEditorContent} ${contentStyles.postContent}` : styles.editorContent}>
         <EditorContent editor={editor} />
       </div>
-      <div className={styles.editorFooter}>
-        <span className={styles.wordCount}>
-          {characterCount.words()} words
-        </span>
-        <span className={styles.charLimit}>
-          {characterCount.characters()} / {maxLength.toLocaleString()} characters
-          {percentage > 80 && (
-            <span style={{ marginLeft: 8, color: percentage > 95 ? "oklch(0.6 0.2 25)" : "oklch(0.7 0.15 70)" }}>
-              ({percentage}%)
-            </span>
-          )}
-        </span>
-      </div>
+      {!isInline && (
+        <div className={styles.editorFooter}>
+          <span className={styles.wordCount}>
+            {characterCount.words()} words
+          </span>
+          <span className={styles.charLimit}>
+            {characterCount.characters()} / {maxLength.toLocaleString()} characters
+            {percentage > 80 && (
+              <span style={{ marginLeft: 8, color: percentage > 95 ? "oklch(0.6 0.2 25)" : "oklch(0.7 0.15 70)" }}>
+                ({percentage}%)
+              </span>
+            )}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
