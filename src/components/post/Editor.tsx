@@ -11,7 +11,7 @@ import { CharacterCount } from "@tiptap/extension-character-count";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import MenuBar from "./MenuBar";
 import FloatingTextMenu from "./FloatingTextMenu";
-import SlashCommandMenu from "./SlashCommandMenu";
+
 import styles from "./post-editor.module.scss";
 
 import contentStyles from "./post-content.module.scss";
@@ -94,7 +94,7 @@ const Tiptap = ({
     <div className={isInline ? styles.inlineEditorWrapper : styles.editorWrapper}>
       <MenuBar editor={editor} />
       <FloatingTextMenu editor={editor} />
-      <SlashCommandMenu editor={editor} />
+
       <div className={isInline ? `${styles.inlineEditorContent} ${contentStyles.postContent}` : styles.editorContent}>
         <EditorContent editor={editor} />
       </div>
