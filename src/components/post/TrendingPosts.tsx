@@ -15,15 +15,15 @@ interface TrendingPostsProps {
 const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsProps) => {
   if (isLoading) {
     return (
-      <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}>
+      <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-2"}>
         {Array(layout === "grid" ? 3 : 5).fill(0).map((_, i) => (
-          <div key={i} className={`bg-card border border-border/40 rounded-xl overflow-hidden ${layout === "sidebar" ? "flex gap-3 p-3" : "h-[320px]"}`}>
+          <div key={i} className={`overflow-hidden ${layout === "sidebar" ? "flex gap-3 p-2" : "bg-card border border-border/40 rounded-xl h-[320px] p-3"}`}>
             {layout === "sidebar" ? (
               <>
-                <Skeleton className="size-10 rounded-full shrink-0" />
-                <div className="flex flex-1 flex-col gap-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/3" />
+                <Skeleton className="size-8 rounded-full shrink-0" />
+                <div className="flex flex-1 flex-col gap-1.5 justify-center">
+                  <Skeleton className="h-3.5 w-3/4" />
+                  <Skeleton className="h-2.5 w-1/3" />
                 </div>
               </>
             ) : (
@@ -57,7 +57,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
   }
 
   return (
-    <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
+    <div className={layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-2.5"}>
       {posts.filter(Boolean).map((post, index) => {
         const user = post.user;
         const userUsername = user?.username || "anonymous";
@@ -92,21 +92,21 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                   <div className="flex items-center gap-2 mb-3">
                      <div className="relative w-6 h-6 rounded-full overflow-hidden border border-border">
                         {user?.image ? (
-                          <Image
-                            src={getProfilePicture(user.image || "")}
-                            alt={userName}
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                            <User className="w-3 h-3 text-primary" />
-                          </div>
-                        )}
-                     </div>
-                     <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                       {userName}
-                     </span>
+                           <Image
+                             src={getProfilePicture(user.image || "")}
+                             alt={userName}
+                             fill
+                             className="object-cover"
+                           />
+                         ) : (
+                           <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                             <User className="w-3 h-3 text-primary" />
+                           </div>
+                         )}
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                        {userName}
+                      </span>
                   </div>
 
                   <h3 className="font-bold text-lg leading-tight mb-auto group-hover:text-primary transition-colors">
@@ -143,32 +143,36 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
           >
             <Link
               href={`/${userUsername}/${post.slug || ""}`}
-              className="group flex gap-3 p-3 rounded-xl bg-card border border-border/40 hover:border-primary/30 hover:shadow-md transition-all duration-200"
+              className="group flex gap-3 p-2 rounded-lg hover:bg-muted/60 transition-all duration-200"
             >
               {/* Author Avatar */}
               <div className="shrink-0">
-                 <div className="w-10 h-10 rounded-full overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
+                 <div className="w-8 h-8 rounded-full overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
                     {user?.image ? (
                         <Image
                           src={getProfilePicture(user.image || "")}
                           alt={userName}
-                          width={40}
-                          height={40}
+                          width={32}
+                          height={32}
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full bg-muted flex items-center justify-center">
-                           <User className="w-5 h-5 text-muted-foreground" />
+                           <User className="w-4 h-4 text-muted-foreground" />
                         </div>
                       )}
                  </div>
               </div>
 
               <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <h4 className="font-semibold text-sm leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                <h4 className="font-semibold text-sm leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-0.5">
                   {post.title || "Untitled"}
                 </h4>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                  <span className="font-medium text-foreground/80 group-hover:text-primary transition-colors truncate max-w-[80px]">
+                    @{userName}
+                  </span>
+                  <span className="text-muted-foreground/45">•</span>
                   <span className="flex items-center gap-0.5">
                      <Eye className="w-3 h-3" />
                      {post.view_count?.toLocaleString()}
