@@ -56,17 +56,17 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
         {/* Trending Topics */}
         <Card className="bg-card border border-border/70 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardContent className="p-5">
-            <h3 className="font-bold text-foreground mb-4 flex items-center gap-2 text-base">
+            <h3 className="font-bold text-foreground mb-3 flex items-center gap-2 text-base">
               <TrendingUp className="w-4 h-4 text-primary" />
               Popular Topics
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {Array.isArray(trendingTags) && trendingTags.length > 0 ? (
                 trendingTags.slice(0, 10).map((tag, index) => (
                   <Link
                     key={index}
                     href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-muted rounded-full text-xs font-semibold text-foreground/80 hover:bg-primary/10 hover:text-primary transition-all duration-200 border border-border/60"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all duration-200 border border-border/50"
                   >
                     <Hash className="w-3 h-3 text-muted-foreground/60 group-hover:text-primary" />
                     {tag}

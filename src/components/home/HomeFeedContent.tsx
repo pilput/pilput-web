@@ -197,18 +197,18 @@ const HomeFeedContent = ({
 
               {/* Trending Topics */}
               {tags.length > 0 && (
-                <Card className="glass-card shadow-premium border-glow-hover">
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <Card className="glass-card shadow-premium border-glow-hover bg-card/90">
+                  <CardContent className="p-5">
+                    <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-primary" />
                       Trending Topics
                     </h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {tags.slice(0, 10).map((tag, index) => (
                         <Link
                           key={index}
                           href={`/tags/${encodeURIComponent(tag)}`}
-                          className="px-3 py-1.5 bg-muted rounded-full text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all duration-300 hover:scale-105 border border-border/60 block"
+                          className="px-2.5 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/85 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all duration-200 hover:scale-102 border border-border/50 block"
                         >
                           #{tag}
                         </Link>
@@ -219,8 +219,8 @@ const HomeFeedContent = ({
               )}
 
               {/* Trending Posts Widget */}
-              <Card className="glass-card shadow-premium border-glow-hover">
-                <CardContent className="p-4">
+              <Card className="glass-card shadow-premium border-glow-hover bg-card/90">
+                <CardContent className="p-5">
                   <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-primary" />
                     Trending Posts
