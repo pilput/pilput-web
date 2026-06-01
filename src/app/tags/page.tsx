@@ -211,21 +211,21 @@ const TagsPage = () => {
           {/* Popular Tags Section */}
           {!searchTerm && sortedTags.length > 0 && (
             <div className="mt-12">
-              <Card className="glass-card border-border/60 shadow-premium">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-orange-500" />
+              <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
+                <CardContent className="p-5">
+                  <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-primary" />
                     Most Popular Tags
                   </h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {sortedTags.slice(0, 10).map((tag) => (
                       <Link
                         key={tag.id}
                         href={`/tags/${encodeURIComponent(tag.name)}`}
-                        className="px-3 py-1.5 bg-muted hover:bg-primary/10 rounded-full text-sm font-medium text-foreground hover:text-primary transition-all duration-300 hover:scale-[1.02] flex items-center gap-1 border border-border/40"
+                        className="px-2.5 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all duration-200 hover:scale-102 flex items-center gap-1 border border-border/50"
                       >
                         #{tag.name}
-                        <Badge className="ml-1 bg-primary/10 text-primary border border-primary/20 text-xs font-semibold">
+                        <Badge className="ml-1 bg-primary/10 text-primary border border-primary/20 text-[10px] h-4 px-1 flex items-center font-bold">
                           {tag.post_count}
                         </Badge>
                       </Link>
