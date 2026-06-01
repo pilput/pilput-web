@@ -63,14 +63,119 @@ export function ChatSidebar() {
     setEditingId(null);
   };
 
-  const sortedConversations = [...conversations].sort((a, b) => {
-    if (a.is_pinned && !b.is_pinned) return -1;
-    if (!a.is_pinned && b.is_pinned) return 1;
-    return (
-      new Date(b.updated_at || b.created_at).getTime() -
-      new Date(a.updated_at || a.created_at).getTime()
+  const pinnedConversations = conversations
+    .filter((c) => c.is_pinned)
+    .sort(
+      (a, b) =>
+        new Date(b.updated_at || b.created_at).getTime() -
+        new Date(a.updated_at || a.created_at).getTime()
     );
-  });
+
+  const unpinnedConversations = conversations
+    .filter((c) => !c.is_pinned)
+    .sort(
+      (a, b) =>
+        new Date(b.updated_at || b.created_at).getTime() -
+        new Date(a.updated_at || a.created_at).getTime()
+    );
+
+  const renderConversationItem = (chat: Conversation) => {
+    const isActive = chat.id === currentConversationId;
+    return (
+      <SidebarMenuItem key={chat.id}>
+        {editingId === chat.id ? (
+          <div className="px-2 py-0.5 flex w-full">
+            <input
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              onBlur={() => handleSaveRename(chat.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSaveRename(chat.id);
+                if (e.key === "Escape") setEditingId(null);
+              }}
+              className="h-8 w-full rounded-md border border-primary/50 bg-background px-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary/30"
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        ) : (
+          <div className="group/item relative flex items-center">
+            <SidebarMenuButton
+              asChild
+              isActive={isActive}
+              className={cn(
+                "h-9 w-full flex-1 rounded-lg px-3 text-sm transition-colors",
+                isActive
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-normal"
+              )}
+              tooltip={chat.title}
+            >
+              <Link href={`/chat/${chat.id}`} className="flex items-center gap-2.5 pr-10 w-full">
+                <MessageSquare
+                  className={cn(
+                    "h-3.5 w-3.5 shrink-0",
+                    isActive ? "text-primary" : "text-muted-foreground/60"
+                  )}
+                />
+                <span className="truncate flex-1">{chat.title}</span>
+                {chat.is_pinned && (
+                  <Pin className="h-3.5 w-3.5 shrink-0 text-primary rotate-45" />
+                )}
+              </Link>
+            </SidebarMenuButton>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md opacity-0 group-hover/item:opacity-100 hover:bg-accent text-muted-foreground hover:text-foreground transition-all"
+                  title="Options"
+                >
+                  <MoreHorizontal className="h-3.5 w-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    updateConversation(chat.id, { is_pinned: !chat.is_pinned });
+                  }}
+                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                >
+                  <Pin className="h-4 w-4 mr-2" />
+                  {chat.is_pinned ? "Unpin" : "Pin"} conversation
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditingId(chat.id);
+                    setEditTitle(chat.title);
+                  }}
+                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Rename conversation
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteConversation(chat.id);
+                  }}
+                  className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete conversation
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
+      </SidebarMenuItem>
+    );
+  };
 
   return (
     <Sidebar
@@ -145,133 +250,65 @@ export function ChatSidebar() {
         </SidebarGroup>
 
         {/* Chat List — only in expanded mode */}
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
-          <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-            Conversations
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-0.5">
-              {sortedConversations.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-10 px-3 text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
-                    <MessageSquare className="h-5 w-5 text-muted-foreground/50" />
-                  </div>
-                  <p className="text-sm font-medium text-muted-foreground">No conversations yet</p>
-                  <p className="text-xs text-muted-foreground/60">Start a new chat above</p>
+        {conversations.length === 0 ? (
+          <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
+            <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              Conversations
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <div className="flex flex-col items-center gap-2 py-10 px-3 text-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                  <MessageSquare className="h-5 w-5 text-muted-foreground/50" />
                 </div>
-              ) : (
-                <>
-                  {sortedConversations.map((chat: Conversation) => {
-                    const isActive = chat.id === currentConversationId;
-                    return (
-                      <SidebarMenuItem key={chat.id}>
-                        {editingId === chat.id ? (
-                          <div className="px-2 py-0.5 flex w-full">
-                            <input
-                              type="text"
-                              value={editTitle}
-                              onChange={(e) => setEditTitle(e.target.value)}
-                              onBlur={() => handleSaveRename(chat.id)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") handleSaveRename(chat.id);
-                                if (e.key === "Escape") setEditingId(null);
-                              }}
-                              className="h-8 w-full rounded-md border border-primary/50 bg-background px-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary/30"
-                              autoFocus
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                          </div>
-                        ) : (
-                          <div className="group/item relative flex items-center">
-                            <SidebarMenuButton
-                              asChild
-                              isActive={isActive}
-                              className={cn(
-                                "h-9 w-full flex-1 rounded-lg px-3 text-sm transition-colors",
-                                isActive
-                                  ? "bg-primary/10 text-primary font-medium"
-                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-normal"
-                              )}
-                              tooltip={chat.title}
-                            >
-                              <Link href={`/chat/${chat.id}`} className="flex items-center gap-2.5 pr-10 w-full">
-                                <MessageSquare
-                                  className={cn(
-                                    "h-3.5 w-3.5 shrink-0",
-                                    isActive ? "text-primary" : "text-muted-foreground/60"
-                                  )}
-                                />
-                                <span className="truncate flex-1">{chat.title}</span>
-                                {chat.is_pinned && (
-                                  <Pin className="h-3.5 w-3.5 shrink-0 text-primary rotate-45" />
-                                )}
-                              </Link>
-                            </SidebarMenuButton>
+                <p className="text-sm font-medium text-muted-foreground">No conversations yet</p>
+                <p className="text-xs text-muted-foreground/60">Start a new chat above</p>
+              </div>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ) : (
+          <>
+            {/* Pinned Group */}
+            {pinnedConversations.length > 0 && (
+              <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
+                <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60 flex items-center gap-1.5">
+                  <Pin className="h-3 w-3 rotate-45 text-primary" />
+                  Pinned
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu className="gap-0.5">
+                    {pinnedConversations.map(renderConversationItem)}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
 
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md opacity-0 group-hover/item:opacity-100 hover:bg-accent text-muted-foreground hover:text-foreground transition-all"
-                                  title="Options"
-                                >
-                                  <MoreHorizontal className="h-3.5 w-3.5" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48">
-                                <DropdownMenuItem
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    updateConversation(chat.id, { is_pinned: !chat.is_pinned });
-                                  }}
-                                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                                >
-                                  <Pin className="h-4 w-4 mr-2" />
-                                  {chat.is_pinned ? "Unpin" : "Pin"} conversation
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setEditingId(chat.id);
-                                    setEditTitle(chat.title);
-                                  }}
-                                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                                >
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Rename conversation
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteConversation(chat.id);
-                                  }}
-                                  className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
-                                >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete conversation
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        )}
-                      </SidebarMenuItem>
-                    );
-                  })}
+            {/* Unpinned Group */}
+            {unpinnedConversations.length > 0 && (
+              <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
+                <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  {pinnedConversations.length > 0 ? "Recent" : "Conversations"}
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu className="gap-0.5">
+                    {unpinnedConversations.map(renderConversationItem)}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
 
-                  <ChatPagination
-                    currentPage={conversationsPagination.page}
-                    totalPages={Math.ceil(conversationsPagination.total / conversationsPagination.limit)}
-                    onLoadMore={loadMoreConversations}
-                    hasMore={conversationsPagination.hasMore}
-                    totalConversations={conversationsPagination.total}
-                    currentCount={conversations.length}
-                  />
-                </>
-              )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+            {/* Pagination */}
+            <div className="px-4 py-2 group-data-[collapsible=icon]:hidden">
+              <ChatPagination
+                currentPage={conversationsPagination.page}
+                totalPages={Math.ceil(conversationsPagination.total / conversationsPagination.limit)}
+                onLoadMore={loadMoreConversations}
+                hasMore={conversationsPagination.hasMore}
+                totalConversations={conversationsPagination.total}
+                currentCount={conversations.length}
+              />
+            </div>
+          </>
+        )}
       </SidebarContent>
 
       {/* Footer */}
