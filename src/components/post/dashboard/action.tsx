@@ -63,7 +63,7 @@ const ActionComponent = ({
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem>
           <Link
-            href={`/${post.user.username}/${post.slug}`}
+            href={post.user?.username ? `/${post.user.username}/${post.slug || ""}` : `#/post/${post.id}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center"

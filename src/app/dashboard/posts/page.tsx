@@ -60,7 +60,7 @@ export default function Posts() {
 
   const filteredPosts = useMemo(() => {
     return poststore.posts.filter((post) => {
-      const matchesSearch = post.title
+      const matchesSearch = (post.title || "")
         .toLowerCase()
         .includes(debouncedSearch.toLowerCase());
       const matchesStatus =
@@ -198,10 +198,10 @@ export default function Posts() {
                         </Tooltip>
                       </TableCell>
                       <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
-                        {format(post.created_at, "MMM dd, yyyy")}
+                        {post.created_at ? format(new Date(post.created_at), "MMM dd, yyyy") : "Draft"}
                       </TableCell>
                       <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
-                        {format(post.updated_at, "MMM dd, yyyy")}
+                        {post.updated_at ? format(new Date(post.updated_at), "MMM dd, yyyy") : "-"}
                       </TableCell>
                       <TableCell className="text-center tabular-nums">
                         {post.view_count ?? 0}

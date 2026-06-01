@@ -20,7 +20,7 @@ interface PostGridCardProps {
 }
 
 const PostGridCard = ({ post }: PostGridCardProps) => {
-  const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
+  const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
 
   return (
@@ -37,7 +37,7 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
           <Image
             className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
             src={getUrlImage(post.photo_url)}
-            alt={post.title}
+            alt={post.title || "Cover"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
@@ -52,11 +52,11 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
             <Link href={`/${post.user?.username || "anonymous"}`}>
               <Avatar className="h-7 w-7 border border-primary/10 shadow-xs hover:scale-105 transition-transform">
                 <AvatarImage
-                  src={getProfilePicture(post.user?.image)}
-                  alt={post.user?.first_name || post.user?.username || "Author"}
+                  src={getProfilePicture(post.user?.image || "")}
+                  alt={post.user?.username || "Author"}
                 />
                 <AvatarFallback className="text-[10px] font-bold bg-primary/5 text-primary">
-                  {post.user?.first_name?.[0] || post.user?.username?.[0] || "A"}
+                  {post.user?.username?.[0] || "A"}
                 </AvatarFallback>
               </Avatar>
             </Link>
@@ -65,19 +65,19 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
                 href={`/${post.user?.username || "anonymous"}`}
                 className="block font-bold text-xs hover:text-primary transition-colors mb-0.5 truncate"
               >
-                {post.user ? `${post.user.first_name || ""} ${post.user.last_name || ""}`.trim() || post.user.username : "Anonymous"}
+                {post.user?.username || "Anonymous"}
               </Link>
               <span className="text-[10px] text-muted-foreground">
-                {format(post.created_at, "MMM d, yyyy")}
+                {post.created_at ? format(new Date(post.created_at), "MMM d, yyyy") : "Draft"}
               </span>
             </div>
           </div>
 
           {/* Title & Excerpt */}
           <div className="space-y-2">
-            <Link href={`/${post.user?.username || "anonymous"}/${post.slug}`} className="block group/title">
+            <Link href={`/${post.user?.username || "anonymous"}/${post.slug || ""}`} className="block group/title">
               <h3 className="font-bold text-base md:text-lg leading-snug tracking-tight text-foreground group-hover/title:text-primary transition-colors line-clamp-2">
-                {post.title}
+                {post.title || "Untitled"}
               </h3>
             </Link>
             <p className="text-xs text-muted-foreground/90 leading-relaxed line-clamp-3">

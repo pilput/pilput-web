@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const PostList = ({ post }: { post: Post }) => {
-  const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
+  const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
 
   return (
@@ -38,7 +38,7 @@ const PostList = ({ post }: { post: Post }) => {
           <Image
             className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
             src={getUrlImage(post.photo_url)}
-            alt={post.title}
+            alt={post.title || "Cover"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={false}
@@ -56,11 +56,11 @@ const PostList = ({ post }: { post: Post }) => {
             <Link href={`/${post.user?.username || "anonymous"}`}>
               <Avatar className="h-9 w-9 border border-primary/20 shadow-xs">
                 <AvatarImage
-                  src={getProfilePicture(post.user?.image)}
-                  alt={post.user?.first_name || post.user?.username || "Author"}
+                  src={getProfilePicture(post.user?.image || "")}
+                  alt={post.user?.username || "Author"}
                 />
                 <AvatarFallback className="text-xs font-bold bg-primary/5 text-primary">
-                  {post.user?.first_name?.[0] || post.user?.username?.[0] || "A"}
+                  {post.user?.username?.[0] || "A"}
                 </AvatarFallback>
               </Avatar>
             </Link>
@@ -70,11 +70,11 @@ const PostList = ({ post }: { post: Post }) => {
               href={`/${post.user?.username || "anonymous"}`}
               className="block font-bold text-sm hover:text-primary transition-colors"
             >
-              {post.user ? `${post.user.first_name || ""} ${post.user.last_name || ""}`.trim() || post.user.username : "Anonymous"}
+              {post.user?.username || "Anonymous"}
             </Link>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Clock className="w-3.5 h-3.5 opacity-70" />
-              <span>{format(post.created_at, "MMM d, yyyy")}</span>
+              <span>{post.created_at ? format(new Date(post.created_at), "MMM d, yyyy") : "Draft"}</span>
             </div>
           </div>
         </div>
@@ -82,14 +82,14 @@ const PostList = ({ post }: { post: Post }) => {
         {/* Title & Content */}
         <div className="space-y-2.5">
           <Link
-            href={`/${post.user?.username || "anonymous"}/${post.slug}`}
+            href={`/${post.user?.username || "anonymous"}/${post.slug || ""}`}
             className="block group"
           >
             <motion.h2
               className="font-extrabold text-xl md:text-2xl leading-snug line-clamp-2 tracking-tight group-hover:text-primary transition-colors duration-300"
               whileHover={{ x: 2 }}
             >
-              {post.title}
+              {post.title || "Untitled"}
             </motion.h2>
           </Link>
 

@@ -19,10 +19,8 @@ interface CommentData {
   text: string;
   user: {
     id: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    image: string;
+    username: string | null;
+    image: string | null;
   } | null;
   created_at: string | null;
   updated_at: string | null;
@@ -284,7 +282,7 @@ const Comment = ({ postId }: { postId: string }) => {
                   <Avatar className="shrink-0">
                     <AvatarImage
                       src={getProfilePicture(data.user?.image ?? "")}
-                      alt={data.user ? `${data.user.first_name} ${data.user.last_name}` : "Anonymous User"}
+                      alt={data.user?.username || "Anonymous User"}
                     />
                     <AvatarFallback>
                       <User className="w-5 h-5" />
@@ -295,9 +293,7 @@ const Comment = ({ postId }: { postId: string }) => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        {data.user?.first_name
-                          ? `${data.user.first_name} ${data.user.last_name}`
-                          : "Anonymous User"}
+                        {data.user?.username || "Anonymous User"}
                       </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {data.created_at ? formatDistanceToNow(new Date(data.created_at), {

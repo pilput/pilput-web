@@ -26,7 +26,7 @@ interface FeaturedPostCardProps {
 }
 
 const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
-  const plaintext = post.body.replace(/(<([^>]+)>)/gi, "").trim();
+  const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
 
   return (
@@ -44,7 +44,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
             <Image
               className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
               src={getUrlImage(post.photo_url)}
-              alt={post.title}
+              alt={post.title || "Cover"}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
@@ -66,11 +66,11 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
               <Link href={`/${post.user?.username || "anonymous"}`}>
                 <Avatar className="h-8 w-8 border border-primary/20 shadow-xs hover:scale-105 transition-transform">
                   <AvatarImage
-                    src={getProfilePicture(post.user?.image)}
-                    alt={post.user?.first_name || post.user?.username || "Author"}
+                    src={getProfilePicture(post.user?.image || "")}
+                    alt={post.user?.username || "Author"}
                   />
                   <AvatarFallback className="text-xs font-bold bg-primary/5 text-primary">
-                    {post.user?.first_name?.[0] || post.user?.username?.[0] || "A"}
+                    {post.user?.username?.[0] || "A"}
                   </AvatarFallback>
                 </Avatar>
               </Link>
@@ -79,20 +79,20 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                   href={`/${post.user?.username || "anonymous"}`}
                   className="block font-bold text-xs hover:text-primary transition-colors leading-none mb-0.5"
                 >
-                  {post.user ? `${post.user.first_name || ""} ${post.user.last_name || ""}`.trim() || post.user.username : "Anonymous"}
+                  {post.user?.username || "Anonymous"}
                 </Link>
                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                   <Clock className="w-3 h-3 opacity-70" />
-                  <span>{format(post.created_at, "MMMM d, yyyy")}</span>
+                  <span>{post.created_at ? format(new Date(post.created_at), "MMMM d, yyyy") : "Draft"}</span>
                 </div>
               </div>
             </div>
 
             {/* Title & Excerpt */}
             <div className="space-y-2">
-              <Link href={`/${post.user?.username || "anonymous"}/${post.slug}`}>
+              <Link href={`/${post.user?.username || "anonymous"}/${post.slug || ""}`}>
                 <h2 className="font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-tight leading-snug text-foreground group-hover:text-primary transition-colors duration-300">
-                  {post.title}
+                  {post.title || "Untitled"}
                 </h2>
               </Link>
               <p className="text-xs sm:text-sm text-muted-foreground/95 leading-relaxed line-clamp-3">

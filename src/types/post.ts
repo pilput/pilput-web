@@ -1,23 +1,27 @@
+export interface UserBrief {
+  id: string;
+  username: string | null;
+  image: string | null;
+}
+
 export interface Post {
   id: string;
-  title: string;
-  body: string;
-  slug: string;
-  user: User;
-  photo_url: string;
-  created_at: string;
-  updated_at: string;
-  published: boolean;
+  title: string | null;
+  photo_url: string | null;
+  body: string | null;
+  slug: string | null;
   view_count: number;
-  /** Some API responses use `likes_count`, others `like_count`. */
-  likes_count?: number;
-  like_count?: number;
-  /** Present when the post payload is loaded with an authenticated context. */
+  like_count: number;
+  bookmark_count: number;
+  published: boolean | null;
+  published_at?: string | null;
+  user: UserBrief | null;
+  tags: Tags[];
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at?: string | null;
   is_liked_by_current_user?: boolean;
   comments_count?: number;
-  /** Total bookmarks (saves) for this post when the API includes it. */
-  bookmark_count?: number;
-  tags: Tags[];
 }
 
 export interface PostCreate {
@@ -55,12 +59,11 @@ export interface Tags {
   name: string;
 }
 
-/** Resolves like total whether the payload uses `likes_count` or `like_count`. */
+/** Resolves like total from the updated API likes count field. */
 export function getPostLikesCount(
-  post: Pick<Post, "likes_count" | "like_count">,
+  post: Pick<Post, "like_count">,
 ): number {
-  const raw = post.likes_count ?? post.like_count;
-  const n = Number(raw);
+  const n = Number(post.like_count);
   if (!Number.isFinite(n) || n < 0) return 0;
   return Math.floor(n);
 }
@@ -78,7 +81,7 @@ export interface Comment {
   post_id: string;
   parent_comment_id: string | null;
   text: string;
-  user: User | null;
+  user: UserBrief | null;
   created_at: string | null;
   updated_at: string | null;
   replies?: Comment[];

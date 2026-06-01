@@ -61,7 +61,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
       {posts.filter(Boolean).map((post, index) => {
         const user = post.user;
         const userUsername = user?.username || "anonymous";
-        const userName = user ? `${user.first_name} ${user.last_name}`.trim() : userUsername;
+        const userName = userUsername;
 
         if (layout === "grid") {
           return (
@@ -72,11 +72,11 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
               transition={{ delay: index * 0.1 }}
               className="group relative bg-card hover:bg-card/80 border border-border hover:border-primary/20 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg"
             >
-              <Link href={`/${userUsername}/${post.slug}`} className="block h-full flex-col">
+              <Link href={`/${userUsername}/${post.slug || ""}`} className="block h-full flex-col">
                 <div className="relative aspect-video overflow-hidden">
                    <Image
-                    src={getUrlImage(post.photo_url)}
-                    alt={post.title}
+                    src={getUrlImage(post.photo_url || "")}
+                    alt={post.title || "Cover"}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -93,7 +93,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                      <div className="relative w-6 h-6 rounded-full overflow-hidden border border-border">
                         {user?.image ? (
                           <Image
-                            src={getProfilePicture(user.image)}
+                            src={getProfilePicture(user.image || "")}
                             alt={userName}
                             fill
                             className="object-cover"
@@ -110,7 +110,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                   </div>
 
                   <h3 className="font-bold text-lg leading-tight mb-auto group-hover:text-primary transition-colors">
-                    {post.title}
+                    {post.title || "Untitled"}
                   </h3>
 
                   <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/40 text-xs text-muted-foreground">
@@ -142,7 +142,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
             transition={{ delay: index * 0.05 }}
           >
             <Link
-              href={`/${userUsername}/${post.slug}`}
+              href={`/${userUsername}/${post.slug || ""}`}
               className="group flex gap-3 p-3 rounded-xl bg-card border border-border/40 hover:border-primary/30 hover:shadow-md transition-all duration-200"
             >
               {/* Author Avatar */}
@@ -150,7 +150,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                  <div className="w-10 h-10 rounded-full overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
                     {user?.image ? (
                         <Image
-                          src={getProfilePicture(user.image)}
+                          src={getProfilePicture(user.image || "")}
                           alt={userName}
                           width={40}
                           height={40}
@@ -166,7 +166,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
 
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <h4 className="font-semibold text-sm leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
-                  {post.title}
+                  {post.title || "Untitled"}
                 </h4>
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                   <span className="flex items-center gap-0.5">

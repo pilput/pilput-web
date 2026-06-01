@@ -271,8 +271,7 @@ export default function BookmarksClient() {
       row.post?.title?.toLowerCase().includes(q) ||
       row.name?.toLowerCase().includes(q) ||
       row.notes?.toLowerCase().includes(q) ||
-      row.post?.user?.first_name?.toLowerCase().includes(q) ||
-      row.post?.user?.last_name?.toLowerCase().includes(q)
+      row.post?.user?.username?.toLowerCase().includes(q)
     );
   });
 
@@ -578,7 +577,7 @@ export default function BookmarksClient() {
                 {filteredBookmarks.map((row) => {
                   const post = row.post;
                   if (!post) return null; // Defensive check
-                  const href = `/${post.user.username}/${post.slug}`;
+                  const href = post.user?.username ? `/${post.user.username}/${post.slug}` : `#/post/${post.id}`;
                   const busy = removingId === row.id;
                   
                   return (
@@ -632,33 +631,42 @@ export default function BookmarksClient() {
 
                                 {/* Author Metadata */}
                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
-                                  <Link
-                                    href={`/${post.user.username}`}
-                                    className="inline-flex items-center gap-1.5 min-w-0 hover:text-foreground font-medium transition-colors"
-                                  >
-                                    <Avatar className="h-5 w-5 border border-border">
-                                      <AvatarImage
-                                        src={getProfilePicture(post.user.image)}
-                                        alt=""
-                                      />
-                                      <AvatarFallback className="text-[9px] font-bold">
-                                        {post.user.username[0]?.toUpperCase()}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    <span className="truncate">
-                                      {post.user.first_name} {post.user.last_name}
-                                    </span>
-                                  </Link>
+                                  {post.user ? (
+                                    <Link
+                                      href={`/${post.user.username}`}
+                                      className="inline-flex items-center gap-1.5 min-w-0 hover:text-foreground font-medium transition-colors"
+                                    >
+                                      <Avatar className="h-5 w-5 border border-border">
+                                        <AvatarImage
+                                          src={getProfilePicture(post.user.image || "")}
+                                          alt=""
+                                        />
+                                        <AvatarFallback className="text-[9px] font-bold">
+                                          {post.user.username ? post.user.username[0]?.toUpperCase() : "U"}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <span className="truncate">
+                                        {post.user.username}
+                                      </span>
+                                    </Link>
+                                  ) : (
+                                    <div className="inline-flex items-center gap-1.5 min-w-0 text-muted-foreground">
+                                      <Avatar className="h-5 w-5 border border-border">
+                                        <AvatarFallback className="text-[9px] font-bold">A</AvatarFallback>
+                                      </Avatar>
+                                      <span>Anonymous</span>
+                                    </div>
+                                  )}
 
                                   <span className="h-3 w-px bg-border" aria-hidden />
 
                                   <span className="inline-flex items-center gap-1">
                                     <Calendar className="w-3.5 h-3.5 opacity-70" />
-                                    {new Date(post.created_at).toLocaleDateString([], {
+                                    {post.created_at ? new Date(post.created_at).toLocaleDateString([], {
                                       month: "short",
                                       day: "numeric",
                                       year: "numeric",
-                                    })}
+                                    }) : "Draft"}
                                   </span>
                                 </div>
 

@@ -7,21 +7,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProfilePicture } from "@/utils/getImage";
 
 const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean }) => {
-  const plaintext = post.body.replace(/(<([^>]+)>)/gi, " ");
-  const formattedDate = new Date(post.created_at).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+  const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, " ");
+  const formattedDate = post.created_at
+    ? new Date(post.created_at).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    : "Draft";
+
+  const href = post.user?.username ? `/${post.user.username}/${post.slug || ""}` : `#/post/${post.id}`;
 
   return (
-    <Link href={`/${post.user.username}/${post.slug}`} className="block h-full">
+    <Link href={href} className="block h-full">
       <Card className="group flex h-full flex-col overflow-hidden border-border/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <Calendar className="h-3.5 w-3.5" />
-              <time dateTime={post.created_at}>{formattedDate}</time>
+              <time dateTime={post.created_at || ""}>{formattedDate}</time>
             </div>
             {post.tags?.[0] && (
               <Badge variant="secondary" className="h-5 rounded-md border border-primary/10 bg-primary/8 px-2 py-0 text-[10px] font-semibold text-primary hover:bg-primary/10">
@@ -31,7 +35,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
           </div>
           
           <CardTitle className="text-lg font-semibold leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-200">
-            {post.title}
+            {post.title || "Untitled"}
           </CardTitle>
         </CardHeader>
         
@@ -44,13 +48,13 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
         <CardFooter className="flex items-center justify-between border-t border-border/50 pt-3 text-xs text-muted-foreground">
           <div className="flex items-center space-x-2">
             <Avatar className="h-5 w-5 border border-border/50">
-              <AvatarImage src={getProfilePicture(post.user?.image)} alt={post.user.username} />
+              <AvatarImage src={getProfilePicture(post.user?.image || "")} alt={post.user?.username || "Author"} />
               <AvatarFallback className="text-[10px]">
-                {post.user.first_name?.[0] || post.user.username[0]}
+                {post.user?.username ? post.user.username[0].toUpperCase() : "A"}
               </AvatarFallback>
             </Avatar>
             <span className="font-medium transition-colors group-hover:text-foreground">
-              {post.user.username}
+              {post.user?.username || "Anonymous"}
             </span>
           </div>
           

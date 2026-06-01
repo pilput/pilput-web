@@ -64,7 +64,7 @@ export async function generateMetadata(props: {
     const canonicalUrl = `/${params.username}/${params.slug}`;
 
     return {
-      title: post.title,
+      title: post.title || "Untitled",
       description,
       alternates: {
         canonical: canonicalUrl,
@@ -72,16 +72,16 @@ export async function generateMetadata(props: {
       openGraph: {
         type: "article",
         url: `${baseUrl}${canonicalUrl}`,
-        title: post.title,
+        title: post.title || "Untitled",
         description,
-        publishedTime: post.created_at,
-        modifiedTime: post.updated_at,
+        publishedTime: post.created_at || undefined,
+        modifiedTime: post.updated_at || post.created_at || undefined,
         authors: [`${baseUrl}/${params.username}`],
         tags: post.tags?.map((tag) => tag.name) || [],
         images: [
           {
             url: image,
-            alt: post.title,
+            alt: post.title || "Cover",
             width: 1200,
             height: 630,
           },
@@ -89,7 +89,7 @@ export async function generateMetadata(props: {
       },
       twitter: {
         card: "summary_large_image",
-        title: post.title,
+        title: post.title || "Untitled",
         description,
         images: [image],
       },
@@ -129,8 +129,8 @@ export default async function Page(props: {
     dateModified: post.updated_at || post.created_at,
     author: {
       "@type": "Person",
-      name: `${post.user.first_name} ${post.user.last_name}`.trim() || post.user.username,
-      url: `${baseUrl}/${post.user.username}`,
+      name: post.user?.username || "Anonymous",
+      url: post.user?.username ? `${baseUrl}/${post.user.username}` : baseUrl,
     },
     publisher: {
       "@type": "Organization",
@@ -154,13 +154,13 @@ export default async function Page(props: {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "pilput", item: baseUrl },
-      { "@type": "ListItem", position: 2, name: post.user.username, item: `${baseUrl}/${post.user.username}` },
-      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+      { "@type": "ListItem", position: 2, name: post.user?.username || "Anonymous", item: post.user?.username ? `${baseUrl}/${post.user.username}` : baseUrl },
+      { "@type": "ListItem", position: 3, name: post.title || "Untitled", item: postUrl },
     ],
   };
 
-  const readingTime = getReadingTime(post.body);
-  const authorName = [post.user.first_name, post.user.last_name].filter(Boolean).join(" ") || post.user.username;
+  const readingTime = getReadingTime(post.body || "");
+  const authorName = post.user?.username || "Anonymous";
 
   return (
     <>
@@ -182,20 +182,24 @@ export default async function Page(props: {
             <header className={styles.postHeader}>
               {/* Breadcrumb */}
               <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-                <Link href={`/${post.user.username}`} className={styles.breadcrumbLink}>
-                  @{post.user.username}
-                </Link>
-                <span className={styles.breadcrumbSep} aria-hidden>/</span>
-                <span className={styles.breadcrumbCurrent}>{post.title}</span>
+                {post.user?.username && (
+                  <>
+                    <Link href={`/${post.user.username}`} className={styles.breadcrumbLink}>
+                      @{post.user.username}
+                    </Link>
+                    <span className={styles.breadcrumbSep} aria-hidden>/</span>
+                  </>
+                )}
+                <span className={styles.breadcrumbCurrent}>{post.title || "Untitled"}</span>
               </nav>
 
-              <h1>{post.title}</h1>
+              <h1>{post.title || "Untitled"}</h1>
 
               {/* Reading time + date strip */}
               <div className={styles.postDateStrip}>
                 <span className={styles.postDateItem}>
                   <Calendar className="w-3.5 h-3.5" aria-hidden />
-                  {formatDate(post.created_at)}
+                  {post.created_at ? formatDate(post.created_at) : "Draft"}
                 </span>
                 <span className={styles.postDateDot} aria-hidden>·</span>
                 <span className={styles.postDateItem}>
@@ -206,27 +210,41 @@ export default async function Page(props: {
 
               {/* Author and engagement row */}
               <div className={styles.postMeta}>
-                <Link href={`/${post.user.username}`} className={styles.authorSection}>
-                  <Avatar className="w-11 h-11 ring-2 ring-border shrink-0">
-                    <AvatarImage
-                      src={getProfilePicture(post.user.image)}
-                      alt={`@${post.user.username}`}
-                    />
-                    <AvatarFallback className="bg-muted text-muted-foreground text-sm font-semibold">
-                      {post.user.username[0].toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className={styles.authorInfo}>
-                    <span className={styles.authorName}>{authorName}</span>
-                    <span className={styles.authorUsername}>@{post.user.username}</span>
+                {post.user ? (
+                  <Link href={`/${post.user.username}`} className={styles.authorSection}>
+                    <Avatar className="w-11 h-11 ring-2 ring-border shrink-0">
+                      <AvatarImage
+                        src={getProfilePicture(post.user.image || "")}
+                        alt={`@${post.user.username}`}
+                      />
+                      <AvatarFallback className="bg-muted text-muted-foreground text-sm font-semibold">
+                        {post.user.username ? post.user.username[0].toUpperCase() : "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className={styles.authorInfo}>
+                      <span className={styles.authorName}>{authorName}</span>
+                      <span className={styles.authorUsername}>@{post.user.username}</span>
+                    </div>
+                  </Link>
+                ) : (
+                  <div className={styles.authorSection}>
+                    <Avatar className="w-11 h-11 ring-2 ring-border shrink-0">
+                      <AvatarFallback className="bg-muted text-muted-foreground text-sm font-semibold">
+                        A
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className={styles.authorInfo}>
+                      <span className={styles.authorName}>Anonymous</span>
+                      <span className={styles.authorUsername}>@anonymous</span>
+                    </div>
                   </div>
-                </Link>
+                )}
 
                 <PostDetailEngagementRow
                   postId={post.id}
                   initialLiked={post.is_liked_by_current_user ?? false}
                   initialCount={getPostLikesCount(post)}
-                  createdAt={post.created_at}
+                  createdAt={post.created_at || ""}
                   viewCount={post.view_count}
                   initialBookmarkCount={getPostBookmarkCount(post)}
                 />
@@ -238,7 +256,7 @@ export default async function Page(props: {
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 border border-border shadow-xs">
                 <Image
                   src={getUrlImage(post.photo_url)}
-                  alt={post.title}
+                  alt={post.title || "Cover"}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 800px"
@@ -248,7 +266,7 @@ export default async function Page(props: {
             )}
 
             {/* Article Content */}
-            <PostContent html={post.body} className={styles.postContent} />
+            <PostContent html={post.body || ""} className={styles.postContent} />
 
             {/* Tags Section */}
             {post.tags && post.tags.length > 0 && (
