@@ -816,7 +816,7 @@ export default function BookmarksClient() {
       <Dialog open={!!deletingFolder} onOpenChange={(open) => !open && setDeletingFolder(null)}>
         <DialogContent className="sm:max-w-md text-left">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
+            <DialogTitle className="flex items-center gap-2 text-destructive leading-normal">
               <Info className="w-5 h-5" />
               Delete Folder
             </DialogTitle>
@@ -858,7 +858,7 @@ export default function BookmarksClient() {
       <Dialog open={!!editingBookmark} onOpenChange={(open) => !open && setEditingBookmark(null)}>
         <DialogContent className="sm:max-w-md text-left">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 leading-normal">
               <Bookmark className="w-5 h-5 text-primary fill-primary/10" />
               Configure Saved Details
             </DialogTitle>
@@ -867,7 +867,7 @@ export default function BookmarksClient() {
             <div className="space-y-4 py-2 text-left">
               <div className="space-y-1">
                 <span className="text-xs text-muted-foreground">Original post:</span>
-                <p className="text-sm font-bold truncate leading-none">
+                <p className="text-sm font-bold line-clamp-2 leading-snug">
                   {editingBookmark.post?.title}
                 </p>
               </div>
