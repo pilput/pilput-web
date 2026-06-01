@@ -119,7 +119,11 @@ export function ChatMessage({
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.15 }}
                     >
-                      <Markdown content={message.content} className="text-foreground" />
+                      <Markdown
+                        content={message.content}
+                        className="text-foreground"
+                        isStreaming={message.isStreaming}
+                      />
                     </motion.div>
                   </AnimatePresence>
                 )}

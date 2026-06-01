@@ -13,6 +13,7 @@ import { useState } from "react";
 interface MarkdownProps {
   content: string;
   className?: string;
+  isStreaming?: boolean;
 }
 
 // Type for code block props
@@ -104,9 +105,9 @@ const CopyButton = ({
   );
 };
 
-export function Markdown({ content, className }: MarkdownProps) {
+export function Markdown({ content, className, isStreaming }: MarkdownProps) {
   return (
-    <div className={cn("prose dark:prose-invert max-w-none", className)}>
+    <div className={cn("prose dark:prose-invert max-w-none", isStreaming && "is-generating", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypePrism]}

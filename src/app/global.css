@@ -328,4 +328,23 @@
       box-shadow: none;
     }
   }
+
+  /* AI Streaming Cursor */
+  .is-generating .prose > h1:last-child::after,
+  .is-generating .prose > h2:last-child::after,
+  .is-generating .prose > h3:last-child::after,
+  .is-generating .prose > h4:last-child::after,
+  .is-generating .prose > h5:last-child::after,
+  .is-generating .prose > h6:last-child::after,
+  .is-generating .prose > p:last-child::after,
+  .is-generating .prose > li:last-child::after,
+  .is-generating .prose > blockquote:last-child::after,
+  .is-generating .prose > pre:last-child code::after {
+    content: "▍";
+    display: inline-block;
+    margin-left: 0.25rem;
+    color: var(--primary);
+    animation: cursor-blink 0.8s step-end infinite;
+    vertical-align: baseline;
+  }
 }
