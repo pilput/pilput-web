@@ -197,7 +197,7 @@ const HomeFeedContent = ({
 
               {/* Trending Topics */}
               {tags.length > 0 && (
-                <Card className="glass-card shadow-premium border-glow-hover bg-card/90">
+                <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
                   <CardContent className="p-5">
                     <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-primary" />
@@ -219,7 +219,7 @@ const HomeFeedContent = ({
               )}
 
               {/* Trending Posts Widget */}
-              <Card className="glass-card shadow-premium border-glow-hover bg-card/90">
+              <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
                 <CardContent className="p-5">
                   <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-primary" />

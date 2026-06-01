@@ -43,9 +43,9 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
     <div className="lg:w-80 w-full shrink-0">
       <div className="sticky top-24 space-y-6">
         {/* Trending Posts */}
-        <Card className="bg-card border border-border/70 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="bg-card border border-border/70 shadow-lg hover:shadow-xl transition-all duration-300 py-0">
           <CardContent className="p-5">
-            <h3 className="font-bold text-foreground mb-4 flex items-center gap-2 text-base">
+            <h3 className="font-bold text-foreground mb-3 flex items-center gap-2 text-base">
               <Sparkles className="w-4 h-4 text-primary" />
               Trending Stories
             </h3>
@@ -54,7 +54,7 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
         </Card>
 
         {/* Trending Topics */}
-        <Card className="bg-card border border-border/70 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="bg-card border border-border/70 shadow-lg hover:shadow-xl transition-all duration-300 py-0">
           <CardContent className="p-5">
             <h3 className="font-bold text-foreground mb-3 flex items-center gap-2 text-base">
               <TrendingUp className="w-4 h-4 text-primary" />

@@ -22,7 +22,7 @@ export default function ReadingListCard() {
   const showCount = getToken() && loaded && count > 0;
 
   return (
-    <Card className="glass-card shadow-premium border-glow-hover bg-card/90 transition-all duration-300">
+    <Card className="glass-card shadow-premium border-glow-hover bg-card/90 transition-all duration-300 py-0">
       <CardContent className="p-5">
         <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
           <Bookmark className="w-5 h-5 text-primary fill-primary/10" />
