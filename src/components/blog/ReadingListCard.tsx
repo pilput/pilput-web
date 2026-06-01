@@ -23,8 +23,8 @@ export default function ReadingListCard() {
 
   return (
     <Card className="glass-card shadow-premium border-glow-hover bg-card/90 transition-all duration-300">
-      <CardContent className="p-6">
-        <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+      <CardContent className="p-5">
+        <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
           <Bookmark className="w-5 h-5 text-primary fill-primary/10" />
           Reading list
         </h3>
