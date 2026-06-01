@@ -16,7 +16,7 @@ import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, Eye, Bookmark, BookOpen, FileCheck, FileEdit, FileText } from "lucide-react";
+import { Search, Plus, Eye, Bookmark } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -76,9 +76,14 @@ export default function Posts() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
-            Posts Management
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
+              Posts Management
+            </h1>
+            <Badge variant="secondary" className="font-semibold text-xs py-0.5 px-2.5 bg-muted/65 hover:bg-muted/80 text-muted-foreground border border-border/60 rounded-full transition-colors shrink-0">
+              {poststore.total} posts
+            </Badge>
+          </div>
           <p className="text-sm text-muted-foreground mt-0.5">
             Create, edit, and organize your articles and drafts.
           </p>
@@ -89,43 +94,6 @@ export default function Posts() {
             Add new post
           </Button>
         </Link>
-      </div>
-
-      {/* KPI Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
-          <div>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Posts</span>
-            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">{poststore.total}</div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
-            <BookOpen className="h-5 w-5" />
-          </div>
-        </div>
-
-        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
-          <div>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Published</span>
-            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
-              {poststore.posts.filter((p) => p.published).length}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
-            <FileCheck className="h-5 w-5" />
-          </div>
-        </div>
-
-        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
-          <div>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Drafts</span>
-            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
-              {poststore.posts.filter((p) => !p.published).length}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
-            <FileEdit className="h-5 w-5" />
-          </div>
-        </div>
       </div>
 
       {/* Main Card Wrapper */}
@@ -153,9 +121,9 @@ export default function Posts() {
             </Select>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <div className="min-w-[880px] px-4 py-2">
+        <CardContent className="p-2 sm:p-4 md:p-6">
+          <div className="overflow-x-auto -mx-2 sm:-mx-4 md:-mx-6">
+            <div className="min-w-[880px] px-2 sm:px-4 md:px-6">
               <TooltipProvider>
               <Table>
                 <TableCaption className="pb-4">Total {poststore.total} posts found</TableCaption>

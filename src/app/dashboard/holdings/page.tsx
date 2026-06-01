@@ -425,12 +425,6 @@ export default function HoldingsPage() {
                   : `${filteredHoldings.length} holding${filteredHoldings.length === 1 ? "" : "s"} tracked for this period.`}
               </CardDescription>
             </div>
-            {filteredHoldings.length > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                Live view
-              </span>
-            )}
           </div>
         </CardHeader>
         <CardContent className="p-0">
