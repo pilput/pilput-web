@@ -162,7 +162,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-6 bg-muted/10 p-4 md:p-6">
-          <main className="flex-1 rounded-2xl glass-card p-4 shadow-premium md:p-6">
+          <main className="flex-1">
             {children}
           </main>
         </div>
