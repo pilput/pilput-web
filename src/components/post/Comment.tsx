@@ -209,12 +209,12 @@ const Comment = ({ postId }: { postId: string }) => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+                <MessageCircle className="w-5 h-5" />
               </div>
               <div>
                 <CardTitle className="text-xl">Discussion</CardTitle>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   Share your thoughts and join the conversation
                 </p>
               </div>
@@ -292,16 +292,16 @@ const Comment = ({ postId }: { postId: string }) => {
                   {/* Comment Content */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-gray-900 dark:text-white">
+                      <span className="font-semibold text-foreground">
                         {data.user?.username || "Anonymous User"}
                       </span>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="text-sm text-muted-foreground">
                         {data.created_at ? formatDistanceToNow(new Date(data.created_at), {
                           addSuffix: true,
                         }) : "Just now"}
                       </span>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
+                    <p className="text-foreground/90 leading-relaxed mb-3">
                       {data.text}
                     </p>
 
@@ -390,12 +390,12 @@ const Comment = ({ postId }: { postId: string }) => {
         <Card id="comment-input">
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gray-600 dark:bg-gray-500 rounded-lg flex items-center justify-center">
-                <Edit3 className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+                <Edit3 className="w-4 h-4" />
               </div>
               <div className="flex-1">
                 <CardTitle className="text-lg">Add Comment</CardTitle>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground">
                   Share your thoughts
                 </p>
               </div>

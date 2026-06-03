@@ -1,50 +1,52 @@
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PostListPulse = () => {
   return (
-    <article className="group relative animate-pulse bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm h-full flex flex-col">
+    <Card className="h-full border-border/70 bg-card shadow-sm flex flex-col overflow-hidden">
       {/* Cover Image placeholder (16/9 aspect ratio) */}
-      <div className="relative w-full aspect-video bg-gray-200 dark:bg-gray-800" />
+      <Skeleton className="relative w-full aspect-video rounded-none" />
 
-      <div className="p-6 flex-1 flex flex-col">
+      <CardHeader className="space-y-4 pb-3">
         {/* Author Info */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="relative shrink-0">
-            <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-800" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="h-4 w-32 max-w-full rounded bg-gray-200 dark:bg-gray-800 mb-2" />
-            <div className="h-3 w-24 rounded bg-gray-200 dark:bg-gray-800" />
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <div className="min-w-0 flex-1 space-y-1.5">
+            <Skeleton className="h-4 w-32 max-w-full rounded-md" />
+            <Skeleton className="h-3 w-24 rounded-md" />
           </div>
         </div>
 
-        {/* Title & Content */}
-        <div className="space-y-3 flex-1 mb-4">
-          <div className="h-7 w-11/12 rounded bg-gray-200 dark:bg-gray-800" />
-          <div className="h-7 w-3/4 rounded bg-gray-200 dark:bg-gray-800" />
-          <div className="pt-2 space-y-2">
-             <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-800" />
-             <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-800" />
-             <div className="h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-800" />
-          </div>
+        {/* Title */}
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-11/12 rounded-md" />
+          <Skeleton className="h-6 w-3/4 rounded-md" />
+        </div>
+      </CardHeader>
+
+      <CardContent className="pb-3 grow space-y-2">
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-4 w-full rounded" />
+        <Skeleton className="h-4 w-2/3 rounded" />
+      </CardContent>
+
+      <CardFooter className="pt-3 border-t border-border/55 mt-auto flex flex-col items-stretch gap-4">
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-5 w-12 rounded-full" />
         </div>
 
-        {/* Tags & Actions */}
-        <div className="mt-auto">
-             <div className="flex flex-wrap gap-2 mb-4">
-                <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-800" />
-                <div className="h-4 w-12 rounded bg-gray-200 dark:bg-gray-800" />
-             </div>
-             
-             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <div className="h-4 w-8 rounded bg-gray-200 dark:bg-gray-800" />
-                    <div className="h-4 w-8 rounded bg-gray-200 dark:bg-gray-800" />
-                </div>
-                <div className="h-4 w-8 rounded bg-gray-200 dark:bg-gray-800" />
-             </div>
+        {/* Actions */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-4.5 w-8 rounded" />
+            <Skeleton className="h-4.5 w-8 rounded" />
+          </div>
+          <Skeleton className="h-4.5 w-8 rounded" />
         </div>
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 };
 

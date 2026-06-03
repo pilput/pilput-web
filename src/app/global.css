@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@import "tailwindcss";
-
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
@@ -59,9 +57,9 @@
   --accent: oklch(0.2 0.018 260);
   --accent-foreground: oklch(0.96 0.01 260);
   --destructive: oklch(0.53 0.19 25);
-  --destructive-foreground: oklch(0.1 0.01 0);
-  --border: oklch(0.22 0.014 260);
-  --input: oklch(0.22 0.014 260);
+  --destructive-foreground: oklch(0.99 0.02 230);
+  --border: oklch(0.18 0.014 260);
+  --input: oklch(0.18 0.014 260);
   --ring: oklch(0.68 0.18 260);
   --chart-1: oklch(0.68 0.2 252);
   --chart-2: oklch(0.6 0.12 196);
@@ -74,7 +72,7 @@
   --sidebar-primary-foreground: oklch(0.12 0.016 260);
   --sidebar-accent: oklch(0.18 0.016 260);
   --sidebar-accent-foreground: oklch(0.93 0.01 260);
-  --sidebar-border: oklch(0.2 0.014 260);
+  --sidebar-border: oklch(0.18 0.014 260);
   --sidebar-ring: oklch(0.68 0.18 260);
 }
 
