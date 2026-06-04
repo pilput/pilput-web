@@ -1,10 +1,13 @@
 import { findChildren } from "@tiptap/core";
-import type { Node as ProsemirrorNode } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import Prism from "prismjs";
 
 import { resolveHighlightLanguage } from "@/lib/code-highlight";
+
+/** Doc node type aligned with Plugin/DecorationSet (avoids duplicate prosemirror-model installs). */
+type DocNode = Parameters<typeof DecorationSet.create>[0];
+type FindChildrenDoc = Parameters<typeof findChildren>[0];
 
 function segmentsFromPrismTokens(
   input: string | Prism.Token | (string | Prism.Token)[],
@@ -38,13 +41,13 @@ function getDecorations({
   name,
   defaultLanguage,
 }: {
-  doc: ProsemirrorNode;
+  doc: DocNode;
   name: string;
   defaultLanguage: string | null | undefined;
 }) {
   const decorations: Decoration[] = [];
 
-  findChildren(doc, (node) => node.type.name === name).forEach((block) => {
+  findChildren(doc as FindChildrenDoc, (node) => node.type.name === name).forEach((block) => {
     let from = block.pos + 1;
     const attrLang = block.node.attrs.language ?? defaultLanguage ?? "plaintext";
     const resolved = resolveHighlightLanguage(`language-${attrLang}`, null);
@@ -102,8 +105,14 @@ export function PrismPlugin({
       apply: (transaction, decorationSet, oldState, newState) => {
         const oldNodeName = oldState.selection.$head.parent.type.name;
         const newNodeName = newState.selection.$head.parent.type.name;
-        const oldNodes = findChildren(oldState.doc, (node) => node.type.name === name);
-        const newNodes = findChildren(newState.doc, (node) => node.type.name === name);
+        const oldNodes = findChildren(
+          oldState.doc as FindChildrenDoc,
+          (node) => node.type.name === name
+        );
+        const newNodes = findChildren(
+          newState.doc as FindChildrenDoc,
+          (node) => node.type.name === name
+        );
 
         if (
           transaction.docChanged &&
