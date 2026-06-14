@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { Config } from "@/utils/getConfig";
+import { motion } from "framer-motion";
+
 
 type Inputs = {
   email: string;
@@ -155,160 +157,167 @@ export default function Signup() {
         <span>Back to home</span>
       </Link>
 
-      <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
-        <CardHeader className="space-y-2 pb-5 text-center">
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            Create an account
-          </CardTitle>
-          <CardDescription>
-            Enter your information to create your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  id="username"
-                  placeholder="Enter your username"
-                  className="pl-9 pr-9"
-                  {...register("username")}
-                  aria-invalid={errors.username ? "true" : "false"}
-                  autoComplete="username"
-                  disabled={isSubmitting}
-                />
-                {!errors.username && usernameStatus === "checking" && (
-                  <Loader2
-                    className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground"
-                    aria-hidden="true"
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md"
+      >
+        <Card className="w-full border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+          <CardHeader className="space-y-2 pb-5 text-center">
+            <CardTitle className="text-2xl font-bold tracking-tight">
+              Create an account
+            </CardTitle>
+            <CardDescription>
+              Enter your information to create your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    id="username"
+                    placeholder="Enter your username"
+                    className="pl-9 pr-9"
+                    {...register("username")}
+                    aria-invalid={errors.username ? "true" : "false"}
+                    autoComplete="username"
+                    disabled={isSubmitting}
                   />
-                )}
-                {!errors.username && usernameStatus === "available" && (
-                  <CheckCircle2
-                    className="absolute right-3 top-3 h-4 w-4 text-green-600"
-                    aria-hidden="true"
-                  />
-                )}
-                {!errors.username &&
-                  (usernameStatus === "taken" || usernameStatus === "error") && (
-                    <XCircle
-                      className="absolute right-3 top-3 h-4 w-4 text-red-500"
+                  {!errors.username && usernameStatus === "checking" && (
+                    <Loader2
+                      className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground"
                       aria-hidden="true"
                     />
                   )}
+                  {!errors.username && usernameStatus === "available" && (
+                    <CheckCircle2
+                      className="absolute right-3 top-3 h-4 w-4 text-green-600"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {!errors.username &&
+                    (usernameStatus === "taken" || usernameStatus === "error") && (
+                      <XCircle
+                        className="absolute right-3 top-3 h-4 w-4 text-red-500"
+                        aria-hidden="true"
+                      />
+                    )}
+                </div>
+                {errors.username && (
+                  <p className="text-sm text-red-500">
+                    {errors.username.message}
+                  </p>
+                )}
+                {!errors.username && usernameStatus !== "idle" && (
+                  <p
+                    className={`rounded-md border px-3 py-2 text-sm ${
+                      usernameStatus === "available"
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300"
+                        : usernameStatus === "checking"
+                        ? "border-border bg-muted/50 text-muted-foreground"
+                        : "border-red-200 bg-red-50 text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
+                    }`}
+                    aria-live="polite"
+                    role="status"
+                  >
+                    {usernameMessage}
+                  </p>
+                )}
               </div>
-              {errors.username && (
-                <p className="text-sm text-red-500">
-                  {errors.username.message}
-                </p>
-              )}
-              {!errors.username && usernameStatus !== "idle" && (
-                <p
-                  className={`rounded-md border px-3 py-2 text-sm ${
-                    usernameStatus === "available"
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300"
-                      : usernameStatus === "checking"
-                      ? "border-border bg-muted/50 text-muted-foreground"
-                      : "border-red-200 bg-red-50 text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
-                  }`}
-                  aria-live="polite"
-                  role="status"
-                >
-                  {usernameMessage}
-                </p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="pl-9"
-                  {...register("email")}
-                  aria-invalid={errors.email ? "true" : "false"}
-                  autoComplete="email"
-                  disabled={isSubmitting}
-                />
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="pl-9"
+                    {...register("email")}
+                    aria-invalid={errors.email ? "true" : "false"}
+                    autoComplete="email"
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-sm text-red-500">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
-              {errors.email && (
-                <p className="text-sm text-red-500">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  className="pl-9"
-                  {...register("password")}
-                  aria-invalid={errors.password ? "true" : "false"}
-                  autoComplete="new-password"
-                  disabled={isSubmitting}
-                />
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    className="pl-9"
+                    {...register("password")}
+                    aria-invalid={errors.password ? "true" : "false"}
+                    autoComplete="new-password"
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
+
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating account...
+                  </>
+                ) : (
+                  "Create an account"
+                )}
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4">
+            <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                "Create an account"
-              )}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <div className="relative w-full">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <Link
-            href={`${Config.apibaseurl}/api/auth/oauth/github`}
-            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
-            aria-label="Sign up with GitHub"
-          >
-            <GitHubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-            Github
-          </Link>
-
-          <div className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
             <Link
-              href="/login"
-              className="font-medium text-primary hover:underline"
+              href={`${Config.apibaseurl}/api/auth/oauth/github`}
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full"
+              aria-label="Sign up with GitHub"
             >
-              Sign in
+              <GitHubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+              Github
             </Link>
-          </div>
-        </CardFooter>
-      </Card>
+
+            <div className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-medium text-primary hover:underline"
+              >
+                Sign in
+              </Link>
+            </div>
+          </CardFooter>
+        </Card>
+      </motion.div>
     </main>
   );
 }

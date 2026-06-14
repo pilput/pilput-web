@@ -23,6 +23,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import TrendingPosts from "@/components/post/TrendingPosts";
 import ReadingListCard from "@/components/blog/ReadingListCard";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 interface HomeFeedContentProps {
   initialPosts: Post[];
@@ -239,11 +241,16 @@ const HomeFeedContent = ({
                   ))}
                 </div>
               ) : posts.length > 0 ? (
-                <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-6"}>
-                  {posts.map((post) => (
-                    <PostList key={post.id} post={post} />
-                  ))}
-                </div>
+                <motion.div
+                  layout
+                  className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "space-y-6"}
+                >
+                  <AnimatePresence mode="popLayout">
+                    {posts.map((post) => (
+                      <PostList key={post.id} post={post} />
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
               ) : (
                 <div className="text-center py-16 bg-card border border-dashed border-border/60 rounded-2xl p-8">
                   <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">

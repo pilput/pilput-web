@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { getCookie } from "cookies-next";
 import { getMainNavItems } from "./nav-items";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -88,40 +90,46 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Expandable Navigation Menu */}
-        {showmenu && (
-          <div
-            className="md:hidden border-t border-border/45 bg-background/95 backdrop-blur-xl py-3 px-2 space-y-1"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Mobile navigation menu"
-          >
-            <div className="py-2.5 space-y-1">
-              {navigation.map((item) => {
-                const active = pathname === item.href;
-                return (
-                  <Link
-                    key={`${item.href}-${item.name}`}
-                    href={item.href}
-                    onClick={() => setshowmenu(false)}
-                    className={cn(
-                      "block mx-2 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all",
-                      active
-                        ? "bg-primary/10 text-primary border-l-2 border-primary pl-4.5"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    )}
-                    aria-current={active ? "page" : undefined}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-              <div className="flex items-center justify-between mx-2 px-3 pt-3.5 pb-1.5 border-t border-border/50">
-                <DarkModeButton />
-                <ButtonLogged />
+        <AnimatePresence>
+          {showmenu && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="md:hidden border-t border-border/45 bg-background/95 backdrop-blur-xl py-3 px-2 space-y-1 overflow-hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation menu"
+            >
+              <div className="py-2.5 space-y-1">
+                {navigation.map((item) => {
+                  const active = pathname === item.href;
+                  return (
+                    <Link
+                      key={`${item.href}-${item.name}`}
+                      href={item.href}
+                      onClick={() => setshowmenu(false)}
+                      className={cn(
+                        "block mx-2 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all",
+                        active
+                          ? "bg-primary/10 text-primary border-l-2 border-primary pl-4.5"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      )}
+                      aria-current={active ? "page" : undefined}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
+                <div className="flex items-center justify-between mx-2 px-3 pt-3.5 pb-1.5 border-t border-border/50">
+                  <DarkModeButton />
+                  <ButtonLogged />
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

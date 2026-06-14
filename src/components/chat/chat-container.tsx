@@ -8,6 +8,8 @@ import { ChatMessage } from "./chat-message";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sparkles, Zap, BookOpen, Code2, PenLine } from "lucide-react";
+import { motion } from "framer-motion";
+
 
 const SUGGESTIONS = [
   {
@@ -105,7 +107,12 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
       <div className="flex h-full flex-col items-center justify-center bg-background px-4 py-10">
         <div className="flex w-full max-w-2xl flex-col items-center gap-8">
           {/* Hero */}
-          <div className="flex flex-col items-center gap-3 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="flex flex-col items-center gap-3 text-center"
+          >
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
               <Sparkles className="h-7 w-7 text-primary" />
             </div>
@@ -117,16 +124,33 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                 Ask anything — I&apos;m here to help you think, write, and build.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Suggestion prompts */}
-          <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.08,
+                },
+              },
+            }}
+            initial="hidden"
+            animate="show"
+            className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4"
+          >
             {SUGGESTIONS.map(({ icon: Icon, label, prompt }) => (
-              <button
+              <motion.button
                 key={label}
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
+                }}
                 onClick={() => handleSendMessage(prompt)}
                 disabled={isSending}
-                className="group flex flex-col items-start gap-2 rounded-xl border border-border bg-card p-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm disabled:pointer-events-none disabled:opacity-50"
+                className="group flex flex-col items-start gap-2 rounded-xl border border-border bg-card p-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
               >
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted transition-colors group-hover:bg-primary/10">
                   <Icon className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-primary" />
@@ -137,18 +161,23 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                     {prompt}
                   </p>
                 </div>
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
 
           {/* Input */}
-          <div className="w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25, ease: "easeOut" }}
+            className="w-full"
+          >
             <ChatInput
               showModelPicker={true}
               onSendMessage={handleSendMessage}
               isDisabled={isSending}
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     );
