@@ -116,7 +116,7 @@ export default function ComparisonSummaryCards({ data, hideValues = false }: Com
             {summary.to.totalProfitLossPercentage > 0 ? "+" : ""}{summary.to.totalProfitLossPercentage.toFixed(2)}%
           </div>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className={`text-[10px] sm:text-xs font-medium ${summary.to.totalProfitLossPercentage >= summary.from.totalProfitLossPercentage ? "↑" : "↓"}`}>
+            <span className={`text-[10px] sm:text-xs font-medium ${summary.to.totalProfitLossPercentage >= summary.from.totalProfitLossPercentage ? "text-green-600" : "text-red-600"}`}>
               {summary.to.totalProfitLossPercentage >= summary.from.totalProfitLossPercentage ? "↑" : "↓"}
             </span>
             <span className="text-[10px] sm:text-xs text-muted-foreground break-words">
