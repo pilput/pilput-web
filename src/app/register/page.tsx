@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
-import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -29,6 +28,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { setTokens } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 import { motion } from "framer-motion";
 
@@ -75,16 +75,10 @@ export default function Signup() {
       }
 
       toast.success("Account created successfully", { id });
-      const expire = new Date();
-      expire.setTime(expire.getTime() + 3 * 60 * 60 * 1000); // 3 hours from now
 
-      setCookie("token", result.data.access_token, {
-        expires: expire,
-        secure: true,
-        path: "/",
-        domain: `.${Config.maindomain}`,
-        sameSite: "none",
-      });
+      if (result.data?.access_token) {
+        setTokens(result.data.access_token, result.data.refresh_token);
+      }
       router.push("/");
     } catch (error) {
       toast.error("Invalid username or password. Please try again.", { id });

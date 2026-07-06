@@ -1,4 +1,9 @@
-import { getToken } from "./Auth";
+import {
+  getToken,
+  getRefreshToken,
+  setTokens,
+  clearTokens,
+} from "./Auth";
 import { ErrorHandlerAPI } from "./ErrorHandler";
 import { Config } from "./getConfig";
 
@@ -79,11 +84,56 @@ async function parseBody(response: Response): Promise<unknown> {
 }
 
 function createClient(baseURL: string) {
+  // A single in-flight refresh shared across concurrent requests so we never
+  // fire multiple `/api/auth/refresh` calls (which would break token rotation).
+  let refreshPromise: Promise<string | null> | null = null;
+
+  async function doRefresh(): Promise<string | null> {
+    const refreshToken = getRefreshToken();
+    if (!refreshToken) {
+      return null;
+    }
+    try {
+      const res = await fetch(joinBaseUrl(baseURL, "/api/auth/refresh"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        clearTokens();
+        return null;
+      }
+      const json = (await parseBody(res)) as {
+        data?: { access_token?: string; refresh_token?: string };
+      };
+      const accessToken = json?.data?.access_token;
+      if (!accessToken) {
+        clearTokens();
+        return null;
+      }
+      setTokens(accessToken, json?.data?.refresh_token);
+      return accessToken;
+    } catch {
+      return null;
+    }
+  }
+
+  function refreshAccessToken(): Promise<string | null> {
+    if (!refreshPromise) {
+      refreshPromise = doRefresh().finally(() => {
+        refreshPromise = null;
+      });
+    }
+    return refreshPromise;
+  }
+
   async function request<T = unknown>(
     method: string,
     path: string,
     body: unknown | undefined,
     config: RequestConfig = {},
+    isRetry = false,
   ): Promise<HttpResponse<T>> {
     const url = buildUrl(baseURL, path, config.params);
     const headers: Record<string, string> = { ...(config.headers ?? {}) };
@@ -120,6 +170,32 @@ function createClient(baseURL: string) {
       });
     } catch (e) {
       throw e;
+    }
+
+    // Transparently refresh an expired access token once, then retry the
+    // original request with the rotated token. Only for authenticated calls.
+    if (
+      response.status === 401 &&
+      !isRetry &&
+      headers["Authorization"] &&
+      getRefreshToken()
+    ) {
+      const newAccessToken = await refreshAccessToken();
+      if (newAccessToken) {
+        return request<T>(
+          method,
+          path,
+          body,
+          {
+            ...config,
+            headers: {
+              ...headers,
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+          },
+          true,
+        );
+      }
     }
 
     const data = (await parseBody(response)) as T;
@@ -183,6 +259,28 @@ export async function getDataExternal(
     return data;
   } catch (error) {
     return ErrorHandlerAPI(error);
+  }
+}
+
+/**
+ * Log out: revoke the refresh-token session on the backend, then clear the
+ * local token cookies. Always clears cookies even if the request fails.
+ */
+export async function logoutUser() {
+  const token = getToken();
+  const refreshToken = getRefreshToken();
+  try {
+    if (refreshToken) {
+      await apiClient.post(
+        "/api/auth/logout",
+        { refresh_token: refreshToken },
+        token ? { headers: { Authorization: `Bearer ${token}` } } : undefined,
+      );
+    }
+  } catch {
+    // Ignore backend errors — the session is cleared locally regardless.
+  } finally {
+    clearTokens();
   }
 }
 

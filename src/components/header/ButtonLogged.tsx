@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getCookie } from "cookies-next";
 import Link from "next/link";
 import { User, LogIn, Settings, ChevronDown } from "lucide-react";
-import { RemoveToken } from "@/utils/Auth";
+import { logoutUser } from "@/utils/fetch";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,8 +43,8 @@ const ButtonLogged = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => {
-                  RemoveToken();
+                onClick={async () => {
+                  await logoutUser();
                   window.location.href = "/login";
                 }}
                 className="text-red-600 dark:text-red-400"

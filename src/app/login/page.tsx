@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
-import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { apiClient } from "@/utils/fetch";
+import { setTokens } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { motion } from "framer-motion";
@@ -103,16 +103,7 @@ export default function LoginPage() {
         throw new Error(result.message || "Login failed");
       }
 
-      const expire = new Date();
-      expire.setTime(expire.getTime() + 3 * 60 * 60 * 1000); // 3 hours from now
-
-      setCookie("token", result.data.access_token, {
-        expires: expire,
-        path: "/",
-        domain: `.${Config.maindomain}`,
-        sameSite: "none",
-        secure: true,
-      });
+      setTokens(result.data.access_token, result.data.refresh_token);
 
       toast.success("Login successful! Redirecting...");
 

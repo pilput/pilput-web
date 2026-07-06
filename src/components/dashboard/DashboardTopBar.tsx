@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/tooltip";
 import { getProfilePicture } from "@/utils/getImage";
 import { useTheme } from "next-themes";
-import { logOut } from "@/utils/Auth";
+import { logoutUser } from "@/utils/fetch";
 import { authStore } from "@/stores/userStore";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -28,8 +28,8 @@ const DashboardTopBar = () => {
   const fetchUser = authStore((state) => state.fetch);
   const { theme, setTheme } = useTheme();
 
-  function logout() {
-    logOut();
+  async function logout() {
+    await logoutUser();
     window.location.href = "/";
   }
 

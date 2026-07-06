@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { setCookie } from "cookies-next";
 import { toast } from "sonner";
 import { Loader2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Config } from "@/utils/getConfig";
+import { setTokens } from "@/utils/Auth";
 import { authStore } from "@/stores/userStore";
 import { apiClient } from "@/utils/fetch";
 
@@ -86,18 +85,8 @@ export function OAuthCallback() {
           throw new Error(result.message || "Failed to exchange OAuth code.");
         }
 
-        // Set expiration: 3 hours from now (matching login page)
-        const expire = new Date();
-        expire.setTime(expire.getTime() + 3 * 60 * 60 * 1000);
-
-        // Save token in cookie
-        setCookie("token", result.data.access_token, {
-          expires: expire,
-          path: "/",
-          domain: `.${Config.maindomain}`,
-          sameSite: "none",
-          secure: true,
-        });
+        // Save access + refresh tokens in cookies
+        setTokens(result.data.access_token, result.data.refresh_token);
 
         // Update auth store with user info
         await authStore.getState().fetch();
