@@ -9,7 +9,7 @@ A modern, open publishing platform built with Next.js 16+ that allows creators t
 
 ## ✨ Features
 
-- **Rich Text Editor** – TipTap-based editor with headings, images, YouTube embeds, links, code blocks with Prism highlighting, and slash commands
+- **Rich Text Editor** – TipTap-based editor with headings, images, YouTube embeds, links, code blocks with highlight.js/lowlight syntax highlighting, and slash commands
 - **Authentication** – JWT-based auth with cookie storage, automatic session refresh, login, register, password reset, and OAuth callbacks
 - **Blog System** – Create, edit, and publish articles with tags, cover images, view counts, likes, comments, and bookmarks
 - **Analytics Dashboard** – User analytics with charts and post performance metrics
@@ -153,8 +153,8 @@ src/
 │   └── writer/               # Writer components
 ├── hooks/                    # Custom React hooks
 ├── lib/                      # Shared libraries and utilities
-│   ├── code-highlight.ts     # Code highlighting helpers
-│   ├── tiptap-prism-plugin.ts # TipTap Prism plugin
+│   ├── code-highlight.ts     # Code highlighting helpers (highlight.js)
+│   ├── code-block-highlight.ts # TipTap lowlight code-block extension
 │   ├── utils.ts              # General utilities
 │   └── validation.ts         # Zod validation schemas
 ├── stores/                   # Zustand state management
@@ -182,7 +182,7 @@ src/
 | **Animations** | Framer Motion, Pixi.js |
 | **State** | Zustand |
 | **Forms** | React Hook Form + Zod |
-| **Editor** | TipTap with custom extensions and Prism highlighting |
+| **Editor** | TipTap with custom extensions and lowlight/highlight.js syntax highlighting |
 | **HTTP** | Native fetch with custom `apiClient` wrappers |
 | **Charts** | Recharts |
 | **Theme** | next-themes |

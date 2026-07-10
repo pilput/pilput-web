@@ -1,7 +1,7 @@
 "use client";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { CodeBlockPrism } from "@/lib/code-block-prism";
+import { CodeBlockHighlight } from "@/lib/code-block-highlight";
 import Underline from "@tiptap/extension-underline";
 import Youtube from "@tiptap/extension-youtube";
 import Image from "@tiptap/extension-image";
@@ -39,7 +39,7 @@ const Tiptap = ({
         },
         codeBlock: false,
       }),
-      CodeBlockPrism,
+      CodeBlockHighlight,
       Underline,
       Youtube.configure({
         controls: true,

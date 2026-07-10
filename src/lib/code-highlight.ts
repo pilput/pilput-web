@@ -1,17 +1,23 @@
-import Prism from "prismjs";
+import hljs from "highlight.js/lib/core";
+import bash from "highlight.js/lib/languages/bash";
+import css from "highlight.js/lib/languages/css";
+import javascript from "highlight.js/lib/languages/javascript";
+import json from "highlight.js/lib/languages/json";
+import markdown from "highlight.js/lib/languages/markdown";
+import python from "highlight.js/lib/languages/python";
+import typescript from "highlight.js/lib/languages/typescript";
+import xml from "highlight.js/lib/languages/xml";
 
-import "prismjs/components/prism-markup";
-import "prismjs/components/prism-css";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-json";
-import "prismjs/components/prism-bash";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-tsx";
+import "highlight.js/styles/tomorrow-night-bright.css";
 
-import "prismjs/themes/prism-tomorrow.css";
+hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("css", css);
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("markdown", markdown);
+hljs.registerLanguage("python", python);
+hljs.registerLanguage("typescript", typescript);
+hljs.registerLanguage("xml", xml);
 
 const LANG_ALIASES: Record<string, string> = {
   code: "plaintext",
@@ -19,11 +25,11 @@ const LANG_ALIASES: Record<string, string> = {
   text: "plaintext",
   plain: "plaintext",
   js: "javascript",
-  jsx: "jsx",
+  jsx: "javascript",
   mjs: "javascript",
   cjs: "javascript",
   ts: "typescript",
-  tsx: "tsx",
+  tsx: "typescript",
   py: "python",
   md: "markdown",
   sh: "bash",
@@ -31,14 +37,14 @@ const LANG_ALIASES: Record<string, string> = {
   zsh: "bash",
   yml: "plaintext",
   yaml: "plaintext",
-  html: "markup",
-  xml: "markup",
-  svg: "markup",
-  vue: "markup",
+  html: "xml",
+  markup: "xml",
+  svg: "xml",
+  vue: "xml",
 };
 
 /**
- * Resolve fenced / class language to a Prism grammar id, or "plaintext".
+ * Resolve fenced / class language to a highlight.js grammar id, or "plaintext".
  */
 export function resolveHighlightLanguage(
   className: string,
@@ -50,26 +56,22 @@ export function resolveHighlightLanguage(
   return LANG_ALIASES[raw] ?? raw;
 }
 
-function hasPrismGrammar(lang: string): boolean {
-  return Boolean(
-    lang &&
-      lang !== "plaintext" &&
-      typeof Prism.languages[lang] === "object"
-  );
+function hasHljsGrammar(lang: string): boolean {
+  return Boolean(lang && lang !== "plaintext" && hljs.getLanguage(lang));
 }
 
 /**
  * Human-readable label for UI (post header, chat). Mirrors previous detectLanguage behavior.
  */
-export function formatLanguageLabel(resolvedPrismLang: string, rawFromClass?: string): string {
-  if (resolvedPrismLang === "markup") {
+export function formatLanguageLabel(resolvedLang: string, rawFromClass?: string): string {
+  if (resolvedLang === "xml") {
     const r = rawFromClass?.toLowerCase();
     if (r === "html" || r === "xml" || r === "svg" || r === "vue") return r;
     return "markup";
   }
-  if (resolvedPrismLang === "bash") return "shell";
-  if (resolvedPrismLang === "plaintext" || !resolvedPrismLang) return "code";
-  return resolvedPrismLang;
+  if (resolvedLang === "bash") return "shell";
+  if (resolvedLang === "plaintext" || !resolvedLang) return "code";
+  return resolvedLang;
 }
 
 /**
@@ -115,7 +117,7 @@ export function highlightCodeElement(
     return;
   }
 
-  const grammarLang = hasPrismGrammar(lang) ? lang : "plaintext";
+  const grammarLang = hasHljsGrammar(lang) ? lang : "plaintext";
 
   if (grammarLang === "plaintext") {
     code.textContent = source;
@@ -131,12 +133,11 @@ export function highlightCodeElement(
   }
 
   try {
-    const grammar = Prism.languages[grammarLang];
-    code.innerHTML = Prism.highlight(source, grammar, grammarLang);
+    code.innerHTML = hljs.highlight(source, { language: grammarLang }).value;
+    code.classList.add("hljs");
     code.dataset.prismHighlighted = "true";
   } catch {
     code.textContent = source;
     code.dataset.prismHighlighted = "true";
   }
 }
-
