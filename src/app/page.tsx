@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { cookies } from "next/headers";
-import Navigation from "@/components/header/Navbar";
+import Navbar from "@/components/header/Navbar";
 import Hero from "@/components/landing/Hero";
 import Highlights from "@/components/landing/Highlights";
 import Features from "@/components/landing/Features";
@@ -22,7 +22,7 @@ export default async function Home() {
   if (isLoggedIn) {
     return (
       <>
-        <Navigation />
+        <Navbar />
         <Suspense
           fallback={
             <div className="min-h-screen bg-background animate-pulse" />
@@ -75,7 +75,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(organizationJsonLd) }}
       />
-      <Navigation />
+      <Navbar />
       <main id="main-content">
         <LandingMotionObserver />
         <Hero />
