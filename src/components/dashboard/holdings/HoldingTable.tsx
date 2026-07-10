@@ -139,8 +139,8 @@ export default function HoldingTable({
     const sorted = [...filteredHoldings];
     return sorted.sort((a, b) => {
       const { key, direction } = sortConfig;
-      let aValue: any;
-      let bValue: any;
+      let aValue: unknown;
+      let bValue: unknown;
 
       if (key === "holding_type") {
         aValue = a.holding_type?.name ?? "";

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { setTokens } from "@/utils/Auth";
 import { authStore } from "@/stores/userStore";
-import { apiClient } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 
 // Map backend error types to user-friendly messages
 const ERROR_MESSAGES: Record<string, string> = {
@@ -95,14 +95,15 @@ export function OAuthCallback() {
 
         // Redirect user to the specified redirect url or default page
         router.push(redirectUrl);
-      } catch (err: any) {
+      } catch (err) {
         console.error("OAuth Callback Error:", err);
         if (!isSubscribed) return;
 
         let message = "An unexpected error occurred during authentication setup.";
-        if (err.response?.data?.message) {
-          message = err.response.data.message;
-        } else if (err.message) {
+        if (isHttpError(err)) {
+          const data = err.response.data as { message?: string } | undefined;
+          message = data?.message || message;
+        } else if (err instanceof Error) {
           message = err.message;
         }
 

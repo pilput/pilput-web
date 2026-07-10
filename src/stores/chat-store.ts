@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { type Message } from "@/components/chat/chat-message";
-import { apiClient } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
 import { Config } from "@/utils/getConfig";
 
@@ -88,14 +88,25 @@ const validateMessage = (
  * Extracts error information from an API error response
  * Returns ChatError with isAuthError flag for 401 responses
  */
-const extractError = (err: any, defaultMessage: string): ChatError & { isAuthError?: boolean } => {
-  const status = err?.response?.status;
+const extractError = (err: unknown, defaultMessage: string): ChatError & { isAuthError?: boolean } => {
+  if (!isHttpError(err)) {
+    return { message: defaultMessage };
+  }
+  const status = err.response.status;
+  const data = err.response.data as { message?: string } | undefined;
   return {
-    message: err?.response?.data?.message || defaultMessage,
-    code: status?.toString(),
+    message: data?.message || defaultMessage,
+    code: status.toString(),
     isAuthError: status === 401,
   };
 };
+
+const isAbortError = (err: unknown): boolean =>
+  err instanceof DOMException && err.name === "AbortError";
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" ? (value as Record<string, unknown>) : null;
+}
 
 interface ChatState {
   // Data
@@ -293,18 +304,23 @@ export const useChatStore = create<ChatState>((set, get) => ({
             }
 
             try {
-              let parsed: any = null;
+              let parsed: unknown = null;
               try {
                 parsed = JSON.parse(data);
               } catch {
                 parsed = data; // Keep as string
               }
+              const parsedRecord = asRecord(parsed);
+              const nestedData = asRecord(parsedRecord?.data);
 
               // Determine actual event type
-              const eventType = currentEvent || (parsed && parsed.type) || "";
+              const eventType =
+                currentEvent || (parsedRecord?.type as string | undefined) || "";
 
               if (eventType === "conversation_created") {
-                const id = parsed.conversation_id || (parsed.data && parsed.data.conversation_id);
+                const id =
+                  (parsedRecord?.conversation_id as string | undefined) ??
+                  (nestedData?.conversation_id as string | undefined);
                 if (id) {
                   set({ isNewConversation: true });
                   onConversationCreated?.(id);
@@ -325,7 +341,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
                   }));
                 }
               } else if (eventType === "ai_chunk") {
-                const chunkText = typeof parsed === "string" ? parsed : (parsed.data || parsed.content || "");
+                const chunkText =
+                  typeof parsed === "string"
+                    ? parsed
+                    : (typeof parsedRecord?.data === "string"
+                        ? parsedRecord.data
+                        : (parsedRecord?.content as string | undefined)) || "";
                 if (chunkText) {
                   accumulatedContent += chunkText;
                   if (updateTimeout) {
@@ -335,8 +356,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 }
               } else if (eventType === "ai_complete") {
                 // Done streaming the message
-                const completeMsg = parsed.data || parsed;
-                if (completeMsg && completeMsg.content) {
+                const completeMsg = nestedData ?? parsedRecord;
+                if (completeMsg && typeof completeMsg.content === "string") {
                   accumulatedContent = completeMsg.content;
                   if (updateTimeout) {
                     clearTimeout(updateTimeout);
@@ -344,15 +365,19 @@ export const useChatStore = create<ChatState>((set, get) => ({
                   batchedUpdate();
                 }
               } else if (eventType === "error") {
-                const errMsg = typeof parsed === "string" ? parsed : (parsed.message || "An error occurred during streaming");
+                const errMsg =
+                  typeof parsed === "string"
+                    ? parsed
+                    : (parsedRecord?.message as string | undefined) ||
+                      "An error occurred during streaming";
                 throw new Error(errMsg);
               } else {
                 // Fallback for generic or old style SSE
                 const chunkText = typeof parsed === "string"
                   ? parsed
-                  : (parsed.type === "ai_chunk" && typeof parsed.data === "string"
-                      ? parsed.data
-                      : (parsed.content || ""));
+                  : (parsedRecord?.type === "ai_chunk" && typeof parsedRecord?.data === "string"
+                      ? parsedRecord.data
+                      : (parsedRecord?.content as string | undefined)) || "";
 
                 if (chunkText) {
                   accumulatedContent += chunkText;
@@ -456,7 +481,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           loadingStates: { ...state.loadingStates, fetchingChats: false },
         };
       });
-    } catch (err: any) {
+    } catch (err) {
       const error = extractError(err, "Failed to fetch conversations");
       set((state) => ({
         loadingStates: { ...state.loadingStates, fetchingChats: false },
@@ -540,8 +565,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
         messages,
         loadingStates: { ...state.loadingStates, fetchingMessages: false },
       }));
-    } catch (err: any) {
-      if (err?.name === "AbortError") {
+    } catch (err) {
+      if (isAbortError(err)) {
         return;
       }
       const error = extractError(err, "Failed to fetch messages");
@@ -601,7 +626,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
       return conversationId;
-    } catch (err: any) {
+    } catch (err) {
       const error = extractError(err, "Failed to create conversation");
       set((state) => ({
         loadingStates: { ...state.loadingStates, creatingConversation: false },
@@ -670,7 +695,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         assistantMessage.id,
         onConversationCreated,
       );
-    } catch (err: any) {
+    } catch (err) {
       const error = extractError(err, "Failed to send message");
 
       console.error("Error sending message:", error);
@@ -723,7 +748,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         return true;
       }
       return false;
-    } catch (err: any) {
+    } catch (err) {
       const error = extractError(err, "Failed to update conversation");
       set({ error: { message: error.message, code: error.code } });
       console.error("Error updating conversation:", error);
@@ -771,7 +796,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         error: { message: "Failed to delete conversation" },
       }));
       return false;
-    } catch (err: any) {
+    } catch (err) {
       const error = extractError(err, "Failed to delete conversation");
       set((state) => ({
         loadingStates: { ...state.loadingStates, deletingConversation: false },

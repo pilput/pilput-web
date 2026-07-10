@@ -18,7 +18,7 @@ interface MarkdownProps {
 
 // Type for code block props
 interface CodeBlockProps extends React.HTMLAttributes<HTMLElement> {
-  node?: any;
+  node?: unknown;
   inline?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -47,7 +47,7 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 
 // Type for heading props
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  node?: any;
+  node?: unknown;
   children?: React.ReactNode;
 }
 
@@ -117,7 +117,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             node,
             children,
             ...props
-          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: unknown }) => (
             <h1 className="text-3xl font-bold my-4" {...props}>
               {children}
             </h1>
@@ -126,7 +126,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             node,
             children,
             ...props
-          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: unknown }) => (
             <h2 className="text-2xl font-bold my-3" {...props}>
               {children}
             </h2>
@@ -135,7 +135,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             node,
             children,
             ...props
-          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: unknown }) => (
             <h3 className="text-xl font-semibold my-2" {...props}>
               {children}
             </h3>
@@ -144,7 +144,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             node,
             children,
             ...props
-          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: unknown }) => (
             <h4 className="text-lg font-semibold my-2" {...props}>
               {children}
             </h4>
@@ -153,7 +153,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             node,
             children,
             ...props
-          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: unknown }) => (
             <h5 className="text-base font-medium my-1" {...props}>
               {children}
             </h5>
@@ -162,7 +162,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             node,
             children,
             ...props
-          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: any }) => (
+          }: React.HTMLAttributes<HTMLHeadingElement> & { node?: unknown }) => (
             <h6 className="text-sm font-medium my-1" {...props}>
               {children}
             </h6>

@@ -5,7 +5,7 @@ import { getProfilePicture } from "@/utils/getImage";
 import { formatDistanceToNow } from "date-fns";
 import { MessageCircle, User, Edit3, LogIn, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { apiClient } from "@/utils/fetch";
+import { apiClient, isHttpError } from "@/utils/fetch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -191,12 +191,12 @@ const Comment = ({ postId }: { postId: string }) => {
       } else {
         toast.error(response.data.message || "Failed to post comment");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending comment:", error);
-      const errorMessage =
-        error?.response?.data?.message ||
-        "Failed to post comment. Please try again.";
-      toast.error(errorMessage);
+      const data = isHttpError(error)
+        ? (error.response.data as { message?: string } | undefined)
+        : undefined;
+      toast.error(data?.message || "Failed to post comment. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

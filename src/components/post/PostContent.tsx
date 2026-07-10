@@ -6,7 +6,8 @@ import {
   highlightCodeElement,
   resolveHighlightLanguage,
 } from "@/lib/code-highlight";
-import { useEffect, useRef } from "react";
+import { sanitizeHtml } from "@/utils/sanitize";
+import { useEffect, useMemo, useRef } from "react";
 import styles from "./post-content.module.scss";
 
 interface PostContentProps {
@@ -16,6 +17,7 @@ interface PostContentProps {
 
 const PostContent = ({ html, className }: PostContentProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const safeHtml = useMemo(() => sanitizeHtml(html), [html]);
 
   useEffect(() => {
     const container = contentRef.current;
@@ -102,11 +104,11 @@ const PostContent = ({ html, className }: PostContentProps) => {
     return () => {
       cleanups.forEach((cleanup) => cleanup());
     };
-  }, [html]);
+  }, [safeHtml]);
 
   return (
     <div className={className}>
-      <div ref={contentRef} dangerouslySetInnerHTML={{ __html: html }} />
+      <div ref={contentRef} dangerouslySetInnerHTML={{ __html: safeHtml }} />
     </div>
   );
 };

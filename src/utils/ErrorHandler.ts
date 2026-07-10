@@ -1,13 +1,14 @@
 import { deleteCookie } from "cookies-next";
 import { toast } from "sonner";
 import { Config } from "./getConfig";
+import { isHttpError } from "./fetch";
 
-export const ErrorHandlerAPI = (error: any) => {
+export const ErrorHandlerAPI = (error: unknown) => {
   // Log the error for debugging purposes
   console.error("API Error:", error);
 
   // Handle network errors
-  if (!error.response) {
+  if (!isHttpError(error)) {
     toast.error("Network error. Please check your connection.");
     return {
       data: {
@@ -16,6 +17,8 @@ export const ErrorHandlerAPI = (error: any) => {
       },
     };
   }
+
+  const responseData = error.response.data as { message?: string } | undefined;
 
   // Handle authentication errors
   const authErrors = [
@@ -28,8 +31,8 @@ export const ErrorHandlerAPI = (error: any) => {
   ];
 
   if (
-    authErrors.includes(error?.response?.data?.message) ||
-    error.response?.status === 401
+    (responseData?.message && authErrors.includes(responseData.message)) ||
+    error.response.status === 401
   ) {
     deleteCookie("token", {
       path: "/",
@@ -83,9 +86,7 @@ export const ErrorHandlerAPI = (error: any) => {
       toast.error("Service unavailable. Please try again later.");
       break;
     default:
-      toast.error(
-        error?.response?.data?.message || "An unexpected error occurred."
-      );
+      toast.error(responseData?.message || "An unexpected error occurred.");
   }
 
   return error.response;

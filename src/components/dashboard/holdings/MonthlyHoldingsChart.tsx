@@ -85,14 +85,15 @@ type DateFilter = {
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{ payload: MonthlyChartPoint }>;
   label?: string;
   hideValues: boolean;
 }
 
 const CustomTooltip = ({ active, payload, label, hideValues }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const point = payload[0]?.payload as MonthlyChartPoint;
+    const point = payload[0]?.payload;
+    if (!point) return null;
 
     return (
       <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">

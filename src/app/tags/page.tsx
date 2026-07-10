@@ -35,11 +35,12 @@ const TagsPage = () => {
     async function fetchTags() {
       setIsLoading(true);
       try {
-        const { data } = await apiClient.get("/api/tags");
-        const response = data;
+        const { data: response } = await apiClient.get<{
+          data?: Array<Omit<TagWithStats, "post_count">>;
+        }>("/api/tags");
         if (response.data) {
           // Add mock post counts since the API doesn't provide them
-          const tagsWithStats = response.data.map((tag: any) => ({
+          const tagsWithStats = response.data.map((tag) => ({
             ...tag,
             post_count: Math.floor(Math.random() * 50) + 1, // Mock data
           }));

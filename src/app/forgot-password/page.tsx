@@ -35,7 +35,7 @@ interface ApiError {
       message: string;
     };
   };
-  request?: any;
+  request?: unknown;
   message?: string;
 }
 

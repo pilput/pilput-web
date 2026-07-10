@@ -15,6 +15,7 @@ import { PostDetailEngagementRow } from "@/components/post/PostDetailEngagementR
 import styles from "@/components/post/post-content.module.scss";
 import { Config } from "@/utils/getConfig";
 import { Calendar, Clock } from "lucide-react";
+import { toSafeJsonLd } from "@/utils/sanitize";
 
 interface SuccessResponse {
   data: Post;
@@ -166,11 +167,11 @@ export default async function Page(props: {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(articleJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
       />
       <ViewRecorder postId={post.id} />
       <Navigation />

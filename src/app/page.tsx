@@ -11,6 +11,7 @@ import Footer from "@/components/footer/Footer";
 import HomeFeedContent from "@/components/home/HomeFeedContent";
 import { Config } from "@/utils/getConfig";
 import { postsPerPage } from "@/lib/blog-feed-data";
+import { toSafeJsonLd } from "@/utils/sanitize";
 
 /** Cookie read per request — needed to branch guest (SSR landing) vs logged-in (client feed only) */
 export const dynamic = "force-dynamic";
@@ -68,11 +69,11 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(webSiteJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(organizationJsonLd) }}
       />
       <Navigation />
       <main id="main-content">

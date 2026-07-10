@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, type TooltipContentProps } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import type { Holding } from "@/types/holding"
 import { formatCurrency } from "@/lib/utils"
@@ -73,9 +73,9 @@ export default function OverviewChart({
   }
 
   // Custom tooltip content as inline function to avoid component creation during render
-  const renderTooltipContent = ({ active, payload }: any) => {
+  const renderTooltipContent = ({ active, payload }: TooltipContentProps) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload
+      const data = payload[0].payload as (typeof chartData)[number]
       return (
         <div className="rounded-lg border bg-popover p-2 shadow-md text-popover-foreground">
           <div className="flex flex-col gap-1">

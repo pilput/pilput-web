@@ -18,6 +18,7 @@ import WriterProfileClient from "./WriterProfileClient";
 import ProfileFollowActions from "@/components/writer/ProfileFollowActions";
 import type { Writer } from "@/types/writer";
 import { cookies } from "next/headers";
+import { toSafeJsonLd } from "@/utils/sanitize";
 
 interface SuccessResponse {
   data: Writer;
@@ -103,7 +104,7 @@ export default async function page(props: {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(personJsonLd) }}
       />
       <Navigation />
       <main className="min-h-screen bg-background">

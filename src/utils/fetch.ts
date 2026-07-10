@@ -378,7 +378,12 @@ export async function getPostLikes(postId: string) {
   }
   const { data } = await apiClient.get<{
     data?: {
-      likes: Array<{ id: string; created_at: string; user_id?: string; user?: any }>;
+      likes: Array<{
+        id: string;
+        created_at: string;
+        user_id?: string;
+        user?: { id: string; username: string; image?: string | null };
+      }>;
     };
   }>(`/api/posts/${postId}/likes`, {
     headers: Object.keys(headers).length > 0 ? headers : undefined,
