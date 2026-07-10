@@ -1,288 +1,245 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowUpRight, BookOpen, Bot, Cpu, Globe, MessageCircle, PieChart, Sparkles, TrendingUp, Wifi } from "lucide-react";
+import { BookOpen, Sparkles, PieChart, MessageCircle, Check, X, Play, Pause, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
-const WritingVisual = () => {
-  const [text, setText] = useState("");
-  const target = "Deep focus mode...";
+// Steps definition
+const steps = [
+  {
+    id: 0,
+    title: "Focus",
+    subtitle: "Immersive Editor",
+    description: "Draft articles, tutorials, and investment logs with a clean, distraction-free markdown-first editor.",
+    icon: BookOpen,
+    accent: "violet",
+    colorClass: "text-violet-500 bg-violet-500/10 border-violet-500/20",
+    gradient: "from-violet-500/12 via-indigo-500/5 to-transparent",
+  },
+  {
+    id: 1,
+    title: "Refine",
+    subtitle: "AI Companion",
+    description: "Brainstorm finance topics, auto-generate outlines, and refine your prose using our integrated AI helper.",
+    icon: Sparkles,
+    accent: "purple",
+    colorClass: "text-purple-500 bg-purple-500/10 border-purple-500/20",
+    gradient: "from-purple-500/12 via-pink-500/5 to-transparent",
+  },
+  {
+    id: 2,
+    title: "Track",
+    subtitle: "Portfolio Dashboard",
+    description: "Log your financial holdings (Stocks, Crypto, Mutual Funds) and track monthly performance, value growth, and profit/loss stats.",
+    icon: PieChart,
+    accent: "sky",
+    colorClass: "text-sky-500 bg-sky-500/10 border-sky-500/20",
+    gradient: "from-sky-500/12 via-emerald-500/5 to-transparent",
+  },
+  {
+    id: 3,
+    title: "Connect",
+    subtitle: "Share Investment Logs",
+    description: "Publish your portfolio insights, share strategy lessons, and discuss asset allocation with a community of creators.",
+    icon: MessageCircle,
+    accent: "rose",
+    colorClass: "text-rose-500 bg-rose-500/10 border-rose-500/20",
+    gradient: "from-rose-500/12 via-pink-500/5 to-transparent",
+  },
+];
 
-  useEffect(() => {
-    let index = 0;
-    let isDeleting = false;
-    let timer: NodeJS.Timeout;
+const DraftMockup = ({ typewriterText }: { typewriterText: string }) => (
+  <div className="p-6 font-sans flex flex-col gap-3 h-full select-none text-left">
+    <div className="space-y-1.5">
+      <div className="text-[10px] font-extrabold text-violet-500 tracking-wider uppercase">NEW POST</div>
+      <h2 className="text-xl font-bold text-foreground leading-tight">My 2026 Asset Allocation Strategy</h2>
+    </div>
+    <p className="text-[10.5px] leading-relaxed text-muted-foreground font-medium flex-1">
+      {typewriterText}
+      <span className="inline-block h-3.5 w-0.5 ml-0.5 bg-violet-500 animate-cursor-blink align-middle" />
+    </p>
+  </div>
+);
 
-    const tick = () => {
-      if (!isDeleting) {
-        setText(target.slice(0, index + 1));
-        index++;
-        if (index === target.length) {
-          isDeleting = true;
-          timer = setTimeout(tick, 1800); // pause at end
-        } else {
-          timer = setTimeout(tick, 90);
-        }
-      } else {
-        setText(target.slice(0, index - 1));
-        index--;
-        if (index === 0) {
-          isDeleting = false;
-          timer = setTimeout(tick, 600); // pause at start
-        } else {
-          timer = setTimeout(tick, 45);
-        }
-      }
-    };
+const RefineMockup = () => (
+  <div className="p-6 font-sans flex flex-col gap-3 h-full select-none text-left relative">
+    <div className="space-y-1.5 opacity-40">
+      <div className="text-[10px] font-extrabold text-purple-500 tracking-wider uppercase">NEW POST</div>
+      <h2 className="text-xl font-bold text-foreground leading-tight">My 2026 Asset Allocation Strategy</h2>
+    </div>
+    <p className="text-[10.5px] leading-relaxed text-muted-foreground font-medium flex-1">
+      Writing a portfolio log helps maintain rebalancing discipline. Every year, I rebalance my index funds, stocks, and crypto back to target ratios...
+    </p>
 
-    timer = setTimeout(tick, 600);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <div className="absolute bottom-0 left-0 right-0 h-[52%] px-6 overflow-hidden pointer-events-none">
-      <div className="w-full h-full bg-background/80 backdrop-blur-md rounded-t-2xl border-t border-x border-border/50 p-5 translate-y-3 group-hover:translate-y-0 transition-transform duration-700 ease-out shadow-premium">
-        <div className="flex items-center gap-1.5 mb-4 pb-3 border-b border-border/40">
-          {["B", "I", "H1"].map((t) => (
-            <span key={t} className="text-[10px] font-bold text-muted-foreground/60 bg-muted/40 rounded px-2 py-0.5">
-              {t}
-            </span>
-          ))}
-          <div className="ml-auto w-16 h-1.5 bg-primary/25 rounded-full" />
+    {/* AI Tooltip */}
+    <motion.div
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay: 0.15 }}
+      className="absolute top-1/2 left-6 right-6 -translate-y-1/2 bg-card border border-purple-500/35 rounded-xl p-3.5 shadow-xl backdrop-blur-md z-20 flex flex-col gap-2.5"
+    >
+      <div className="flex items-center justify-between pb-1.5 border-b border-border/40">
+        <div className="flex items-center gap-1.5 text-purple-500">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="text-[9px] font-extrabold tracking-wide uppercase">AI Assistant</span>
         </div>
-        <div className="space-y-2.5">
-          <div className="h-2.5 w-1/3 bg-primary/25 rounded-full" />
-          <div className="h-2 w-full bg-muted/65 rounded-full" />
-          <div className="h-2 w-[90%] bg-muted/65 rounded-full" />
-          <div className="h-2 w-3/4 bg-muted/65 rounded-full" />
-          <div className="inline-flex items-center gap-1.5 mt-1.5 bg-primary/5 border border-primary/10 px-2.5 py-1 rounded-md">
-            <span className="text-[10px] font-semibold text-primary">
-              {text}
-            </span>
-            <div className="h-3 w-0.5 bg-primary animate-cursor-blink" />
-          </div>
+        <span className="text-[7.5px] font-bold text-muted-foreground/80 bg-muted/40 px-1.5 py-0.5 rounded">Action: Outline</span>
+      </div>
+      <div className="text-[9.5px] text-muted-foreground leading-relaxed">
+        Outline suggestions for <span className="font-semibold text-foreground">portfolio rebalancing</span>:
+        <div className="text-foreground font-semibold mt-1.5 bg-purple-500/5 border border-purple-500/10 p-2 rounded-lg text-[9px] leading-relaxed space-y-1">
+          <p>1. Assess Target Allocation vs. Current Allocations</p>
+          <p>2. Set Thresholds for Rebalancing (e.g. 5% drift)</p>
+          <p>3. Plan Tax-Efficient Rebalancing Transactions</p>
         </div>
       </div>
-    </div>
-  );
-};
-
-const AIVisual = () => {
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStep((s) => (s + 1) % 3);
-    }, 3200);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="absolute bottom-5 right-4 left-4 space-y-2 pointer-events-none">
-      <div className="flex justify-end">
-        <div className="bg-primary/10 text-primary text-[10px] font-semibold px-3 py-1.5 rounded-2xl rounded-br-xs border border-primary/20 shadow-xs">
-          Make this punchier
-        </div>
+      <div className="flex items-center justify-end gap-1.5">
+        <button className="h-6 px-2.5 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-[8.5px] font-bold flex items-center gap-1 cursor-pointer">
+          <X className="w-2.5 h-2.5" /> Reject
+        </button>
+        <button className="h-6 px-2.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 text-[8.5px] font-bold flex items-center gap-1 cursor-pointer">
+          <Check className="w-2.5 h-2.5" /> Insert Outline
+        </button>
       </div>
+    </motion.div>
+  </div>
+);
 
-      {step === 0 && (
-        <div className="flex items-end gap-2 transition-all duration-300">
-          <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0 border border-primary/20">
-            <Cpu className="w-3 h-3 text-primary animate-pulse" />
-          </div>
-          <div className="bg-muted/70 backdrop-blur-md text-[10px] text-muted-foreground px-3 py-1.5 rounded-2xl rounded-bl-xs border border-border/40">
-            <span className="inline-flex gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
-            </span>
-          </div>
-        </div>
-      )}
-
-      {step >= 1 && (
-        <div className="flex items-end gap-2 transition-all duration-500 transform translate-y-0 opacity-100">
-          <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0 border border-primary/20 animate-pulse">
-            <Cpu className="w-3 h-3 text-primary" />
-          </div>
-          <div className="bg-gradient-to-r from-primary to-primary/95 text-primary-foreground text-[10px] font-semibold px-3 py-1.5 rounded-2xl rounded-bl-xs shadow-md shadow-primary/10 max-w-[85%] border-0 transition-all">
-            {step === 1 ? "Unlock developer potential." : "Unleash your creative voice."}
-          </div>
-        </div>
-      )}
+const PortfolioMockup = () => (
+  <div className="p-6 font-sans flex flex-col gap-3 h-full select-none text-left relative">
+    <div className="flex items-center justify-between pb-2 border-b border-border/40 shrink-0">
+      <div>
+        <div className="text-[9px] font-extrabold text-sky-500 tracking-wider uppercase">PORTFOLIO TRACKER</div>
+        <h2 className="text-sm font-bold text-foreground">Holdings Overview</h2>
+      </div>
+      <div className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+        <TrendingUp className="w-3 h-3" />
+        <span>+18.57% (Rp 19,500,000)</span>
+      </div>
     </div>
-  );
-};
 
-const GlobalVisual = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[
-      { top: "35%", left: "20%", color: "bg-primary/70", delay: "0s" },
-      { top: "50%", left: "65%", color: "bg-primary/50", delay: "0.4s" },
-      { top: "25%", left: "75%", color: "bg-primary/60", delay: "0.8s" },
-    ].map((dot, i) => (
-      <span key={i} className="absolute" style={{ top: dot.top, left: dot.left }}>
-        <span className={cn("absolute inline-flex w-3.5 h-3.5 rounded-full opacity-60 animate-ping", dot.color)} style={{ animationDelay: dot.delay }} />
-        <span className={cn("relative inline-flex w-3 h-3 rounded-full border border-background shadow-xs", dot.color, "opacity-90")} />
-      </span>
-    ))}
-    <svg className="absolute inset-0 w-full h-full opacity-25" viewBox="0 0 200 120" preserveAspectRatio="none">
-      <path d="M 40 42 Q 85 80 130 60 T 150 30" fill="none" stroke="currentColor" strokeWidth="0.75" strokeDasharray="3 3" className="text-primary" />
-    </svg>
-    <div className="absolute bottom-5 right-5 flex items-center gap-1.5 bg-background/85 border border-primary/25 rounded-full px-3 py-1 shadow-md shadow-primary/5 backdrop-blur-md">
-      <Wifi className="w-3 h-3 text-primary animate-pulse" />
-      <span className="text-[10px] font-bold text-primary">12ms</span>
-      <span className="text-[10px] text-muted-foreground">latency</span>
+    {/* Summary statistics */}
+    <div className="grid grid-cols-2 gap-4 py-2 border-b border-border/40 shrink-0">
+      <div>
+        <span className="text-[8px] font-bold text-muted-foreground uppercase">Net Worth</span>
+        <div className="text-sm font-black text-foreground">Rp 124,500,000</div>
+      </div>
+      <div>
+        <span className="text-[8px] font-bold text-muted-foreground uppercase">Total Invested</span>
+        <div className="text-sm font-bold text-muted-foreground">Rp 105,000,000</div>
+      </div>
+    </div>
+
+    {/* Asset Allocations Breakdown */}
+    <div className="flex-1 flex flex-col justify-center gap-3">
+      <div className="text-[9px] font-bold text-muted-foreground uppercase">Asset Allocation</div>
+      <div className="space-y-2.5">
+        {[
+          { name: "Stocks (Indo)", value: "Rp 56,025,000", pct: "45%", color: "bg-sky-500" },
+          { name: "Cryptocurrency", value: "Rp 43,575,000", pct: "35%", color: "bg-purple-500" },
+          { name: "Mutual Funds", value: "Rp 24,900,000", pct: "20%", color: "bg-emerald-500" },
+        ].map((item) => (
+          <div key={item.name} className="space-y-1">
+            <div className="flex items-center justify-between text-[9px] font-bold">
+              <span className="text-foreground">{item.name}</span>
+              <span className="text-muted-foreground">{item.value} ({item.pct})</span>
+            </div>
+            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+              <div className={cn("h-full rounded-full", item.color)} style={{ width: item.pct }} />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 );
 
-const InsightsVisual = () => {
-  const [bars, setBars] = useState([40, 65, 45, 80, 55, 90, 70]);
+const ConnectMockup = () => (
+  <div className="p-6 font-sans flex flex-col justify-between h-full select-none text-left">
+    {/* Article body snippet */}
+    <div className="space-y-2 opacity-35">
+      <div className="h-2 w-1/4 bg-primary/20 rounded-full" />
+      <div className="h-1.5 w-full bg-muted-foreground/35 rounded-full" />
+      <div className="h-1.5 w-[90%] bg-muted-foreground/35 rounded-full" />
+    </div>
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBars((curr) =>
-        curr.map((val) => {
-          const change = Math.floor(Math.random() * 21) - 10; // -10% to +10%
-          return Math.max(20, Math.min(100, val + change));
-        })
-      );
-    }, 2200);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
-      <div className="flex items-end gap-1.5 h-16">
-        {bars.map((h, i) => (
-          <div
-            key={i}
-            className="flex-1 rounded-t-md bg-primary/15 group-hover:bg-primary/25 transition-all duration-500 relative overflow-hidden"
-            style={{ height: `${h}%` }}
-          >
-            <div className="absolute inset-x-0 bottom-0 top-0 bg-gradient-to-t from-primary/55 to-transparent" />
+    {/* Comments section */}
+    <div className="border-t border-border/40 pt-3 space-y-2.5">
+      <div className="text-[8px] font-black text-rose-500 tracking-wide uppercase">Feedback & Discussion</div>
+      
+      {/* Comment Card */}
+      <div className="flex items-start gap-2.5 bg-muted/20 border border-border/30 rounded-xl p-2.5">
+        <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-rose-500 to-pink-500 flex-shrink-0 flex items-center justify-center text-[7.5px] font-black text-white shadow-xs">
+          SC
+        </div>
+        <div className="flex-1 space-y-0.5 text-left">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] font-bold text-foreground">Sarah Chen</span>
+            <span className="text-[7.5px] text-muted-foreground">3m ago</span>
           </div>
-        ))}
-      </div>
-      <div className="flex items-center gap-1.5 mt-3.5 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full w-fit">
-        <TrendingUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-        <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400">+24% this week</span>
+          <p className="text-[9px] text-muted-foreground leading-normal font-medium">
+            Do you hold any stablecoins in your crypto allocation, or is it purely BTC and ETH?
+          </p>
+        </div>
       </div>
     </div>
-  );
-};
 
-const CommunityVisual = () => {
-  const [bubbles, setBubbles] = useState<number[]>([0]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBubbles((curr) => {
-        if (curr.length >= 3) {
-          return [0];
-        } else {
-          return [...curr, curr.length];
-        }
-      });
-    }, 2800);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 pointer-events-none w-[50%]">
-      {bubbles.includes(0) && (
-        <div className="self-start flex items-end gap-2 transition-all duration-500 opacity-100 translate-y-0">
-          <div className="w-6 h-6 rounded-full bg-primary/10 border border-primary/25 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-primary">
-            A
-          </div>
-          <div className="bg-background/90 border border-border/50 backdrop-blur-md text-[10px] text-muted-foreground px-3 py-1.5 rounded-2xl rounded-bl-xs leading-relaxed max-w-[85%] shadow-xs">
-            Great post!
-          </div>
-        </div>
-      )}
-      {bubbles.includes(1) && (
-        <div className="self-end transition-all duration-500 opacity-100 translate-y-0">
-          <div className="bg-primary text-primary-foreground border border-primary/20 text-[10px] font-semibold px-3 py-1.5 rounded-2xl rounded-br-xs leading-relaxed shadow-md shadow-primary/5">
-            Thanks! More soon
-          </div>
-        </div>
-      )}
-      {bubbles.includes(2) && (
-        <div className="self-start flex items-end gap-2 transition-all duration-500 opacity-100 translate-y-0">
-          <div className="w-6 h-6 rounded-full bg-emerald-500/10 border border-emerald-500/25 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-            C
-          </div>
-          <div className="bg-background/90 border border-border/50 backdrop-blur-md text-[10px] text-muted-foreground px-3 py-1.5 rounded-2xl rounded-bl-xs shadow-xs">
-            Can&apos;t wait 🚀
-          </div>
-        </div>
-      )}
+    {/* Claps & Share bar */}
+    <div className="border-t border-border/40 pt-2.5 flex items-center justify-between">
+      <button className="h-7 px-3 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/15 transition-colors text-[8.5px] font-bold flex items-center gap-1.5 cursor-pointer">
+        <span>👏</span> <span>148 Claps</span>
+      </button>
+      <span className="text-[8px] font-bold text-muted-foreground">1,240 Reads • 12 Comments</span>
     </div>
-  );
-};
-
-const highlights = [
-  {
-    title: "Immersive Writing",
-    description: "A distraction-free environment designed for deep focus and effortless creation.",
-    icon: BookOpen,
-    className: "lg:col-span-2 lg:row-span-2",
-    gradient: "from-primary/15 via-primary/5 to-transparent",
-    iconColor: "text-primary",
-    element: <WritingVisual />,
-  },
-  {
-    title: "AI Workspace",
-    description: "Refine ideas and polish your prose with smart assistance.",
-    icon: Bot,
-    className: "lg:col-span-1 lg:row-span-1",
-    gradient: "from-primary/15 via-primary/5 to-transparent",
-    iconColor: "text-primary",
-    element: <AIVisual />,
-  },
-  {
-    title: "Global Edge",
-    description: "Available everywhere, instantly.",
-    icon: Globe,
-    className: "lg:col-span-1 lg:row-span-1",
-    gradient: "from-primary/15 via-primary/5 to-transparent",
-    iconColor: "text-primary",
-    element: <GlobalVisual />,
-  },
-  {
-    title: "Insights",
-    description: "Track your growth with beautiful analytics.",
-    icon: PieChart,
-    className: "lg:col-span-1 lg:row-span-1",
-    gradient: "from-primary/15 via-primary/5 to-transparent",
-    iconColor: "text-primary",
-    element: <InsightsVisual />,
-  },
-  {
-    title: "Community",
-    description: "Connect with a global audience and grow your reach through meaningful interactions.",
-    icon: MessageCircle,
-    className: "lg:col-span-2 lg:row-span-1",
-    gradient: "from-primary/15 via-primary/5 to-transparent",
-    iconColor: "text-primary",
-    element: <CommunityVisual />,
-  },
-];
+  </div>
+);
 
 const Highlights = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [typewriterText, setTypewriterText] = useState("");
+  const draftTarget = "Writing a portfolio log helps maintain rebalancing discipline. Every year, I rebalance my index funds, stocks, and crypto back to target ratios...";
+
+  // Typewriter effect logic for Step 0
+  useEffect(() => {
+    if (activeStep === 0) {
+      let idx = 0;
+      const interval = setInterval(() => {
+        if (idx <= draftTarget.length) {
+          setTypewriterText(draftTarget.slice(0, idx));
+          idx++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 30);
+      return () => clearInterval(interval);
+    }
+  }, [activeStep]);
+
+  // Auto rotation logic
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % steps.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
   return (
     <section className="relative overflow-hidden border-b border-border/40 bg-background py-20 sm:py-24 lg:py-28">
-      <div className="absolute inset-0 bg-gradient-to-b from-muted/20 via-background/40 to-background dark:from-muted/10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-muted/20 via-background/40 to-background dark:from-muted/10 pointer-events-none" />
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <div className="inline-flex items-center landing-reveal">
             <Badge
               variant="outline"
-              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 shadow-xs"
+              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 shadow-xs cursor-default"
             >
-              <Sparkles className="w-3.5 h-3.5 mr-2" />
+              <Sparkles className="w-3.5 h-3.5 mr-2 animate-pulse-slow" />
               Core workflow
             </Badge>
           </div>
@@ -296,41 +253,127 @@ const Highlights = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {highlights.map((item, index) => (
-            <div
-              key={item.title}
-              className={cn(
-                "group relative overflow-hidden rounded-2xl border-glow-hover glass-card shadow-premium hover:shadow-premium-hover transition-all duration-500 hover:-translate-y-1.5",
-                item.className,
-                "min-h-[290px] landing-reveal"
-              )}
-              style={{ animationDelay: `${180 + index * 80}ms` }}
-            >
-              <div className={cn("absolute inset-0 bg-linear-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-700", item.gradient)} />
+        {/* 2-Column interactive layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto items-center">
+          
+          {/* Left Column: Selector buttons */}
+          <div className="lg:col-span-5 flex flex-col gap-4 select-none">
+            {steps.map((step) => {
+              const isActive = activeStep === step.id;
+              const Icon = step.icon;
 
-              <div className="relative p-8 lg:p-10 h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-6">
-                    <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center bg-background/80 shadow-xs border border-border/50 transition-colors group-hover:border-primary/30", item.iconColor)}>
-                      <item.icon className="w-5 h-5" />
+              return (
+                <div
+                  key={step.id}
+                  onClick={() => {
+                    setActiveStep(step.id);
+                    setIsPlaying(false); // Pause auto-rotate when user interacts
+                  }}
+                  className={cn(
+                    "group text-left p-5 rounded-2xl border transition-all duration-300 cursor-pointer relative overflow-hidden",
+                    isActive
+                      ? "bg-card border-border/80 shadow-premium"
+                      : "bg-transparent border-transparent hover:bg-muted/30"
+                  )}
+                >
+                  {/* Subtle active colored glow background */}
+                  {isActive && (
+                    <div className={cn("absolute inset-0 bg-linear-to-br opacity-100 transition-opacity duration-500", step.gradient)} />
+                  )}
+
+                  <div className="flex gap-4 items-start relative z-10">
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all duration-300",
+                      isActive ? step.colorClass : "text-muted-foreground bg-muted/40 border-border/40 group-hover:border-border/80"
+                    )}>
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <ArrowUpRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:text-primary transition-all duration-300" />
-                  </div>
-
-                  <div className="space-y-2 relative z-10">
-                    <h3 className="text-xl lg:text-2xl font-bold text-foreground tracking-tight">{item.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm max-w-[280px]">
-                      {item.description}
-                    </p>
+                    
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/60">{step.title}</span>
+                        {isActive && (
+                          <span className={cn("w-1.5 h-1.5 rounded-full animate-ping", 
+                            step.accent === "violet" && "bg-violet-500",
+                            step.accent === "purple" && "bg-purple-500",
+                            step.accent === "sky" && "bg-sky-500",
+                            step.accent === "rose" && "bg-rose-500"
+                          )} />
+                        )}
+                      </div>
+                      <h3 className={cn(
+                        "text-lg font-bold transition-colors",
+                        isActive ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
+                      )}>
+                        {step.subtitle}
+                      </h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
+              );
+            })}
 
-                {item.element}
-              </div>
+            {/* Play/Pause controls */}
+            <div className="flex items-center gap-2 mt-2 px-5 text-muted-foreground">
+              <button
+                onClick={() => setIsPlaying((prev) => !prev)}
+                className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-muted/40 hover:bg-muted/80 px-3 py-1.5 rounded-full border border-border/50 transition-colors cursor-pointer"
+              >
+                {isPlaying ? (
+                  <>
+                    <Pause className="w-2.5 h-2.5" /> Pause Auto-Play
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-2.5 h-2.5" /> Resume Auto-Play
+                  </>
+                )}
+              </button>
             </div>
-          ))}
+          </div>
+
+          {/* Right Column: Unified mockup panel */}
+          <div className="lg:col-span-7 w-full">
+            <div className="relative aspect-video lg:aspect-auto lg:h-[390px] rounded-2xl border border-border/45 bg-card/85 text-left shadow-premium backdrop-blur-xl overflow-hidden border-glow-hover flex flex-col transition-all duration-300">
+              
+              {/* Browser Header */}
+              <div className="flex items-center gap-1.5 border-b border-border/45 px-5 py-3.5 bg-muted/25 select-none shrink-0">
+                <span className="h-2 w-2 rounded-full bg-red-500/70" />
+                <span className="h-2 w-2 rounded-full bg-yellow-500/70" />
+                <span className="h-2 w-2 rounded-full bg-green-500/70" />
+                <div className="ml-4 flex items-center gap-1.5 bg-background/55 border border-border/40 rounded-md px-3 py-1 text-[9px] font-semibold text-muted-foreground/80 w-44">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
+                  <span className="truncate select-none">compounding-ideas.md</span>
+                </div>
+              </div>
+
+              {/* Main content display area */}
+              <div className="flex-1 relative overflow-hidden bg-card/45">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeStep}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.25 }}
+                    className="absolute inset-0 h-full w-full"
+                  >
+                    {activeStep === 0 && <DraftMockup typewriterText={typewriterText} />}
+                    {activeStep === 1 && <RefineMockup />}
+                    {activeStep === 2 && <PortfolioMockup />}
+                    {activeStep === 3 && <ConnectMockup />}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+            </div>
+          </div>
+
         </div>
+
       </div>
     </section>
   );
