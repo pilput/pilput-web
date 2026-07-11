@@ -34,6 +34,7 @@ import OverviewChart from "@/components/dashboard/holdings/OverviewChart";
 import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHoldingsChart";
 import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
+import UpcomingCorporateActions from "@/components/dashboard/holdings/calendar/UpcomingCorporateActions";
 import { cn, formatCurrency } from "@/lib/utils";
 import { parseDecimal } from "@/types/holding";
 
@@ -43,15 +44,15 @@ function holdingsChartColorVar(index: number) {
 
 const STORAGE_KEY = "overview-sections-collapsed";
 
-type SectionKey = "summary" | "allocation" | "performance" | "trends";
+type SectionKey = "summary" | "actions" | "allocation" | "performance" | "trends";
 
 function loadCollapsed(): Record<SectionKey, boolean> {
   if (typeof window === "undefined")
-    return { summary: false, allocation: false, performance: false, trends: false };
+    return { summary: false, actions: false, allocation: false, performance: false, trends: false };
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}");
   } catch {
-    return { summary: false, allocation: false, performance: false, trends: false };
+    return { summary: false, actions: false, allocation: false, performance: false, trends: false };
   }
 }
 
@@ -524,6 +525,11 @@ export default function HoldingOverviewPage() {
           isLoading={isLoading}
           hideValues={hideValues}
         />
+      </CollapsibleSection>
+
+      {/* ── Section: Corporate Actions ──────────────────── */}
+      <CollapsibleSection id="actions" label="Corporate Actions" collapsed={!!collapsed.actions} onToggle={toggleSection}>
+        <UpcomingCorporateActions />
       </CollapsibleSection>
 
       {/* ── Section: Allocation ─────────────────────────── */}

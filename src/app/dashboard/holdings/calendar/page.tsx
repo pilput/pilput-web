@@ -1,0 +1,169 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { format, startOfMonth, endOfMonth } from "date-fns";
+import { ArrowLeft, CalendarRange, Coins, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
+import CorporateActionCalendarGrid from "@/components/dashboard/holdings/calendar/CorporateActionCalendarGrid";
+import CorporateActionDayPanel from "@/components/dashboard/holdings/calendar/CorporateActionDayPanel";
+import { useCorporateActionsStore } from "@/stores/corporateActionsStore";
+import { cn } from "@/lib/utils";
+import type { CorporateActionItem, CorporateActionType } from "@/types/corporate-action";
+
+type TypeFilter = "all" | CorporateActionType;
+
+const MONTH_LABELS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+export default function CorporateActionsCalendarPage() {
+  const { actions, isLoading, cached, fetchCalendar } = useCorporateActionsStore();
+
+  const now = useMemo(() => new Date(), []);
+  const [filterMonth, setFilterMonth] = useState((now.getMonth() + 1).toString());
+  const [filterYear, setFilterYear] = useState(now.getFullYear().toString());
+  const [appliedMonth, setAppliedMonth] = useState(now.getMonth() + 1);
+  const [appliedYear, setAppliedYear] = useState(now.getFullYear());
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [selectedDate, setSelectedDate] = useState<string | null>(
+    format(now, "yyyy-MM-dd")
+  );
+
+  useEffect(() => {
+    const monthDate = new Date(appliedYear, appliedMonth - 1, 1);
+    const from = format(startOfMonth(monthDate), "yyyy-MM-dd");
+    const to = format(endOfMonth(monthDate), "yyyy-MM-dd");
+    fetchCalendar({ from, to });
+  }, [appliedMonth, appliedYear, fetchCalendar]);
+
+  function handleFilter(monthOverride?: number, yearOverride?: number) {
+    const m = monthOverride ?? parseInt(filterMonth, 10);
+    const y = yearOverride ?? parseInt(filterYear, 10);
+    setAppliedMonth(m);
+    setAppliedYear(y);
+
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === y && today.getMonth() + 1 === m;
+    setSelectedDate(
+      isCurrentMonth ? format(today, "yyyy-MM-dd") : format(new Date(y, m - 1, 1), "yyyy-MM-dd")
+    );
+  }
+
+  const filteredActions = useMemo<CorporateActionItem[]>(
+    () => (typeFilter === "all" ? actions : actions.filter((a) => a.type === typeFilter)),
+    [actions, typeFilter]
+  );
+
+  const actionsByDate = useMemo(() => {
+    const map: Record<string, CorporateActionItem[]> = {};
+    for (const action of filteredActions) {
+      (map[action.date] ??= []).push(action);
+    }
+    return map;
+  }, [filteredActions]);
+
+  const selectedActions = selectedDate ? actionsByDate[selectedDate] ?? [] : [];
+
+  const stats = useMemo(() => {
+    const dividendCount = filteredActions.filter((a) => a.type === "dividend").length;
+    const rupsCount = filteredActions.filter((a) => a.type === "rups").length;
+    return { dividendCount, rupsCount };
+  }, [filteredActions]);
+
+  const monthLabel =
+    appliedMonth >= 1 && appliedMonth <= 12
+      ? `${MONTH_LABELS[appliedMonth - 1]} ${appliedYear}`
+      : `${appliedMonth}/${appliedYear}`;
+
+  return (
+    <div className="flex w-full flex-col gap-6 sm:gap-8">
+      {/* Header */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <Button variant="ghost" size="icon" className="shrink-0 -ml-2" asChild>
+              <Link href="/dashboard/holdings/overview" aria-label="Back to overview">
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </Button>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
+                  Corporate Actions Calendar
+                </h1>
+                <span className="inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-2.5 py-0.5 text-[10px] sm:text-xs font-medium tracking-wide text-muted-foreground">
+                  {monthLabel}
+                </span>
+              </div>
+              <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 hidden sm:block">
+                Dividend ex-dates and RUPS meetings for stocks on the IDX exchange.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter bar */}
+        <div className="rounded-xl border border-border/70 bg-muted/30 px-3 py-2.5 sm:px-4">
+          <HoldingFilter
+            month={filterMonth}
+            year={filterYear}
+            onMonthChange={setFilterMonth}
+            onYearChange={setFilterYear}
+            onFilter={handleFilter}
+          />
+        </div>
+
+        {/* Type filter + stats */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as TypeFilter)}>
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="dividend">Dividends</TabsTrigger>
+              <TabsTrigger value="rups">RUPS</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          <div className="flex flex-wrap gap-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium">
+              <Coins className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              {stats.dividendCount} dividend{stats.dividendCount === 1 ? "" : "s"}
+            </div>
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium">
+              <Users className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
+              {stats.rupsCount} RUPS
+            </div>
+            {cached && (
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
+                <CalendarRange className="h-3.5 w-3.5" />
+                Cached
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Calendar + day panel */}
+      <div className="grid gap-4 md:gap-5 lg:grid-cols-3">
+        <div
+          className={cn(
+            "lg:col-span-2 min-w-0 transition-opacity",
+            isLoading && "opacity-60 pointer-events-none"
+          )}
+        >
+          <CorporateActionCalendarGrid
+            month={appliedMonth}
+            year={appliedYear}
+            actionsByDate={actionsByDate}
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+          />
+        </div>
+        <CorporateActionDayPanel date={selectedDate} actions={selectedActions} />
+      </div>
+    </div>
+  );
+}

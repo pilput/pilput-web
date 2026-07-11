@@ -28,6 +28,7 @@ import {
   ArrowLeft,
   DollarSign,
   LayoutDashboard,
+  CalendarRange,
 } from "lucide-react";
 import { authStore } from "@/stores/userStore";
 import { AuthGuard } from "@/components/auth/AuthGuard";
@@ -71,6 +72,11 @@ const navMain = [
         title: "Holdings",
         url: "/dashboard/holdings",
         icon: DollarSign,
+      },
+      {
+        title: "Calendar",
+        url: "/dashboard/holdings/calendar",
+        icon: CalendarRange,
       },
     ],
   },
