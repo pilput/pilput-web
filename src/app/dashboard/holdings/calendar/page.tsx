@@ -6,7 +6,7 @@ import { format, startOfMonth, endOfMonth } from "date-fns";
 import { ArrowLeft, CalendarRange, Coins, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
+import CalendarMonthNav from "@/components/dashboard/holdings/calendar/CalendarMonthNav";
 import CorporateActionCalendarGrid from "@/components/dashboard/holdings/calendar/CorporateActionCalendarGrid";
 import CorporateActionDayPanel from "@/components/dashboard/holdings/calendar/CorporateActionDayPanel";
 import { useCorporateActionsStore } from "@/stores/corporateActionsStore";
@@ -24,8 +24,6 @@ export default function CorporateActionsCalendarPage() {
   const { actions, isLoading, cached, fetchCalendar } = useCorporateActionsStore();
 
   const now = useMemo(() => new Date(), []);
-  const [filterMonth, setFilterMonth] = useState((now.getMonth() + 1).toString());
-  const [filterYear, setFilterYear] = useState(now.getFullYear().toString());
   const [appliedMonth, setAppliedMonth] = useState(now.getMonth() + 1);
   const [appliedYear, setAppliedYear] = useState(now.getFullYear());
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
@@ -40,9 +38,7 @@ export default function CorporateActionsCalendarPage() {
     fetchCalendar({ from, to });
   }, [appliedMonth, appliedYear, fetchCalendar]);
 
-  function handleFilter(monthOverride?: number, yearOverride?: number) {
-    const m = monthOverride ?? parseInt(filterMonth, 10);
-    const y = yearOverride ?? parseInt(filterYear, 10);
+  function applyPeriod(m: number, y: number) {
     setAppliedMonth(m);
     setAppliedYear(y);
 
@@ -52,6 +48,25 @@ export default function CorporateActionsCalendarPage() {
       isCurrentMonth ? format(today, "yyyy-MM-dd") : format(new Date(y, m - 1, 1), "yyyy-MM-dd")
     );
   }
+
+  function handlePrevMonth() {
+    const m = appliedMonth === 1 ? 12 : appliedMonth - 1;
+    const y = appliedMonth === 1 ? appliedYear - 1 : appliedYear;
+    applyPeriod(m, y);
+  }
+
+  function handleNextMonth() {
+    const m = appliedMonth === 12 ? 1 : appliedMonth + 1;
+    const y = appliedMonth === 12 ? appliedYear + 1 : appliedYear;
+    applyPeriod(m, y);
+  }
+
+  function handleToday() {
+    applyPeriod(now.getMonth() + 1, now.getFullYear());
+  }
+
+  const isCurrentMonth =
+    appliedMonth === now.getMonth() + 1 && appliedYear === now.getFullYear();
 
   const filteredActions = useMemo<CorporateActionItem[]>(
     () => (typeFilter === "all" ? actions : actions.filter((a) => a.type === typeFilter)),
@@ -91,14 +106,9 @@ export default function CorporateActionsCalendarPage() {
               </Link>
             </Button>
             <div className="min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
-                  Corporate Actions Calendar
-                </h1>
-                <span className="inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-2.5 py-0.5 text-[10px] sm:text-xs font-medium tracking-wide text-muted-foreground">
-                  {monthLabel}
-                </span>
-              </div>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
+                Corporate Actions Calendar
+              </h1>
               <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 hidden sm:block">
                 Dividend ex-dates and RUPS meetings for stocks on the IDX exchange.
               </p>
@@ -106,16 +116,14 @@ export default function CorporateActionsCalendarPage() {
           </div>
         </div>
 
-        {/* Filter bar */}
-        <div className="rounded-xl border border-border/70 bg-muted/30 px-3 py-2.5 sm:px-4">
-          <HoldingFilter
-            month={filterMonth}
-            year={filterYear}
-            onMonthChange={setFilterMonth}
-            onYearChange={setFilterYear}
-            onFilter={handleFilter}
-          />
-        </div>
+        {/* Month nav */}
+        <CalendarMonthNav
+          label={monthLabel}
+          isCurrentMonth={isCurrentMonth}
+          onPrev={handlePrevMonth}
+          onNext={handleNextMonth}
+          onToday={handleToday}
+        />
 
         {/* Type filter + stats */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
