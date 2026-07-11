@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { format, startOfMonth, endOfMonth } from "date-fns";
+import { format } from "date-fns";
 import { ArrowLeft, CalendarRange, Coins, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,10 +32,7 @@ export default function CorporateActionsCalendarPage() {
   );
 
   useEffect(() => {
-    const monthDate = new Date(appliedYear, appliedMonth - 1, 1);
-    const from = format(startOfMonth(monthDate), "yyyy-MM-dd");
-    const to = format(endOfMonth(monthDate), "yyyy-MM-dd");
-    fetchCalendar({ from, to });
+    fetchCalendar({ month: appliedMonth, year: appliedYear });
   }, [appliedMonth, appliedYear, fetchCalendar]);
 
   function applyPeriod(m: number, y: number) {

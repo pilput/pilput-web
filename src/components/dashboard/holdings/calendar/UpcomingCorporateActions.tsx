@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { format, addDays } from "date-fns";
+import { format, addMonths } from "date-fns";
 import { CalendarClock, Coins, Users, ArrowRight } from "lucide-react";
 import {
   Card,
@@ -12,20 +12,59 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useCorporateActionsStore } from "@/stores/corporateActionsStore";
+import { apiClient } from "@/utils/fetch";
+import { getToken } from "@/utils/Auth";
 import { cn, formatCurrency } from "@/lib/utils";
+import type {
+  CorporateActionCalendarResponse,
+  CorporateActionItem,
+} from "@/types/corporate-action";
 
-const UPCOMING_DAYS = 30;
 const MAX_ITEMS = 5;
 
+async function fetchMonth(month: number, year: number): Promise<CorporateActionItem[]> {
+  const { data } = await apiClient.get<{
+    success: boolean;
+    data: CorporateActionCalendarResponse;
+  }>("/api/holdings/calendar", {
+    headers: { Authorization: `Bearer ${getToken()}` },
+    params: { month, year },
+  });
+  return data?.data?.actions ?? [];
+}
+
 export default function UpcomingCorporateActions() {
-  const { actions, isLoading, fetchCalendar } = useCorporateActionsStore();
+  const [actions, setActions] = useState<CorporateActionItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const from = format(new Date(), "yyyy-MM-dd");
-    const to = format(addDays(new Date(), UPCOMING_DAYS), "yyyy-MM-dd");
-    fetchCalendar({ from, to });
-  }, [fetchCalendar]);
+    let cancelled = false;
+
+    async function load() {
+      setIsLoading(true);
+      try {
+        const now = new Date();
+        const next = addMonths(now, 1);
+        const [thisMonth, nextMonth] = await Promise.all([
+          fetchMonth(now.getMonth() + 1, now.getFullYear()),
+          fetchMonth(next.getMonth() + 1, next.getFullYear()),
+        ]);
+        if (cancelled) return;
+
+        const today = format(now, "yyyy-MM-dd");
+        setActions([...thisMonth, ...nextMonth].filter((a) => a.date >= today));
+      } catch {
+        if (!cancelled) setActions([]);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const upcoming = useMemo(
     () =>
@@ -42,7 +81,7 @@ export default function UpcomingCorporateActions() {
             Upcoming Corporate Actions
           </CardTitle>
           <CardDescription className="text-xs mt-1">
-            Dividend &amp; RUPS events in the next {UPCOMING_DAYS} days
+            Dividend &amp; RUPS events coming up
           </CardDescription>
         </div>
         <Button asChild variant="ghost" size="sm" className="h-8 px-2.5 text-xs gap-1 shrink-0">
@@ -61,7 +100,7 @@ export default function UpcomingCorporateActions() {
           </div>
         ) : upcoming.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-6">
-            No corporate actions in the next {UPCOMING_DAYS} days.
+            No upcoming corporate actions in the next two months.
           </p>
         ) : (
           <div className="space-y-2">

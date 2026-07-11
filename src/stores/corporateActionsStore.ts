@@ -30,7 +30,7 @@ interface CorporateActionsState {
   cached: boolean;
   isLoading: boolean;
 
-  fetchCalendar: (params: { from: string; to: string }) => Promise<void>;
+  fetchCalendar: (params: { month: number; year: number }) => Promise<void>;
 }
 
 export const useCorporateActionsStore = create<CorporateActionsState>((set) => ({
@@ -41,12 +41,12 @@ export const useCorporateActionsStore = create<CorporateActionsState>((set) => (
   cached: false,
   isLoading: false,
 
-  fetchCalendar: async ({ from, to }) => {
+  fetchCalendar: async ({ month, year }) => {
     set({ isLoading: true });
     try {
       const { data } = await apiClient.get("/api/holdings/calendar", {
         headers: authHeaders(),
-        params: { from, to },
+        params: { month, year },
       });
 
       const payload = unwrapEnvelope<CorporateActionCalendarResponse>(data);
