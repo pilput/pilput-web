@@ -164,7 +164,8 @@ export default function Component() {
               <Tooltip
                 cursor={false}
                 labelFormatter={(value) => {
-                  return new Date(value).toLocaleDateString("en-US", {
+                  if (!value) return ""
+                  return new Date(String(value)).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                   })
