@@ -36,7 +36,7 @@
     "clsx": "^2.1.1",
     "cookies-next": "^6.1.1",
     "date-fns": "^4.4.0",
-    "framer-motion": "^12.43.0",
+    "framer-motion": "^13.0.0",
     "highlight.js": "^11.11.1",
     "isomorphic-dompurify": "^3.22.0",
     "lowlight": "^3.3.0",
