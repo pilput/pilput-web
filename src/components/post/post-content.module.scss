@@ -36,8 +36,6 @@
     padding: 1.2rem 1.35rem;
     overflow-x: auto;
     margin: 1.5em 0;
-      inset 0 1px 0 color-mix(in oklch, white 7%, transparent),
-      0 8px 18px color-mix(in oklch, black 12%, transparent);
     scrollbar-width: thin;
     scrollbar-color: var(--code-scrollbar) transparent;
 

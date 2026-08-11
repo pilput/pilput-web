@@ -36,8 +36,6 @@
     padding: 1.2rem 1.35rem;
     overflow-x: auto;
     margin: 1.5em 0;
-      inset 0 1px 0 color-mix(in oklch, white 7%, transparent),
-      0 8px 18px color-mix(in oklch, black 12%, transparent);
     scrollbar-width: thin;
     scrollbar-color: var(--code-scrollbar) transparent;
 
@@ -192,8 +190,6 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: color-mix(in oklch, var(--background) 92%, black 8%);
-    0 10px 30px color-mix(in oklch, black 18%, transparent),
-    0 1px 0 color-mix(in oklch, white 8%, transparent) inset;
   backdrop-filter: blur(8px);
 }
 
@@ -256,8 +252,6 @@
   border-radius: 12px;
   border: 1px solid var(--border);
   background: color-mix(in oklch, var(--background) 95%, black 5%);
-    0 16px 40px color-mix(in oklch, black 16%, transparent),
-    0 1px 0 color-mix(in oklch, white 8%, transparent) inset;
 }
 
 .slashItem {
@@ -817,8 +811,6 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin-bottom: 1.5rem;
-      0 4px 12px color-mix(in oklch, black 8%, transparent),
-      0 1px 0 color-mix(in oklch, white 5%, transparent) inset;
     z-index: 40;
     transition: all 0.2s ease;
   }
@@ -843,13 +835,9 @@
   backdrop-filter: blur(12px);
   border: 1px solid color-mix(in oklch, var(--border) 45%, transparent) !important;
   border-radius: var(--radius-lg);
-    0 8px 30px color-mix(in oklch, black 4%, transparent),
-    0 1px 0 color-mix(in oklch, white 5%, transparent) inset !important;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-      0 12px 35px color-mix(in oklch, black 7%, transparent),
-      0 1px 0 color-mix(in oklch, white 8%, transparent) inset !important;
     transform: translateY(-2px);
     border-color: color-mix(in oklch, var(--primary) 25%, var(--border)) !important;
   }
