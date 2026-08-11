@@ -150,7 +150,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                 }}
                 onClick={() => handleSendMessage(prompt)}
                 disabled={isSending}
-                className="group flex flex-col items-start gap-2 rounded-xl border border-border bg-card p-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5 hover:shadow-sm disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
+                className="group flex flex-col items-start gap-2 rounded-xl border border-border bg-card p-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
               >
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted transition-colors group-hover:bg-primary/10">
                   <Icon className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-primary" />

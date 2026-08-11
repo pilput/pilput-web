@@ -35,7 +35,7 @@ export default function ContactPage() {
             you.
           </p>
 
-          <div className="bg-card border border-border/60 rounded-xl shadow-premium p-8 glass-card">
+          <div className="bg-card border border-border/60 rounded-xl p-8 glass-card">
             <form className="space-y-6">
               <div>
                 <Label

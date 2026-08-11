@@ -213,7 +213,7 @@ export default function ManageUser() {
         </div>
         <Dialog open={modaluser} onOpenChange={setmodaluser}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shadow-sm shrink-0">
+            <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0">
               <UserPlus className="h-4 w-4" />
               Add new user
             </Button>
@@ -332,7 +332,7 @@ export default function ManageUser() {
 
       {/* KPI Stats cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+        <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
           <div>
             <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Users</span>
             <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">{total}</div>
@@ -342,7 +342,7 @@ export default function ManageUser() {
           </div>
         </div>
 
-        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+        <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
           <div>
             <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Administrators</span>
             <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
@@ -354,7 +354,7 @@ export default function ManageUser() {
           </div>
         </div>
 
-        <div className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
+        <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
           <div>
             <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Standard Users</span>
             <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
@@ -368,7 +368,7 @@ export default function ManageUser() {
       </div>
 
       {/* Main card wrapper for search filters and list */}
-      <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
+      <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
         <CardHeader className="p-5 border-b border-border/60">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative flex-1">
@@ -506,7 +506,7 @@ export default function ManageUser() {
                                 {user.is_super_admin ? (
                                   <Badge
                                     variant="default"
-                                    className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
+                                    className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"
                                   >
                                     Admin
                                   </Badge>

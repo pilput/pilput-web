@@ -23,7 +23,7 @@ export default function CorporateActionDayPanel({
   actions,
 }: CorporateActionDayPanelProps) {
   return (
-    <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
+    <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
         <CardTitle className="text-sm font-semibold">
           {date ? format(parseISO(date), "EEEE, d MMMM yyyy") : "Select a date"}

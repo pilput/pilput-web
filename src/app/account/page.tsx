@@ -152,21 +152,21 @@ export default function AccountPage() {
                 <TabsList className="flex flex-col items-stretch bg-muted/50 p-2 space-y-2 w-full rounded-lg border h-fit">
                   <TabsTrigger
                     value="profile"
-                    className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm hover:bg-muted/80 transition-all"
+                    className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]: hover:bg-muted/80 transition-all"
                   >
                     <UserIcon className="h-4 w-4" />
                     Profile
                   </TabsTrigger>
                   <TabsTrigger
                     value="security"
-                    className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm hover:bg-muted/80 transition-all"
+                    className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]: hover:bg-muted/80 transition-all"
                   >
                     <Shield className="h-4 w-4" />
                     Security
                   </TabsTrigger>
                   <TabsTrigger
                     value="danger"
-                    className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground data-[state=active]:shadow-sm hover:bg-destructive/10 hover:text-destructive transition-all"
+                    className="w-full justify-start gap-3 text-sm font-medium px-4 py-3 rounded-md data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground data-[state=active]: hover:bg-destructive/10 hover:text-destructive transition-all"
                   >
                     <AlertTriangle className="h-4 w-4" />
                     Danger Zone

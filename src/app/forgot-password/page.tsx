@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
         <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-muted/70 to-transparent dark:from-muted/25" />
         <div className="absolute inset-y-0 right-0 hidden w-1/2 border-l border-border/60 bg-muted/25 lg:block" />
         <Link
-          className="fixed left-4 top-4 z-10 flex items-center gap-2 rounded-md border border-border/70 bg-background/85 px-3 py-2 text-sm font-medium shadow-sm backdrop-blur-md transition-colors hover:bg-accent/70 focus:outline-none focus:ring-2 focus:ring-ring sm:left-6 sm:top-6"
+          className="fixed left-4 top-4 z-10 flex items-center gap-2 rounded-md border border-border/70 bg-background/85 px-3 py-2 text-sm font-medium backdrop-blur-md transition-colors hover:bg-accent/70 focus:outline-none focus:ring-2 focus:ring-ring sm:left-6 sm:top-6"
           href="/login"
           aria-label="Back to login page"
         >
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
           <span>Back to login</span>
         </Link>
 
-        <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+        <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 backdrop-blur-xl">
           <CardHeader className="space-y-2 pb-5 text-center">
             <CardTitle className="text-2xl font-bold tracking-tight">
               {isSent ? "Check your email" : "Forgot password?"}

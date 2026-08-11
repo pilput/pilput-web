@@ -96,7 +96,7 @@ const CustomTooltip = ({ active, payload, label, hideValues }: CustomTooltipProp
     if (!point) return null;
 
     return (
-      <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
+      <div className="rounded-lg border bg-background p-2 sm:p-3 text-xs sm:text-sm">
         <div className="space-y-1">
           <div className="font-medium text-foreground">
             {formatMonthLabel(label ?? "")}
@@ -285,7 +285,7 @@ export default function MonthlyHoldingsChart({
   );
 
   return (
-    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden h-full flex flex-col justify-between transition-all duration-300">
+    <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden h-full flex flex-col justify-between transition-all duration-300">
       <CardHeader className="px-4 py-5 sm:px-5 border-b border-border/50">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">

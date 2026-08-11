@@ -63,7 +63,7 @@ export default function HoldingTableRow({
       <TableCell>
         <Badge
           variant="secondary"
-          className={`${getPlatformColor(holding.platform)} rounded-md font-bold uppercase tracking-wider text-[9px] sm:text-[10px] px-2 py-0.5 border shadow-sm`}
+          className={`${getPlatformColor(holding.platform)} rounded-md font-bold uppercase tracking-wider text-[9px] sm:text-[10px] px-2 py-0.5 border `}
         >
           {holding.platform}
         </Badge>
@@ -74,7 +74,7 @@ export default function HoldingTableRow({
             variant="secondary"
             className={cn(
               getHoldingTypeColor(holding.holding_type.name),
-              "rounded-md font-semibold tracking-wide text-[9px] sm:text-[10px] px-2 py-0.5 border shadow-sm"
+              "rounded-md font-semibold tracking-wide text-[9px] sm:text-[10px] px-2 py-0.5 border "
             )}
           >
             {holding.holding_type.name}

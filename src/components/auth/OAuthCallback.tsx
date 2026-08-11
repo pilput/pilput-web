@@ -122,7 +122,7 @@ export function OAuthCallback() {
 
   if (status === "error") {
     return (
-      <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20">
+      <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 backdrop-blur-xl">
         <CardHeader className="space-y-2 pb-5 text-center">
           <CardTitle className="text-2xl font-bold tracking-tight text-destructive">
             Authentication Failed
@@ -150,7 +150,7 @@ export function OAuthCallback() {
   }
 
   return (
-    <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 p-8 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/20 glass-card">
+    <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 p-8 backdrop-blur-xl glass-card">
       <CardContent className="flex flex-col items-center justify-center gap-6 pt-6 text-center">
         <div className="relative flex items-center justify-center">
           <div className="absolute h-16 w-16 animate-ping rounded-full bg-primary/20 duration-1000" />

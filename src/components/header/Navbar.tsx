@@ -58,7 +58,7 @@ const Navbar = () => {
                         className={cn(
                           "px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer border border-transparent",
                           active
-                            ? "bg-primary/8 text-primary ring-1 ring-primary/10 shadow-xs"
+                            ? "bg-primary/8 text-primary ring-1 ring-primary/10 "
                             : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                         )}
                       >
@@ -81,7 +81,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={toggleMenu}
-            className="md:hidden rounded-xl border border-border/50 bg-background/80 p-2 shadow-xs transition-colors hover:bg-muted/65 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0 cursor-pointer"
+            className="md:hidden rounded-xl border border-border/50 bg-background/80 p-2 transition-colors hover:bg-muted/65 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0 cursor-pointer"
             aria-label={showmenu ? "Close menu" : "Open menu"}
             aria-expanded={showmenu}
           >

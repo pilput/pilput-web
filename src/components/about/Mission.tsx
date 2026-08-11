@@ -118,7 +118,7 @@ const MissionSection = () => {
         >
           <motion.div
             variants={itemVariants}
-            className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-50/50 via-background to-orange-50/30 dark:from-amber-950/20 dark:via-background dark:to-orange-950/10 border border-border/50 shadow-xl"
+            className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-50/50 via-background to-orange-50/30 dark:from-amber-950/20 dark:via-background dark:to-orange-950/10 border border-border/50"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               {/* Text Content */}
@@ -217,10 +217,10 @@ const MissionSection = () => {
               initial="rest"
               whileHover="hover"
             >
-              <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl px-8 h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl px-8 h-full transition- duration-300">
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-linear-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-12 h-12 bg-linear-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
                       <Sparkles className="h-6 w-6 text-primary" />
                     </div>
                     <div>
@@ -251,10 +251,10 @@ const MissionSection = () => {
               initial="rest"
               whileHover="hover"
             >
-              <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl px-8 h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl px-8 h-full transition- duration-300">
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 bg-linear-to-br from-secondary/20 to-purple/20 rounded-full flex items-center justify-center shadow-md">
+                    <div className="w-12 h-12 bg-linear-to-br from-secondary/20 to-purple/20 rounded-full flex items-center justify-center">
                       <Target className="h-6 w-6 text-secondary" />
                     </div>
                     <div>
@@ -300,10 +300,10 @@ const MissionSection = () => {
                   initial="rest"
                   whileHover="hover"
                 >
-                  <Card className={`bg-card/30 backdrop-blur-sm border-border/30 rounded-xl group-hover:bg-card/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 ${colors.border}`}>
+                  <Card className={`bg-card/30 backdrop-blur-sm border-border/30 rounded-xl group-hover:bg-card/50 transition-all duration-300   ${colors.border}`}>
                     <CardContent className="text-center space-y-4">
                       <motion.div
-                        className={`w-16 h-16 bg-linear-to-br ${colors.bg} rounded-full flex items-center justify-center mx-auto group-hover:bg-primary/10 transition-colors shadow-md`}
+                        className={`w-16 h-16 bg-linear-to-br ${colors.bg} rounded-full flex items-center justify-center mx-auto group-hover:bg-primary/10 transition-colors `}
                         whileHover={{ scale: 1.1 }}
                         transition={{ type: "spring" as const, stiffness: 300 }}
                       >
@@ -325,7 +325,7 @@ const MissionSection = () => {
           viewport={{ once: true, amount: 0.1 }}
           variants={itemVariants}
         >
-          <div className="bg-linear-to-r from-primary/10 via-secondary/10 to-purple/10 rounded-3xl p-12 backdrop-blur-sm border border-border/50 shadow-xl">
+          <div className="bg-linear-to-r from-primary/10 via-secondary/10 to-purple/10 rounded-3xl p-12 backdrop-blur-sm border border-border/50">
             <motion.h3
               className="text-3xl md:text-4xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent mb-6"
               initial={{ opacity: 0, y: 20 }}
@@ -352,7 +352,7 @@ const MissionSection = () => {
               <Button
                 asChild
                 size="lg"
-                className="bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-primary/25"
+                className="bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-6 rounded-full transition-all duration-300 hover:scale-105"
               >
                 <Link href="/register">
                   <Users className="mr-2 h-5 w-5" />

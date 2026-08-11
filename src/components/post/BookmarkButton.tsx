@@ -245,7 +245,7 @@ export default function BookmarkButton({
                 disabled={showSpinner}
                 onClick={() => void onClick()}
                 className={cn(
-                  "inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border/80 bg-background px-3 text-sm font-medium text-muted-foreground shadow-sm transition-colors",
+                  "inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border/80 bg-background px-3 text-sm font-medium text-muted-foreground  transition-colors",
                   "hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-50",
                   isBookmarked && "border-primary/40 text-primary",
                   className,

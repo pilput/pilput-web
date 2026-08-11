@@ -50,7 +50,7 @@ const BlogPosts = ({
           className={
             isFeed
               ? "flex flex-wrap items-center gap-3 border-b border-border/60 pb-4"
-              : "flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5 shadow-md backdrop-blur-md"
+              : "flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5  backdrop-blur-md"
           }
         >
           <div className="flex items-center gap-2 text-sm text-foreground font-bold">

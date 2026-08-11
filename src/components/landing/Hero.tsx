@@ -141,7 +141,7 @@ const Hero = () => {
           <div className="landing-reveal">
             <Badge
               variant="outline"
-              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 animate-pulse-slow cursor-default shadow-xs"
+              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 animate-pulse-slow cursor-default"
             >
               <Sparkles className="mr-2 h-3.5 w-3.5" />
               Built for focused publishing
@@ -166,7 +166,7 @@ const Hero = () => {
             <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold shadow-md shadow-primary/10 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/20 hover:brightness-105 transition-all duration-300 sm:min-w-48 cursor-pointer border-0"
+                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold bg-gradient-to-r from-primary to-primary/90 text-primary-foreground hover:brightness-105 transition-all duration-300 sm:min-w-48 cursor-pointer border-0"
               >
                 <PenLine className="mr-2 h-4 w-4" />
                 Start writing
@@ -178,7 +178,7 @@ const Hero = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-12 w-full rounded-xl border-border/80 bg-background/55 px-6 text-sm font-semibold backdrop-blur-md hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer shadow-xs"
+                className="h-12 w-full rounded-xl border-border/80 bg-background/55 px-6 text-sm font-semibold backdrop-blur-md hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer"
               >
                 <BookOpenText className="mr-2 h-4 w-4" />
                 Read articles
@@ -191,7 +191,7 @@ const Hero = () => {
             <div className="absolute -top-12 -left-12 w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-blob-float pointer-events-none" />
             <div className="absolute -bottom-12 -right-12 w-72 h-72 rounded-full bg-purple-500/25 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-8s" }} />
 
-            <div className="overflow-hidden rounded-2xl border border-border/45 bg-card/85 text-left shadow-premium backdrop-blur-xl relative z-10 transition-all duration-500 border-glow-hover">
+            <div className="overflow-hidden rounded-2xl border border-border/45 bg-card/85 text-left backdrop-blur-xl relative z-10 transition-all duration-500 border-glow-hover">
               <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3.5 bg-muted/20 select-none">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
@@ -398,7 +398,7 @@ const Hero = () => {
                             )}
                           >
                             {articlesData[selectedTag].highlight}
-                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 hidden group-hover/hl:flex items-center gap-1.5 bg-card text-foreground border border-border rounded-lg px-2.5 py-1.5 shadow-lg z-30 whitespace-nowrap text-[11px] transition-all">
+                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 hidden group-hover/hl:flex items-center gap-1.5 bg-card text-foreground border border-border rounded-lg px-2.5 py-1.5 z-30 whitespace-nowrap text-[11px] transition-all">
                               <span className="font-bold text-primary">
                                 Bold
                               </span>
@@ -453,7 +453,7 @@ const Hero = () => {
                           className={cn(
                             "rounded-full px-3 py-1 text-[10px] font-bold transition-all cursor-pointer border",
                             selectedTag === tag
-                              ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                              ? "bg-primary text-primary-foreground border-primary "
                               : "bg-primary/5 border-primary/10 text-primary hover:bg-primary/15"
                           )}
                         >
@@ -471,7 +471,7 @@ const Hero = () => {
                     {trustItems.map((item) => (
                       <div
                         key={item.title}
-                        className="flex gap-3.5 rounded-xl border border-border/40 bg-background/50 p-4 shadow-sm hover:border-primary/30 hover:bg-background/80 hover:shadow-premium transition-all duration-300"
+                        className="flex gap-3.5 rounded-xl border border-border/40 bg-background/50 p-4 hover:border-primary/30 hover:bg-background/80 transition-all duration-300"
                       >
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300">
                           <item.icon className="h-4.5 w-4.5" />

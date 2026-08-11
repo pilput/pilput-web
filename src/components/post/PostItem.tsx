@@ -20,7 +20,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
 
   return (
     <Link href={href} className="block h-full">
-      <Card className="group flex h-full flex-col overflow-hidden border-border/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
+      <Card className="group flex h-full flex-col overflow-hidden border-border/70 bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25">
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">

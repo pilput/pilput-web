@@ -46,7 +46,7 @@ export default function PostViewsChart() {
   }, [analytics])
 
   return (
-    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
+    <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b border-border/50 py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle className="text-xl font-bold flex items-center justify-center sm:justify-start gap-2">
@@ -169,7 +169,7 @@ export default function PostViewsChart() {
                     }) : "";
                     
                     return (
-                      <div className="rounded-lg border bg-background p-3 shadow-md text-xs sm:text-sm">
+                      <div className="rounded-lg border bg-background p-3 text-xs sm:text-sm">
                         <p className="font-semibold mb-1 text-muted-foreground">{formattedDate}</p>
                         <div className="space-y-1">
                           <div className="flex justify-between items-center gap-6">

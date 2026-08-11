@@ -70,7 +70,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="group relative bg-card hover:bg-card/80 border border-border hover:border-primary/20 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg"
+              className="group relative bg-card hover:bg-card/80 border border-border hover:border-primary/20 rounded-xl overflow-hidden transition-all duration-300"
             >
               <Link href={`/${userUsername}/${post.slug || ""}`} className="block h-full flex-col">
                 <div className="relative aspect-video overflow-hidden">
@@ -81,7 +81,7 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-2 left-2 flex gap-1">
-                     <span className="bg-background/90 backdrop-blur text-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-border/50 shadow-sm flex items-center gap-1">
+                     <span className="bg-background/90 backdrop-blur text-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-border/50 flex items-center gap-1">
                        <Sparkles className="w-3 h-3 text-primary" />
                        Trending
                      </span>

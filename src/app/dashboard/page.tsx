@@ -105,7 +105,7 @@ function Page() {
   return (
     <div className="flex flex-col gap-6 md:gap-8">
       {/* Welcome Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-muted/40 p-6 shadow-sm border border-border/40">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-muted/40 p-6 border border-border/40">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-12 translate-x-12 pointer-events-none" />
         <div className="relative z-10 flex flex-col gap-2">
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
@@ -128,7 +128,7 @@ function Page() {
           const Icon = kpi.icon;
           return (
             <motion.div key={idx} variants={cardVariants}>
-              <div className="relative overflow-hidden glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl transition-all duration-300 group h-full flex flex-col justify-between p-5">
+              <div className="relative overflow-hidden glass-card border-glow-hover rounded-2xl transition-all duration-300 group h-full flex flex-col justify-between p-5">
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">
                     {kpi.title}

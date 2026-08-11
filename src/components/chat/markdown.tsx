@@ -206,7 +206,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
           // Customize blockquotes
           blockquote: ({ children, ...props }: BlockquoteProps) => {
             return (
-              <blockquote className="border-l-4 border-primary/50 bg-muted/30 pl-4 py-2 my-3 italic rounded-md shadow-sm transition-shadow hover:shadow-md">
+              <blockquote className="border-l-4 border-primary/50 bg-muted/30 pl-4 py-2 my-3 italic rounded-md transition-">
                 {children}
               </blockquote>
             );
@@ -214,7 +214,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
           // Customize tables
           table: ({ children, ...props }: TableProps) => {
             return (
-              <div className="my-6 overflow-x-auto rounded-lg border border-muted-foreground/10 shadow-sm">
+              <div className="my-6 overflow-x-auto rounded-lg border border-muted-foreground/10">
                 <table className="w-full border-collapse text-sm">
                   {children}
                 </table>
@@ -249,7 +249,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
           img: (props: ImageProps) => {
             const { alt, src, className = "", ...rest } = props;
             return (
-              <div className="my-6 overflow-hidden rounded-xl border border-muted-foreground/10 shadow-md bg-background/80">
+              <div className="my-6 overflow-hidden rounded-xl border border-muted-foreground/10 bg-background/80">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}

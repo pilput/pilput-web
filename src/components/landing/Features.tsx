@@ -129,7 +129,7 @@ const Features = () => {
               <article
                 className={cn(
                   "group relative h-[350px] w-full overflow-hidden rounded-2xl",
-                  "glass-card border-glow-hover shadow-premium hover:shadow-premium-hover",
+                  "glass-card border-glow-hover  ",
                   "transition-all duration-500 ease-out hover:-translate-y-1.5"
                 )}
               >
@@ -147,7 +147,7 @@ const Features = () => {
                     <div className="flex items-center justify-between mb-6">
                       <div
                         className={cn(
-                          "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-xs border",
+                          "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3  border",
                           feature.accentColor
                         )}
                       >

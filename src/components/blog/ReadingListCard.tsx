@@ -22,7 +22,7 @@ export default function ReadingListCard() {
   const showCount = getToken() && loaded && count > 0;
 
   return (
-    <Card className="glass-card shadow-premium border-glow-hover bg-card/90 transition-all duration-300 py-0">
+    <Card className="glass-card border-glow-hover bg-card/90 transition-all duration-300 py-0">
       <CardContent className="p-5">
         <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
           <Bookmark className="w-5 h-5 text-primary fill-primary/10" />
@@ -42,7 +42,7 @@ export default function ReadingListCard() {
               ? "/bookmarks"
               : `/login?redirect=${encodeURIComponent("/bookmarks")}`
           }
-          className="block w-full text-center px-4 py-2 rounded-lg border border-primary/60 bg-primary text-primary-foreground hover:shadow-md transition-colors text-sm font-medium cursor-pointer"
+          className="block w-full text-center px-4 py-2 rounded-lg border border-primary/60 bg-primary text-primary-foreground transition-colors text-sm font-medium cursor-pointer"
         >
           {getToken() ? "Open reading list" : "Sign in to save posts"}
         </Link>

@@ -56,7 +56,7 @@ export function LikeDetailDefaultButton({
             disabled={busy}
             onClick={(e) => void onToggle(e)}
             className={cn(
-              "inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border/80 bg-background px-3 text-sm font-medium shadow-sm transition-colors",
+              "inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-border/80 bg-background px-3 text-sm font-medium  transition-colors",
               "disabled:pointer-events-none disabled:opacity-50 hover:bg-muted hover:text-foreground",
               liked ? "border-red-500/30 text-red-500" : "text-muted-foreground",
               className,

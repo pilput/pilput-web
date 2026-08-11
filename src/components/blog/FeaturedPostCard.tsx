@@ -31,7 +31,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
 
   return (
     <motion.article
-      className="group relative glass-card border-glow-hover rounded-3xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-350 bg-card/40 backdrop-blur-md"
+      className="group relative glass-card border-glow-hover rounded-3xl overflow-hidden transition-all duration-350 bg-card/40 backdrop-blur-md"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -50,7 +50,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
               priority
             />
             <div className="absolute top-3 left-3 z-10 flex gap-2">
-              <span className="bg-primary text-primary-foreground text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5 uppercase">
+              <span className="bg-primary text-primary-foreground text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-full flex items-center gap-1.5 uppercase">
                 <Sparkles className="w-3 h-3 fill-current" />
                 Featured Story
               </span>
@@ -64,7 +64,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
             {/* Author Info */}
             <div className="flex items-center gap-2.5">
               <Link href={`/${post.user?.username || "anonymous"}`}>
-                <Avatar className="h-8 w-8 border border-primary/20 shadow-xs hover:scale-105 transition-transform">
+                <Avatar className="h-8 w-8 border border-primary/20 hover:scale-105 transition-transform">
                   <AvatarImage
                     src={getProfilePicture(post.user?.image || "")}
                     alt={post.user?.username || "Author"}

@@ -89,7 +89,7 @@ export default function Posts() {
           </p>
         </div>
         <Link href="/dashboard/posts/create" className="w-full sm:w-auto">
-          <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shadow-sm">
+          <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold">
             <Plus className="h-4 w-4" />
             Add new post
           </Button>
@@ -97,7 +97,7 @@ export default function Posts() {
       </div>
 
       {/* Main Card Wrapper */}
-      <Card className="glass-card border-glow-hover shadow-premium rounded-2xl overflow-hidden transition-all duration-300">
+      <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
         <CardHeader className="p-5 border-b border-border/60">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <div className="relative flex-1">
@@ -172,7 +172,7 @@ export default function Posts() {
                         {post.published ? (
                           <Badge
                             variant="default"
-                            className="border-0 bg-emerald-600 text-white shadow-sm dark:bg-emerald-500"
+                            className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"
                           >
                             Published
                           </Badge>

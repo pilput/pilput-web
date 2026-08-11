@@ -77,7 +77,7 @@ export default function OverviewChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload as (typeof chartData)[number]
       return (
-        <div className="rounded-lg border bg-popover p-2 shadow-md text-popover-foreground">
+        <div className="rounded-lg border bg-popover p-2 text-popover-foreground">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               {data.name}
@@ -122,7 +122,7 @@ export default function OverviewChart({
   )
 
   return (
-    <Card className="flex flex-col glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
+    <Card className="flex flex-col glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="px-4 pb-3 pt-4 sm:px-5">
         <CardTitle className="text-sm font-semibold">Asset Allocation</CardTitle>
         <CardDescription className="text-xs">

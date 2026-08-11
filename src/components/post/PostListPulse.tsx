@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const PostListPulse = () => {
   return (
-    <Card className="h-full border-border/70 bg-card shadow-sm flex flex-col overflow-hidden">
+    <Card className="h-full border-border/70 bg-card flex flex-col overflow-hidden">
       {/* Cover Image placeholder (16/9 aspect ratio) */}
       <Skeleton className="relative w-full aspect-video rounded-none" />
 

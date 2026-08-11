@@ -81,7 +81,7 @@ const AboutContent = () => {
 
             <motion.h1
               variants={itemVariants}
-              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 bg-linear-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent drop-shadow-sm"
+              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 bg-linear-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent"
             >
               About <span className="font-extrabold text-primary">pilput</span>
             </motion.h1>
@@ -98,7 +98,7 @@ const AboutContent = () => {
             variants={itemVariants}
             className="max-w-4xl mx-auto text-center mb-12"
           >
-            <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 hover:bg-card/60 transition-all duration-300 group shadow-lg hover:shadow-primary/10">
+            <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 hover:bg-card/60 transition-all duration-300 group">
               <motion.p 
                 className="text-lg md:text-xl text-foreground/90 leading-relaxed mb-6"
                 initial={{ opacity: 0, y: 20 }}
@@ -126,7 +126,7 @@ const AboutContent = () => {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16"
           >
             <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:shadow-lg hover:shadow-yellow-500/10 hover:border-yellow-500/20"
+              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-yellow-500/20"
               whileHover={{ y: -4 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -142,7 +142,7 @@ const AboutContent = () => {
             </motion.div>
 
             <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/20"
+              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-blue-500/20"
               whileHover={{ y: -4 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -158,7 +158,7 @@ const AboutContent = () => {
             </motion.div>
 
             <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:shadow-lg hover:shadow-green-500/10 hover:border-green-500/20"
+              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-green-500/20"
               whileHover={{ y: -4 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -174,7 +174,7 @@ const AboutContent = () => {
             </motion.div>
 
             <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/20"
+              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-purple-500/20"
               whileHover={{ y: -4 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -198,7 +198,7 @@ const AboutContent = () => {
               <Button
                 asChild
                 size="lg"
-                className="bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white px-8 py-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/25 text-lg font-semibold"
+                className="bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white px-8 py-6 rounded-full transition-all duration-300 text-lg font-semibold"
                 aria-label="Explore the blog section"
               >
                 <Link href="/blog" className="flex items-center">
@@ -212,7 +212,7 @@ const AboutContent = () => {
                 variant="outline"
                 asChild
                 size="lg"
-                className="border-2 border-border hover:border-primary/50 hover:bg-primary/5 px-8 py-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-lg font-semibold"
+                className="border-2 border-border hover:border-primary/50 hover:bg-primary/5 px-8 py-6 rounded-full transition-all duration-300 text-lg font-semibold"
                 aria-label="Register for a new account"
               >
                 <Link href="/register" className="flex items-center">

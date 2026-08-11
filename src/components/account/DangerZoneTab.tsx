@@ -9,7 +9,7 @@ interface DangerZoneTabProps {
 
 export default function DangerZoneTab({ onDeleteAccount }: DangerZoneTabProps) {
   return (
-    <Card className="bg-background/80 backdrop-blur-md border border-red-200/50 dark:border-red-800/50 shadow-lg">
+    <Card className="bg-background/80 backdrop-blur-md border border-red-200/50 dark:border-red-800/50">
       <CardHeader>
         <CardTitle className="text-xl text-red-600 dark:text-red-400">Danger Zone</CardTitle>
         <CardDescription className="text-muted-foreground">

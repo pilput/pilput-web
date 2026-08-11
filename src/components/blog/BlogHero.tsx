@@ -27,7 +27,7 @@ const BlogHero = ({
       <div className="absolute inset-0 bg-grid-slate-100/[0.08] dark:bg-grid-slate-800/[0.1] bg-size-[32px_32px]" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
         <div className="text-center mb-6 space-y-2">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-2.5 py-0.5 text-[11px] font-semibold border border-primary/20 shadow-xs">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-2.5 py-0.5 text-[11px] font-semibold border border-primary/20">
             <Sparkles className="w-3.5 h-3.5" />
             Freshly curated for you
           </div>
@@ -40,7 +40,7 @@ const BlogHero = ({
         </div>
         {/* Search Bar */}
         <div className="max-w-xl mx-auto">
-          <div className="relative group shadow-md shadow-primary/5 rounded-full border border-border/70 bg-card/85 backdrop-blur-sm">
+          <div className="relative group rounded-full border border-border/70 bg-card/85 backdrop-blur-sm">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4.5 h-4.5" />
             <input
               type="text"

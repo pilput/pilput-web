@@ -152,7 +152,7 @@ const TagsPage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {sortedTags.map((tag) => (
                 <Link key={tag.id} href={`/tags/${encodeURIComponent(tag.name)}`}>
-                  <Card className="glass-card border-border/60 hover:shadow-premium hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
+                  <Card className="glass-card border-border/60 hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2">
@@ -212,7 +212,7 @@ const TagsPage = () => {
           {/* Popular Tags Section */}
           {!searchTerm && sortedTags.length > 0 && (
             <div className="mt-12">
-              <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
+              <Card className="glass-card border-glow-hover bg-card/90 py-0">
                 <CardContent className="p-5">
                   <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-primary" />

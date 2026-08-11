@@ -90,7 +90,7 @@ const highlights = [
       <div className="flex items-center justify-between w-full opacity-60 group-hover:opacity-90 transition-opacity duration-300 select-none">
         <div className="flex -space-x-1.5 overflow-hidden">
           {["from-rose-500 to-pink-500", "from-blue-500 to-indigo-500", "from-emerald-500 to-teal-500"].map((gradient, i) => (
-            <div key={i} className={cn("inline-block h-5 w-5 rounded-full border border-background bg-gradient-to-tr shadow-xs", gradient)} />
+            <div key={i} className={cn("inline-block h-5 w-5 rounded-full border border-background bg-gradient-to-tr ", gradient)} />
           ))}
           <div className="inline-block h-5 w-5 rounded-full border border-background bg-muted flex items-center justify-center text-[6px] font-black text-muted-foreground">
             +12
@@ -117,7 +117,7 @@ const Highlights = () => {
           <div className="inline-flex items-center landing-reveal">
             <Badge
               variant="outline"
-              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 shadow-xs cursor-default"
+              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 cursor-default"
             >
               <Sparkles className="w-3.5 h-3.5 mr-2 animate-pulse-slow" />
               Core workflow
@@ -141,7 +141,7 @@ const Highlights = () => {
             return (
               <div
                 key={item.id}
-                className="group relative overflow-hidden rounded-3xl border border-border/30 bg-card/45 backdrop-blur-md p-8 sm:p-10 transition-all duration-500 hover:-translate-y-1 hover:shadow-premium border-glow-hover flex flex-col justify-between min-h-[340px] landing-reveal"
+                className="group relative overflow-hidden rounded-3xl border border-border/30 bg-card/45 backdrop-blur-md p-8 sm:p-10 transition-all duration-500 hover:-translate-y-1 border-glow-hover flex flex-col justify-between min-h-[340px] landing-reveal"
               >
                 {/* Soft glow background */}
                 <div className={cn("absolute inset-0 bg-linear-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none", item.gradient)} />
@@ -149,7 +149,7 @@ const Highlights = () => {
                 <div>
                   {/* Top row */}
                   <div className="flex justify-between items-center mb-8 relative z-10">
-                    <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center border shadow-xs transition-colors", item.colorClass)}>
+                    <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center border  transition-colors", item.colorClass)}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <span className="text-[10px] font-mono font-bold tracking-widest text-muted-foreground/40 group-hover:text-muted-foreground/80 transition-colors">

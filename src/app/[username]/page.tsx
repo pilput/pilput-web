@@ -111,13 +111,13 @@ export default async function page(props: {
         <div className="border-b border-border/60 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_30%),linear-gradient(180deg,var(--background),color-mix(in_oklab,var(--muted)_35%,transparent))]">
           <div className="mx-auto max-w-7xl px-4 pt-3 pb-8 sm:px-6 sm:pt-4 sm:pb-12 lg:px-8">
             <div className="mx-auto max-w-5xl">
-              <Card className="overflow-hidden border-border/70 bg-card/90 py-0 shadow-sm backdrop-blur">
+              <Card className="overflow-hidden border-border/70 bg-card/90 py-0 backdrop-blur">
                 <CardHeader className="relative border-b border-border/60 p-0">
                   <div className="h-24 bg-linear-to-r from-primary/20 via-chart-2/15 to-chart-4/15 sm:h-32" />
                   <div className="px-5 pb-6 sm:px-8 sm:pb-8">
                     <div className="-mt-10 flex flex-col gap-5 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
                       <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end">
-                        <Avatar className="h-24 w-24 shrink-0 border-4 border-card bg-card shadow-md sm:h-28 sm:w-28">
+                        <Avatar className="h-24 w-24 shrink-0 border-4 border-card bg-card sm:h-28 sm:w-28">
                           <AvatarImage
                             src={
                               writer.image

@@ -43,7 +43,7 @@ const CallToAction = () => {
             </div>
           </div>
 
-          <div className="rounded-lg border border-border/70 bg-background p-5 shadow-sm landing-reveal landing-delay-2">
+          <div className="rounded-lg border border-border/70 bg-background p-5 landing-reveal landing-delay-2">
             <div className="rounded-md border border-border/70 bg-card p-4">
               <div className="mb-5 flex items-center gap-3 border-b border-border/60 pb-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
@@ -63,7 +63,7 @@ const CallToAction = () => {
                 <Link href="/register" className="block">
                   <Button
                     size="lg"
-                    className="group h-12 w-full rounded-md text-sm font-semibold shadow-md shadow-primary/15"
+                    className="group h-12 w-full rounded-md text-sm font-semibold"
                   >
                     Start writing
                     <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />

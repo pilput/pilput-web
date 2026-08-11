@@ -210,7 +210,7 @@ export default function BookmarksClient() {
   if (!getToken()) {
     return (
       <div className="flex-1 w-full flex flex-col items-center justify-center max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="relative p-8 w-full border border-border/70 bg-card/90 shadow-xl rounded-2xl backdrop-blur-md overflow-hidden">
+        <div className="relative p-8 w-full border border-border/70 bg-card/90 rounded-2xl backdrop-blur-md overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 space-y-5">
             <div className="mx-auto w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
@@ -221,7 +221,7 @@ export default function BookmarksClient() {
               Keep track of articles, thoughts, and stories you want to read later. Sign in to save posts to your private library.
             </p>
             <div className="pt-2">
-              <Button asChild className="w-full sm:w-auto px-8 py-5 shadow-md shadow-primary/15 font-semibold cursor-pointer">
+              <Button asChild className="w-full sm:w-auto px-8 py-5 font-semibold cursor-pointer">
                 <Link href={`/login?redirect=${encodeURIComponent("/bookmarks")}`}>
                   Sign in to Pilput
                 </Link>
@@ -292,7 +292,7 @@ export default function BookmarksClient() {
         {/* Dialog for folder creation */}
         <Dialog open={folderOpen} onOpenChange={setFolderOpen}>
           <DialogTrigger asChild>
-            <Button className="shrink-0 cursor-pointer shadow-md font-semibold gap-1.5 self-start md:self-auto">
+            <Button className="shrink-0 cursor-pointer font-semibold gap-1.5 self-start md:self-auto">
               <FolderPlus className="w-4 h-4" />
               New Folder
             </Button>
@@ -347,7 +347,7 @@ export default function BookmarksClient() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
         {/* SIDEBAR: Folder Manager */}
-        <Card className="col-span-1 border border-border/70 shadow-sm bg-card/90 p-4 shrink-0">
+        <Card className="col-span-1 border border-border/70 bg-card/90 p-4 shrink-0">
           <div className="flex items-center justify-between pb-3.5 mb-3 border-b border-border/50">
             <h3 className="font-bold text-sm tracking-wide text-foreground/80 uppercase">
               Folders
@@ -362,7 +362,7 @@ export default function BookmarksClient() {
               className={cn(
                 "flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-all border text-sm",
                 selectedFolderId === "all"
-                  ? "bg-primary/10 border-primary/20 text-primary font-bold shadow-xs"
+                  ? "bg-primary/10 border-primary/20 text-primary font-bold "
                   : "border-transparent hover:bg-muted/60 text-muted-foreground hover:text-foreground"
               )}
             >
@@ -386,7 +386,7 @@ export default function BookmarksClient() {
               className={cn(
                 "flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-all border text-sm",
                 selectedFolderId === "uncategorized"
-                  ? "bg-primary/10 border-primary/20 text-primary font-bold shadow-xs"
+                  ? "bg-primary/10 border-primary/20 text-primary font-bold "
                   : "border-transparent hover:bg-muted/60 text-muted-foreground hover:text-foreground"
               )}
             >
@@ -414,7 +414,7 @@ export default function BookmarksClient() {
                     className={cn(
                       "group flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-all border text-sm",
                       selectedFolderId === f.id
-                        ? "bg-primary/10 border-primary/20 text-primary font-bold shadow-xs"
+                        ? "bg-primary/10 border-primary/20 text-primary font-bold "
                         : "border-transparent hover:bg-muted/60 text-muted-foreground hover:text-foreground"
                     )}
                   >
@@ -480,7 +480,7 @@ export default function BookmarksClient() {
         {/* MAIN PANEL: Bookmarks list */}
         <div className="col-span-1 md:col-span-3 flex flex-col gap-4">
           {/* Active Folder Header details & Search bar */}
-          <Card className="border border-border/70 p-5 bg-card/90 shadow-sm">
+          <Card className="border border-border/70 p-5 bg-card/90">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
               <div>
                 <h2 className="text-xl font-bold text-foreground">
@@ -497,7 +497,7 @@ export default function BookmarksClient() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 text-xs cursor-pointer shadow-xs"
+                    className="h-8 text-xs cursor-pointer"
                     onClick={() => {
                       setEditingFolder(currentFolder);
                       setEditFolderName(currentFolder.name);
@@ -589,7 +589,7 @@ export default function BookmarksClient() {
                       transition={{ duration: 0.25, ease: "easeOut" }}
                       layout
                     >
-                      <Card className="group overflow-hidden border-border/70 hover:border-primary/25 bg-card/90 shadow-sm hover:shadow-md transition-all duration-300">
+                      <Card className="group overflow-hidden border-border/70 hover:border-primary/25 bg-card/90 transition-all duration-300">
                         <CardContent className="p-0">
                           <div className="flex flex-col sm:flex-row sm:items-stretch">
                             {post.photo_url ? (
@@ -686,7 +686,7 @@ export default function BookmarksClient() {
 
                               <div className="flex flex-wrap items-center justify-between gap-4 pt-3.5 border-t border-border/40">
                                 <div className="flex items-center gap-2">
-                                  <Button variant="outline" size="sm" asChild className="h-8 text-xs font-semibold cursor-pointer shadow-xs">
+                                  <Button variant="outline" size="sm" asChild className="h-8 text-xs font-semibold cursor-pointer">
                                     <Link href={href} className="inline-flex items-center">
                                       Read post
                                       <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -735,7 +735,7 @@ export default function BookmarksClient() {
                                       )
                                     }
                                   >
-                                    <SelectTrigger className="h-8 text-xs font-semibold w-[140px] shadow-2xs border-border/80">
+                                    <SelectTrigger className="h-8 text-xs font-semibold w-[140px] border-border/80">
                                       <SelectValue placeholder="Move folder..." />
                                     </SelectTrigger>
                                     <SelectContent align="end">

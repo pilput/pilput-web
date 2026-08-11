@@ -25,7 +25,7 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
 
   return (
     <motion.article
-      className="group flex flex-col h-full relative glass-card border-glow-hover rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-350 bg-card/30 backdrop-blur-sm"
+      className="group flex flex-col h-full relative glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350 bg-card/30 backdrop-blur-sm"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -50,7 +50,7 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
           {/* Author Info */}
           <div className="flex items-center gap-2.5">
             <Link href={`/${post.user?.username || "anonymous"}`}>
-              <Avatar className="h-7 w-7 border border-primary/10 shadow-xs hover:scale-105 transition-transform">
+              <Avatar className="h-7 w-7 border border-primary/10 hover:scale-105 transition-transform">
                 <AvatarImage
                   src={getProfilePicture(post.user?.image || "")}
                   alt={post.user?.username || "Author"}

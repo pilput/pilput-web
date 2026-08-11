@@ -120,12 +120,12 @@ export default function TagContent({
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1 bg-card border border-border/70 rounded-xl p-1 shadow-xs">
+                <div className="flex items-center gap-1 bg-card border border-border/70 rounded-xl p-1">
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-lg transition-all duration-200 ${
                       viewMode === "grid"
-                        ? "bg-primary text-primary-foreground shadow-xs"
+                        ? "bg-primary text-primary-foreground "
                         : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                     aria-label="Grid view"
@@ -136,7 +136,7 @@ export default function TagContent({
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-lg transition-all duration-200 ${
                       viewMode === "list"
-                        ? "bg-primary text-primary-foreground shadow-xs"
+                        ? "bg-primary text-primary-foreground "
                         : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                     aria-label="List view"
@@ -174,7 +174,7 @@ export default function TagContent({
                   </p>
                   <Link
                     href="/blog"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity font-semibold shadow-xs"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity font-semibold"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     Browse All Posts
@@ -211,7 +211,7 @@ export default function TagContent({
           <div className="lg:w-80 shrink-0">
             <div className="sticky top-24 space-y-6">
               {/* Tag Stats */}
-              <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
+              <Card className="glass-card border-glow-hover bg-card/90 py-0">
                 <CardContent className="p-5">
                   <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                     <Eye className="w-5 h-5 text-primary" />
@@ -240,7 +240,7 @@ export default function TagContent({
 
               {/* Related Tags */}
               {relatedTags.length > 0 && (
-                <Card className="glass-card shadow-premium border-glow-hover bg-card/90 py-0">
+                <Card className="glass-card border-glow-hover bg-card/90 py-0">
                   <CardContent className="p-5">
                     <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-primary" />

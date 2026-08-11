@@ -28,7 +28,7 @@ export default function HoldingHeader({
   return (
     <div className="min-w-0 flex-1">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 flex items-center justify-center ring-1 ring-primary/10 shadow-sm">
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 flex items-center justify-center ring-1 ring-primary/10">
           <PieChart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
         <div className="min-w-0">

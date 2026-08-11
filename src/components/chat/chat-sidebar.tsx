@@ -225,7 +225,7 @@ export function ChatSidebar() {
             {/* Expanded */}
             <Button
               asChild
-              className="w-full justify-start gap-2 h-9 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm group-data-[collapsible=icon]:hidden"
+              className="w-full justify-start gap-2 h-9 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 group-data-[collapsible=icon]:hidden"
             >
               <Link href="/chat" title="New Chat">
                 <Plus className="h-4 w-4 shrink-0" />
@@ -238,7 +238,7 @@ export function ChatSidebar() {
               <Button
                 asChild
                 size="icon"
-                className="h-8 w-8 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                className="h-8 w-8 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                 title="New Chat"
               >
                 <Link href="/chat">

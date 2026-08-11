@@ -254,7 +254,7 @@ export default async function Page(props: {
 
             {/* Featured Image — standard post image inside the column */}
             {post.photo_url && (
-              <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 border border-border shadow-xs">
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 border border-border">
                 <Image
                   src={getUrlImage(post.photo_url)}
                   alt={post.title || "Cover"}

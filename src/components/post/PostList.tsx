@@ -27,7 +27,7 @@ const PostList = ({ post }: { post: Post }) => {
 
   return (
     <motion.article 
-      className="group relative glass-card border-glow-hover rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-350"
+      className="group relative glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       layout
@@ -54,7 +54,7 @@ const PostList = ({ post }: { post: Post }) => {
             whileHover={{ scale: 1.05 }}
           >
             <Link href={`/${post.user?.username || "anonymous"}`}>
-              <Avatar className="h-9 w-9 border border-primary/20 shadow-xs">
+              <Avatar className="h-9 w-9 border border-primary/20">
                 <AvatarImage
                   src={getProfilePicture(post.user?.image || "")}
                   alt={post.user?.username || "Author"}

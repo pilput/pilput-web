@@ -158,11 +158,11 @@ export const FeatureCard: React.FC<FeatureCardProps> = memo(
           // Border effects
           "border border-white/20 dark:border-white/10",
           // Shadow effects
-          "shadow-lg shadow-black/5 dark:shadow-white/5",
+          "  ",
           // 3D transform effects
           "transform-gpu transition-all duration-500 ease-out",
-          "hover:scale-105 hover:shadow-2xl",
-          "hover:shadow-primary/20 dark:hover:shadow-primary/30",
+          "hover:scale-105 ",
+          " ",
           // 3D perspective
           "hover:transform-[perspective(1000px)_rotateX(var(--rotate-x,0))_rotateY(var(--rotate-y,0))_translateZ(20px)]",
           className

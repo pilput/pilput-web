@@ -80,7 +80,7 @@ export default function Community() {
           <Link href="/blog" className="w-full sm:w-auto">
             <Button
               size="lg"
-              className="w-full sm:w-auto h-12 group rounded-md px-7 gap-2 shadow-md shadow-primary/20 bg-linear-to-r from-primary to-primary/95 text-primary-foreground hover:brightness-110 hover:shadow-primary/30 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto h-12 group rounded-md px-7 gap-2 bg-linear-to-r from-primary to-primary/95 text-primary-foreground hover:brightness-110 transition-all duration-300 cursor-pointer"
             >
               Explore all articles
               <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />

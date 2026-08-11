@@ -49,7 +49,7 @@ const AboutMe = () => {
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div variants={itemVariants} className="relative group">
-              <div className="relative z-10 bg-card border border-border rounded-2xl p-2 shadow-2xl transition-transform duration-300 group-hover:scale-[1.02]">
+              <div className="relative z-10 bg-card border border-border rounded-2xl p-2 transition-transform duration-300 group-hover:scale-[1.02]">
                  <div className="relative aspect-square rounded-xl overflow-hidden bg-muted">
                     <Image 
                       src="https://avatars.githubusercontent.com/u/48351693?v=4" 

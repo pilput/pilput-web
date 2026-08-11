@@ -31,7 +31,7 @@ export default function TopPostsWidget() {
   }, [topPosts])
 
   return (
-    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden h-full flex flex-col justify-between transition-all duration-300">
+    <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden h-full flex flex-col justify-between transition-all duration-300">
       <CardHeader className="border-b border-border/50 py-5">
         <CardTitle className="text-xl font-bold flex items-center gap-2">
           <Trophy className="h-5 w-5 text-amber-500" />

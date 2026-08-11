@@ -205,7 +205,7 @@ export default function PostCreate() {
   return (
     <div className="max-w-7xl mx-auto py-4 px-3 sm:py-6 sm:px-4 lg:px-6">
       {/* Sticky top action header */}
-      <div className="sticky top-16 z-20 bg-background/85 backdrop-blur-md border-b border-border/40 py-3.5 px-4 mb-6 shadow-xs rounded-xl">
+      <div className="sticky top-16 z-20 bg-background/85 backdrop-blur-md border-b border-border/40 py-3.5 px-4 mb-6 rounded-xl">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Button
@@ -347,7 +347,7 @@ export default function PostCreate() {
 
             {/* Featured Image — aspect-video standard post image, not full-bleed banner */}
             {post.photo_url ? (
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-border shadow-xs mt-4 mb-6 group">
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-border mt-4 mb-6 group">
                 <Image
                   src={getUrlImage(post.photo_url)}
                   alt="Post cover"
@@ -361,7 +361,7 @@ export default function PostCreate() {
                     variant="secondary"
                     size="sm"
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-white hover:bg-white/95 text-black border-none shadow-md font-semibold h-9"
+                    className="bg-white hover:bg-white/95 text-black border-none font-semibold h-9"
                   >
                     <ImagePlus className="h-4 w-4 mr-2" />
                     Change Cover
@@ -370,7 +370,7 @@ export default function PostCreate() {
                     variant="destructive"
                     size="sm"
                     onClick={handleRemoveImage}
-                    className="shadow-md font-semibold h-9"
+                    className="font-semibold h-9"
                   >
                     <X className="h-4 w-4 mr-2" />
                     Remove Cover

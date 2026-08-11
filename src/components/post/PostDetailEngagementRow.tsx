@@ -38,7 +38,7 @@ export function PostDetailEngagementRow({
   );
 
   const actionBtnClass =
-    "h-9 min-w-9 shrink-0 rounded-md border border-border/80 bg-background px-2 shadow-sm";
+    "h-9 min-w-9 shrink-0 rounded-md border border-border/80 bg-background px-2 ";
 
   return (
     <div

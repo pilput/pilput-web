@@ -102,7 +102,7 @@ export default function ProfileTab({ user, onSubmit, loading, onProfileUpdate }:
   const avatarUrl = previewImage || (user?.image ? getProfilePicture(user.image) : undefined);
 
   return (
-    <Card className="bg-background/80 backdrop-blur-md border border-border/50 shadow-lg">
+    <Card className="bg-background/80 backdrop-blur-md border border-border/50">
       <CardHeader>
         <CardTitle className="text-xl">Profile Information</CardTitle>
         <CardDescription className="text-muted-foreground">

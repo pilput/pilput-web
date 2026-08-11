@@ -75,7 +75,7 @@ function LikesTooltip({ active, payload }: LikesTooltipProps) {
   const key = row?.monthKey
   const count = row?.count ?? 0
   return (
-    <div className="rounded-md border bg-background px-3 py-2 text-sm shadow-md">
+    <div className="rounded-md border bg-background px-3 py-2 text-sm">
       <p className="font-medium">
         {key ? formatMonthLabel(key) : "Month"}
       </p>
@@ -162,7 +162,7 @@ export default function LikeChart() {
   const totalLikes = chartData.reduce((sum, row) => sum + row.count, 0)
 
   return (
-    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
+    <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-center sm:justify-between border-b border-border/50 py-5">
         <div className="space-y-1">
           <CardTitle className="flex items-center gap-2">

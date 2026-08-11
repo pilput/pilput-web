@@ -76,7 +76,7 @@ export default function Social() {
                 key={social.name}
                 variant="outline"
                 className={cn(
-                  "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105 hover:shadow-lg border-border/50 bg-card/50 backdrop-blur-sm",
+                  "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105  border-border/50 bg-card/50 backdrop-blur-sm",
                   social.hoverColor,
                 )}
                 asChild
@@ -87,7 +87,7 @@ export default function Social() {
                   rel="noopener noreferrer"
                   className="w-full"
                 >
-                  <div className="p-4 rounded-full bg-background/80 shadow-sm group-hover:shadow-md transition-all duration-300">
+                  <div className="p-4 rounded-full bg-background/80 transition-all duration-300">
                     <social.icon
                       className={cn(
                         "h-8 w-8 transition-colors duration-300",

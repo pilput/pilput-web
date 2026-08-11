@@ -222,7 +222,7 @@ export function ChatMessage({
                 </motion.div>
               ) : (
                 <div className="group/bubble relative">
-                  <div className="rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-sm">
+                  <div className="rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
                     <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
                   </div>
 

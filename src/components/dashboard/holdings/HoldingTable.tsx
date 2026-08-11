@@ -208,22 +208,22 @@ export default function HoldingTable({
       <div className="p-3 sm:p-4 border-b border-border/60 bg-muted/20 space-y-3">
         {/* Main Filter Tabs: ALL, Platform, Type */}
         <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
-          <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-background/70 p-1 border border-border/60 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-none">
+          <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-background/70 p-1 border border-border/60 -[0_1px_2px_rgba(0,0,0,0.03)]">
             <TabsTrigger 
               value="all" 
-              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:"
             >
               All Holdings
             </TabsTrigger>
             <TabsTrigger 
               value="platform" 
-              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:"
             >
               By Platform
             </TabsTrigger>
             <TabsTrigger 
               value="type" 
-              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
+              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:"
             >
               By Type
             </TabsTrigger>
@@ -246,7 +246,7 @@ export default function HoldingTable({
                   value={platform} 
                   className={cn(
                     "text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 transition-all rounded-md uppercase tracking-tight",
-                    "data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-current",
+                    "data-[state=active]: data-[state=active]:ring-1 data-[state=active]:ring-current",
                     getPlatformColor(platform).split(" ").filter(c => !c.startsWith("border-")).join(" "),
                     "data-[state=active]:font-bold"
                   )}
@@ -273,7 +273,7 @@ export default function HoldingTable({
                   value={type.id.toString()} 
                   className={cn(
                     "text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 transition-all rounded-full px-4",
-                    "data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-current",
+                    "data-[state=active]: data-[state=active]:ring-1 data-[state=active]:ring-current",
                     getHoldingTypeColor(type.name).split(" ").filter(c => !c.startsWith("border-")).join(" "),
                     "data-[state=active]:font-semibold"
                   )}

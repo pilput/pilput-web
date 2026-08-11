@@ -40,7 +40,7 @@ function CustomTooltip({
 }: CustomTooltipProps) {
   if (active && payload && payload.length >= 2) {
     return (
-      <div className="rounded-lg border bg-background p-2 sm:p-3 shadow-sm text-xs sm:text-sm">
+      <div className="rounded-lg border bg-background p-2 sm:p-3 text-xs sm:text-sm">
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <div className="flex flex-col min-w-0">
             <span className="text-[0.65rem] sm:text-[0.70rem] uppercase text-muted-foreground">
@@ -99,7 +99,7 @@ export default function ComparisonChart({
   ];
 
   return (
-    <Card className="glass-card border-glow-hover shadow-premium hover:shadow-premium-hover rounded-2xl overflow-hidden transition-all duration-300">
+    <Card className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300">
       <CardHeader className="px-3 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
         <CardTitle className="text-base sm:text-lg">Comparison Overview</CardTitle>
         <CardDescription className="text-xs sm:text-sm mt-1">

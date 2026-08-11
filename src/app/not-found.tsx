@@ -21,7 +21,7 @@ export default function NotFound() {
       </div>
 
       <div className="relative flex min-h-screen items-center justify-center p-4 sm:p-6">
-        <Card className="w-full max-w-md border-primary/15 shadow-xl shadow-primary/5">
+        <Card className="w-full max-w-md border-primary/15">
           <CardHeader className="items-center pb-2 text-center sm:px-8">
             <div className="flex animate-in fade-in-0 zoom-in-95 flex-col items-center gap-5 duration-500">
               <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/15">
