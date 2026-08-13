@@ -10,13 +10,15 @@ bun run lint      # ESLint (eslint-config-next/core-web-vitals)
 bunx tsc --noEmit # type-check (no script in package.json)
 ```
 
-No test runner is configured (`src/test/` is empty). Single-package Next.js app — `next-turbo` is just the repo name; there is no Turborepo or workspace setup.
+Bun is the only package manager — `bun.lock` is the sole lockfile (no npm/yarn/pnpm). Use `bun` for installs and run scripts; don't generate an npm `package-lock.json`. TypeScript is v7 (the native compiler).
+
+No test runner is configured (no `src/test/`). Single-package Next.js app — `next-turbo` is just the repo name; there is no Turborepo or workspace setup. No CI workflows exist (`.github/workflows/` is empty).
 
 ## Architecture
 
 - **Next.js 16+ App Router** — all routes under `src/app/`. See the agent-rules block at the bottom: read `node_modules/next/dist/docs/` before writing Next-specific code (APIs differ from older versions)
 - **API client**: `apiClient` in `src/utils/fetch.ts` (thin wrapper around native `fetch`, not Axios) → `NEXT_PUBLIC_API_URL`. It transparently refreshes an expired JWT via `/api/auth/refresh` on a 401 and retries once (single shared in-flight refresh), passes `FormData` through for uploads, and defaults to `cache: "no-store"`
-- **Auth**: JWT access + refresh tokens in cookies via `cookies-next`; see `src/utils/Auth.ts`. Cookies are `secure: true` and domain-scoped to `NEXT_PUBLIC_DOMAIN`
+- **Auth**: JWT access + refresh tokens in cookies via `cookies-next`; see `src/utils/Auth.ts`. Cookies are `secure: true`, `sameSite: "none"`, and domain-scoped to `.NEXT_PUBLIC_DOMAIN` — so they require HTTPS; plain `http://localhost` will silently drop them
 - **State**: Zustand stores in `src/stores/`
 - **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
 - **Rich text**: TipTap v3 editor in `src/components/post/Editor.tsx`; code blocks use **highlight.js/lowlight** (`src/lib/code-block-highlight.ts`, `src/lib/code-highlight.ts`). Prism (`rehype-prism-plus`) is only used for chat Markdown rendering (`src/components/chat/markdown.tsx`)
@@ -30,6 +32,8 @@ No test runner is configured (`src/test/` is empty). Single-package Next.js app 
 - Style utilities: `cn()` from `@/lib/utils` (clsx + tailwind-merge)
 - Form validation schemas must be defined in `src/lib/validation.ts` with Zod, not inline
 - Post editor styles are SCSS modules (`src/components/post/*.module.scss`); everything else is Tailwind
+- Turbopack: `next.config.ts` sets `turbopack.root`; Next 16 runs Turbopack for dev/build — don't add `webpack` config
+- Security headers for all routes are set in `next.config.ts` `headers()`; `next/image` `remotePatterns` are allow-listed there — add new image hosts there, not via `unoptimized`
 
 ## Environment
 
