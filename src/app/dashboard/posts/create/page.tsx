@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { postsStore } from "@/stores/create-post-store";
+import { useCreatePostStore } from "@/stores/create-post-store";
 import { getToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
@@ -67,7 +67,7 @@ export default function PostCreate() {
     updateSlug,
     addTag,
     removeTagAt,
-  } = postsStore();
+  } = useCreatePostStore();
 
   const update = (data: string) => {
     updateBody(data);

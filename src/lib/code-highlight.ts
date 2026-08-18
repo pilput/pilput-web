@@ -87,6 +87,31 @@ export function extractRawLanguageSlug(
 }
 
 /**
+ * Highlight source text directly using highlight.js
+ */
+export function highlightCode(
+  source: string,
+  rawLang?: string
+): { html: string; language: string } {
+  if (!source) {
+    return { html: "", language: "plaintext" };
+  }
+  const resolved = rawLang ? resolveHighlightLanguage(rawLang) : "plaintext";
+  const grammarLang = hasHljsGrammar(resolved) ? resolved : "plaintext";
+
+  if (grammarLang === "plaintext") {
+    return { html: source, language: "plaintext" };
+  }
+
+  try {
+    const result = hljs.highlight(source, { language: grammarLang });
+    return { html: result.value, language: grammarLang };
+  } catch {
+    return { html: source, language: "plaintext" };
+  }
+}
+
+/**
  * Highlight a `<code>` element inside `<pre>` (post HTML hydration).
  *
  * `fallbackLanguage` is used when the `<code>` element has no
@@ -98,7 +123,7 @@ export function highlightCodeElement(
   code: HTMLElement,
   fallbackLanguage: string = "plaintext"
 ): void {
-  if (code.dataset.prismHighlighted === "true") {
+  if (code.dataset.highlighted === "true") {
     return;
   }
 
@@ -113,7 +138,7 @@ export function highlightCodeElement(
   const source = code.textContent ?? "";
 
   if (!source.trim()) {
-    code.dataset.prismHighlighted = "true";
+    code.dataset.highlighted = "true";
     return;
   }
 
@@ -121,7 +146,7 @@ export function highlightCodeElement(
 
   if (grammarLang === "plaintext") {
     code.textContent = source;
-    code.dataset.prismHighlighted = "true";
+    code.dataset.highlighted = "true";
     return;
   }
 
@@ -135,9 +160,9 @@ export function highlightCodeElement(
   try {
     code.innerHTML = hljs.highlight(source, { language: grammarLang }).value;
     code.classList.add("hljs");
-    code.dataset.prismHighlighted = "true";
+    code.dataset.highlighted = "true";
   } catch {
     code.textContent = source;
-    code.dataset.prismHighlighted = "true";
+    code.dataset.highlighted = "true";
   }
 }

@@ -41,7 +41,7 @@ interface PostsState {
   total: number
 }
 
-export const postsStore = create<PostsState>()((set, get) => ({
+export const useCreatePostStore = create<PostsState>()((set, get) => ({
   post: {
     title: '',
     body: DEFAULT_BODY,

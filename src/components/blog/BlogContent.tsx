@@ -29,16 +29,29 @@ const FALLBACK_TRENDING_TAGS = [
   "javascript",
 ];
 
-const BlogContent = () => {
+interface BlogContentProps {
+  initialPosts?: Post[];
+  initialTotal?: number;
+  initialTags?: string[];
+}
+
+const BlogContent = ({
+  initialPosts,
+  initialTotal = 0,
+  initialTags,
+}: BlogContentProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const skipUrlSyncFromRouter = useRef(false);
+  const isInitialMount = useRef(true);
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [total, setTotal] = useState(0);
-  const [trendingTags, setTrendingTags] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState<Post[]>(() => initialPosts ?? []);
+  const [total, setTotal] = useState(() => initialTotal);
+  const [trendingTags, setTrendingTags] = useState<string[]>(
+    () => initialTags ?? []
+  );
+  const [isLoading, setIsLoading] = useState(() => initialPosts === undefined);
   const [currentPage, setCurrentPage] = useState(() =>
     parseBlogPageQueryParam(searchParams.get("page"))
   );
@@ -89,6 +102,9 @@ const BlogContent = () => {
   }, []);
 
   useEffect(() => {
+    if (initialTags && initialTags.length > 0) {
+      return;
+    }
     let cancelled = false;
     async function fetchTags() {
       try {
@@ -106,9 +122,19 @@ const BlogContent = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialTags]);
 
   useEffect(() => {
+    if (
+      isInitialMount.current &&
+      initialPosts !== undefined &&
+      currentPage === 0 &&
+      !debouncedSearchQuery.trim()
+    ) {
+      isInitialMount.current = false;
+      return;
+    }
+    isInitialMount.current = false;
     let cancelled = false;
 
     async function fetchPosts() {
@@ -151,7 +177,7 @@ const BlogContent = () => {
     return () => {
       cancelled = true;
     };
-  }, [currentPage, debouncedSearchQuery]);
+  }, [currentPage, debouncedSearchQuery, initialPosts]);
 
   /** Keep URL in sync with the input (`searchQuery`) so `q` and `page` update immediately; any search change stays on page 1. */
   useEffect(() => {

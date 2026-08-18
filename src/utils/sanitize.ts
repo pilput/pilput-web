@@ -46,10 +46,17 @@ export const sanitizeHtml = (html: string): string => {
   });
 };
 
+const HTML_ESCAPE_MAP: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
 export const escapeHtml = (text: string): string => {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
+  if (!text) return "";
+  return text.replace(/[&<>"']/g, (m) => HTML_ESCAPE_MAP[m] || m);
 };
 
 /**

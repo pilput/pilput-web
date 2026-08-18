@@ -1,14 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypePrism from "rehype-prism-plus/common";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import "prismjs/themes/prism-tomorrow.css";
-import { useState } from "react";
+import { formatLanguageLabel, highlightCode } from "@/lib/code-highlight";
 
 interface MarkdownProps {
   content: string;
@@ -110,7 +108,6 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
     <div className={cn("prose dark:prose-invert max-w-none", isStreaming && "is-generating", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypePrism]}
         components={{
           // Customize headings
           h1: ({
@@ -176,7 +173,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             ...props
           }: CodeBlockProps) => {
             const match = /language-([\w+-]+)/.exec(className || "");
-            const language = match ? match[1] : "";
+            const rawLang = match ? match[1] : "";
             const code = String(children).replace(/\n$/, "");
 
             if (inline) {
@@ -187,18 +184,22 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
               );
             }
 
+            const highlighted = highlightCode(code, rawLang);
+            const label = formatLanguageLabel(highlighted.language, rawLang);
+
             return (
               <div className="group relative my-4 rounded-md bg-[#161b22] border border-[#30363d] overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-2 bg-[#161b22] border-b border-[#30363d]">
                   <span className="text-xs text-[#8b949e] font-mono uppercase tracking-wide">
-                    {language || "code"}
+                    {label}
                   </span>
                   <CopyButton code={code} className="opacity-100! group-hover:opacity-100 transition-opacity" />
                 </div>
                 <pre className="overflow-x-auto p-4 text-sm leading-relaxed font-mono bg-transparent text-[#c9d1d9]">
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
+                  <code
+                    className={cn("hljs", className)}
+                    dangerouslySetInnerHTML={{ __html: highlighted.html }}
+                  />
                 </pre>
               </div>
             );

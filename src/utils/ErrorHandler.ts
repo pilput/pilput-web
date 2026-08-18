@@ -1,7 +1,6 @@
-import { deleteCookie } from "cookies-next";
 import { toast } from "sonner";
-import { Config } from "./getConfig";
 import { isHttpError } from "./fetch";
+import { clearTokens } from "./Auth";
 
 export const ErrorHandlerAPI = (error: unknown) => {
   // Log the error for debugging purposes
@@ -34,12 +33,7 @@ export const ErrorHandlerAPI = (error: unknown) => {
     (responseData?.message && authErrors.includes(responseData.message)) ||
     error.response.status === 401
   ) {
-    deleteCookie("token", {
-      path: "/",
-      domain: `.${Config.maindomain}`,
-      sameSite: "none",
-      secure: true,
-    });
+    clearTokens();
 
     // Store current URL for redirect after login (same method as proxy middleware)
     if (typeof window !== "undefined" && window.location) {

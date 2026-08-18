@@ -7,7 +7,7 @@ export const postSchema = z.object({
     .max(100, "Title must be less than 100 characters"),
   body: z.string()
     .min(1, "Content is required")
-    .max(5000, "Content must be less than 5000 characters"),
+    .max(100000, "Content must be less than 100,000 characters"),
   slug: z.string()
     .min(1, "Slug is required")
     .max(100, "Slug must be less than 100 characters")
