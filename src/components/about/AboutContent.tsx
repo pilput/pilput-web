@@ -15,25 +15,25 @@ const AboutContent = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.08,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring" as const,
-        stiffness: 100,
+        duration: 0.5,
+        ease: "easeOut" as const,
       },
     },
   };
 
   return (
-    <section className="pt-6 pb-20 md:pt-8 md:pb-32 bg-background relative overflow-hidden">
+    <section className="pt-8 pb-20 md:pt-12 md:pb-28 bg-background relative overflow-hidden">
       {/* Enhanced background decoration */}
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
@@ -67,7 +67,7 @@ const AboutContent = () => {
                   }
                 }}
               >
-                Independent & Open Source
+                Independent &amp; Open Source
                 <motion.span
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
@@ -99,25 +99,15 @@ const AboutContent = () => {
             className="max-w-4xl mx-auto text-center mb-12"
           >
             <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 hover:bg-card/60 transition-all duration-300 group">
-              <motion.p 
-                className="text-lg md:text-xl text-foreground/90 leading-relaxed mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
+              <p className="text-lg md:text-xl text-foreground/90 leading-relaxed mb-6">
                 A clean, fast, and secure publishing platform built for modern creators.
                 Share your stories, connect with readers, and grow your audience.
-              </motion.p>
-              <motion.div 
-                className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
+              </p>
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <Sparkles className="h-4 w-4 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
-                <span className="group-hover:text-foreground transition-colors">Trusted by thousands of writers worldwide</span>
+                <span className="group-hover:text-foreground transition-colors">Built with passion for writers worldwide</span>
                 <Sparkles className="h-4 w-4 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
-              </motion.div>
+              </div>
             </div>
           </motion.div>
 
@@ -125,69 +115,37 @@ const AboutContent = () => {
             variants={itemVariants}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16"
           >
-            <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-yellow-500/20"
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.div
-                className="bg-yellow-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-500/20 transition-all duration-300 group-hover:scale-110"
-                whileHover={{ rotate: 180 }}
-                transition={{ type: "spring", stiffness: 200 }}
-              >
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-yellow-500/20">
+              <div className="bg-yellow-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-500/20 transition-all duration-300 group-hover:scale-110">
                 <Zap className="h-8 w-8 text-yellow-500" />
-              </motion.div>
+              </div>
               <h3 className="font-semibold text-lg mb-2 group-hover:text-yellow-500 transition-colors">Lightning Fast</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Optimized for speed and performance</p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-blue-500/20"
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.div
-                className="bg-blue-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/20 transition-all duration-300 group-hover:scale-110"
-                whileHover={{ rotate: 90 }}
-                transition={{ type: "spring", stiffness: 200 }}
-              >
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-blue-500/20">
+              <div className="bg-blue-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/20 transition-all duration-300 group-hover:scale-110">
                 <PenSquare className="h-8 w-8 text-blue-500" />
-              </motion.div>
+              </div>
               <h3 className="font-semibold text-lg mb-2 group-hover:text-blue-500 transition-colors">Simple Editor</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Intuitive writing experience</p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-green-500/20"
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.div
-                className="bg-green-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-green-500/20 transition-all duration-300 group-hover:scale-110"
-                whileHover={{ scale: 1.2 }}
-                transition={{ type: "spring", stiffness: 200 }}
-              >
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-green-500/20">
+              <div className="bg-green-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-green-500/20 transition-all duration-300 group-hover:scale-110">
                 <Shield className="h-8 w-8 text-green-500" />
-              </motion.div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-green-500 transition-colors">Secure & Reliable</h3>
+              </div>
+              <h3 className="font-semibold text-lg mb-2 group-hover:text-green-500 transition-colors">Secure &amp; Reliable</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Your content is safe with us</p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-purple-500/20"
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <motion.div
-                className="bg-purple-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-500/20 transition-all duration-300 group-hover:scale-110"
-                whileHover={{ rotate: 360 }}
-                transition={{ type: "spring", stiffness: 200 }}
-              >
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-purple-500/20">
+              <div className="bg-purple-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-500/20 transition-all duration-300 group-hover:scale-110">
                 <Code className="h-8 w-8 text-purple-500" />
-              </motion.div>
+              </div>
               <h3 className="font-semibold text-lg mb-2 group-hover:text-purple-500 transition-colors">Open Source</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Transparent and community-driven</p>
-            </motion.div>
+            </div>
           </motion.div>
 
           <motion.div
@@ -199,11 +157,11 @@ const AboutContent = () => {
                 asChild
                 size="lg"
                 className="bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white px-8 py-6 rounded-full transition-all duration-300 text-lg font-semibold"
-                aria-label="Explore the blog section"
+                aria-label="Explore stories"
               >
-                <Link href="/blog" className="flex items-center">
+                <Link href="/explore" className="flex items-center">
                   <Globe className="h-5 w-5 mr-3" />
-                  Explore the Blog
+                  Explore Stories
                 </Link>
               </Button>
             </motion.div>

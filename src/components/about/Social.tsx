@@ -71,39 +71,42 @@ export default function Social() {
         </CardHeader>
         <CardContent className="pt-0 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {socialLinks.map((social, index) => (
-              <Button
-                key={social.name}
-                variant="outline"
-                className={cn(
-                  "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105  border-border/50 bg-card/50 backdrop-blur-sm",
-                  social.hoverColor,
-                )}
-                asChild
-              >
-                <a
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full"
+            {socialLinks.map((social) => {
+              const Icon = social.icon;
+              return (
+                <Button
+                  key={social.name}
+                  variant="outline"
+                  className={cn(
+                    "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105 border-border/50 bg-card/50 backdrop-blur-sm",
+                    social.hoverColor,
+                  )}
+                  asChild
                 >
-                  <div className="p-4 rounded-full bg-background/80 transition-all duration-300">
-                    <social.icon
-                      className={cn(
-                        "h-8 w-8 transition-colors duration-300",
-                        social.color,
-                      )}
-                    />
-                  </div>
-                  <div className="space-y-1 text-center">
-                    <span className="font-bold text-lg text-foreground block">{social.name}</span>
-                    <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                      {social.description}
-                    </p>
-                  </div>
-                </a>
-              </Button>
-            ))}
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full"
+                  >
+                    <div className="p-4 rounded-full bg-background/80 transition-all duration-300">
+                      <Icon
+                        className={cn(
+                          "h-8 w-8 transition-colors duration-300",
+                          social.color,
+                        )}
+                      />
+                    </div>
+                    <div className="space-y-1 text-center">
+                      <span className="font-bold text-lg text-foreground block">{social.name}</span>
+                      <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                        {social.description}
+                      </p>
+                    </div>
+                  </a>
+                </Button>
+              );
+            })}
           </div>
         </CardContent>
       </div>
