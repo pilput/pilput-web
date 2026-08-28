@@ -384,7 +384,7 @@ export default function HoldingsPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="rounded-xl border border-border/70 bg-card/60 px-3 py-2.5 sm:px-4 -[0_1px_2px_rgba(0,0,0,0.03)] dark:bg-muted/20">
+        <div className="rounded-xl border border-border/70 bg-card/60 px-3 py-2.5 sm:px-4 shadow-xs dark:bg-muted/20">
           <HoldingFilter
             month={filterMonth}
             year={filterYear}

@@ -120,7 +120,7 @@ export default function HoldingFilter({
           <ChevronLeft className="w-4 h-4" />
         </Button>
 
-        <div className="flex items-center gap-1 bg-background rounded-md border border-input px-2 h-9 -[0_1px_2px_rgba(0,0,0,0.03)]">
+        <div className="flex items-center gap-1 bg-background rounded-md border border-input px-2 h-9 shadow-xs">
           <CalendarDays className="w-4 h-4 text-muted-foreground shrink-0 ml-1" />
           <Select value={month} onValueChange={handleMonthChange}>
             <SelectTrigger
