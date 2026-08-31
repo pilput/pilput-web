@@ -360,3 +360,12 @@ export const bookmarkSchema = z.object({
 
 export type BookmarkFolderFormData = z.infer<typeof bookmarkFolderSchema>;
 export type BookmarkFormData = z.infer<typeof bookmarkSchema>;
+
+// Tag create/update validation schema
+export const tagSchema = z.object({
+  name: z.string()
+    .min(1, "Tag name is required")
+    .max(30, "Tag name must be less than 30 characters"),
+});
+
+export type TagFormData = z.infer<typeof tagSchema>;

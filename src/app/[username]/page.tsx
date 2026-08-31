@@ -10,12 +10,12 @@ import {
   AtSign,
   CalendarDays,
   ExternalLink,
-  FileText,
   Link as LinkIcon,
-  UsersRound,
 } from "lucide-react";
 import WriterProfileClient from "./WriterProfileClient";
 import ProfileFollowActions from "@/components/writer/ProfileFollowActions";
+import ProfileStats from "@/components/writer/ProfileStats";
+import MutualFollows from "@/components/writer/MutualFollows";
 import type { Writer } from "@/types/writer";
 import { cookies } from "next/headers";
 import { toSafeJsonLd } from "@/utils/sanitize";
@@ -73,23 +73,6 @@ export default async function page(props: {
     year: "numeric",
   });
   const websiteLabel = getWebsiteLabel(writer.profile?.website);
-  const stats = [
-    {
-      label: "Followers",
-      value: writer.followers_count ?? 0,
-      icon: UsersRound,
-    },
-    {
-      label: "Following",
-      value: writer.following_count ?? 0,
-      icon: AtSign,
-    },
-    {
-      label: "Posts",
-      value: writer.posts_count ?? 0,
-      icon: FileText,
-    },
-  ];
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -172,12 +155,17 @@ export default async function page(props: {
                         </div>
                       </div>
 
-                      <div className="sm:pb-1">
+                      <div className="space-y-2 sm:pb-1 sm:text-right">
                         <ProfileFollowActions
                           writerId={writer.id}
                           profileUsername={writer.username}
                           initialIsFollowing={Boolean(writer.is_following)}
                           redirectPath={redirectPath}
+                        />
+                        <MutualFollows
+                          profileUserId={writer.id}
+                          profileUsername={writer.username}
+                          profileDisplayName={fullName || writer.username}
                         />
                       </div>
                     </div>
@@ -201,31 +189,12 @@ export default async function page(props: {
                       )}
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-1">
-                      {stats.map((stat) => {
-                        const Icon = stat.icon;
-
-                        return (
-                          <div
-                            key={stat.label}
-                            className="rounded-lg border border-border/60 bg-muted/25 px-3 py-3 sm:px-4"
-                          >
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-xs font-medium text-muted-foreground">
-                                {stat.label}
-                              </span>
-                              <Icon
-                                className="h-3.5 w-3.5 text-primary/70"
-                                aria-hidden
-                              />
-                            </div>
-                            <div className="mt-2 text-2xl font-bold tabular-nums tracking-tight text-foreground">
-                              {stat.value.toLocaleString()}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <ProfileStats
+                      writerId={writer.id}
+                      followersCount={writer.followers_count ?? 0}
+                      followingCount={writer.following_count ?? 0}
+                      postsCount={writer.posts_count ?? 0}
+                    />
                   </div>
                 </CardContent>
               </Card>

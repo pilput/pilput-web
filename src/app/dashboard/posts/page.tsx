@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { postsStore } from "@/stores/posts-store";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
@@ -44,9 +44,33 @@ export default function Posts() {
   const { fetch: fetchPosts } = poststore;
   const currentPage = Math.floor(offset / limit) + 1;
 
+  const publishedFilter =
+    status === "published" ? true : status === "draft" ? false : undefined;
+
+  // Tracks the previous search/status filters so we can detect a filter
+  // change within the fetch effect below and fetch from offset 0 right away
+  // instead of fetching a stale page first.
+  const prevFiltersRef = useRef({ search: debouncedSearch, status });
+
   useEffect(() => {
-    fetchPosts(limit, offset);
-  }, [offset, fetchPosts, limit]);
+    const filtersChanged =
+      prevFiltersRef.current.search !== debouncedSearch ||
+      prevFiltersRef.current.status !== status;
+    prevFiltersRef.current = { search: debouncedSearch, status };
+
+    const effectiveOffset = filtersChanged ? 0 : offset;
+    if (filtersChanged && offset !== 0) {
+      setOffset(0);
+    }
+
+    fetchPosts(
+      limit,
+      effectiveOffset,
+      debouncedSearch || undefined,
+      publishedFilter
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offset, debouncedSearch, status, fetchPosts, limit]);
 
   function changeOffset(newOffset: number) {
     if (newOffset >= 0 && newOffset < poststore.total) {
@@ -55,21 +79,10 @@ export default function Posts() {
   }
 
   const refetchPosts = () => {
-    poststore.fetch(limit, offset);
+    poststore.fetch(limit, offset, debouncedSearch || undefined, publishedFilter);
   };
 
-  const filteredPosts = useMemo(() => {
-    return poststore.posts.filter((post) => {
-      const matchesSearch = (post.title || "")
-        .toLowerCase()
-        .includes(debouncedSearch.toLowerCase());
-      const matchesStatus =
-        status === "all" ||
-        (status === "published" && post.published) ||
-        (status === "draft" && !post.published);
-      return matchesSearch && matchesStatus;
-    });
-  }, [poststore.posts, debouncedSearch, status]);
+  const filteredPosts = poststore.posts;
 
   return (
     <div className="flex flex-col gap-6 w-full">

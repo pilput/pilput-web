@@ -10,7 +10,12 @@ interface PostsState {
   total: number;
   analytics: PostAnalyticsData | null;
   analyticsLoading: boolean;
-  fetch: (limit?: number, offset?: number) => Promise<void>;
+  fetch: (
+    limit?: number,
+    offset?: number,
+    search?: string,
+    published?: boolean
+  ) => Promise<void>;
   fetchPublic: (limit?: number, offset?: number) => Promise<void>;
   fetchAnalytics: (startDate?: string, endDate?: string) => Promise<void>;
 }
@@ -23,15 +28,23 @@ export const postsStore = create<PostsState>()((set) => ({
   analytics: null,
   analyticsLoading: false,
 
-  fetch: async (limit = 10, offset = 0) => {
+  fetch: async (limit = 10, offset = 0, search, published) => {
     set({ loading: true, error: false });
     try {
+      const params: Record<string, unknown> = { limit, offset };
+      if (search) {
+        params.search = search;
+      }
+      if (published !== undefined) {
+        params.published = published;
+      }
+
       const { data } = await apiClient.get<{
         data: Post[];
         success: boolean;
         meta?: { total_items: number };
       }>("/api/posts/me", {
-        params: { limit, offset },
+        params,
         headers: { Authorization: `Bearer ${getToken()}` },
       });
 

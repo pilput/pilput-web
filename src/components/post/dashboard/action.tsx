@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { MoreHorizontal, Eye, Trash, Send, Edit } from "lucide-react";
+import { useState } from "react";
+import { MoreHorizontal, Eye, Trash, Send, Edit, MessageSquare } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +14,7 @@ import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
 import { getToken } from "@/utils/Auth";
 import type { Post } from "@/types/post";
+import PostCommentsDialog from "@/components/post/dashboard/PostCommentsDialog";
 
 const ActionComponent = ({
   post,
@@ -21,6 +23,8 @@ const ActionComponent = ({
   post: Post;
   refetchPosts: () => void;
 }) => {
+  const [showCommentsDialog, setShowCommentsDialog] = useState(false);
+
   const onPublish = async () => {
     const id = toast.loading("Updating publish...");
     try {
@@ -46,52 +50,68 @@ const ActionComponent = ({
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       toast.success("Post deleted successfully", { id });
+      refetchPosts();
     } catch (error) {
       console.log(error);
       toast.error("Failed to delete post", { id });
     }
   };
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>
-          <Link
-            href={post.user?.username ? `/${post.user.username}/${post.slug || ""}` : `#/post/${post.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center"
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Link
+              href={post.user?.username ? `/${post.user.username}/${post.slug || ""}` : `#/post/${post.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+            >
+              <Eye className="mr-2 h-4 w-4" />
+              <span>View</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link
+              href={`/dashboard/posts/edit/${post.id}`}
+              className="flex items-center"
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              <span>Edit</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer" onClick={onPublish}>
+            <Send className="mr-2 h-4 w-4" />
+            {post.published ? <span>Unpublish</span> : <span>Publish</span>}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setShowCommentsDialog(true)}
           >
-            <Eye className="mr-2 h-4 w-4" />
-            <span>View</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link
-            href={`/dashboard/posts/edit/${post.id}`}
-            className="flex items-center"
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            <span>Edit</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer" onClick={onPublish}>
-          <Send className="mr-2 h-4 w-4" />
-          {post.published ? <span>Unpublish</span> : <span>Publish</span>}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={onDelete}>
-          <Trash className="mr-2 h-4 w-4" />
-          <span>Delete</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <MessageSquare className="mr-2 h-4 w-4" />
+            <span>Comments</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="cursor-pointer" onClick={onDelete}>
+            <Trash className="mr-2 h-4 w-4" />
+            <span>Delete</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <PostCommentsDialog
+        post={post}
+        open={showCommentsDialog}
+        onOpenChange={setShowCommentsDialog}
+      />
+    </>
   );
 };
 

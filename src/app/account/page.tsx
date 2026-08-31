@@ -70,9 +70,8 @@ export default function AccountPage() {
       await apiClient.patch(
         "/api/auth/password",
         {
-          old_password: data.old_password,
+          current_password: data.old_password,
           new_password: data.new_password,
-          confirm_password: data.confirm_password,
         },
         {
           headers: { Authorization: `Bearer ${token}` },

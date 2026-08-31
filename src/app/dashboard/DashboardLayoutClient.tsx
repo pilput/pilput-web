@@ -29,6 +29,8 @@ import {
   DollarSign,
   LayoutDashboard,
   CalendarRange,
+  BarChart3,
+  Tag,
 } from "lucide-react";
 import { authStore } from "@/stores/userStore";
 import { AuthGuard } from "@/components/auth/AuthGuard";
@@ -42,12 +44,6 @@ const navMain = [
         url: "/dashboard",
         icon: Home,
       },
-      {
-        title: "Users",
-        url: "/dashboard/users",
-        icon: Users,
-        superAdminOnly: true,
-      },
     ],
   },
   {
@@ -57,6 +53,12 @@ const navMain = [
         title: "Posts",
         url: "/dashboard/posts",
         icon: FileText,
+      },
+      {
+        title: "Tags",
+        url: "/dashboard/tags",
+        icon: Tag,
+        superAdminOnly: true,
       },
     ],
   },
@@ -77,6 +79,23 @@ const navMain = [
         title: "Calendar",
         url: "/dashboard/holdings/calendar",
         icon: CalendarRange,
+      },
+    ],
+  },
+  {
+    title: "Administration",
+    items: [
+      {
+        title: "Users",
+        url: "/dashboard/users",
+        icon: Users,
+        superAdminOnly: true,
+      },
+      {
+        title: "Reports",
+        url: "/dashboard/reports",
+        icon: BarChart3,
+        superAdminOnly: true,
       },
     ],
   },
