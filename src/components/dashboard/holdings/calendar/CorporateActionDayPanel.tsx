@@ -96,6 +96,22 @@ export default function CorporateActionDayPanel({
                       </span>
                     </div>
                   )}
+                  {action.cum_date && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Cum-date</span>
+                      <span className="font-medium tabular-nums">
+                        {format(parseISO(action.cum_date), "d MMM yyyy")}
+                      </span>
+                    </div>
+                  )}
+                  {action.rec_date && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Recording date</span>
+                      <span className="font-medium tabular-nums">
+                        {format(parseISO(action.rec_date), "d MMM yyyy")}
+                      </span>
+                    </div>
+                  )}
                   {action.pay_date && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Pay date</span>
