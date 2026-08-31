@@ -3,17 +3,14 @@
 import { useEffect } from "react";
 import { format, subDays } from "date-fns";
 import { authStore } from "@/stores/userStore";
-import { useHoldingsStore } from "@/stores/holdingsStore";
 import { postsStore } from "@/stores/posts-store";
-import { formatCurrency } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { Users, Heart, FileText, Wallet, BookOpen } from "lucide-react";
+import { Users, Heart, FileText, BookOpen } from "lucide-react";
 
 const LikeChart = dynamic(() => import("@/components/dashboard/LikeChart"), { ssr: false });
 const PostViewsChart = dynamic(() => import("@/components/dashboard/PostViewsChart"), { ssr: false });
 const TopPostsWidget = dynamic(() => import("@/components/dashboard/TopPostsWidget"), { ssr: false });
-const MonthlyHoldingsChart = dynamic(() => import("@/components/dashboard/holdings/MonthlyHoldingsChart"), { ssr: false });
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,26 +36,18 @@ const cardVariants = {
 
 function Page() {
   const user = authStore((state) => state.data);
-  const fetchHoldings = useHoldingsStore((state) => state.fetchHoldings);
-  const holdingsSummary = useHoldingsStore((state) => state.summary);
   const fetchPosts = postsStore((state) => state.fetch);
   const fetchAnalytics = postsStore((state) => state.fetchAnalytics);
   const analytics = postsStore((state) => state.analytics);
 
   useEffect(() => {
-    fetchHoldings();
     fetchPosts(1, 0);
-    
+
     // Fetch last 30 days post analytics by default
     const endDate = format(new Date(), "yyyy-MM-dd");
     const startDate = format(subDays(new Date(), 30), "yyyy-MM-dd");
     void fetchAnalytics(startDate, endDate);
-  }, [fetchHoldings, fetchPosts, fetchAnalytics]);
-
-  // Derive portfolio values
-  const totalCurrentValue = holdingsSummary ? parseFloat(holdingsSummary.totalCurrentValue) : 0;
-  const totalProfitLoss = holdingsSummary ? parseFloat(holdingsSummary.totalProfitLoss) : 0;
-  const totalProfitLossPercentage = holdingsSummary ? parseFloat(holdingsSummary.totalProfitLossPercentage) : 0;
+  }, [fetchPosts, fetchAnalytics]);
 
   // Derive analytics values
   const totalViews = analytics?.summary?.total_views ?? 0;
@@ -89,17 +78,6 @@ function Page() {
       icon: FileText,
       iconColor: "text-indigo-500 bg-indigo-500/10",
     },
-    {
-      title: "Investment Net Worth",
-      value: totalCurrentValue > 0 ? formatCurrency(totalCurrentValue, "IDR", { decimals: 0 }) : "Rp 0",
-      helper: totalProfitLoss !== 0 ? (
-        <span className={totalProfitLoss >= 0 ? "text-emerald-500 font-semibold" : "text-destructive font-semibold"}>
-          {totalProfitLoss >= 0 ? "+" : ""}{totalProfitLossPercentage.toFixed(1)}% Return
-        </span>
-      ) : "No tracked holdings",
-      icon: Wallet,
-      iconColor: "text-emerald-500 bg-emerald-500/10",
-    },
   ];
 
   return (
@@ -112,14 +90,14 @@ function Page() {
             Welcome back, {user.first_name || user.username || "there"}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            Here&apos;s a performance overview of your publishing activity, user engagement, and investment portfolio.
+            Here&apos;s a performance overview of your publishing activity and user engagement.
           </p>
         </div>
       </div>
 
       {/* KPI Stats Cards */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -152,13 +130,8 @@ function Page() {
       </motion.div>
 
       {/* Primary Analytics Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <PostViewsChart />
-        </div>
-        <div>
-          <MonthlyHoldingsChart />
-        </div>
+      <div>
+        <PostViewsChart />
       </div>
 
       {/* Secondary Analytics Row */}
