@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MessageSquare, Trash2, User as UserIcon } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -28,32 +28,46 @@ const PostCommentsDialog = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState<Comment[] | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchComments = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await apiClient.get<{
-        success: boolean;
-        data: Comment[];
-      }>(`/api/posts/${post.id}/comments`);
-      setComments(Array.isArray(data?.data) ? data.data : []);
-    } catch (error) {
-      console.error("Failed to fetch comments:", error);
-      toast.error("Failed to load comments");
-      setComments([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [post.id]);
+  const loading = open && comments === null;
 
   useEffect(() => {
-    if (open) {
-      fetchComments();
+    if (!open) {
+      return;
     }
-  }, [open, fetchComments]);
+    let ignore = false;
+
+    apiClient
+      .get<{
+        success: boolean;
+        data: Comment[];
+      }>(`/api/posts/${post.id}/comments`)
+      .then(({ data }) => {
+        if (!ignore) {
+          setComments(Array.isArray(data?.data) ? data.data : []);
+        }
+      })
+      .catch((error) => {
+        if (!ignore) {
+          console.error("Failed to fetch comments:", error);
+          toast.error("Failed to load comments");
+          setComments([]);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [open, post.id]);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      setComments(null);
+    }
+    onOpenChange(newOpen);
+  };
 
   const onDeleteComment = async (commentId: string) => {
     if (!confirm("Delete this comment? This action cannot be undone.")) {
@@ -67,7 +81,7 @@ const PostCommentsDialog = ({
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       toast.success("Comment deleted", { id: toastId });
-      setComments((prev) => prev.filter((c) => c.id !== commentId));
+      setComments((prev) => (prev ? prev.filter((c) => c.id !== commentId) : []));
     } catch (error) {
       const message = isHttpError(error)
         ? (error.response?.data as { message?: string })?.message ??
@@ -80,7 +94,7 @@ const PostCommentsDialog = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -105,7 +119,7 @@ const PostCommentsDialog = ({
                 </div>
               ))}
             </div>
-          ) : comments.length === 0 ? (
+          ) : !comments || comments.length === 0 ? (
             <div className="rounded-lg border border-dashed p-8 text-center">
               <MessageSquare className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">No comments yet</p>

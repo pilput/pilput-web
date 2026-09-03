@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run typecheck && bun run lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

@@ -64,7 +64,7 @@ export const useCorporateActionsStore = create<CorporateActionsState>((set) => (
     } catch (error) {
       if (isHttpError(error) && error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
       toast.error("Failed to load corporate actions calendar");
     } finally {

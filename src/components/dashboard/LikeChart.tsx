@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { format, startOfMonth, subMonths } from "date-fns"
 import { Heart } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip } from "recharts"
@@ -87,6 +88,7 @@ function LikesTooltip({ active, payload }: LikesTooltipProps) {
 }
 
 export default function LikeChart() {
+  const router = useRouter()
   const [months, setMonths] = React.useState(12)
   const [isLoading, setIsLoading] = React.useState(true)
   const [chartData, setChartData] = React.useState<
@@ -136,11 +138,11 @@ export default function LikeChart() {
         if (isHttpError(error)) {
           if (error.response?.status === 401) {
             RemoveToken()
-            window.location.href = "/login"
+            router.push("/login")
             return
           }
           if (error.response?.status === 403) {
-            window.location.href = "/forbidden"
+            router.push("/forbidden")
             return
           }
         }
@@ -157,7 +159,7 @@ export default function LikeChart() {
     return () => {
       cancelled = true
     }
-  }, [months])
+  }, [months, router])
 
   const totalLikes = chartData.reduce((sum, row) => sum + row.count, 0)
 

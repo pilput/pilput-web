@@ -32,7 +32,8 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { Search, UserPlus, Users, Shield, User as UserIcon } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -46,11 +47,12 @@ import { getProfilePicture } from "@/utils/getImage";
 import { addUserSchema, type AddUserFormData } from "@/lib/validation";
 
 export default function ManageUser() {
+  const router = useRouter();
   const auth = authStore((state) => state.data);
   const fetchAuth = authStore((state) => state.fetch);
   const [users, setusers] = useState<User[]>([]);
   const [modaluser, setmodaluser] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
 
   const addUserForm = useForm<AddUserFormData>({
@@ -85,59 +87,115 @@ export default function ManageUser() {
     });
   }, [users, search, roleFilter]);
 
+  const handleAuthError = useCallback((error: unknown): boolean => {
+    if (isHttpError(error)) {
+      if (error.response?.status === 401) {
+        RemoveToken();
+        router.push("/login");
+        return true;
+      }
+      if (error.response?.status === 403) {
+        router.push("/forbidden");
+        return true;
+      }
+    }
+    return false;
+  }, [router]);
+
+  const refetchUsers = useCallback(
+    async (fetchOffset: number = 0) => {
+      setIsLoading(true);
+      try {
+        const { data } = await apiClient.get("/api/users", {
+          params: { limit: limit, offset: fetchOffset, deleted: deletedFilter },
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        const response = data as {
+          success: boolean;
+          data: User[];
+          message?: string;
+          meta?: {
+            total_items: number;
+            offset: number;
+            limit: number;
+            total_pages: number;
+          };
+        };
+        if (response.success && Array.isArray(response.data)) {
+          setusers(response.data);
+          if (response.meta?.total_items) {
+            setTotal(response.meta.total_items);
+          }
+        } else {
+          toast.error("Cannot connect to server");
+        }
+      } catch (error) {
+        if (handleAuthError(error)) return;
+        toast.error("Cannot connect to server");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [limit, deletedFilter, handleAuthError]
+  );
+
   useEffect(() => {
     fetchAuth();
-    refetchUsers(offset);
-  }, [fetchAuth, offset, deletedFilter]);
+    let ignore = false;
 
-  async function refetchUsers(fetchOffset: number = 0) {
-    setIsLoading(true);
-    try {
-      const { data } = await apiClient.get("/api/users", {
-        params: { limit: limit, offset: fetchOffset, deleted: deletedFilter },
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      const response = data as {
-        success: boolean;
-        data: User[];
-        message?: string;
-        meta?: {
-          total_items: number;
-          offset: number;
-          limit: number;
-          total_pages: number;
+    async function loadUsers() {
+      try {
+        const { data } = await apiClient.get("/api/users", {
+          params: { limit, offset, deleted: deletedFilter },
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        if (ignore) return;
+        const response = data as {
+          success: boolean;
+          data: User[];
+          message?: string;
+          meta?: {
+            total_items: number;
+            offset: number;
+            limit: number;
+            total_pages: number;
+          };
         };
-      };
-      if (response.success && Array.isArray(response.data)) {
-        setusers(response.data);
-        if (response.meta?.total_items) {
-          setTotal(response.meta.total_items);
+        if (response.success && Array.isArray(response.data)) {
+          setusers(response.data);
+          if (response.meta?.total_items) {
+            setTotal(response.meta.total_items);
+          }
+        } else {
+          toast.error("Cannot connect to server");
         }
-      } else {
-        toast.error("Cannot connect to server");
-      }
-    } catch (error) {
-      if (isHttpError(error)) {
-        if (error.response?.status === 401) {
-          RemoveToken();
-          window.location.href = "/login";
-          return;
+      } catch (error) {
+        if (!ignore) {
+          if (!handleAuthError(error)) {
+            toast.error("Cannot connect to server");
+          }
         }
-        if (error.response?.status === 403) {
-          window.location.href = "/forbidden";
-          return;
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
         }
       }
-      toast.error("Cannot connect to server");
-    } finally {
-      setIsLoading(false);
     }
-  }
+
+    loadUsers();
+
+    return () => {
+      ignore = true;
+    };
+  }, [fetchAuth, offset, deletedFilter, limit, handleAuthError]);
 
   function changeOffset(newOffset: number) {
     if (newOffset >= 0 && newOffset < total) {
+      setIsLoading(true);
       setOffset(newOffset);
     }
   }
@@ -177,16 +235,8 @@ export default function ManageUser() {
         toast.error(result.message ?? "Failed to create user", { id: toastId });
       }
     } catch (error) {
+      if (handleAuthError(error)) return;
       if (isHttpError(error)) {
-        if (error.response?.status === 401) {
-          RemoveToken();
-          window.location.href = "/login";
-          return;
-        }
-        if (error.response?.status === 403) {
-          window.location.href = "/forbidden";
-          return;
-        }
         const msg =
           (error.response?.data as { message?: string })?.message ??
           "Failed to create user";

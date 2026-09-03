@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { format, subDays } from "date-fns";
 import {
   Area,
@@ -85,20 +86,7 @@ function displayName(person: {
   return "Unknown user";
 }
 
-function handleAuthError(error: unknown): boolean {
-  if (isHttpError(error)) {
-    if (error.response?.status === 401) {
-      RemoveToken();
-      window.location.href = "/login";
-      return true;
-    }
-    if (error.response?.status === 403) {
-      window.location.href = "/forbidden";
-      return true;
-    }
-  }
-  return false;
-}
+
 
 interface StatCardProps {
   title: string;
@@ -133,6 +121,7 @@ function StatCard({ title, value, icon: Icon, iconClassName, isLoading }: StatCa
 }
 
 export default function ReportsPage() {
+  const router = useRouter();
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
   const [tagId, setTagId] = useState<string>("all");
@@ -148,132 +137,149 @@ export default function ReportsPage() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
-  async function fetchTags() {
-    try {
-      const { data: response } = await apiClient.get<{ data?: Tags[] }>("/api/tags");
-      if (response.data) {
-        setTags(response.data);
+  const handleAuthError = useCallback((error: unknown): boolean => {
+    if (isHttpError(error)) {
+      if (error.response?.status === 401) {
+        RemoveToken();
+        router.push("/login");
+        return true;
       }
-    } catch {
-      // Tag filter is a nice-to-have; silently ignore failures.
-    }
-  }
-
-  async function fetchOverview(start: string, end: string) {
-    setIsLoadingOverview(true);
-    try {
-      const { data } = await apiClient.get<{
-        success: boolean;
-        data: OverviewReportResponse;
-      }>("/api/reports/overview", {
-        params: { startDate: start, endDate: end },
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-      if (data?.data?.overview) {
-        setOverview(data.data.overview);
-      } else {
-        toast.error("Cannot connect to server");
+      if (error.response?.status === 403) {
+        router.push("/forbidden");
+        return true;
       }
-    } catch (error) {
-      if (handleAuthError(error)) return;
-      toast.error("Failed to load overview report");
-    } finally {
-      setIsLoadingOverview(false);
     }
-  }
-
-  async function fetchEngagement(start: string, end: string) {
-    setIsLoadingEngagement(true);
-    try {
-      const { data } = await apiClient.get<{ success: boolean; data: EngagementMetrics }>(
-        "/api/reports/engagement",
-        {
-          params: { startDate: start, endDate: end },
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
-      );
-      if (data?.data) {
-        setEngagement(data.data);
-      } else {
-        toast.error("Cannot connect to server");
-      }
-    } catch (error) {
-      if (handleAuthError(error)) return;
-      toast.error("Failed to load engagement metrics");
-    } finally {
-      setIsLoadingEngagement(false);
-    }
-  }
-
-  async function fetchUsers(start: string, end: string) {
-    setIsLoadingUsers(true);
-    try {
-      const { data } = await apiClient.get<{ success: boolean; data: UserReport }>(
-        "/api/reports/users",
-        {
-          params: { startDate: start, endDate: end, limit: USERS_LIMIT },
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
-      );
-      if (data?.data) {
-        setUserReport(data.data);
-      } else {
-        toast.error("Cannot connect to server");
-      }
-    } catch (error) {
-      if (handleAuthError(error)) return;
-      toast.error("Failed to load user report");
-    } finally {
-      setIsLoadingUsers(false);
-    }
-  }
-
-  async function fetchPosts(start: string, end: string, filterTagId: string) {
-    setIsLoadingPosts(true);
-    try {
-      const { data } = await apiClient.get<{ success: boolean; data: PostReport }>(
-        "/api/reports/posts",
-        {
-          params: {
-            startDate: start,
-            endDate: end,
-            limit: POSTS_LIMIT,
-            tagId: filterTagId !== "all" ? filterTagId : undefined,
-          },
-          headers: { Authorization: `Bearer ${getToken()}` },
-        }
-      );
-      if (data?.data) {
-        setPostReport(data.data);
-      } else {
-        toast.error("Cannot connect to server");
-      }
-    } catch (error) {
-      if (handleAuthError(error)) return;
-      toast.error("Failed to load post report");
-    } finally {
-      setIsLoadingPosts(false);
-    }
-  }
+    return false;
+  }, [router]);
 
   useEffect(() => {
-    fetchTags();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let ignore = false;
+    async function loadTags() {
+      try {
+        const { data: response } = await apiClient.get<{ data?: Tags[] }>("/api/tags");
+        if (!ignore && response?.data) {
+          setTags(response.data);
+        }
+      } catch {
+        // Tag filter is a nice-to-have; silently ignore failures.
+      }
+    }
+    loadTags();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useEffect(() => {
-    fetchOverview(startDate, endDate);
-    fetchEngagement(startDate, endDate);
-    fetchUsers(startDate, endDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate]);
+    let ignore = false;
+
+    async function loadReports() {
+      try {
+        const [overviewRes, engagementRes, usersRes] = await Promise.allSettled([
+          apiClient.get<{ success: boolean; data: OverviewReportResponse }>("/api/reports/overview", {
+            params: { startDate, endDate },
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }),
+          apiClient.get<{ success: boolean; data: EngagementMetrics }>("/api/reports/engagement", {
+            params: { startDate, endDate },
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }),
+          apiClient.get<{ success: boolean; data: UserReport }>("/api/reports/users", {
+            params: { startDate, endDate, limit: USERS_LIMIT },
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }),
+        ]);
+
+        if (ignore) return;
+
+        if (overviewRes.status === "fulfilled" && overviewRes.value.data?.data?.overview) {
+          setOverview(overviewRes.value.data.data.overview);
+        } else if (overviewRes.status === "rejected") {
+          if (!handleAuthError(overviewRes.reason)) {
+            toast.error("Failed to load overview report");
+          }
+        }
+
+        if (engagementRes.status === "fulfilled" && engagementRes.value.data?.data) {
+          setEngagement(engagementRes.value.data.data);
+        } else if (engagementRes.status === "rejected") {
+          if (!handleAuthError(engagementRes.reason)) {
+            toast.error("Failed to load engagement metrics");
+          }
+        }
+
+        if (usersRes.status === "fulfilled" && usersRes.value.data?.data) {
+          setUserReport(usersRes.value.data.data);
+        } else if (usersRes.status === "rejected") {
+          if (!handleAuthError(usersRes.reason)) {
+            toast.error("Failed to load user report");
+          }
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoadingOverview(false);
+          setIsLoadingEngagement(false);
+          setIsLoadingUsers(false);
+        }
+      }
+    }
+
+    loadReports();
+
+    return () => {
+      ignore = true;
+    };
+  }, [startDate, endDate, handleAuthError]);
 
   useEffect(() => {
-    fetchPosts(startDate, endDate, tagId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate, tagId]);
+    let ignore = false;
+
+    async function loadPosts() {
+      try {
+        const { data } = await apiClient.get<{ success: boolean; data: PostReport }>(
+          "/api/reports/posts",
+          {
+            params: {
+              startDate,
+              endDate,
+              limit: POSTS_LIMIT,
+              tagId: tagId !== "all" ? tagId : undefined,
+            },
+            headers: { Authorization: `Bearer ${getToken()}` },
+          }
+        );
+        if (!ignore) {
+          if (data?.data) {
+            setPostReport(data.data);
+          } else {
+            toast.error("Cannot connect to server");
+          }
+        }
+      } catch (error) {
+        if (!ignore) {
+          if (!handleAuthError(error)) {
+            toast.error("Failed to load post report");
+          }
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoadingPosts(false);
+        }
+      }
+    }
+
+    loadPosts();
+
+    return () => {
+      ignore = true;
+    };
+  }, [startDate, endDate, tagId, handleAuthError]);
 
   function resetDateRange() {
+    setIsLoadingOverview(true);
+    setIsLoadingEngagement(true);
+    setIsLoadingUsers(true);
+    setIsLoadingPosts(true);
     setStartDate(defaultStartDate());
     setEndDate(defaultEndDate());
   }
@@ -309,7 +315,13 @@ export default function ReportsPage() {
                 type="date"
                 value={startDate}
                 max={endDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={(e) => {
+                  setIsLoadingOverview(true);
+                  setIsLoadingEngagement(true);
+                  setIsLoadingUsers(true);
+                  setIsLoadingPosts(true);
+                  setStartDate(e.target.value);
+                }}
               />
             </div>
             <div className="space-y-1.5 flex-1">
@@ -319,7 +331,13 @@ export default function ReportsPage() {
                 type="date"
                 value={endDate}
                 min={startDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                onChange={(e) => {
+                  setIsLoadingOverview(true);
+                  setIsLoadingEngagement(true);
+                  setIsLoadingUsers(true);
+                  setIsLoadingPosts(true);
+                  setEndDate(e.target.value);
+                }}
               />
             </div>
             <Button
@@ -649,7 +667,13 @@ export default function ReportsPage() {
               </CardDescription>
             </div>
             {tags.length > 0 && (
-              <Select value={tagId} onValueChange={setTagId}>
+              <Select
+                value={tagId}
+                onValueChange={(val) => {
+                  setIsLoadingPosts(true);
+                  setTagId(val);
+                }}
+              >
                 <SelectTrigger className="w-full sm:w-[200px]">
                   <SelectValue placeholder="Filter by tag" />
                 </SelectTrigger>

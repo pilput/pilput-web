@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MoreHorizontal, Trash, Edit, AlertTriangle } from "lucide-react";
 import {
@@ -44,6 +45,7 @@ const TagActionComponent = ({
   tag: Tags;
   refetchTags: () => void;
 }) => {
+  const router = useRouter();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -66,11 +68,11 @@ const TagActionComponent = ({
     if (isHttpError(error)) {
       if (error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        router.push("/login");
         return true;
       }
       if (error.response?.status === 403) {
-        window.location.href = "/forbidden";
+        router.push("/forbidden");
         return true;
       }
     }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, Heart, Plus, Search, Tag as TagIcon, TrendingUp } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -59,6 +60,7 @@ function extractErrorMessage(error: unknown, fallback: string): string {
 }
 
 export default function ManageTags() {
+  const router = useRouter();
   const [tags, setTags] = useState<Tags[]>([]);
   const [trending, setTrending] = useState<TrendingTag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -77,22 +79,22 @@ export default function ManageTags() {
     return tags.filter((tag) => tag.name.toLowerCase().includes(q));
   }, [tags, search]);
 
-  function handleAuthError(error: unknown): boolean {
+  const handleAuthError = useCallback((error: unknown): boolean => {
     if (isHttpError(error)) {
       if (error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        router.push("/login");
         return true;
       }
       if (error.response?.status === 403) {
-        window.location.href = "/forbidden";
+        router.push("/forbidden");
         return true;
       }
     }
     return false;
-  }
+  }, [router]);
 
-  async function fetchTags() {
+  const fetchTags = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data: response } = await apiClient.get<{
@@ -110,26 +112,41 @@ export default function ManageTags() {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  async function fetchTrending() {
-    try {
-      const { data: response } = await apiClient.get<{
-        success: boolean;
-        data?: TrendingTag[];
-      }>("/api/tags/trending");
-      if (response.success && Array.isArray(response.data)) {
-        setTrending(response.data);
-      }
-    } catch {
-      // Trending stats are a nice-to-have; silently ignore failures.
-    }
-  }
+  }, [handleAuthError]);
 
   useEffect(() => {
-    fetchTags();
-    fetchTrending();
-  }, []);
+    let ignore = false;
+
+    async function loadInitialData() {
+      try {
+        const [tagsRes, trendingRes] = await Promise.allSettled([
+          apiClient.get<{ success: boolean; data?: Tags[] }>("/api/tags"),
+          apiClient.get<{ success: boolean; data?: TrendingTag[] }>("/api/tags/trending"),
+        ]);
+        if (ignore) return;
+        if (tagsRes.status === "fulfilled" && tagsRes.value.data?.data) {
+          setTags(tagsRes.value.data.data);
+        } else if (tagsRes.status === "rejected") {
+          if (!handleAuthError(tagsRes.reason)) {
+            toast.error("Failed to load tags");
+          }
+        }
+        if (trendingRes.status === "fulfilled" && trendingRes.value.data?.data) {
+          setTrending(trendingRes.value.data.data);
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadInitialData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [handleAuthError]);
 
   function closeModal() {
     setModalOpen(false);

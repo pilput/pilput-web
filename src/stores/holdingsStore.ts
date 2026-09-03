@@ -113,7 +113,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     } catch (error) {
       if (isHttpError(error) && error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
       toast.error("Cannot connect to server");
     } finally {
@@ -140,7 +140,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     } catch (error) {
       if (isHttpError(error) && error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
       console.error("Failed to fetch holdings summary", error);
     } finally {
@@ -174,7 +174,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     } catch (error) {
       if (isHttpError(error) && error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
       return null;
     }
@@ -218,7 +218,7 @@ export const useHoldingsStore = create<HoldingsState>((set, get) => ({
     } catch (error) {
       if (isHttpError(error) && error.response?.status === 401) {
         RemoveToken();
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
       toast.error("Failed to sync prices", { id: toastId });
       throw error;

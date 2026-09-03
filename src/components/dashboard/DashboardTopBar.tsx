@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,13 +25,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Settings, User, LogOut, Home, Moon, Sun } from "lucide-react";
 
 const DashboardTopBar = () => {
+  const router = useRouter();
   const user = authStore((state) => state.data);
   const fetchUser = authStore((state) => state.fetch);
   const { resolvedTheme, setTheme } = useTheme();
 
   async function logout() {
     await logoutUser();
-    window.location.href = "/";
+    router.push("/");
   }
 
   const toggleTheme = () => {

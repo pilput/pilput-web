@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getCookie } from "cookies-next";
 import Link from "next/link";
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const ButtonLogged = () => {
+  const router = useRouter();
   const token = getCookie("token")?.toString() || "";
 
   return (
@@ -45,7 +47,7 @@ const ButtonLogged = () => {
               <DropdownMenuItem
                 onClick={async () => {
                   await logoutUser();
-                  window.location.href = "/login";
+                  router.push("/login");
                 }}
                 className="text-red-600 dark:text-red-400"
               >

@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
@@ -59,8 +60,8 @@ function DefaultErrorFallback({ error, reset }: { error?: Error; reset: () => vo
           <Button onClick={reset} className="mr-2">
             Try again
           </Button>
-          <Button variant="outline" onClick={() => window.location.href = "/"}>
-            Go home
+          <Button variant="outline" asChild>
+            <Link href="/">Go home</Link>
           </Button>
         </CardContent>
       </Card>

@@ -44,9 +44,9 @@ export const ErrorHandlerAPI = (error: unknown) => {
         !currentUrl.startsWith("/register")
       ) {
         const redirectParam = encodeURIComponent(currentUrl);
-        window.location.href = `/login?redirect=${redirectParam}`;
+        window.location.replace(`/login?redirect=${redirectParam}`);
       } else {
-        window.location.href = "/login";
+        window.location.replace("/login");
       }
     }
 
