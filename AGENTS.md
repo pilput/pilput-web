@@ -3,26 +3,27 @@
 ## Commands
 
 ```bash
-bun run dev       # dev server (http://localhost:3000)
-bun run build     # production build
-bun run start     # production server
-bun run lint      # ESLint (eslint-config-next/core-web-vitals)
-bunx tsc --noEmit # type-check (no script in package.json)
+bun run dev        # dev server (http://localhost:3000)
+bun run build      # production build
+bun run start      # production server
+bun run lint       # ESLint (eslint-config-next/core-web-vitals)
+bun run typecheck  # tsc --noEmit
+bun run check      # typecheck + lint
 ```
 
-Bun is the only package manager — `bun.lock` is the sole lockfile (no npm/yarn/pnpm). Use `bun` for installs and run scripts; don't generate an npm `package-lock.json`. TypeScript is v7 (the native compiler).
+Bun is the only package manager — `bun.lock` is the sole lockfile (no npm/yarn/pnpm). Bun version is pinned in `.mise.toml`. TypeScript is v5 (strict mode, `@/*` → `./src/*`).
 
-No test runner is configured (no `src/test/`). Single-package Next.js app — `next-turbo` is just the repo name; there is no Turborepo or workspace setup. No CI workflows exist (`.github/workflows/` is empty).
+No test runner is configured (no `src/test/` despite the README tree). Single-package Next.js app — `next-turbo` is just the repo name; there is no Turborepo or workspace setup. No CI (no `.github/` directory).
 
 ## Architecture
 
 - **Next.js 16+ App Router** — all routes under `src/app/`. See the agent-rules block at the bottom: read `node_modules/next/dist/docs/` before writing Next-specific code (APIs differ from older versions)
-- **API client**: `apiClient` in `src/utils/fetch.ts` (thin wrapper around native `fetch`, not Axios) → `NEXT_PUBLIC_API_URL`. It transparently refreshes an expired JWT via `/api/auth/refresh` on a 401 and retries once (single shared in-flight refresh), passes `FormData` through for uploads, and defaults to `cache: "no-store"`
+- **API client**: `apiClient` in `src/utils/fetch.ts` (thin wrapper around native `fetch`, not Axios) → `NEXT_PUBLIC_API_URL`. It transparently refreshes an expired JWT via `/api/auth/refresh` on a 401 for authenticated requests and retries once (single shared in-flight refresh), passes `FormData` through for uploads, and defaults to `cache: "no-store"`
 - **Auth**: JWT access + refresh tokens in cookies via `cookies-next`; see `src/utils/Auth.ts`. Cookies are `secure: true`, `sameSite: "none"`, and domain-scoped to `.NEXT_PUBLIC_DOMAIN` — so they require HTTPS; plain `http://localhost` will silently drop them
 - **State**: Zustand stores in `src/stores/`
 - **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
 - **Rich text**: TipTap v3 editor in `src/components/post/Editor.tsx`; code blocks use **highlight.js/lowlight** (`src/lib/code-block-highlight.ts`, `src/lib/code-highlight.ts`). Prism (`rehype-prism-plus`) is only used for chat Markdown rendering (`src/components/chat/markdown.tsx`)
-- **UI components**: Shadcn UI (new-york, `src/components/ui/`, `components.json`); add new ones via `npx shadcn@latest add <name>`
+- **UI components**: Shadcn UI (new-york, `src/components/ui/`, `components.json`); add new ones via `bunx shadcn@latest add <name>`
 
 ## Conventions
 
