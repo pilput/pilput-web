@@ -1,10 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { getCookie } from "cookies-next";
 import Link from "next/link";
-import { User, LogIn, Settings, ChevronDown } from "lucide-react";
+import { LayoutDashboard, LogIn, Settings, ChevronDown, LogOut } from "lucide-react";
 import { logoutUser } from "@/utils/fetch";
+import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,57 +15,71 @@ import {
 
 const ButtonLogged = () => {
   const router = useRouter();
-  const token = getCookie("token")?.toString() || "";
+  const { isLoggedIn, ready } = useIsLoggedIn();
+
+  // Reserve the slot until the cookie is readable so the bar doesn't reflow.
+  if (!ready) {
+    return <div className="h-8 w-24 animate-pulse rounded-md bg-muted/60" aria-hidden="true" />;
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <Link href="/login">
+        <Button size="sm" className="gap-2 rounded-full px-4 shadow-sm">
+          <LogIn className="h-4 w-4" />
+          Login
+        </Button>
+      </Link>
+    );
+  }
 
   return (
-    <>
-      {token ? (
-        <div className="flex items-center">
-          {/* Dashboard button */}
-          <Link href="/dashboard">
-            <Button variant="default" size="sm" className="rounded-r-none gap-2">
-              <User className="h-4 w-4" />
-              Dashboard
-            </Button>
-          </Link>
+    <div className="flex items-center">
+      {/* Dashboard button */}
+      <Link href="/dashboard">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2 rounded-l-full rounded-r-none border-r-0 pl-4"
+        >
+          <LayoutDashboard className="h-4 w-4" />
+          Dashboard
+        </Button>
+      </Link>
 
-          {/* Separate dropdown trigger */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="default" size="sm" className="rounded-l-none px-2">
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href="/account" className="flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
-                  Account Settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={async () => {
-                  await logoutUser();
-                  router.push("/login");
-                }}
-                className="text-red-600 dark:text-red-400"
-              >
-                <LogIn className="h-4 w-4 rotate-180" />
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      ) : (
-        <Link href="/login" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md">
-          <Button variant="outline" size="sm" className="gap-2">
-            <LogIn className="h-4 w-4" />
-            Login
+      {/* Separate dropdown trigger */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-l-none rounded-r-full px-2 pr-3"
+            aria-label="Account menu"
+          >
+            <ChevronDown className="h-4 w-4" />
           </Button>
-        </Link>
-      )}
-    </>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="min-w-45">
+          <DropdownMenuItem asChild>
+            <Link href="/account" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Account Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={async () => {
+              await logoutUser();
+              router.push("/login");
+            }}
+            className="gap-2 text-red-600 dark:text-red-400"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
 

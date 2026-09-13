@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BookOpenText,
-  ChevronDown,
   Globe2,
   PenLine,
   ShieldCheck,
@@ -128,10 +127,10 @@ const Hero = () => {
   }, [selectedTag]);
 
   return (
-    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/40 pt-6 pb-16 sm:pt-8 sm:pb-20 lg:pt-10 lg:pb-24">
+    <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/40 pt-12 pb-20 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-28">
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background/50 to-background dark:from-muted/10" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-60" />
+      <div className="absolute inset-0 bg-linear-to-b from-muted/30 via-background/50 to-background dark:from-muted/10" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-size-[32px_32px] opacity-60" />
       <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
 
       <HeroBackground />
@@ -148,15 +147,15 @@ const Hero = () => {
             </Badge>
           </div>
 
-          <div className="mt-7 max-w-5xl space-y-5 landing-reveal landing-delay-1">
-            <h1 className="text-4xl font-extrabold leading-[1.03] tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+          <div className="mt-7 max-w-4xl space-y-6 landing-reveal landing-delay-1">
+            <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
               Write and publish
-              <span className="block bg-linear-to-r from-primary via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="block bg-linear-to-r from-primary via-indigo-600 to-purple-600 bg-clip-text pb-1 text-transparent dark:via-indigo-400 dark:to-purple-400">
                 ideas worth reading.
               </span>
             </h1>
 
-            <p className="mx-auto max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg lg:text-xl">
+            <p className="mx-auto max-w-2xl text-base leading-7 text-pretty text-muted-foreground sm:text-lg">
               PILPUT gives writers a clean place to draft, publish, discover,
               and grow without burying the work under clutter.
             </p>
@@ -166,7 +165,7 @@ const Hero = () => {
             <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold bg-gradient-to-r from-primary to-primary/90 text-primary-foreground hover:brightness-105 transition-all duration-300 sm:min-w-48 cursor-pointer border-0"
+                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold bg-linear-to-r from-primary to-primary/90 text-primary-foreground hover:brightness-105 transition-all duration-300 sm:min-w-48 cursor-pointer border-0"
               >
                 <PenLine className="mr-2 h-4 w-4" />
                 Start writing
@@ -185,6 +184,14 @@ const Hero = () => {
               </Button>
             </Link>
           </div>
+
+          <p className="mt-4 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-xs font-medium text-muted-foreground landing-reveal landing-delay-2">
+            <span>Free to start</span>
+            <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
+            <span>No credit card required</span>
+            <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
+            <span>Publish in seconds</span>
+          </p>
 
           <div className="relative mt-12 w-full max-w-5xl landing-reveal landing-delay-3 group">
             {/* Ambient glows behind the editor */}
@@ -325,7 +332,7 @@ const Hero = () => {
                     </button>
                   </div>
 
-                  <div className="relative space-y-5 p-6 sm:p-8 min-h-[320px] flex flex-col justify-between">
+                  <div className="relative space-y-5 p-6 sm:p-8 min-h-80 flex flex-col justify-between">
                     <div className="space-y-4">
                       <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
                         <span className="rounded bg-emerald-500/10 px-2 py-0.5 font-bold text-emerald-600 dark:text-emerald-400">
@@ -494,9 +501,6 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 opacity-30 landing-float select-none pointer-events-none">
-        <ChevronDown className="h-5 w-5" />
-      </div>
     </section>
   );
 };

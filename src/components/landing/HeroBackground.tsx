@@ -16,6 +16,13 @@ interface Particle {
 const CONNECTION_DIST = 196;
 const PARTICLE_COUNT = 98;
 
+/** Pair-wise linking is O(n²), so thin the field out on small screens. */
+function particleCountFor(width: number) {
+  if (width < 640) return Math.round(PARTICLE_COUNT * 0.4);
+  if (width < 1024) return Math.round(PARTICLE_COUNT * 0.65);
+  return PARTICLE_COUNT;
+}
+
 const HeroBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { resolvedTheme } = useTheme();
@@ -27,7 +34,10 @@ const HeroBackground = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let animId: number;
+    let running = false;
     let particles: Particle[] = [];
     let W = 0;
     let H = 0;
@@ -64,7 +74,7 @@ const HeroBackground = () => {
     }
 
     function spawnParticles() {
-      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      particles = Array.from({ length: particleCountFor(W) }, () => ({
         x: Math.random() * W,
         y: Math.random() * H,
         vx: (Math.random() - 0.5) * 0.56,
@@ -166,7 +176,19 @@ const HeroBackground = () => {
         ctx!.fillRect(0, 0, W, H);
       }
 
-      animId = requestAnimationFrame(draw);
+      if (running) animId = requestAnimationFrame(draw);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      draw();
+    }
+
+    function stop() {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(animId);
     }
 
     const ro = new ResizeObserver(() => {
@@ -175,13 +197,34 @@ const HeroBackground = () => {
     });
     ro.observe(canvas);
 
+    // Only burn frames while the hero is actually on screen and the tab is
+    // in the foreground — this canvas keeps running otherwise.
+    let onScreen = true;
+    const syncRunning = () => {
+      if (onScreen && !document.hidden) start();
+      else stop();
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        syncRunning();
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
+    document.addEventListener("visibilitychange", syncRunning);
+
     resize();
     spawnParticles();
-    draw();
+    start();
 
     return () => {
-      cancelAnimationFrame(animId);
+      stop();
       ro.disconnect();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", syncRunning);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };

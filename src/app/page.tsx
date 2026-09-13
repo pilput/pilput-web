@@ -1,4 +1,5 @@
 import Navbar from "@/components/header/Navbar";
+import SkipToContent from "@/components/a11y/SkipToContent";
 import Hero from "@/components/landing/Hero";
 import Highlights from "@/components/landing/Highlights";
 import Features from "@/components/landing/Features";
@@ -52,6 +53,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(organizationJsonLd) }}
       />
+      <SkipToContent />
       <Navbar />
       <main id="main-content">
         <LandingMotionObserver />

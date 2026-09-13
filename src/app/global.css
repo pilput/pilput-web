@@ -268,6 +268,23 @@
     border-bottom: 1px solid color-mix(in oklch, var(--border) 45%, transparent);
   }
 
+  /* Marketing navbar: invisible at rest, glass once content slides under it */
+  .nav-surface {
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .nav-surface[data-scrolled="true"] {
+    background-color: color-mix(in oklch, var(--background) 72%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-bottom-color: color-mix(in oklch, var(--border) 70%, transparent);
+    box-shadow: 0 8px 24px -16px color-mix(in oklch, var(--foreground) 35%, transparent);
+  }
+
   .glass-card {
     background-color: color-mix(in oklch, var(--card) 80%, transparent);
     backdrop-filter: blur(12px);
