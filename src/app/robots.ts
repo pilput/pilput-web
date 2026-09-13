@@ -17,13 +17,15 @@ export default function robots(): MetadataRoute.Robots {
           "/account",
           "/profile",
           "/login",
-          "/register"
+          "/register",
+          "/feed-home"
         ],
       },
     ],
     sitemap: [
       `${baseUrl}/sitemap.xml`,
       `${baseUrl}/posts/sitemap.xml`,
+      `${baseUrl}/tags/sitemap.xml`,
     ],
     host: baseUrl,
   };

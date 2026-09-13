@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-import { cookies } from "next/headers";
 import Navbar from "@/components/header/Navbar";
 import Hero from "@/components/landing/Hero";
 import Highlights from "@/components/landing/Highlights";
@@ -8,36 +6,15 @@ import LandingMotionObserver from "@/components/landing/LandingMotionObserver";
 import CallToAction from "@/components/landing/CallToAction";
 import Community from "@/components/landing/Community";
 import Footer from "@/components/footer/Footer";
-import HomeFeedContent from "@/components/home/HomeFeedContent";
 import { Config } from "@/utils/getConfig";
-import { postsPerPage } from "@/lib/blog-feed-data";
 import { toSafeJsonLd } from "@/utils/sanitize";
 
-/** Cookie read per request — needed to branch guest (SSR landing) vs logged-in (client feed only) */
-export const dynamic = "force-dynamic";
-
-export default async function Home() {
-  const isLoggedIn = Boolean((await cookies()).get("token")?.value);
-
-  if (isLoggedIn) {
-    return (
-      <>
-        <Navbar />
-        <Suspense
-          fallback={
-            <div className="min-h-screen bg-background animate-pulse" />
-          }
-        >
-          <HomeFeedContent
-            initialPosts={[]}
-            initialTotal={0}
-            postsPerPage={postsPerPage}
-          />
-        </Suspense>
-      </>
-    );
-  }
-
+/**
+ * Guest landing page only — logged-in visitors are rewritten (URL stays "/")
+ * to /feed-home by middleware.ts before this ever renders. That keeps this
+ * route fully static/cacheable for crawlers and anonymous traffic.
+ */
+export default function Home() {
   const baseUrl = Config.mainbaseurl;
 
   const webSiteJsonLd = {
