@@ -33,6 +33,7 @@ const DashboardTopBar = () => {
   async function logout() {
     await logoutUser();
     router.push("/");
+    router.refresh();
   }
 
   const toggleTheme = () => {

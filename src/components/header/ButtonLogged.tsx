@@ -71,6 +71,7 @@ const ButtonLogged = () => {
             onClick={async () => {
               await logoutUser();
               router.push("/login");
+              router.refresh();
             }}
             className="gap-2 text-red-600 dark:text-red-400"
           >

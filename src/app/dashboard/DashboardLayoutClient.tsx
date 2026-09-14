@@ -175,6 +175,7 @@ function AppSidebar() {
   async function handleLogout() {
     await logoutUser();
     router.push("/");
+    router.refresh();
   }
 
   const filteredNavMain = navMain
