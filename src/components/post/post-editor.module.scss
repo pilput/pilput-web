@@ -330,8 +330,9 @@
 
     outline: none;
     min-height: 380px;
-    font-size: 1rem;
-    line-height: 1.75;
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    letter-spacing: -0.003em;
     color: var(--foreground);
 
     // Placeholder

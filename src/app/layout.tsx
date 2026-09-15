@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "next-themes";
-import { Geist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import { Config } from "@/utils/getConfig";
 import "./global.css";
@@ -89,10 +89,11 @@ export const metadata: Metadata = {
   },
 };
 
-const geist = Geist({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
 });
+
 export default function RootLayout({
   children,
 }: {
@@ -100,7 +101,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={geist.className}>
+      <body className={plusJakartaSans.className}>
         <ThemeProvider attribute="class">
           <TooltipProvider>{children}</TooltipProvider>
           <Toaster />

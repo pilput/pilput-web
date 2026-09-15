@@ -94,7 +94,8 @@
   @include codeThemeVars;
 
   font-size: 1.125rem;
-  line-height: 1.75;
+  line-height: 1.85;
+  letter-spacing: -0.003em;
   color: var(--foreground);
   max-width: none;
 
@@ -127,7 +128,7 @@
 
   // Paragraphs
   p {
-    margin-bottom: 1.5em;
+    margin-bottom: 1.65em;
     color: var(--foreground);
   }
 
@@ -338,7 +339,7 @@
 
 // ── Reading container ─────────────────────────────────────────────────────
 .postViewContainer {
-  max-width: 52rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 2.5rem 1.25rem;
 
@@ -394,8 +395,8 @@
     font-size: 2rem;
     font-weight: 800;
     color: var(--foreground);
-    line-height: 1.18;
-    letter-spacing: -0.03em;
+    line-height: 1.22;
+    letter-spacing: -0.025em;
     margin-bottom: 1rem;
 
     @media (min-width: 640px) {
