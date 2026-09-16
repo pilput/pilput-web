@@ -13,12 +13,12 @@ bun run check      # typecheck + lint
 
 Bun is the only package manager — `bun.lock` is the sole lockfile (no npm/yarn/pnpm). Bun version is pinned in `.mise.toml`. TypeScript is v5 (strict mode, `@/*` → `./src/*`).
 
-No test runner is configured (no `src/test/` despite the README tree). Single-package Next.js app — `next-turbo` is just the repo name; there is no Turborepo or workspace setup. No CI (no `.github/` directory).
+No test runner is configured (no `test` script; `src/test/` from the README tree does not exist). Single-package Next.js app — `next-turbo` is just the old repo name; there is no Turborepo or workspace setup. No active CI (`.github/workflows/` exists but is empty).
 
 ## Architecture
 
 - **Next.js 16+ App Router** — all routes under `src/app/`. See the agent-rules block at the bottom: read `node_modules/next/dist/docs/` before writing Next-specific code (APIs differ from older versions)
-- **API client**: `apiClient` in `src/utils/fetch.ts` (thin wrapper around native `fetch`, not Axios) → `NEXT_PUBLIC_API_URL`. It transparently refreshes an expired JWT via `/api/auth/refresh` on a 401 for authenticated requests and retries once (single shared in-flight refresh), passes `FormData` through for uploads, and defaults to `cache: "no-store"`
+- **API client**: `apiClient` in `src/utils/fetch.ts` (thin wrapper around native `fetch`, not Axios) → `NEXT_PUBLIC_API_URL`. It does **not** attach `Authorization` automatically — callers must pass `headers: { Authorization: \`Bearer ${getToken()}\` }`. It transparently refreshes an expired JWT via `/api/auth/refresh` on a 401 for authenticated requests and retries once (single shared in-flight refresh), passes `FormData` through for uploads, and defaults to `cache: "no-store"`. Errors are `HttpError`; helpers in `fetch.ts` convert them via `ErrorHandlerAPI` (toasts + login redirect on 401)
 - **Auth**: JWT access + refresh tokens in cookies via `cookies-next`; see `src/utils/Auth.ts`. Cookies are `secure: true`, `sameSite: "none"`, and domain-scoped to `.NEXT_PUBLIC_DOMAIN` — so they require HTTPS; plain `http://localhost` will silently drop them
 - **State**: Zustand stores in `src/stores/`
 - **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
@@ -33,6 +33,8 @@ No test runner is configured (no `src/test/` despite the README tree). Single-pa
 - Style utilities: `cn()` from `@/lib/utils` (clsx + tailwind-merge)
 - Form validation schemas must be defined in `src/lib/validation.ts` with Zod, not inline
 - Post editor styles are SCSS modules (`src/components/post/*.module.scss`); everything else is Tailwind
+- Render stored TipTap HTML only via `sanitizeHtml()` (`src/utils/sanitize.ts`) + `dangerouslySetInnerHTML` — it allow-lists tags and drops non-YouTube iframes; serialize JSON-LD with `toSafeJsonLd()`
+- Resolve image paths via `getUrlImage()` / `getProfilePicture()` (`src/utils/getImage.ts`) — they prepend `NEXT_PUBLIC_STORAGE_URL`; don't hardcode the host
 - Turbopack: `next.config.ts` sets `turbopack.root`; Next 16 runs Turbopack for dev/build — don't add `webpack` config
 - Security headers for all routes are set in `next.config.ts` `headers()`; `next/image` `remotePatterns` are allow-listed there — add new image hosts there, not via `unoptimized`
 
