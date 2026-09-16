@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import RandomPosts from "@/components/post/RandomPosts";
+import PostItemPulse from "@/components/post/PostItemPulse";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sparkles, RefreshCw, ArrowRight } from "lucide-react";
@@ -11,15 +12,38 @@ import { cn } from "@/lib/utils";
 export default function Community() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(
+    () => typeof IntersectionObserver === "undefined"
+  );
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Defer the `/api/posts/random` fetch until the feed is near the viewport,
+  // so landing LCP doesn't compete with a below-the-fold API call.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const handleRefresh = useCallback(() => {
+    setShouldLoad(true);
     setIsRefreshing(true);
     setRefreshKey((k) => k + 1);
     setTimeout(() => setIsRefreshing(false), 700);
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-background py-20 sm:py-24 lg:py-28">
+    <section ref={sectionRef} className="relative overflow-hidden bg-background py-20 sm:py-24 lg:py-28">
       <div className="absolute inset-x-0 top-0 h-44 bg-linear-to-b from-muted/55 to-transparent dark:from-muted/20" />
 
       {/* Decorative Glow Blobs */}
@@ -57,7 +81,20 @@ export default function Community() {
               : "opacity-100 scale-100 blur-none"
           )}
         >
-          <RandomPosts key={refreshKey} showHeader={false} />
+          {shouldLoad ? (
+            <RandomPosts key={refreshKey} showHeader={false} />
+          ) : (
+            // Same grid + skeleton cards as the real feed so swapping in
+            // content later doesn't shift layout (no CLS).
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 py-8"
+              aria-hidden="true"
+            >
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <PostItemPulse key={i} />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row landing-reveal landing-delay-2">

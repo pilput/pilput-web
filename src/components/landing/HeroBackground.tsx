@@ -26,7 +26,7 @@ function particleCountFor(width: number) {
 const HeroBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { resolvedTheme } = useTheme();
-  const mouseRef = useRef({ x: -1000, y: -1000, active: false });
+  const mouseRef = useRef({ x: -1000, y: -1000, active: false, queued: false });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -50,10 +50,17 @@ const HeroBackground = () => {
     const accentL = 60;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
-      mouseRef.current.active = true;
+      // Coalesce bursts of mousemove events — the draw loop reads the latest
+      // position once per frame, so no per-event layout work is needed.
+      if (mouseRef.current.queued) return;
+      mouseRef.current.queued = true;
+      requestAnimationFrame(() => {
+        const rect = canvas.getBoundingClientRect();
+        mouseRef.current.x = e.clientX - rect.left;
+        mouseRef.current.y = e.clientY - rect.top;
+        mouseRef.current.active = true;
+        mouseRef.current.queued = false;
+      });
     };
 
     const handleMouseLeave = () => {

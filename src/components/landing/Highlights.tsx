@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Sparkles, PieChart, MessageCircle } from "lucide-react";
+import { BookOpen, Sparkles, PieChart, MessageCircle, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,7 @@ const highlights = [
     index: "01",
     title: "Focus",
     subtitle: "Immersive Editor",
-    description: "Draft articles, tutorials, and investment logs with a clean, distraction-free markdown-first editor designed for deep work.",
+    description: "Draft articles, tutorials, and essays with a clean, distraction-free markdown-first editor designed for deep work.",
     icon: BookOpen,
     accent: "violet",
     colorClass: "text-violet-500 bg-violet-500/10 border-violet-500/20",
@@ -33,7 +33,7 @@ const highlights = [
     index: "02",
     title: "Refine",
     subtitle: "AI Companion",
-    description: "Brainstorm finance topics, auto-generate outlines, and refine your prose using our integrated AI helper that understands your context.",
+    description: "Brainstorm topics, auto-generate outlines, and refine your prose using our integrated AI helper that understands your context.",
     icon: Sparkles,
     accent: "purple",
     colorClass: "text-purple-500 bg-purple-500/10 border-purple-500/20",
@@ -97,7 +97,10 @@ const highlights = [
           </div>
         </div>
         <div className="text-[8px] font-bold text-muted-foreground flex items-center gap-1.5">
-          <span>👏 148 claps</span>
+          <span className="inline-flex items-center gap-1">
+            <Heart className="h-2.5 w-2.5 text-rose-500" />
+            148 likes
+          </span>
           <span className="w-0.5 h-0.5 rounded-full bg-border" />
           <span>8 comments</span>
         </div>

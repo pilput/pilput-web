@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -30,7 +31,7 @@ const trustItems = [
   {
     icon: ShieldCheck,
     title: "Start free",
-    desc: "Publish your first draft without setup drag.",
+    desc: "No setup, no clutter — publish your first draft in seconds.",
   },
   {
     icon: Zap,
@@ -77,6 +78,34 @@ const articlesData: Record<
   },
 };
 
+function ToolbarButton({
+  label,
+  pressed,
+  onToggle,
+  children,
+}: {
+  label: string;
+  pressed?: boolean;
+  onToggle?: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={label}
+      aria-pressed={onToggle ? pressed : undefined}
+      className={cn(
+        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
+        pressed &&
+          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
 const Hero = () => {
   const [selectedTag, setSelectedTag] = useState("Markdown");
   const [titleText, setTitleText] = useState("");
@@ -105,9 +134,19 @@ const Hero = () => {
   };
 
   useEffect(() => {
-    let active = true;
     const targetTitle = articlesData[selectedTag].title;
 
+    // Users who prefer reduced motion get the full title immediately —
+    // no typing animation, no empty heading on first paint.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const frame = requestAnimationFrame(() => {
+        setTitleText(targetTitle);
+        setIsTitleTyped(true);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+
+    let active = true;
     let index = 0;
     const interval = setInterval(() => {
       if (!active) return;
@@ -156,8 +195,8 @@ const Hero = () => {
             </h1>
 
             <p className="mx-auto max-w-2xl text-base leading-7 text-pretty text-muted-foreground sm:text-lg">
-              PILPUT gives writers a clean place to draft, publish, discover,
-              and grow without burying the work under clutter.
+              Pilput gives writers a clean, focused space to draft, publish,
+              and grow an audience — without the clutter.
             </p>
           </div>
 
@@ -210,126 +249,85 @@ const Hero = () => {
               <div className="grid gap-0 lg:grid-cols-[1.25fr_0.75fr]">
                 <div className="flex flex-col border-b border-border/40 lg:border-b-0">
                   <div className="flex flex-wrap items-center gap-1.5 border-b border-border/45 px-5 py-2.5 bg-muted/10 select-none">
-                    <button
-                      type="button"
-                      onClick={() => toggleFormat("bold")}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.bold &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Bold"
+                    <ToolbarButton
+                      label="Bold"
+                      pressed={activeFormats.bold}
+                      onToggle={() => toggleFormat("bold")}
                     >
                       <Bold className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleFormat("italic")}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.italic &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Italic"
+                    </ToolbarButton>
+                    <ToolbarButton
+                      label="Italic"
+                      pressed={activeFormats.italic}
+                      onToggle={() => toggleFormat("italic")}
                     >
                       <Italic className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleFormat("underline")}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.underline &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Underline"
+                    </ToolbarButton>
+                    <ToolbarButton
+                      label="Underline"
+                      pressed={activeFormats.underline}
+                      onToggle={() => toggleFormat("underline")}
                     >
                       <Underline className="w-3.5 h-3.5" />
-                    </button>
+                    </ToolbarButton>
                     <span className="h-4 w-px bg-border mx-1" />
-                    <button
-                      type="button"
-                      onClick={() => {
+                    <ToolbarButton
+                      label="Heading 1"
+                      pressed={activeFormats.heading === 1}
+                      onToggle={() => {
                         setActiveFormats((prev) => ({
                           ...prev,
                           heading: prev.heading === 1 ? 0 : 1,
                         }));
                       }}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.heading === 1 &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Heading 1"
                     >
                       <Heading1 className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
+                    </ToolbarButton>
+                    <ToolbarButton
+                      label="Heading 2"
+                      pressed={activeFormats.heading === 2}
+                      onToggle={() => {
                         setActiveFormats((prev) => ({
                           ...prev,
                           heading: prev.heading === 2 ? 0 : 2,
                         }));
                       }}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.heading === 2 &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Heading 2"
                     >
                       <Heading2 className="w-3.5 h-3.5" />
-                    </button>
+                    </ToolbarButton>
                     <span className="h-4 w-px bg-border mx-1" />
-                    <button
-                      type="button"
-                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-not-allowed opacity-50"
-                      title="Bullet List"
-                      disabled
+                    <span
+                      aria-hidden="true"
+                      className="p-1.5 text-muted-foreground/50 rounded-lg"
                     >
                       <List className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-not-allowed opacity-50"
-                      title="Align Left"
-                      disabled
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="p-1.5 text-muted-foreground/50 rounded-lg"
                     >
                       <AlignLeft className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleFormat("code")}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.code &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Code Block"
+                    </span>
+                    <ToolbarButton
+                      label="Code block"
+                      pressed={activeFormats.code}
+                      onToggle={() => toggleFormat("code")}
                     >
                       <Code className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-not-allowed opacity-50"
-                      title="Add Image"
-                      disabled
+                    </ToolbarButton>
+                    <span
+                      aria-hidden="true"
+                      className="p-1.5 text-muted-foreground/50 rounded-lg"
                     >
                       <ImageIcon className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleFormat("quote")}
-                      className={cn(
-                        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
-                        activeFormats.quote &&
-                          "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
-                      )}
-                      title="Quote"
+                    </span>
+                    <ToolbarButton
+                      label="Quote"
+                      pressed={activeFormats.quote}
+                      onToggle={() => toggleFormat("quote")}
                     >
                       <Quote className="w-3.5 h-3.5" />
-                    </button>
+                    </ToolbarButton>
                   </div>
 
                   <div className="relative space-y-5 p-6 sm:p-8 min-h-80 flex flex-col justify-between">
@@ -343,7 +341,7 @@ const Hero = () => {
                         <span>Ready to publish</span>
                       </div>
 
-                      <h2
+                      <p
                         className={cn(
                           "text-xl sm:text-2xl font-black tracking-tight text-foreground transition-all duration-300 leading-tight",
                           activeFormats.heading === 1 && "text-2xl sm:text-4xl",
@@ -355,7 +353,7 @@ const Hero = () => {
                       >
                         {titleText}
                         <span className="inline-block w-0.5 h-6 ml-0.5 bg-primary animate-cursor-blink align-middle" />
-                      </h2>
+                      </p>
 
                       <div
                         className={cn(
@@ -484,9 +482,9 @@ const Hero = () => {
                           <item.icon className="h-4.5 w-4.5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-foreground">
+                          <p className="text-sm font-bold text-foreground">
                             {item.title}
-                          </h3>
+                          </p>
                           <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
                             {item.desc}
                           </p>
