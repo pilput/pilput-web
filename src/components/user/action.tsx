@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { MoreHorizontal, Eye, Trash, Edit, AlertTriangle, RefreshCw } from "lucide-react";
+import { MoreHorizontal, Eye, Trash, Edit, AlertTriangle, RefreshCw, LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,8 @@ import { apiClient, isHttpError } from "@/utils/fetch";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getToken } from "@/utils/Auth";
+import { useRouter } from "next/navigation";
+import { clearTokens, getToken } from "@/utils/Auth";
 import type { User } from "@/types/user";
 import { editUserSchema, type EditUserFormData } from "@/lib/validation";
 
@@ -40,9 +41,16 @@ const UserActionComponent = ({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  const [showRevokeDialog, setShowRevokeDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [isRevoking, setIsRevoking] = useState(false);
+
+  const router = useRouter();
+  // Revoking your own sessions is allowed, but it ends the session this page
+  // is running in, so the outcome has to be spelled out and acted on.
+  const isSelf = user.username === auth?.username;
 
   const editForm = useForm<EditUserFormData>({
     resolver: zodResolver(editUserSchema),
@@ -138,6 +146,49 @@ const UserActionComponent = ({
       }
     } finally {
       setIsRestoring(false);
+    }
+  };
+
+  const onRevokeSessions = async () => {
+    setIsRevoking(true);
+    const toastid = toast.loading("Revoking sessions...");
+    try {
+      const { data } = await apiClient.delete<{
+        data?: { revoked_sessions?: number };
+      }>(`/api/auth/sessions/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      const count = data?.data?.revoked_sessions ?? 0;
+      toast.success(
+        count === 1
+          ? "1 session revoked"
+          : `${count} sessions revoked`,
+        { id: toastid },
+      );
+      setShowRevokeDialog(false);
+
+      if (isSelf) {
+        // Our own refresh token is gone; staying on an admin page would only
+        // work until the current access token expires.
+        clearTokens();
+        router.push("/login");
+        return;
+      }
+      refetchUsers();
+    } catch (error) {
+      if (isHttpError(error)) {
+        const msg =
+          (error.response?.data as { message?: string })?.message ??
+          "Failed to revoke sessions";
+        toast.error(msg, { id: toastid });
+      } else {
+        toast.error("Failed to revoke sessions", { id: toastid });
+      }
+    } finally {
+      setIsRevoking(false);
     }
   };
 
@@ -237,6 +288,53 @@ const UserActionComponent = ({
               disabled={isDeleting}
             >
               {isDeleting ? "Deleting..." : "Delete User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Revoke Sessions Confirmation Dialog */}
+      <Dialog open={showRevokeDialog} onOpenChange={setShowRevokeDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-amber-600">
+              <LogOut className="h-5 w-5" />
+              Revoke Sessions
+            </DialogTitle>
+            <DialogDescription>
+              {isSelf
+                ? "This signs you out of every device, including this one. You will be sent back to the login page."
+                : "This signs the user out of every device. They will need to log in again."}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-4">
+            <div className="rounded-lg border bg-muted/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
+                  <p className="font-medium">{user.username}</p>
+                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Access tokens already issued stay valid until they expire, so API
+              access can continue for up to 15 minutes.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowRevokeDialog(false)}
+              disabled={isRevoking}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+              onClick={onRevokeSessions}
+              disabled={isRevoking}
+            >
+              {isRevoking ? "Revoking..." : "Revoke sessions"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -4,13 +4,20 @@ import { Config } from "./getConfig";
 export const ACCESS_TOKEN_COOKIE = "token";
 export const REFRESH_TOKEN_COOKIE = "refresh_token";
 
-// Refresh token cookie lifetime — long-lived so sessions can be renewed.
-const REFRESH_TOKEN_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-// The access JWT itself is valid 3h (enforced by the backend). Its cookie is
-// kept for the ENTIRE refresh window (7 days) so client-side auth checks
+// Mirrors the backend's REFRESH_TOKEN_EXPIRY (default 72h). That window is
+// *sliding*: the server moves its deadline forward on every rotation, and
+// because setTokens() runs on each one, these cookies slide with it. Keep this
+// in step with the backend — a cookie that outlives the session leaves the UI
+// claiming the user is logged in until the first API call proves otherwise.
+const REFRESH_TOKEN_MAX_AGE_MS = 72 * 60 * 60 * 1000; // 72 hours
+// The access JWT itself is valid 15m (enforced by the backend). Its cookie is
+// deliberately kept for the ENTIRE refresh window so client-side auth checks
 // (AuthGuard, ButtonLogged) stay "logged in"; an expired JWT triggers a
 // transparent refresh on the next API call, keeping the session alive.
 const ACCESS_TOKEN_MAX_AGE_MS = REFRESH_TOKEN_MAX_AGE_MS;
+// Not mirrored here: the backend also caps a login at REFRESH_TOKEN_ABSOLUTE_EXPIRY
+// (default 30d) regardless of activity. A sliding cookie cannot express that,
+// so a very long-lived session ends with a 401 rather than a vanished cookie.
 
 function cookieOptions(expiresInMs: number) {
   const expires = new Date();

@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -31,7 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { Search, UserPlus, Users, Shield, User as UserIcon } from "lucide-react";
+import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -41,7 +42,7 @@ import type { User } from "@/types/user";
 import UserActionComponent from "@/components/user/action";
 import { Paginate } from "@/components/common/Paginate";
 import { authStore } from "@/stores/userStore";
-import { getToken, RemoveToken } from "@/utils/Auth";
+import { clearTokens, getToken, RemoveToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { addUserSchema, type AddUserFormData } from "@/lib/validation";
@@ -52,6 +53,9 @@ export default function ManageUser() {
   const fetchAuth = authStore((state) => state.fetch);
   const [users, setusers] = useState<User[]>([]);
   const [modaluser, setmodaluser] = useState(false);
+  const [showRevokeAllDialog, setShowRevokeAllDialog] = useState(false);
+  const [revokeAllConfirmation, setRevokeAllConfirmation] = useState("");
+  const [isRevokingAll, setIsRevokingAll] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -249,6 +253,42 @@ export default function ManageUser() {
     }
   }
 
+  const REVOKE_ALL_PHRASE = "REVOKE ALL";
+
+  const onRevokeAllSessions = async () => {
+    setIsRevokingAll(true);
+    const toastid = toast.loading("Revoking every session...");
+    try {
+      const { data } = await apiClient.post<{
+        data?: { revoked_sessions?: number };
+      }>(
+        "/api/auth/sessions/revoke-all",
+        { confirm: true },
+        { headers: { Authorization: `Bearer ${getToken()}` } },
+      );
+
+      const count = data?.data?.revoked_sessions ?? 0;
+      toast.success(`${count} sessions revoked across all users`, {
+        id: toastid,
+      });
+
+      // This revoked our own refresh token too, so there is no session left to
+      // keep this page on.
+      clearTokens();
+      router.push("/login");
+    } catch (error) {
+      if (isHttpError(error)) {
+        const msg =
+          (error.response?.data as { message?: string })?.message ??
+          "Failed to revoke sessions";
+        toast.error(msg, { id: toastid });
+      } else {
+        toast.error("Failed to revoke sessions", { id: toastid });
+      }
+      setIsRevokingAll(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 w-full">
       {/* Page Header */}
@@ -261,124 +301,189 @@ export default function ManageUser() {
             Manage system users, administrators, and permissions.
           </p>
         </div>
-        <Dialog open={modaluser} onOpenChange={setmodaluser}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0">
-              <UserPlus className="h-4 w-4" />
-              Add new user
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add new user</DialogTitle>
-              <DialogDescription>
-                Create a new account with username, email, and password.
-              </DialogDescription>
-            </DialogHeader>
-            <form
-              onSubmit={addUserForm.handleSubmit(submitAddUser)}
-              className="space-y-4"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0 text-destructive border-destructive/40 hover:bg-destructive/10 hover:text-destructive"
+            onClick={() => {
+              setRevokeAllConfirmation("");
+              setShowRevokeAllDialog(true);
+            }}
+          >
+            <ShieldAlert className="h-4 w-4" />
+            Revoke all sessions
+          </Button>
+          <Dialog open={modaluser} onOpenChange={setmodaluser}>
+            <DialogTrigger asChild>
+              <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0">
+                <UserPlus className="h-4 w-4" />
+                Add new user
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add new user</DialogTitle>
+                <DialogDescription>
+                  Create a new account with username, email, and password.
+                </DialogDescription>
+              </DialogHeader>
+              <form
+                onSubmit={addUserForm.handleSubmit(submitAddUser)}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="first_name">First name</Label>
+                    <Input
+                      id="first_name"
+                      {...addUserForm.register("first_name")}
+                      placeholder="First name"
+                    />
+                    {addUserForm.formState.errors.first_name && (
+                      <p className="text-sm text-destructive">
+                        {addUserForm.formState.errors.first_name.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="last_name">Last name</Label>
+                    <Input
+                      id="last_name"
+                      {...addUserForm.register("last_name")}
+                      placeholder="Last name"
+                    />
+                    {addUserForm.formState.errors.last_name && (
+                      <p className="text-sm text-destructive">
+                        {addUserForm.formState.errors.last_name.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
                 <div className="space-y-2">
-                  <Label htmlFor="first_name">First name</Label>
+                  <Label htmlFor="username">Username</Label>
                   <Input
-                    id="first_name"
-                    {...addUserForm.register("first_name")}
-                    placeholder="First name"
+                    id="username"
+                    {...addUserForm.register("username")}
+                    placeholder="Enter username"
                   />
-                  {addUserForm.formState.errors.first_name && (
+                  {addUserForm.formState.errors.username && (
                     <p className="text-sm text-destructive">
-                      {addUserForm.formState.errors.first_name.message}
+                      {addUserForm.formState.errors.username.message}
                     </p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="last_name">Last name</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="last_name"
-                    {...addUserForm.register("last_name")}
-                    placeholder="Last name"
+                    id="email"
+                    type="email"
+                    {...addUserForm.register("email")}
+                    placeholder="Enter email"
                   />
-                  {addUserForm.formState.errors.last_name && (
+                  {addUserForm.formState.errors.email && (
                     <p className="text-sm text-destructive">
-                      {addUserForm.formState.errors.last_name.message}
+                      {addUserForm.formState.errors.email.message}
                     </p>
                   )}
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  {...addUserForm.register("username")}
-                  placeholder="Enter username"
-                />
-                {addUserForm.formState.errors.username && (
-                  <p className="text-sm text-destructive">
-                    {addUserForm.formState.errors.username.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...addUserForm.register("email")}
-                  placeholder="Enter email"
-                />
-                {addUserForm.formState.errors.email && (
-                  <p className="text-sm text-destructive">
-                    {addUserForm.formState.errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  {...addUserForm.register("password")}
-                  placeholder="Enter password"
-                />
-                {addUserForm.formState.errors.password && (
-                  <p className="text-sm text-destructive">
-                    {addUserForm.formState.errors.password.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  {...addUserForm.register("confirmPassword")}
-                  placeholder="Confirm password"
-                />
-                {addUserForm.formState.errors.confirmPassword && (
-                  <p className="text-sm text-destructive">
-                    {addUserForm.formState.errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={closeModaluser}
-                  disabled={isCreating}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isCreating}>
-                  {isCreating ? "Creating..." : "Create user"}
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    {...addUserForm.register("password")}
+                    placeholder="Enter password"
+                  />
+                  {addUserForm.formState.errors.password && (
+                    <p className="text-sm text-destructive">
+                      {addUserForm.formState.errors.password.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    {...addUserForm.register("confirmPassword")}
+                    placeholder="Confirm password"
+                  />
+                  {addUserForm.formState.errors.confirmPassword && (
+                    <p className="text-sm text-destructive">
+                      {addUserForm.formState.errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={closeModaluser}
+                    disabled={isCreating}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={isCreating}>
+                    {isCreating ? "Creating..." : "Create user"}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+
+      {/* Revoke All Sessions Confirmation Dialog */}
+      <Dialog open={showRevokeAllDialog} onOpenChange={setShowRevokeAllDialog}>
+        <DialogContent className="sm:max-w-[480px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <ShieldAlert className="h-5 w-5" />
+              Revoke Every Session
+            </DialogTitle>
+            <DialogDescription>
+              This signs out every user on the platform — including you. Use it
+              when a token leak is suspected but you do not know how far it
+              spread.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-xs text-muted-foreground">
+              Access tokens already issued stay valid until they expire, so API
+              access can continue for up to 15 minutes. Everyone will have to
+              log in again afterwards.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="revoke-all-confirm">
+                Type <span className="font-mono font-semibold">{REVOKE_ALL_PHRASE}</span> to confirm
+              </Label>
+              <Input
+                id="revoke-all-confirm"
+                value={revokeAllConfirmation}
+                onChange={(e) => setRevokeAllConfirmation(e.target.value)}
+                placeholder={REVOKE_ALL_PHRASE}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowRevokeAllDialog(false)}
+              disabled={isRevokingAll}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={onRevokeAllSessions}
+              disabled={isRevokingAll || revokeAllConfirmation !== REVOKE_ALL_PHRASE}
+            >
+              {isRevokingAll ? "Revoking..." : "Revoke all sessions"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* KPI Stats cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
