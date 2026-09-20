@@ -369,3 +369,29 @@ export const tagSchema = z.object({
 });
 
 export type TagFormData = z.infer<typeof tagSchema>;
+
+// Guild create validation schema. The slug is optional — the backend derives
+// one from the name when it is left empty — but it is immutable once set.
+export const guildSchema = z.object({
+  name: z.string()
+    .min(3, "Guild name must be at least 3 characters")
+    .max(100, "Guild name must be less than 100 characters"),
+  slug: z.string()
+    .min(3, "Slug must be at least 3 characters")
+    .max(100, "Slug must be less than 100 characters")
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be URL-friendly (lowercase letters, numbers, and hyphens only)")
+    .optional()
+    .or(z.literal("")),
+  description: z.string()
+    .max(2000, "Description must be less than 2,000 characters")
+    .optional()
+    .or(z.literal("")),
+  avatar_url: z.string()
+    .url("Please enter a valid URL")
+    .max(2048, "Avatar URL must be less than 2,048 characters")
+    .optional()
+    .or(z.literal("")),
+  is_public: z.boolean(),
+});
+
+export type GuildFormData = z.infer<typeof guildSchema>;

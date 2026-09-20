@@ -8,6 +8,7 @@ export function getMainNavItems(isLoggedIn: boolean): NavItem[] {
     },
     { name: isLoggedIn ? "Latest" : "Blog", href: "/blog" },
     ...(!isLoggedIn ? [{ name: "About", href: "/about" }] : []),
+    { name: "Guilds", href: "/guilds" },
     { name: "Chat", href: "/chat" },
   ];
 }
