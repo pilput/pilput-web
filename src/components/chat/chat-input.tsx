@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Paperclip, AlertCircle } from "lucide-react";
+import { Send, AlertCircle, CornerDownLeft } from "lucide-react";
 import { ModelPicker } from "./model-picker";
 import { useChatStore } from "@/stores/chat-store";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -20,39 +20,30 @@ export function ChatInput({
   showModelPicker = true,
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const [rows, setRows] = useState(1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { selectedModel, availableModels } = useChatStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: FormEvent) => {
+    e?.preventDefault();
     if (message.trim()) {
       onSendMessage(message);
       setMessage("");
-      setRows(1);
+      if (textareaRef.current) textareaRef.current.style.height = "auto";
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as any);
+      handleSubmit();
     }
   };
 
   const handleInput = () => {
     if (!textareaRef.current) return;
 
-    // Reset height to get the correct scrollHeight
     textareaRef.current.style.height = "auto";
-
-    // Calculate the number of rows needed (max 6 rows)
-    const newRows = Math.min(
-      Math.max(1, Math.ceil((textareaRef.current.scrollHeight - 16) / 24)),
-      6
-    );
-
-    setRows(newRows);
+    textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
   };
 
   useEffect(() => {
@@ -65,17 +56,17 @@ export function ChatInput({
   const selectedModelName = availableModels.find(model => model.id === selectedModel)?.name || "Unknown Model";
 
   return (
-    <div className="w-full rounded-[1.25rem] border border-border/60 bg-gradient-to-b from-background/95 via-background/90 to-background/80 shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
-      <div className="mx-auto max-w-4xl px-3 py-3 sm:px-4 sm:py-4">
+    <div className="w-full rounded-[1.25rem] border border-border/70 bg-card/90 shadow-[0_20px_45px_-32px_rgba(0,0,0,0.55)] backdrop-blur-xl supports-[backdrop-filter]:bg-card/75 dark:border-white/[0.08] dark:bg-card/95">
+      <div className="mx-auto max-w-4xl p-2.5 sm:p-3">
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-3 px-1">
               {showModelPicker && <ModelPicker />}
-              <span className="text-xs text-muted-foreground">
-                Enter to send • Shift+Enter for new line
+              <span className="hidden text-[11px] text-muted-foreground sm:inline">
+                Shift + Enter untuk baris baru
               </span>
             </div>
-            <div className="flex items-end gap-2 rounded-2xl border border-border/70 bg-card/90 px-2.5 py-2.5 sm:px-3 sm:py-3">
+            <div className="flex items-end gap-2 rounded-xl bg-muted/45 px-3 py-2 sm:px-3.5 dark:bg-black/15">
               <div className="flex-1 relative">
                 <Textarea
                   ref={textareaRef}
@@ -83,32 +74,12 @@ export function ChatInput({
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onInput={handleInput}
-                  placeholder="Type your message..."
-                  className="min-h-[44px] max-h-[180px] w-full resize-none border-0 bg-transparent px-0 py-1 text-sm outline-none focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 sm:pr-20"
+                  placeholder="Tulis pesan Anda..."
+                  aria-label="Pesan chat"
+                  className="min-h-[44px] max-h-[180px] w-full resize-none border-0 bg-transparent px-0 py-1.5 text-sm leading-6 shadow-none outline-none focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   disabled={isDisabled}
-                  rows={rows}
+                  rows={1}
                 />
-                <div className="absolute right-0 bottom-0 flex items-center gap-1 pb-0.5 sm:pb-1 pr-1">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-foreground rounded-md"
-                          disabled={isDisabled}
-                        >
-                          <Paperclip className="h-4 w-4" />
-                          <span className="sr-only">Attach file</span>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Attach file</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
               </div>
               <TooltipProvider>
                 <Tooltip>
@@ -116,13 +87,13 @@ export function ChatInput({
                     <Button
                       type="submit"
                       size="icon"
-                      className="h-11 w-11 shrink-0 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-muted disabled:text-muted-foreground"
+                      className="h-10 w-10 shrink-0 rounded-lg bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-transparent disabled:text-muted-foreground"
                       disabled={isDisabled || !message.trim()}
                     >
                       {isDisabled ? (
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
                       ) : (
-                        <Send className="h-4 w-4" />
+                        <Send className="h-4 w-4" aria-hidden="true" />
                       )}
                       <span className="sr-only">Send message</span>
                     </Button>
@@ -130,13 +101,13 @@ export function ChatInput({
                   <TooltipContent side="top" className="flex items-center gap-2">
                     {message.trim() ? (
                       <>
-                        <span>Send with {selectedModelName}</span>
-                        <Send className="h-4 w-4" />
+                        <span>Kirim dengan {selectedModelName}</span>
+                        <CornerDownLeft className="h-4 w-4" />
                       </>
                     ) : (
                       <>
                         <AlertCircle className="h-4 w-4" />
-                        <span>Type a message first</span>
+                        <span>Tulis pesan terlebih dahulu</span>
                       </>
                     )}
                   </TooltipContent>

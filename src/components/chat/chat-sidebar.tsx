@@ -1,9 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { Plus, MessageSquare, PanelLeftClose, PanelLeftOpen, Trash2, Sparkles, Pin, Edit, MoreHorizontal } from "lucide-react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import {
+  PanelLeftClose,
+  PanelLeftOpen,
+  SquarePen,
+  Search,
+  X,
+  Pin,
+  PinOff,
+  Pencil,
+  Trash2,
+  MoreHorizontal,
+  MessageSquare,
+  Check,
+  Sparkles,
+  User,
+  Settings,
+  Home,
+  Sun,
+  Moon,
+  LogOut,
+  MessageSquareDashed,
+  SearchX,
+  ChevronDown,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useChatStore, type Conversation } from "@/stores/chat-store";
 import {
@@ -17,6 +41,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -26,12 +51,30 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { logoutUser } from "@/utils/fetch";
+import { getProfilePicture } from "@/utils/getImage";
 import { ChatPagination } from "./chat-pagination";
 
 export function ChatSidebar() {
   const params = useParams();
+  const router = useRouter();
   const currentConversationId = params?.id as string;
   const {
     conversations,
@@ -41,17 +84,36 @@ export function ChatSidebar() {
     isNewConversation,
     deleteConversation,
     updateConversation,
+    loadingStates,
   } = useChatStore();
-  const { toggleSidebar, state } = useSidebar();
+  const { toggleSidebar } = useSidebar();
   const { fetch: fetchUser, data: userData } = authStore();
+  const { resolvedTheme, setTheme } = useTheme();
 
+  // State management
+  const [searchQuery, setSearchQuery] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
+  const [chatToDelete, setChatToDelete] = useState<Conversation | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchConversations(0, 15);
     fetchUser();
   }, [isNewConversation, fetchConversations, fetchUser]);
+
+  // Keyboard shortcut Ctrl+K to search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleSaveRename = async (id: string) => {
     if (editTitle.trim()) {
@@ -63,66 +125,177 @@ export function ChatSidebar() {
     setEditingId(null);
   };
 
-  const pinnedConversations = conversations
-    .filter((c) => c.is_pinned)
-    .sort(
-      (a, b) =>
-        new Date(b.updated_at || b.created_at).getTime() -
-        new Date(a.updated_at || a.created_at).getTime()
-    );
+  const handleConfirmDelete = async () => {
+    if (!chatToDelete) return;
+    setIsDeleting(true);
+    const id = chatToDelete.id;
+    try {
+      await deleteConversation(id);
+      if (currentConversationId === id) {
+        router.push("/chat");
+      }
+    } finally {
+      setIsDeleting(false);
+      setChatToDelete(null);
+    }
+  };
 
-  const unpinnedConversations = conversations
-    .filter((c) => !c.is_pinned)
-    .sort(
-      (a, b) =>
-        new Date(b.updated_at || b.created_at).getTime() -
-        new Date(a.updated_at || a.created_at).getTime()
-    );
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push("/");
+    router.refresh();
+  };
 
+  // Filter conversations based on search
+  const isSearching = searchQuery.trim().length > 0;
+  const filteredConversations = useMemo(() => {
+    if (!isSearching) return conversations;
+    const query = searchQuery.toLowerCase().trim();
+    return conversations.filter((c) => c.title.toLowerCase().includes(query));
+  }, [conversations, isSearching, searchQuery]);
+
+  // Pinned conversations
+  const pinnedConversations = useMemo(() => {
+    return filteredConversations
+      .filter((c) => c.is_pinned)
+      .sort(
+        (a, b) =>
+          new Date(b.updated_at || b.created_at).getTime() -
+          new Date(a.updated_at || a.created_at).getTime()
+      );
+  }, [filteredConversations]);
+
+  // Unpinned conversations
+  const unpinnedConversations = useMemo(() => {
+    return filteredConversations
+      .filter((c) => !c.is_pinned)
+      .sort(
+        (a, b) =>
+          new Date(b.updated_at || b.created_at).getTime() -
+          new Date(a.updated_at || a.created_at).getTime()
+      );
+  }, [filteredConversations]);
+
+  // Date-based grouping for unpinned items
+  const dateGroups = useMemo(() => {
+    if (isSearching) {
+      return [{ label: "Percakapan", items: unpinnedConversations }];
+    }
+
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ).getTime();
+    const startOfYesterday = startOfToday - 86400000;
+    const startOfLast7Days = startOfToday - 6 * 86400000;
+    const startOfLast30Days = startOfToday - 29 * 86400000;
+
+    const groups: {
+      today: Conversation[];
+      yesterday: Conversation[];
+      last7Days: Conversation[];
+      last30Days: Conversation[];
+      older: Conversation[];
+    } = {
+      today: [],
+      yesterday: [],
+      last7Days: [],
+      last30Days: [],
+      older: [],
+    };
+
+    for (const item of unpinnedConversations) {
+      const time = new Date(item.updated_at || item.created_at).getTime();
+      if (time >= startOfToday) {
+        groups.today.push(item);
+      } else if (time >= startOfYesterday) {
+        groups.yesterday.push(item);
+      } else if (time >= startOfLast7Days) {
+        groups.last7Days.push(item);
+      } else if (time >= startOfLast30Days) {
+        groups.last30Days.push(item);
+      } else {
+        groups.older.push(item);
+      }
+    }
+
+    return [
+      { label: "Hari ini", items: groups.today },
+      { label: "Kemarin", items: groups.yesterday },
+      { label: "7 hari terakhir", items: groups.last7Days },
+      { label: "30 hari terakhir", items: groups.last30Days },
+      { label: "Lebih lama", items: groups.older },
+    ].filter((group) => group.items.length > 0);
+  }, [unpinnedConversations, isSearching]);
+
+  // Render a conversation item in the list
   const renderConversationItem = (chat: Conversation) => {
     const isActive = chat.id === currentConversationId;
+
     return (
       <SidebarMenuItem key={chat.id}>
         {editingId === chat.id ? (
-          <div className="px-2 py-0.5 flex w-full">
+          <div className="flex w-full items-center gap-1 px-1 py-1">
             <input
               type="text"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
-              onBlur={() => handleSaveRename(chat.id)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveRename(chat.id);
                 if (e.key === "Escape") setEditingId(null);
               }}
-              className="h-8 w-full rounded-md border border-primary/50 bg-background px-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary/30"
+              className="h-7 w-full flex-1 rounded-md border border-primary/60 bg-background px-2 text-xs text-foreground outline-none ring-1 ring-primary/30 focus:border-primary"
               autoFocus
               onClick={(e) => e.stopPropagation()}
             />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSaveRename(chat.id);
+              }}
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-primary hover:bg-primary/10 transition-colors"
+              title="Simpan (Enter)"
+            >
+              <Check className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingId(null);
+              }}
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+              title="Batal (Esc)"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
         ) : (
-          <div className="group/item relative flex items-center">
+          <div className="group/item relative flex items-center w-full">
             <SidebarMenuButton
               asChild
               isActive={isActive}
               className={cn(
-                "h-9 w-full flex-1 rounded-lg px-3 text-sm transition-colors",
+                "relative h-8.5 w-full flex-1 rounded-lg px-2.5 text-xs font-normal transition-all",
                 isActive
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-normal"
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-xs before:absolute before:inset-y-1.5 before:left-0 before:w-1 before:rounded-r-full before:bg-primary"
+                  : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
               )}
               tooltip={chat.title}
             >
-              <Link href={`/chat/${chat.id}`} className="flex items-center gap-2.5 pr-10 w-full">
-                <MessageSquare
-                  className={cn(
-                    "h-3.5 w-3.5 shrink-0",
-                    isActive ? "text-primary" : "text-muted-foreground/60"
-                  )}
-                />
-                <span className="truncate flex-1">{chat.title}</span>
-                {chat.is_pinned && (
-                  <Pin className="h-3.5 w-3.5 shrink-0 text-primary rotate-45" />
+              <Link
+                href={`/chat/${chat.id}`}
+                className="flex items-center pr-7 w-full gap-2"
+              >
+                {chat.is_pinned ? (
+                  <Pin className="h-3 w-3 shrink-0 text-primary rotate-45" />
+                ) : (
+                  <MessageSquare className="h-3 w-3 shrink-0 text-muted-foreground/60 group-hover/item:text-foreground/70" />
                 )}
+                <span className="truncate flex-1 text-left">{chat.title}</span>
               </Link>
             </SidebarMenuButton>
 
@@ -131,22 +304,38 @@ export function ChatSidebar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md opacity-0 group-hover/item:opacity-100 hover:bg-accent text-muted-foreground hover:text-foreground transition-all"
-                  title="Options"
+                  className={cn(
+                    "absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 rounded-md transition-opacity",
+                    "text-muted-foreground hover:bg-background/80 hover:text-foreground",
+                    isActive
+                      ? "opacity-80 group-hover/item:opacity-100"
+                      : "opacity-0 group-hover/item:opacity-100 focus-visible:opacity-100"
+                  )}
+                  title="Pilihan"
                 >
                   <MoreHorizontal className="h-3.5 w-3.5" />
+                  <span className="sr-only">Pilihan percakapan</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-48 shadow-lg">
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
                     updateConversation(chat.id, { is_pinned: !chat.is_pinned });
                   }}
-                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                  className="cursor-pointer text-xs"
                 >
-                  <Pin className="h-4 w-4 mr-2" />
-                  {chat.is_pinned ? "Unpin" : "Pin"} conversation
+                  {chat.is_pinned ? (
+                    <>
+                      <PinOff className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                      <span>Lepas sematan</span>
+                    </>
+                  ) : (
+                    <>
+                      <Pin className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                      <span>Sematkan chat</span>
+                    </>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => {
@@ -154,20 +343,21 @@ export function ChatSidebar() {
                     setEditingId(chat.id);
                     setEditTitle(chat.title);
                   }}
-                  className="focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                  className="cursor-pointer text-xs"
                 >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Rename conversation
+                  <Pencil className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                  <span>Ubah judul</span>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
-                    deleteConversation(chat.id);
+                    setChatToDelete(chat);
                   }}
-                  className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
+                  className="cursor-pointer text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete conversation
+                  <Trash2 className="mr-2 h-3.5 w-3.5 text-destructive" />
+                  <span>Hapus percakapan</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -177,170 +367,434 @@ export function ChatSidebar() {
     );
   };
 
-  return (
-    <Sidebar
-      collapsible="icon"
-      className="border-r border-border bg-sidebar text-sidebar-foreground"
-    >
-      {/* Header */}
-      <SidebarHeader className="border-b border-border/50">
-        {/* Expanded state */}
-        <div className="flex items-center justify-between px-4 py-3 group-data-[collapsible=icon]:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-              <Sparkles className="h-4 w-4 text-primary" />
-            </div>
-            <span className="text-base font-semibold tracking-tight">
-              pilput <span className="text-primary font-bold">AI</span>
-            </span>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="h-7 w-7 shrink-0 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            title="Collapse sidebar"
-          >
-            <PanelLeftClose className="h-4 w-4" />
-            <span className="sr-only">Collapse sidebar</span>
-          </Button>
+  // User Dropdown Content Component
+  const renderUserMenuContent = () => (
+    <>
+      <DropdownMenuLabel className="font-normal py-2">
+        <div className="flex flex-col space-y-0.5">
+          <p className="text-xs font-semibold leading-none text-foreground truncate">
+            {userData.first_name
+              ? `${userData.first_name} ${userData.last_name || ""}`.trim()
+              : userData.username || "Pengguna"}
+          </p>
+          <p className="text-[11px] leading-none text-muted-foreground truncate">
+            {userData.email}
+          </p>
         </div>
+      </DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      {userData.username && (
+        <DropdownMenuItem asChild className="cursor-pointer text-xs">
+          <Link href={`/${userData.username}`}>
+            <User className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+            <span>Profil Saya</span>
+          </Link>
+        </DropdownMenuItem>
+      )}
+      <DropdownMenuItem asChild className="cursor-pointer text-xs">
+        <Link href="/account">
+          <Settings className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+          <span>Pengaturan Akun</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem asChild className="cursor-pointer text-xs">
+        <Link href="/">
+          <Home className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+          <span>Halaman Utama</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem
+        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+        className="cursor-pointer text-xs"
+      >
+        {resolvedTheme === "dark" ? (
+          <>
+            <Sun className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+            <span>Mode Terang</span>
+          </>
+        ) : (
+          <>
+            <Moon className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+            <span>Mode Gelap</span>
+          </>
+        )}
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem
+        onClick={handleLogout}
+        className="cursor-pointer text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
+      >
+        <LogOut className="mr-2 h-3.5 w-3.5 text-destructive" />
+        <span>Keluar</span>
+      </DropdownMenuItem>
+    </>
+  );
 
-        {/* Collapsed (icon) state — clicking expands sidebar */}
-        <button
-          onClick={toggleSidebar}
-          title="Expand sidebar"
-          className="hidden group-data-[collapsible=icon]:flex w-full flex-col items-center gap-3 py-3 px-0"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors">
-            <Sparkles className="h-4 w-4 text-primary" />
-          </div>
-        </button>
-      </SidebarHeader>
-
-      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-1">
-        {/* New Chat Button */}
-        <SidebarGroup className="py-2 group-data-[collapsible=icon]:py-1">
-          <SidebarGroupContent>
-            {/* Expanded */}
-            <Button
-              asChild
-              className="w-full justify-start gap-2 h-9 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 group-data-[collapsible=icon]:hidden"
+  return (
+    <>
+      <Sidebar
+        collapsible="icon"
+        className="border-r border-sidebar-border/60 bg-sidebar text-sidebar-foreground shadow-[12px_0_36px_-30px_rgba(0,0,0,0.5)] backdrop-blur-xl dark:border-white/[0.08]"
+      >
+        {/* Header */}
+        <SidebarHeader className="p-2">
+          {/* Expanded State */}
+          <div className="flex items-center justify-between px-2 py-1.5 group-data-[collapsible=icon]:hidden">
+            <Link
+              href="/"
+              className="flex items-center gap-2 group/brand transition-opacity hover:opacity-90"
             >
-              <Link href="/chat" title="New Chat">
-                <Plus className="h-4 w-4 shrink-0" />
-                <span className="text-sm font-medium">New Chat</span>
-              </Link>
-            </Button>
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs shadow-primary/20 transition-transform group-hover/brand:scale-105">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm font-bold tracking-tight text-foreground">
+                  pilput
+                </span>
+                <span className="rounded-md border border-primary/25 bg-primary/10 px-1 py-0.2 text-[10px] font-bold tracking-wider text-primary uppercase">
+                  AI
+                </span>
+              </div>
+            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleSidebar}
+                  className="h-7 w-7 shrink-0 rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors cursor-pointer"
+                  aria-label="Tutup sidebar"
+                >
+                  <PanelLeftClose className="h-4 w-4" />
+                  <span className="sr-only">Tutup sidebar</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Tutup sidebar (Ctrl+B)</TooltipContent>
+            </Tooltip>
+          </div>
 
-            {/* Collapsed — icon only, centered */}
-            <div className="hidden group-data-[collapsible=icon]:flex justify-center">
+          {/* Collapsed (Icon) State */}
+          <div className="hidden group-data-[collapsible=icon]:flex w-full items-center justify-center py-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleSidebar}
+                  className="h-8 w-8 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors cursor-pointer"
+                  aria-label="Buka sidebar"
+                >
+                  <PanelLeftOpen className="h-4 w-4" />
+                  <span className="sr-only">Buka sidebar</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Buka sidebar (Ctrl+B)</TooltipContent>
+            </Tooltip>
+          </div>
+        </SidebarHeader>
+
+        <SidebarContent className="px-2 pt-1 group-data-[collapsible=icon]:px-1">
+          {/* New Chat Button */}
+          <SidebarGroup className="py-1 group-data-[collapsible=icon]:py-1">
+            <SidebarGroupContent>
+              {/* Expanded New Chat */}
               <Button
                 asChild
-                size="icon"
-                className="h-8 w-8 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-                title="New Chat"
+                className="h-9 w-full justify-between rounded-lg bg-primary text-primary-foreground px-3 shadow-xs hover:bg-primary/90 transition-all cursor-pointer group-data-[collapsible=icon]:hidden"
               >
-                <Link href="/chat">
-                  <Plus className="h-4 w-4" />
+                <Link href="/chat" title="Percakapan Baru">
+                  <div className="flex items-center gap-2">
+                    <SquarePen className="h-4 w-4" />
+                    <span className="text-xs font-semibold">Percakapan Baru</span>
+                  </div>
+                  <kbd className="pointer-events-none hidden rounded bg-primary-foreground/20 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground sm:inline-block">
+                    ⌘K
+                  </kbd>
                 </Link>
               </Button>
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
-        {/* Chat List — only in expanded mode */}
-        {conversations.length === 0 ? (
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
-            <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-              Conversations
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <div className="flex flex-col items-center gap-2 py-10 px-3 text-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
-                  <MessageSquare className="h-5 w-5 text-muted-foreground/50" />
-                </div>
-                <p className="text-sm font-medium text-muted-foreground">No conversations yet</p>
-                <p className="text-xs text-muted-foreground/60">Start a new chat above</p>
+              {/* Collapsed New Chat */}
+              <div className="hidden group-data-[collapsible=icon]:flex justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      size="icon"
+                      variant="outline"
+                      className="h-8 w-8 rounded-lg border-sidebar-border bg-sidebar hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-xs cursor-pointer"
+                    >
+                      <Link href="/chat" aria-label="Percakapan Baru">
+                        <SquarePen className="h-4 w-4" />
+                        <span className="sr-only">Percakapan Baru</span>
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Percakapan Baru</TooltipContent>
+                </Tooltip>
               </div>
             </SidebarGroupContent>
           </SidebarGroup>
-        ) : (
-          <>
-            {/* Pinned Group */}
-            {pinnedConversations.length > 0 && (
-              <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
-                <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60 flex items-center gap-1.5">
-                  <Pin className="h-3 w-3 rotate-45 text-primary" />
-                  Pinned
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu className="gap-0.5">
-                    {pinnedConversations.map(renderConversationItem)}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
 
-            {/* Unpinned Group */}
-            {unpinnedConversations.length > 0 && (
-              <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
-                <SidebarGroupLabel className="px-2 mb-1 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-                  {pinnedConversations.length > 0 ? "Recent" : "Conversations"}
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu className="gap-0.5">
-                    {unpinnedConversations.map(renderConversationItem)}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-
-            {/* Pagination */}
-            <div className="px-4 py-2 group-data-[collapsible=icon]:hidden">
-              <ChatPagination
-                currentPage={conversationsPagination.page}
-                totalPages={Math.ceil(conversationsPagination.total / conversationsPagination.limit)}
-                onLoadMore={loadMoreConversations}
-                hasMore={conversationsPagination.hasMore}
-                totalConversations={conversationsPagination.total}
-                currentCount={conversations.length}
+          {/* Search Filter Input (Expanded Only) */}
+          <div className="px-2 pt-1 pb-2 group-data-[collapsible=icon]:hidden">
+            <div className="relative flex items-center">
+              <Search className="absolute left-2.5 h-3.5 w-3.5 text-muted-foreground/60 pointer-events-none" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari percakapan..."
+                className="h-8 w-full rounded-lg border border-sidebar-border/80 bg-sidebar-accent/30 pl-8 pr-7 text-xs text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/50 focus:bg-background focus:ring-1 focus:ring-primary/20"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2 flex h-4 w-4 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
+                  title="Hapus filter"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
             </div>
-          </>
-        )}
-      </SidebarContent>
-
-      {/* Footer */}
-      <SidebarFooter className="border-t border-border/50 p-2 group-data-[collapsible=icon]:p-1">
-        {/* Expanded */}
-        <div className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-accent transition-colors cursor-default group-data-[collapsible=icon]:hidden">
-          <Avatar className="h-7 w-7 shrink-0 ring-1 ring-border">
-            <AvatarImage src={userData.image} alt={userData.username} />
-            <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
-              {userData.username ? userData.username[0].toUpperCase() : "U"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col min-w-0">
-            <span className="text-sm font-medium text-foreground truncate leading-tight">
-              {userData.username}
-            </span>
-            <span className="text-[11px] text-muted-foreground truncate leading-tight">
-              {userData.email}
-            </span>
           </div>
-        </div>
 
-        {/* Collapsed — avatar only, centered */}
-        <div className="hidden group-data-[collapsible=icon]:flex justify-center py-1">
-          <Avatar className="h-7 w-7 ring-1 ring-border">
-            <AvatarImage src={userData.image} alt={userData.username} />
-            <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
-              {userData.username ? userData.username[0].toUpperCase() : "U"}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      </SidebarFooter>
-    </Sidebar>
+          {/* Loading Skeletons */}
+          {loadingStates.fetchingChats && conversations.length === 0 ? (
+            <div className="space-y-2 px-2 py-3 group-data-[collapsible=icon]:hidden">
+              {[...Array(6)].map((_, i) => (
+                <SidebarMenuSkeleton key={i} showIcon />
+              ))}
+            </div>
+          ) : conversations.length === 0 ? (
+            /* Empty State */
+            <SidebarGroup className="group-data-[collapsible=icon]:hidden py-4">
+              <SidebarGroupContent>
+                <div className="flex flex-col items-center gap-2.5 px-3 py-10 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground">
+                    <MessageSquareDashed className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">
+                      Belum ada percakapan
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Mulai percakapan baru dengan AI sekarang.
+                    </p>
+                  </div>
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="outline"
+                    className="mt-2 h-7 rounded-lg text-xs cursor-pointer"
+                  >
+                    <Link href="/chat">Mulai Chat</Link>
+                  </Button>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ) : isSearching && filteredConversations.length === 0 ? (
+            /* Search Not Found State */
+            <SidebarGroup className="group-data-[collapsible=icon]:hidden py-4">
+              <SidebarGroupContent>
+                <div className="flex flex-col items-center gap-2 px-3 py-10 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted/60 text-muted-foreground">
+                    <SearchX className="h-5 w-5" />
+                  </div>
+                  <p className="text-xs font-medium text-foreground">
+                    Tidak ada hasil
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Tidak ditemukan chat dengan judul &quot;{searchQuery}&quot;
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSearchQuery("")}
+                    className="mt-1 h-7 text-xs text-primary hover:bg-primary/10 cursor-pointer"
+                  >
+                    Hapus pencarian
+                  </Button>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ) : (
+            <>
+              {/* Pinned Group */}
+              {pinnedConversations.length > 0 && (
+                <SidebarGroup className="group-data-[collapsible=icon]:hidden py-1">
+                  <SidebarGroupLabel className="mb-0.5 px-2 text-[11px] font-semibold text-muted-foreground/80 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <Pin className="h-3 w-3 text-primary rotate-45" />
+                      Disematkan
+                    </span>
+                    <span className="rounded-full bg-sidebar-accent px-1.5 py-0.2 text-[10px] font-medium text-muted-foreground">
+                      {pinnedConversations.length}
+                    </span>
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu className="gap-0.5">
+                      {pinnedConversations.map(renderConversationItem)}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              )}
+
+              {/* Categorized Unpinned Groups */}
+              {dateGroups.map((group) => (
+                <SidebarGroup
+                  key={group.label}
+                  className="group-data-[collapsible=icon]:hidden py-1"
+                >
+                  <SidebarGroupLabel className="mb-0.5 px-2 text-[11px] font-semibold text-muted-foreground/80">
+                    {group.label}
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu className="gap-0.5">
+                      {group.items.map(renderConversationItem)}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
+
+              {/* Pagination */}
+              {!isSearching && (
+                <div className="px-2 pt-1 pb-2 group-data-[collapsible=icon]:hidden">
+                  <ChatPagination
+                    currentPage={conversationsPagination.page}
+                    totalPages={Math.ceil(
+                      conversationsPagination.total /
+                        conversationsPagination.limit
+                    )}
+                    onLoadMore={loadMoreConversations}
+                    hasMore={conversationsPagination.hasMore}
+                    totalConversations={conversationsPagination.total}
+                    currentCount={conversations.length}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </SidebarContent>
+
+        {/* Footer */}
+        <SidebarFooter className="m-2 border-t border-sidebar-border/60 px-0 pt-2 group-data-[collapsible=icon]:m-1 group-data-[collapsible=icon]:pt-1">
+          {/* Expanded Footer User Menu */}
+          <div className="group-data-[collapsible=icon]:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-sidebar-accent outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+                  aria-label="Menu akun"
+                >
+                  <Avatar className="h-8 w-8 shrink-0 ring-1 ring-sidebar-border/70">
+                    <AvatarImage
+                      src={getProfilePicture(userData.image)}
+                      alt={userData.username || "User"}
+                    />
+                    <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
+                      {userData.username ? userData.username[0].toUpperCase() : "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-xs font-semibold text-foreground truncate leading-tight">
+                      {userData.first_name || userData.username || "Akun"}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
+                      {userData.email}
+                    </span>
+                  </div>
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                side="top"
+                className="w-56 shadow-lg mb-1"
+              >
+                {renderUserMenuContent()}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Collapsed Footer User Menu */}
+          <div className="hidden group-data-[collapsible=icon]:flex justify-center py-1">
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+                      aria-label="Menu akun"
+                    >
+                      <Avatar className="h-7 w-7 ring-1 ring-sidebar-border hover:ring-primary/40 transition-all">
+                        <AvatarImage
+                          src={getProfilePicture(userData.image)}
+                          alt={userData.username || "User"}
+                        />
+                        <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
+                          {userData.username
+                            ? userData.username[0].toUpperCase()
+                            : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {userData.username || "Akun"}
+                </TooltipContent>
+              </Tooltip>
+              <DropdownMenuContent
+                align="end"
+                side="right"
+                className="w-52 shadow-lg ml-1"
+              >
+                {renderUserMenuContent()}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={!!chatToDelete}
+        onOpenChange={(open) => !open && setChatToDelete(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Hapus Percakapan?</DialogTitle>
+            <DialogDescription>
+              Percakapan{" "}
+              <strong className="text-foreground">
+                &quot;{chatToDelete?.title}&quot;
+              </strong>{" "}
+              akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setChatToDelete(null)}
+              disabled={isDeleting}
+              className="cursor-pointer"
+            >
+              Batal
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+              className="cursor-pointer"
+            >
+              {isDeleting ? "Menghapus..." : "Hapus Percakapan"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

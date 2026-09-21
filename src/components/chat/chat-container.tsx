@@ -7,7 +7,7 @@ import { ChatInput } from "./chat-input";
 import { ChatMessage } from "./chat-message";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Sparkles, Zap, BookOpen, Code2, PenLine } from "lucide-react";
+import { Sparkles, Zap, BookOpen, Code2, PenLine, MessageCircleMore } from "lucide-react";
 import { motion } from "framer-motion";
 
 
@@ -44,6 +44,9 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const {
     messages,
+    conversations,
+    selectedModel,
+    availableModels,
     fetchMessages,
     sendMessage,
     isNewConversation,
@@ -55,6 +58,8 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
   const isSending =
     loadingStates.sendingMessage || loadingStates.creatingConversation;
   const isFetchingMessages = loadingStates.fetchingMessages;
+  const currentChat = conversations.find((conversation) => conversation.id === currentConversation);
+  const selectedModelName = availableModels.find((model) => model.id === selectedModel)?.name;
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
@@ -104,8 +109,8 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
 
   if (!currentConversation) {
     return (
-      <div className="flex h-full flex-col items-center justify-center bg-background px-4 py-10">
-        <div className="flex w-full max-w-2xl flex-col items-center gap-8">
+      <div className="flex h-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--primary)_10%,transparent),transparent_52%)] px-4 py-8 sm:py-10">
+        <div className="flex w-full max-w-2xl flex-col items-center gap-7 sm:gap-8">
           {/* Hero */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: -10 }}
@@ -113,7 +118,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="flex flex-col items-center gap-3 text-center"
           >
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 shadow-[0_12px_30px_-18px_color-mix(in_oklch,var(--primary)_70%,transparent)] ring-1 ring-primary/20">
               <Sparkles className="h-7 w-7 text-primary" />
             </div>
             <div>
@@ -121,7 +126,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                 pilput <span className="text-primary">AI</span>
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Ask anything — I&apos;m here to help you think, write, and build.
+                Ruang untuk berpikir, menulis, dan membangun bersama AI.
               </p>
             </div>
           </motion.div>
@@ -139,7 +144,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
             }}
             initial="hidden"
             animate="show"
-            className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4"
+            className="grid w-full grid-cols-1 gap-2 min-[480px]:grid-cols-2 sm:grid-cols-4"
           >
             {SUGGESTIONS.map(({ icon: Icon, label, prompt }) => (
               <motion.button
@@ -150,7 +155,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                 }}
                 onClick={() => handleSendMessage(prompt)}
                 disabled={isSending}
-                className="group flex flex-col items-start gap-2 rounded-xl border border-border bg-card p-3 text-left transition-all hover:border-primary/30 hover:bg-primary/5 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
+                className="group flex flex-col items-start gap-2 rounded-xl border border-border/80 bg-card/80 p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/35 hover:bg-primary/5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
               >
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted transition-colors group-hover:bg-primary/10">
                   <Icon className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-primary" />
@@ -184,9 +189,23 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex h-full flex-col bg-background">
+      <header className="flex shrink-0 items-center gap-3 border-b border-border/60 bg-background/85 px-4 py-3 backdrop-blur sm:px-6">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/15">
+          <MessageCircleMore className="h-4 w-4 text-primary" aria-hidden="true" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-sm font-semibold text-foreground">
+            {currentChat?.title || "Percakapan"}
+          </h1>
+          <p className="truncate text-[11px] text-muted-foreground">
+            {isSending ? "AI sedang merespons" : selectedModelName || "AI assistant"}
+          </p>
+        </div>
+        {isSending && <span className="h-2 w-2 animate-pulse rounded-full bg-primary" aria-label="AI sedang merespons" />}
+      </header>
       <ScrollArea className="flex-1 min-h-0">
-        <div ref={chatContainerRef} className="py-4">
+        <div ref={chatContainerRef} className="py-5 sm:py-6">
           <div className="mx-auto w-full max-w-3xl px-2">
             {isFetchingMessages ? (
               <div className="space-y-6 px-4 py-6">
@@ -216,7 +235,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
       </ScrollArea>
 
       {/* Input area */}
-      <div className="border-t border-border/50 bg-background/95 px-3 pb-4 pt-3 backdrop-blur">
+      <div className="border-t border-border/50 bg-background/95 px-3 pb-3 pt-3 backdrop-blur sm:pb-4">
         <div className="mx-auto w-full max-w-3xl">
           <ChatInput onSendMessage={handleSendMessage} isDisabled={isSending} />
         </div>
