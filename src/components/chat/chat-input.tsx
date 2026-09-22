@@ -63,7 +63,7 @@ export function ChatInput({
             <div className="flex items-center justify-between gap-3 px-1">
               {showModelPicker && <ModelPicker />}
               <span className="hidden text-[11px] text-muted-foreground sm:inline">
-                Shift + Enter untuk baris baru
+                Shift + Enter for a new line
               </span>
             </div>
             <div className="flex items-end gap-2 rounded-xl bg-muted/45 px-3 py-2 sm:px-3.5 dark:bg-black/15">
@@ -74,8 +74,8 @@ export function ChatInput({
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onInput={handleInput}
-                  placeholder="Tulis pesan Anda..."
-                  aria-label="Pesan chat"
+                  placeholder="Write your message..."
+                  aria-label="Chat message"
                   className="min-h-[44px] max-h-[180px] w-full resize-none border-0 bg-transparent px-0 py-1.5 text-sm leading-6 shadow-none outline-none focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   disabled={isDisabled}
                   rows={1}
@@ -101,13 +101,13 @@ export function ChatInput({
                   <TooltipContent side="top" className="flex items-center gap-2">
                     {message.trim() ? (
                       <>
-                        <span>Kirim dengan {selectedModelName}</span>
+                        <span>Send with {selectedModelName}</span>
                         <CornerDownLeft className="h-4 w-4" />
                       </>
                     ) : (
                       <>
                         <AlertCircle className="h-4 w-4" />
-                        <span>Tulis pesan terlebih dahulu</span>
+                        <span>Write a message first</span>
                       </>
                     )}
                   </TooltipContent>

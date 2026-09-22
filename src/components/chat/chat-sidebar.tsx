@@ -179,7 +179,7 @@ export function ChatSidebar() {
   // Date-based grouping for unpinned items
   const dateGroups = useMemo(() => {
     if (isSearching) {
-      return [{ label: "Percakapan", items: unpinnedConversations }];
+      return [{ label: "Conversations", items: unpinnedConversations }];
     }
 
     const now = new Date();
@@ -222,11 +222,11 @@ export function ChatSidebar() {
     }
 
     return [
-      { label: "Hari ini", items: groups.today },
-      { label: "Kemarin", items: groups.yesterday },
-      { label: "7 hari terakhir", items: groups.last7Days },
-      { label: "30 hari terakhir", items: groups.last30Days },
-      { label: "Lebih lama", items: groups.older },
+      { label: "Today", items: groups.today },
+      { label: "Yesterday", items: groups.yesterday },
+      { label: "Last 7 days", items: groups.last7Days },
+      { label: "Last 30 days", items: groups.last30Days },
+      { label: "Older", items: groups.older },
     ].filter((group) => group.items.length > 0);
   }, [unpinnedConversations, isSearching]);
 
@@ -257,7 +257,7 @@ export function ChatSidebar() {
                 handleSaveRename(chat.id);
               }}
               className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-primary hover:bg-primary/10 transition-colors"
-              title="Simpan (Enter)"
+              title="Save (Enter)"
             >
               <Check className="h-3.5 w-3.5" />
             </button>
@@ -268,7 +268,7 @@ export function ChatSidebar() {
                 setEditingId(null);
               }}
               className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
-              title="Batal (Esc)"
+              title="Cancel (Esc)"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -311,10 +311,10 @@ export function ChatSidebar() {
                       ? "opacity-80 group-hover/item:opacity-100"
                       : "opacity-0 group-hover/item:opacity-100 focus-visible:opacity-100"
                   )}
-                  title="Pilihan"
+                  title="Options"
                 >
                   <MoreHorizontal className="h-3.5 w-3.5" />
-                  <span className="sr-only">Pilihan percakapan</span>
+                  <span className="sr-only">Conversation options</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 shadow-lg">
@@ -328,12 +328,12 @@ export function ChatSidebar() {
                   {chat.is_pinned ? (
                     <>
                       <PinOff className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                      <span>Lepas sematan</span>
+                      <span>Unpin</span>
                     </>
                   ) : (
                     <>
                       <Pin className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                      <span>Sematkan chat</span>
+                      <span>Pin chat</span>
                     </>
                   )}
                 </DropdownMenuItem>
@@ -346,7 +346,7 @@ export function ChatSidebar() {
                   className="cursor-pointer text-xs"
                 >
                   <Pencil className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-                  <span>Ubah judul</span>
+                  <span>Rename</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -357,7 +357,7 @@ export function ChatSidebar() {
                   className="cursor-pointer text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
                 >
                   <Trash2 className="mr-2 h-3.5 w-3.5 text-destructive" />
-                  <span>Hapus percakapan</span>
+                  <span>Delete conversation</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -375,7 +375,7 @@ export function ChatSidebar() {
           <p className="text-xs font-semibold leading-none text-foreground truncate">
             {userData.first_name
               ? `${userData.first_name} ${userData.last_name || ""}`.trim()
-              : userData.username || "Pengguna"}
+              : userData.username || "User"}
           </p>
           <p className="text-[11px] leading-none text-muted-foreground truncate">
             {userData.email}
@@ -387,20 +387,20 @@ export function ChatSidebar() {
         <DropdownMenuItem asChild className="cursor-pointer text-xs">
           <Link href={`/${userData.username}`}>
             <User className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-            <span>Profil Saya</span>
+            <span>My Profile</span>
           </Link>
         </DropdownMenuItem>
       )}
       <DropdownMenuItem asChild className="cursor-pointer text-xs">
         <Link href="/account">
           <Settings className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-          <span>Pengaturan Akun</span>
+          <span>Account Settings</span>
         </Link>
       </DropdownMenuItem>
       <DropdownMenuItem asChild className="cursor-pointer text-xs">
         <Link href="/">
           <Home className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-          <span>Halaman Utama</span>
+          <span>Home</span>
         </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
@@ -411,12 +411,12 @@ export function ChatSidebar() {
         {resolvedTheme === "dark" ? (
           <>
             <Sun className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-            <span>Mode Terang</span>
+            <span>Light Mode</span>
           </>
         ) : (
           <>
             <Moon className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
-            <span>Mode Gelap</span>
+            <span>Dark Mode</span>
           </>
         )}
       </DropdownMenuItem>
@@ -426,7 +426,7 @@ export function ChatSidebar() {
         className="cursor-pointer text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
       >
         <LogOut className="mr-2 h-3.5 w-3.5 text-destructive" />
-        <span>Keluar</span>
+        <span>Log out</span>
       </DropdownMenuItem>
     </>
   );
@@ -464,13 +464,13 @@ export function ChatSidebar() {
                   size="icon"
                   onClick={toggleSidebar}
                   className="h-7 w-7 shrink-0 rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors cursor-pointer"
-                  aria-label="Tutup sidebar"
+                  aria-label="Close sidebar"
                 >
                   <PanelLeftClose className="h-4 w-4" />
-                  <span className="sr-only">Tutup sidebar</span>
+                  <span className="sr-only">Close sidebar</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="right">Tutup sidebar (Ctrl+B)</TooltipContent>
+              <TooltipContent side="right">Close sidebar (Ctrl+B)</TooltipContent>
             </Tooltip>
           </div>
 
@@ -483,13 +483,13 @@ export function ChatSidebar() {
                   size="icon"
                   onClick={toggleSidebar}
                   className="h-8 w-8 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors cursor-pointer"
-                  aria-label="Buka sidebar"
+                  aria-label="Open sidebar"
                 >
                   <PanelLeftOpen className="h-4 w-4" />
-                  <span className="sr-only">Buka sidebar</span>
+                  <span className="sr-only">Open sidebar</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="right">Buka sidebar (Ctrl+B)</TooltipContent>
+              <TooltipContent side="right">Open sidebar (Ctrl+B)</TooltipContent>
             </Tooltip>
           </div>
         </SidebarHeader>
@@ -503,10 +503,10 @@ export function ChatSidebar() {
                 asChild
                 className="h-9 w-full justify-between rounded-lg bg-primary text-primary-foreground px-3 shadow-xs hover:bg-primary/90 transition-all cursor-pointer group-data-[collapsible=icon]:hidden"
               >
-                <Link href="/chat" title="Percakapan Baru">
+                <Link href="/chat" title="New Conversation">
                   <div className="flex items-center gap-2">
                     <SquarePen className="h-4 w-4" />
-                    <span className="text-xs font-semibold">Percakapan Baru</span>
+                    <span className="text-xs font-semibold">New Conversation</span>
                   </div>
                   <kbd className="pointer-events-none hidden rounded bg-primary-foreground/20 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground sm:inline-block">
                     ⌘K
@@ -524,13 +524,13 @@ export function ChatSidebar() {
                       variant="outline"
                       className="h-8 w-8 rounded-lg border-sidebar-border bg-sidebar hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-xs cursor-pointer"
                     >
-                      <Link href="/chat" aria-label="Percakapan Baru">
+                      <Link href="/chat" aria-label="New Conversation">
                         <SquarePen className="h-4 w-4" />
-                        <span className="sr-only">Percakapan Baru</span>
+                        <span className="sr-only">New Conversation</span>
                       </Link>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="right">Percakapan Baru</TooltipContent>
+                  <TooltipContent side="right">New Conversation</TooltipContent>
                 </Tooltip>
               </div>
             </SidebarGroupContent>
@@ -545,7 +545,7 @@ export function ChatSidebar() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari percakapan..."
+                placeholder="Search conversations..."
                 className="h-8 w-full rounded-lg border border-sidebar-border/80 bg-sidebar-accent/30 pl-8 pr-7 text-xs text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/50 focus:bg-background focus:ring-1 focus:ring-primary/20"
               />
               {searchQuery && (
@@ -553,7 +553,7 @@ export function ChatSidebar() {
                   type="button"
                   onClick={() => setSearchQuery("")}
                   className="absolute right-2 flex h-4 w-4 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground"
-                  title="Hapus filter"
+                  title="Clear filter"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -578,10 +578,10 @@ export function ChatSidebar() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-foreground">
-                      Belum ada percakapan
+                      No conversations yet
                     </p>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Mulai percakapan baru dengan AI sekarang.
+                      Start a new conversation with AI now.
                     </p>
                   </div>
                   <Button
@@ -590,7 +590,7 @@ export function ChatSidebar() {
                     variant="outline"
                     className="mt-2 h-7 rounded-lg text-xs cursor-pointer"
                   >
-                    <Link href="/chat">Mulai Chat</Link>
+                    <Link href="/chat">Start Chat</Link>
                   </Button>
                 </div>
               </SidebarGroupContent>
@@ -604,10 +604,10 @@ export function ChatSidebar() {
                     <SearchX className="h-5 w-5" />
                   </div>
                   <p className="text-xs font-medium text-foreground">
-                    Tidak ada hasil
+                    No results
                   </p>
                   <p className="text-[11px] text-muted-foreground">
-                    Tidak ditemukan chat dengan judul &quot;{searchQuery}&quot;
+                    No chat found with title &quot;{searchQuery}&quot;
                   </p>
                   <Button
                     variant="ghost"
@@ -615,7 +615,7 @@ export function ChatSidebar() {
                     onClick={() => setSearchQuery("")}
                     className="mt-1 h-7 text-xs text-primary hover:bg-primary/10 cursor-pointer"
                   >
-                    Hapus pencarian
+                    Clear search
                   </Button>
                 </div>
               </SidebarGroupContent>
@@ -628,7 +628,7 @@ export function ChatSidebar() {
                   <SidebarGroupLabel className="mb-0.5 px-2 text-[11px] font-semibold text-muted-foreground/80 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <Pin className="h-3 w-3 text-primary rotate-45" />
-                      Disematkan
+                      Pinned
                     </span>
                     <span className="rounded-full bg-sidebar-accent px-1.5 py-0.2 text-[10px] font-medium text-muted-foreground">
                       {pinnedConversations.length}
@@ -687,7 +687,7 @@ export function ChatSidebar() {
               <DropdownMenuTrigger asChild>
                 <button
                   className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-sidebar-accent outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-                  aria-label="Menu akun"
+                  aria-label="Account menu"
                 >
                   <Avatar className="h-8 w-8 shrink-0 ring-1 ring-sidebar-border/70">
                     <AvatarImage
@@ -700,7 +700,7 @@ export function ChatSidebar() {
                   </Avatar>
                   <div className="flex flex-col min-w-0 flex-1">
                     <span className="text-xs font-semibold text-foreground truncate leading-tight">
-                      {userData.first_name || userData.username || "Akun"}
+                      {userData.first_name || userData.username || "Account"}
                     </span>
                     <span className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
                       {userData.email}
@@ -727,7 +727,7 @@ export function ChatSidebar() {
                   <DropdownMenuTrigger asChild>
                     <button
                       className="cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-                      aria-label="Menu akun"
+                      aria-label="Account menu"
                     >
                       <Avatar className="h-7 w-7 ring-1 ring-sidebar-border hover:ring-primary/40 transition-all">
                         <AvatarImage
@@ -744,7 +744,7 @@ export function ChatSidebar() {
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
                 <TooltipContent side="right">
-                  {userData.username || "Akun"}
+                  {userData.username || "Account"}
                 </TooltipContent>
               </Tooltip>
               <DropdownMenuContent
@@ -766,13 +766,13 @@ export function ChatSidebar() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Hapus Percakapan?</DialogTitle>
+            <DialogTitle>Delete Conversation?</DialogTitle>
             <DialogDescription>
-              Percakapan{" "}
+              Conversation{" "}
               <strong className="text-foreground">
                 &quot;{chatToDelete?.title}&quot;
               </strong>{" "}
-              akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.
+              will be permanently deleted. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
@@ -782,7 +782,7 @@ export function ChatSidebar() {
               disabled={isDeleting}
               className="cursor-pointer"
             >
-              Batal
+              Cancel
             </Button>
             <Button
               variant="destructive"
@@ -790,7 +790,7 @@ export function ChatSidebar() {
               disabled={isDeleting}
               className="cursor-pointer"
             >
-              {isDeleting ? "Menghapus..." : "Hapus Percakapan"}
+              {isDeleting ? "Deleting..." : "Delete Conversation"}
             </Button>
           </DialogFooter>
         </DialogContent>

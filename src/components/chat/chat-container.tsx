@@ -126,7 +126,7 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
                 pilput <span className="text-primary">AI</span>
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Ruang untuk berpikir, menulis, dan membangun bersama AI.
+                A space to think, write, and build with AI.
               </p>
             </div>
           </motion.div>
@@ -196,13 +196,13 @@ export function ChatContainer({ currentConversation }: ChatContainerProps) {
         </div>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-semibold text-foreground">
-            {currentChat?.title || "Percakapan"}
+            {currentChat?.title || "Conversation"}
           </h1>
           <p className="truncate text-[11px] text-muted-foreground">
-            {isSending ? "AI sedang merespons" : selectedModelName || "AI assistant"}
+            {isSending ? "AI is responding" : selectedModelName || "AI assistant"}
           </p>
         </div>
-        {isSending && <span className="h-2 w-2 animate-pulse rounded-full bg-primary" aria-label="AI sedang merespons" />}
+        {isSending && <span className="h-2 w-2 animate-pulse rounded-full bg-primary" aria-label="AI is responding" />}
       </header>
       <ScrollArea className="flex-1 min-h-0">
         <div ref={chatContainerRef} className="py-5 sm:py-6">

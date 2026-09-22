@@ -36,13 +36,13 @@ export function ChatPagination({
           {isLoading ? (
             <>
               <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
-              <span>Memuat...</span>
+              <span>Loading...</span>
             </>
           ) : (
             <>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/70" />
               <span>
-                Muat {remainingConversations > 0 ? `${remainingConversations} lagi` : "lebih banyak"}
+                Load {remainingConversations > 0 ? `${remainingConversations} more` : "more"}
               </span>
             </>
           )}
@@ -51,7 +51,7 @@ export function ChatPagination({
 
       {!hasMore && currentCount > 0 && (
         <p className="py-1 text-center text-[11px] text-muted-foreground/50">
-          Semua {currentCount} percakapan telah dimuat
+          All {currentCount} conversations loaded
         </p>
       )}
     </div>
