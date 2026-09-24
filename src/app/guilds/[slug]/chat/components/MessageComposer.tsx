@@ -66,7 +66,7 @@ export function MessageComposer({
   const remaining = GUILD_MESSAGE_MAX_LENGTH - value.length;
 
   return (
-    <div className="shrink-0 border-t border-border/60 bg-background px-4 pt-3 pb-3 sm:px-5">
+    <div className="shrink-0 border-t border-border/60 bg-background/75 px-4 pt-3 pb-3 backdrop-blur-md sm:px-5">
       <div
         className={cn(
           "rounded-lg border border-input bg-background transition-colors",

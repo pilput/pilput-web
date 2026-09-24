@@ -8,6 +8,7 @@ import { EMPTY_HISTORY, useGuildChatStore } from "@/stores/guild-chat-store";
 import { authStore } from "@/stores/userStore";
 import type { GuildMessage } from "@/types/guild";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
+import { ChannelBackdrop } from "./components/ChannelBackdrop";
 import { MessageComposer } from "./components/MessageComposer";
 import { MessageList } from "./components/MessageList";
 
@@ -72,7 +73,9 @@ export default function ChannelView({ slug, channelId }: { slug: string; channel
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    // `isolate` keeps the backdrop's negative z-index inside this view.
+    <div className="relative isolate flex h-full min-h-0 flex-col">
+      <ChannelBackdrop channelId={channelId} />
       <MessageList
         key={channelId}
         channel={channel}
