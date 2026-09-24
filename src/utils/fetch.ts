@@ -230,6 +230,12 @@ function createClient(baseURL: string) {
 
     delete: <T = any>(path: string, config?: RequestConfig) =>
       request<T>("DELETE", path, undefined, config),
+
+    /**
+     * Rotate the access token (shared in-flight refresh). For raw `fetch`
+     * callers such as SSE readers that cannot go through `request`.
+     */
+    refreshAccessToken,
   };
 }
 

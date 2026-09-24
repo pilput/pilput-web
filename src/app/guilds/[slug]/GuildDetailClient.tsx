@@ -11,6 +11,7 @@ import {
   Loader2,
   Lock,
   LogOut,
+  MessagesSquare,
   Settings,
   Trash2,
   Users,
@@ -341,17 +342,25 @@ export default function GuildDetailClient({
                 </p>
               )
             ) : (
-              !isOwner && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="cursor-pointer gap-1.5"
-                  onClick={() => setLeaveOpen(true)}
-                >
-                  <LogOut className="w-4 h-4" />
-                  Leave guild
+              <>
+                <Button asChild className="cursor-pointer gap-1.5">
+                  <Link href={`/guilds/${guild.slug}/chat`}>
+                    <MessagesSquare className="w-4 h-4" />
+                    Open chat
+                  </Link>
                 </Button>
-              )
+                {!isOwner && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="cursor-pointer gap-1.5"
+                    onClick={() => setLeaveOpen(true)}
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Leave guild
+                  </Button>
+                )}
+              </>
             )}
 
             {canManage && (

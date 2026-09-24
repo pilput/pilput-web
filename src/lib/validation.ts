@@ -395,3 +395,20 @@ export const guildSchema = z.object({
 });
 
 export type GuildFormData = z.infer<typeof guildSchema>;
+
+// Guild text channel create/edit schema. The backend normalises the name to a
+// lowercase slug ("General Chat" → "general-chat") and rejects one with no
+// letters or digits.
+export const guildChannelSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Channel name is required")
+    .max(100, "Channel name must be less than 100 characters")
+    .regex(/[\p{L}\p{N}]/u, "Channel name must contain a letter or digit"),
+  topic: z.string()
+    .max(1024, "Topic must be less than 1,024 characters")
+    .optional()
+    .or(z.literal("")),
+});
+
+export type GuildChannelFormData = z.infer<typeof guildChannelSchema>;
