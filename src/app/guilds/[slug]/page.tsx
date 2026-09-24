@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Navigation from "@/components/header/Navbar";
-import Footer from "@/components/footer/Footer";
 import { publicPageMetadata } from "@/lib/public-metadata";
 import { apiClient } from "@/utils/fetch";
 import type { Guild } from "@/types/guild";
@@ -56,13 +54,5 @@ export default async function GuildPage(props: {
   const { slug } = await props.params;
   const guild = await fetchGuild(slug);
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation />
-      <main className="flex-1 w-full flex flex-col">
-        <GuildDetailClient slug={slug} initialGuild={guild} />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <GuildDetailClient slug={slug} initialGuild={guild} />;
 }

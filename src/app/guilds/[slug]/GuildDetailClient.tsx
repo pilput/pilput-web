@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  ArrowLeft,
   CalendarDays,
   Globe,
   Loader2,
@@ -23,6 +22,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
+import { useGuildChatStore } from "@/stores/guild-chat-store";
 import { isHttpError } from "@/utils/fetch";
 import {
   deleteGuild,
@@ -40,7 +40,7 @@ import {
 } from "@/types/guild";
 import type { GuildFormData } from "@/lib/validation";
 import { GuildAvatar } from "../components/GuildAvatar";
-import { ConfirmDialog } from "./components/ConfirmDialog";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import { EditGuildDialog } from "./components/EditGuildDialog";
 import { MemberList } from "./components/MemberList";
 
@@ -140,9 +140,18 @@ export default function GuildDetailClient({
     void loadMembers(0);
   }, [ready, loadGuild, loadMembers]);
 
+  // The workspace sidebar keeps its own copy of the guild and the viewer's
+  // guild list; membership and settings changes here must reach it too.
+  const syncWorkspace = useCallback(() => {
+    const store = useGuildChatStore.getState();
+    void store.refreshGuild();
+    void store.loadMyGuilds();
+  }, []);
+
   const refreshAll = useCallback(async () => {
     await Promise.all([loadGuild(), loadMembers(0)]);
-  }, [loadGuild, loadMembers]);
+    syncWorkspace();
+  }, [loadGuild, loadMembers, syncWorkspace]);
 
   const onJoin = async () => {
     setJoining(true);
@@ -188,6 +197,7 @@ export default function GuildDetailClient({
       } else {
         await loadGuild();
       }
+      syncWorkspace();
     } catch (error) {
       toast.error(guildErrorMessage(error, "Could not update the guild."));
     } finally {
@@ -201,6 +211,7 @@ export default function GuildDetailClient({
       await deleteGuild(slug);
       toast.success("Guild deleted");
       setDeleteOpen(false);
+      void useGuildChatStore.getState().loadMyGuilds();
       router.push("/guilds");
     } catch (error) {
       toast.error(guildErrorMessage(error, "Could not delete the guild."));
@@ -247,14 +258,6 @@ export default function GuildDetailClient({
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-10 space-y-6">
-      <Link
-        href="/guilds"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        All guilds
-      </Link>
-
       <Card className="border-border/70 bg-card/90">
         <CardContent className="p-5 sm:p-6 space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-start gap-4">

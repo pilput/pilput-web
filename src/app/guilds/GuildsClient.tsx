@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
+import { useGuildChatStore } from "@/stores/guild-chat-store";
 import {
   createGuild,
   getGuilds,
@@ -118,6 +119,7 @@ export default function GuildsClient() {
       });
       toast.success("Guild created");
       setCreateOpen(false);
+      void useGuildChatStore.getState().loadMyGuilds();
       if (guild) {
         router.push(`/guilds/${guild.slug}`);
         return;
@@ -135,6 +137,7 @@ export default function GuildsClient() {
     try {
       await joinGuild(guild.slug);
       toast.success(`Joined ${guild.name}`);
+      void useGuildChatStore.getState().loadMyGuilds();
       setMyGuildIds((prev) => new Set(prev).add(guild.id));
       setGuilds((prev) =>
         prev.map((g) =>

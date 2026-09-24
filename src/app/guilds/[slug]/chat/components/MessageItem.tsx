@@ -2,11 +2,16 @@
 
 import { memo, useState, type KeyboardEvent, type ReactNode } from "react";
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 import { CornerUpLeft, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { getProfilePicture } from "@/utils/getImage";
 import { GUILD_MESSAGE_MAX_LENGTH, type GuildMessage } from "@/types/guild";
@@ -22,7 +27,7 @@ function renderContent(content: string): ReactNode[] {
         href={part}
         target="_blank"
         rel="noopener noreferrer nofollow"
-        className="text-primary underline underline-offset-2 break-all"
+        className="text-primary hover:underline underline-offset-2 break-all"
       >
         {part}
       </a>
@@ -32,14 +37,24 @@ function renderContent(content: string): ReactNode[] {
   );
 }
 
-function authorLabel(message: Pick<GuildMessage, "author">) {
-  return message.author?.username ?? "Deleted user";
+function formatStamp(date: Date) {
+  const time = format(date, "HH:mm");
+  if (isToday(date)) return `Today at ${time}`;
+  if (isYesterday(date)) return `Yesterday at ${time}`;
+  return format(date, "dd/MM/yyyy HH:mm");
+}
+
+function initials(username: string | null | undefined) {
+  return (username || "?").slice(0, 2).toUpperCase();
 }
 
 interface MessageItemProps {
   message: GuildMessage;
   /** Continues the previous message's group: no avatar or name. */
   compact: boolean;
+  /** Arrived after the list was opened — fades in. */
+  fresh: boolean;
+  own: boolean;
   highlighted: boolean;
   canEdit: boolean;
   canDelete: boolean;
@@ -52,6 +67,8 @@ interface MessageItemProps {
 export const MessageItem = memo(function MessageItem({
   message,
   compact,
+  fresh,
+  own,
   highlighted,
   canEdit,
   canDelete,
@@ -101,150 +118,200 @@ export const MessageItem = memo(function MessageItem({
       // Focusable by tap so the action bar is reachable on touch screens.
       tabIndex={-1}
       className={cn(
-        "group relative flex gap-3 outline-none px-3 sm:px-4 py-0.5 hover:bg-accent/40 transition-colors",
-        !compact && "mt-3 pt-1",
+        "group relative px-3 sm:px-4 py-0.5 outline-none transition-colors",
+        "hover:bg-muted/50 focus-within:bg-muted/50",
+        !compact && "mt-4",
+        fresh && "animate-in fade-in slide-in-from-bottom-1 duration-200",
+        editing && "bg-muted/50",
         highlighted && "bg-primary/10 hover:bg-primary/10",
       )}
     >
-      <div className="w-9 shrink-0">
-        {!compact ? (
-          <Avatar className="h-9 w-9 border border-border mt-0.5">
-            <AvatarImage src={getProfilePicture(message.author?.image || "")} alt="" />
-            <AvatarFallback className="text-[10px] font-bold">
-              {(username || "?").slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        ) : (
-          createdAt && (
-            <time
-              dateTime={message.created_at ?? undefined}
-              className="hidden group-hover:block pt-1 text-[10px] leading-4 text-muted-foreground text-right tabular-nums"
+      {message.reply_to_id && (
+        <div className="relative mb-1 flex min-w-0 items-center gap-1.5 pl-12 text-xs text-muted-foreground">
+          <span
+            aria-hidden
+            className="absolute left-4.5 top-1/2 -bottom-1 w-6.5 rounded-tl-md border-l-2 border-t-2 border-muted-foreground/30"
+          />
+          {reply ? (
+            <button
+              type="button"
+              onClick={() => onJumpTo(reply.id)}
+              className="flex min-w-0 items-center gap-1.5 cursor-pointer hover:text-foreground transition-colors"
+              title="Jump to the original message"
             >
-              {format(createdAt, "HH:mm")}
-            </time>
-          )
-        )}
-      </div>
+              <Avatar className="h-4 w-4 shrink-0">
+                <AvatarImage src={getProfilePicture(reply.author?.image || "")} alt="" />
+                <AvatarFallback className="text-[7px] font-bold">
+                  {initials(reply.author?.username)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="shrink-0 font-semibold text-foreground/80">
+                @{reply.author?.username ?? "deleted user"}
+              </span>
+              <span className="truncate">{reply.content}</span>
+            </button>
+          ) : (
+            <span className="italic">Original message was deleted</span>
+          )}
+        </div>
+      )}
 
-      <div className="min-w-0 flex-1">
-        {message.reply_to_id && (
-          <button
-            type="button"
-            disabled={!reply}
-            onClick={() => reply && onJumpTo(reply.id)}
-            className="mb-0.5 flex max-w-full items-center gap-1.5 text-xs text-muted-foreground enabled:hover:text-foreground enabled:cursor-pointer"
-          >
-            <CornerUpLeft className="w-3 h-3 shrink-0" />
-            {reply ? (
-              <>
-                <span className="font-semibold shrink-0">@{authorLabel(reply)}</span>
-                <span className="truncate">{reply.content}</span>
-              </>
-            ) : (
-              <span className="italic">Original message was deleted</span>
-            )}
-          </button>
-        )}
-
-        {!compact && (
-          <div className="flex items-baseline gap-2">
-            {username ? (
-              <Link href={`/${username}`} className="text-sm font-semibold hover:underline">
-                {username}
+      <div className="flex gap-3">
+        <div className="w-9 shrink-0">
+          {!compact ? (
+            username ? (
+              <Link href={`/${username}`} tabIndex={-1} aria-hidden>
+                <Avatar className="mt-0.5 h-9 w-9 border border-border hover:opacity-90 transition-opacity">
+                  <AvatarImage src={getProfilePicture(message.author?.image || "")} alt="" />
+                  <AvatarFallback className="text-[10px] font-bold">{initials(username)}</AvatarFallback>
+                </Avatar>
               </Link>
             ) : (
-              <span className="text-sm font-semibold text-muted-foreground">Deleted user</span>
-            )}
-            {createdAt && (
+              <Avatar className="mt-0.5 h-9 w-9 border border-border">
+                <AvatarFallback className="text-[10px] font-bold">?</AvatarFallback>
+              </Avatar>
+            )
+          ) : (
+            createdAt && (
               <time
                 dateTime={message.created_at ?? undefined}
-                title={format(createdAt, "PPpp")}
-                className="text-[11px] text-muted-foreground"
+                title={format(createdAt, "PPPPp")}
+                className="invisible group-hover:visible group-focus-within:visible block pt-0.75 text-right text-[10px] leading-5 text-muted-foreground tabular-nums"
               >
                 {format(createdAt, "HH:mm")}
               </time>
-            )}
-          </div>
-        )}
+            )
+          )}
+        </div>
 
-        {editing ? (
-          <div className="py-1 space-y-1">
-            <Textarea
-              autoFocus
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={onEditKeyDown}
-              aria-label="Edit message"
-              className="min-h-9 max-h-60 resize-none text-sm"
-            />
-            <p className="text-[11px] text-muted-foreground">
-              Escape to{" "}
-              <button type="button" className="text-primary hover:underline cursor-pointer" onClick={() => setEditing(false)}>
-                cancel
-              </button>{" "}
-              · Enter to{" "}
-              <button type="button" className="text-primary hover:underline cursor-pointer" onClick={() => void saveEdit()}>
-                save
-              </button>
-              {saving && <Loader2 className="inline w-3 h-3 ml-1.5 animate-spin" />}
+        <div className="min-w-0 flex-1">
+          {!compact && (
+            <div className="flex items-baseline gap-2">
+              {username ? (
+                <Link
+                  href={`/${username}`}
+                  className={cn(
+                    "text-sm font-semibold hover:underline",
+                    own && "text-primary",
+                  )}
+                >
+                  {username}
+                </Link>
+              ) : (
+                <span className="text-sm font-semibold text-muted-foreground">Deleted user</span>
+              )}
+              {createdAt && (
+                <time
+                  dateTime={message.created_at ?? undefined}
+                  title={format(createdAt, "PPPPp")}
+                  className="text-[11px] text-muted-foreground"
+                >
+                  {formatStamp(createdAt)}
+                </time>
+              )}
+            </div>
+          )}
+
+          {editing ? (
+            <div className="py-1 space-y-1.5">
+              <Textarea
+                autoFocus
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={onEditKeyDown}
+                onFocus={(e) => {
+                  const len = e.currentTarget.value.length;
+                  e.currentTarget.setSelectionRange(len, len);
+                }}
+                aria-label="Edit message"
+                className="min-h-10 max-h-60 resize-none bg-background text-sm"
+              />
+              <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                escape to
+                <button
+                  type="button"
+                  className="text-primary hover:underline cursor-pointer"
+                  onClick={() => setEditing(false)}
+                >
+                  cancel
+                </button>
+                · enter to
+                <button
+                  type="button"
+                  className="text-primary hover:underline cursor-pointer"
+                  onClick={() => void saveEdit()}
+                >
+                  save
+                </button>
+                {saving && <Loader2 className="ml-1 w-3 h-3 animate-spin" />}
+              </p>
+            </div>
+          ) : (
+            <p className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground/90">
+              {renderContent(message.content)}
+              {message.edited_at && (
+                <span
+                  className="ml-1.5 align-baseline text-[10px] text-muted-foreground"
+                  title={`Edited ${format(new Date(message.edited_at), "PPPPp")}`}
+                >
+                  (edited)
+                </span>
+              )}
             </p>
-          </div>
-        ) : (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap wrap-break-word">
-            {renderContent(message.content)}
-            {message.edited_at && (
-              <span
-                className="ml-1 text-[10px] text-muted-foreground"
-                title={`Edited ${format(new Date(message.edited_at), "PPpp")}`}
-              >
-                (edited)
-              </span>
-            )}
-          </p>
-        )}
+          )}
+        </div>
       </div>
 
       {!editing && (
-        <div className="absolute -top-3 right-3 hidden group-hover:flex group-focus-within:flex items-center rounded-md border border-border bg-popover shadow-sm">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="cursor-pointer"
-            aria-label="Reply"
-            title="Reply"
-            onClick={() => onReply(message)}
-          >
+        <div className="absolute -top-4 right-4 z-10 hidden items-center gap-0.5 rounded-lg border border-border bg-popover p-0.5 shadow-md group-hover:flex group-focus-within:flex">
+          <ActionButton label="Reply" onClick={() => onReply(message)}>
             <CornerUpLeft />
-          </Button>
+          </ActionButton>
           {canEdit && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="cursor-pointer"
-              aria-label="Edit message"
-              title="Edit"
-              onClick={startEdit}
-            >
+            <ActionButton label="Edit" onClick={startEdit}>
               <Pencil />
-            </Button>
+            </ActionButton>
           )}
           {canDelete && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="cursor-pointer text-destructive hover:text-destructive"
-              aria-label="Delete message"
-              title="Delete"
-              onClick={() => onDelete(message)}
-            >
+            <ActionButton label="Delete" destructive onClick={() => onDelete(message)}>
               <Trash2 />
-            </Button>
+            </ActionButton>
           )}
         </div>
       )}
     </div>
   );
 });
+
+function ActionButton({
+  label,
+  destructive,
+  onClick,
+  children,
+}: {
+  label: string;
+  destructive?: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label={label}
+          onClick={onClick}
+          className={cn(
+            "size-7 cursor-pointer text-muted-foreground hover:text-foreground",
+            destructive && "hover:bg-destructive/10 hover:text-destructive",
+          )}
+        >
+          {children}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{label}</TooltipContent>
+    </Tooltip>
+  );
+}
