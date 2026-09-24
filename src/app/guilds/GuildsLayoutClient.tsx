@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
+import { cn } from "@/lib/utils";
 import { useGuildChatStore } from "@/stores/guild-chat-store";
 import { authStore } from "@/stores/userStore";
+import { GuildsShellProvider, useGuildsShell } from "./components/GuildsShell";
 import { GuildsSidebar } from "./components/GuildsSidebar";
 import { GuildsTopBar } from "./components/GuildsTopBar";
 
 /**
  * Workspace shell for every /guilds page, in the spirit of the dashboard: a
- * collapsible sidebar and a fixed-height content pane that scrolls on its own,
- * so a channel can pin its composer to the bottom.
+ * custom off-canvas sidebar and a fixed-height content pane that scrolls on
+ * its own, so a channel can pin its composer to the bottom.
  */
 export default function GuildsLayoutClient({
   children,
@@ -29,12 +30,29 @@ export default function GuildsLayoutClient({
   }, [ready, isLoggedIn, fetchUser, loadMyGuilds]);
 
   return (
-    <SidebarProvider className="h-svh overflow-hidden">
-      <GuildsSidebar />
-      <SidebarInset className="min-h-0 overflow-hidden md:h-[calc(100svh-1rem)]">
-        <GuildsTopBar />
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+    <GuildsShellProvider>
+      <div className="flex h-svh overflow-hidden bg-sidebar">
+        <GuildsSidebar />
+        <ContentPane>{children}</ContentPane>
+      </div>
+    </GuildsShellProvider>
+  );
+}
+
+/** The page surface: a raised sheet beside the sidebar on desktop. */
+function ContentPane({ children }: { children: React.ReactNode }) {
+  const { desktopOpen } = useGuildsShell();
+  return (
+    <main
+      className={cn(
+        "flex min-w-0 flex-1 flex-col overflow-hidden bg-background",
+        "md:my-2 md:mr-2 md:rounded-xl md:border md:border-border/60",
+        "md:transition-[margin] md:duration-300",
+        desktopOpen ? "md:ml-0" : "md:ml-2",
+      )}
+    >
+      <GuildsTopBar />
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</div>
+    </main>
   );
 }

@@ -7,11 +7,11 @@ import { ChevronRight, Hash, Moon, Sun } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { useGuildChatStore } from "@/stores/guild-chat-store";
 import type { GuildStreamStatus } from "@/utils/guild-chat";
 import { GuildAvatar } from "./GuildAvatar";
+import { SidebarToggle } from "./GuildsShell";
 
 const STATUS: Record<GuildStreamStatus, { label: string; dot: string; pill: string }> = {
   open: {
@@ -56,7 +56,7 @@ export function GuildsTopBar() {
 
   return (
     <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/60 bg-background/80 px-3 backdrop-blur sm:px-4">
-      <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
+      <SidebarToggle className="-ml-1" />
       <Separator orientation="vertical" className="mr-1 h-4! opacity-60" />
 
       <nav aria-label="Breadcrumb" className="min-w-0 flex-1">

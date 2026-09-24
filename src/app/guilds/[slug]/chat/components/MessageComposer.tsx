@@ -66,40 +66,33 @@ export function MessageComposer({
   const remaining = GUILD_MESSAGE_MAX_LENGTH - value.length;
 
   return (
-    <div className="shrink-0 px-3 pb-3 sm:px-4 sm:pb-4">
+    <div className="shrink-0 border-t border-border/60 bg-background px-4 pt-3 pb-3 sm:px-5">
       <div
         className={cn(
-          "overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition-[border-color,box-shadow]",
-          "focus-within:border-primary/40 focus-within:shadow-md focus-within:ring-4 focus-within:ring-primary/5",
+          "rounded-lg border border-input bg-background transition-colors",
+          "focus-within:border-foreground/30",
           tooLong && "border-destructive/60 focus-within:border-destructive/60",
         )}
       >
         {replyTo && (
-          <div className="flex items-center gap-2 border-b border-border/60 bg-muted/40 py-2 pl-3 pr-2 animate-in fade-in slide-in-from-bottom-1 duration-150">
-            <div className="min-w-0 flex-1 border-l-2 border-primary pl-2.5">
-              <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                <CornerUpLeft className="w-3 h-3" />
-                Replying to{" "}
-                <span className="font-semibold text-foreground">
-                  {replyTo.author?.username ? `@${replyTo.author.username}` : "a deleted user"}
-                </span>
-              </p>
-              <p className="truncate text-xs text-muted-foreground/90">{replyTo.content}</p>
-            </div>
-            <Button
+          <div className="flex items-center gap-2 border-b border-border/60 bg-muted/50 px-3 py-1.5 text-xs">
+            <CornerUpLeft className="size-3.5 shrink-0 text-muted-foreground" />
+            <span className="shrink-0 text-muted-foreground">Replying to</span>
+            <span className="shrink-0 font-semibold">
+              {replyTo.author?.username ? `@${replyTo.author.username}` : "deleted user"}
+            </span>
+            <span className="min-w-0 truncate text-muted-foreground">{replyTo.content}</span>
+            <button
               type="button"
-              variant="ghost"
-              size="icon-xs"
-              className="shrink-0 cursor-pointer rounded-full text-muted-foreground"
+              className="ml-auto flex size-5 shrink-0 cursor-pointer items-center justify-center rounded text-muted-foreground hover:bg-background hover:text-foreground"
               aria-label="Cancel reply"
               onClick={onCancelReply}
             >
-              <X />
-            </Button>
+              <X className="size-3.5" />
+            </button>
           </div>
         )}
         <form
-          className="flex items-end gap-2 p-2 pl-3"
           onSubmit={(e) => {
             e.preventDefault();
             void submit();
@@ -113,40 +106,31 @@ export function MessageComposer({
             onKeyDown={onKeyDown}
             placeholder={`Message #${channelName}`}
             aria-label={`Message #${channelName}`}
-            className="min-h-9 max-h-[200px] resize-none border-0 bg-transparent px-0 py-2 text-[15px] shadow-none focus-visible:ring-0 dark:bg-transparent"
+            className="min-h-10 max-h-[200px] resize-none rounded-none border-0 bg-transparent px-3 pt-2.5 pb-1 text-sm shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
-          <Button
-            type="submit"
-            size="icon"
-            disabled={!canSend}
-            className={cn(
-              "shrink-0 cursor-pointer rounded-xl transition-all",
-              !canSend && "bg-muted text-muted-foreground",
-            )}
-            aria-label="Send message"
-          >
-            {sending ? <Loader2 className="animate-spin" /> : <SendHorizontal />}
-          </Button>
+          <div className="flex items-center gap-2 px-2 pb-2">
+            <span className="hidden pl-1 text-[11px] text-muted-foreground sm:inline">
+              <b className="font-medium">Shift + Enter</b> for a new line
+            </span>
+            <span className="ml-auto flex items-center gap-2">
+              {remaining < 500 && (
+                <span className={cn("text-[11px] tabular-nums text-muted-foreground", tooLong && "font-semibold text-destructive")}>
+                  {remaining.toLocaleString()}
+                </span>
+              )}
+              <Button
+                type="submit"
+                size="sm"
+                disabled={!canSend}
+                className="h-7 cursor-pointer gap-1.5 px-2.5 text-xs"
+              >
+                {sending ? <Loader2 className="animate-spin" /> : <SendHorizontal />}
+                Send
+              </Button>
+            </span>
+          </div>
         </form>
       </div>
-      <div className="mt-1.5 flex min-h-4 items-center justify-between px-2 text-[11px] text-muted-foreground">
-        <span className="hidden sm:inline">
-          <Kbd>Enter</Kbd> to send · <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd> for a new line
-        </span>
-        {remaining < 500 && (
-          <span className={cn("ml-auto tabular-nums", tooLong && "font-semibold text-destructive")}>
-            {remaining.toLocaleString()}
-          </span>
-        )}
-      </div>
     </div>
-  );
-}
-
-function Kbd({ children }: { children: React.ReactNode }) {
-  return (
-    <kbd className="rounded border border-border bg-muted px-1 py-px font-sans text-[10px] font-medium">
-      {children}
-    </kbd>
   );
 }

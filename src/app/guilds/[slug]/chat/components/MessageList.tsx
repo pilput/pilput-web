@@ -180,96 +180,118 @@ export function MessageList({
       <div
         ref={scrollRef}
         onScroll={onScroll}
-        className="flex h-full flex-col overflow-y-auto overscroll-contain pb-6"
+        className="flex h-full flex-col overflow-y-auto overscroll-contain pb-3"
         role="log"
         aria-live="polite"
         aria-label={`Messages in #${channel.name}`}
       >
-        <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col">
-          {/* Pushes a short history to the bottom, next to the composer. */}
-          <div className="flex-1" />
-          <div ref={topSentinelRef} aria-hidden />
+        {/* Pushes a short history to the bottom, next to the composer. */}
+        <div className="flex-1" />
+        <div ref={topSentinelRef} aria-hidden />
 
-          {history.hasMore ? (
-            <div className="flex justify-center py-4">
-              {history.loadingOlder ? (
-                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-              ) : (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="cursor-pointer text-muted-foreground"
-                  onClick={onLoadOlder}
-                >
-                  Load older messages
-                </Button>
-              )}
-            </div>
-          ) : (
-            <div className="px-4 sm:px-5 pt-10 pb-2">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-primary/25 to-primary/5 text-primary ring-1 ring-primary/20">
-                <Hash className="w-8 h-8" />
-              </div>
-              <h2 className="mt-4 text-2xl sm:text-3xl font-bold tracking-tight">
-                Welcome to #{channel.name}
-              </h2>
-              <p className="mt-1.5 max-w-xl text-sm text-muted-foreground">
-                {channel.topic || `This is the start of the #${channel.name} channel. Say hello!`}
-              </p>
-              <div className="mt-6 h-px bg-border" />
-            </div>
-          )}
+        {history.hasMore ? (
+          <div className="flex justify-center py-3">
+            {history.loadingOlder ? (
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 cursor-pointer text-xs text-muted-foreground"
+                onClick={onLoadOlder}
+              >
+                Load older messages
+              </Button>
+            )}
+          </div>
+        ) : (
+          <ChannelIntro channel={channel} />
+        )}
 
-          <TooltipProvider delayDuration={300}>
-            {messages.map((message, i) => {
-              const prev = messages[i - 1];
-              const newDay =
-                !!message.created_at && dayKey(message.created_at) !== dayKey(prev?.created_at ?? null);
-              const own = message.author_id === currentUserId;
-              return (
-                <Fragment key={message.id}>
-                  {newDay && message.created_at && (
-                    <div className="relative mt-6 mb-1 flex justify-center px-4" role="separator">
-                      <div className="absolute inset-x-4 top-1/2 h-px bg-border" aria-hidden />
-                      <span className="relative rounded-full border border-border bg-background px-3 py-0.5 text-[11px] font-semibold text-muted-foreground">
-                        {dayLabel(message.created_at)}
-                      </span>
-                    </div>
-                  )}
-                  <MessageItem
-                    message={message}
-                    compact={!newDay && isCompact(prev, message)}
-                    fresh={freshAfter !== null && message.id > freshAfter}
-                    own={own}
-                    highlighted={highlightId === message.id}
-                    canEdit={own}
-                    canDelete={own || canModerate}
-                    onReply={onReply}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    onJumpTo={jumpTo}
-                  />
-                </Fragment>
-              );
-            })}
-          </TooltipProvider>
-        </div>
+        <TooltipProvider delayDuration={300}>
+          {messages.map((message, i) => {
+            const prev = messages[i - 1];
+            const newDay =
+              !!message.created_at && dayKey(message.created_at) !== dayKey(prev?.created_at ?? null);
+            const own = message.author_id === currentUserId;
+            return (
+              <Fragment key={message.id}>
+                {newDay && message.created_at && (
+                  <div className="mt-4 mb-1 flex items-center gap-3 px-4 sm:px-5" role="separator">
+                    <span className="text-xs font-semibold text-foreground/80">
+                      {dayLabel(message.created_at)}
+                    </span>
+                    <span aria-hidden className="h-px flex-1 bg-border" />
+                  </div>
+                )}
+                <MessageItem
+                  message={message}
+                  compact={!newDay && isCompact(prev, message)}
+                  fresh={freshAfter !== null && message.id > freshAfter}
+                  own={own}
+                  highlighted={highlightId === message.id}
+                  canEdit={own}
+                  canDelete={own || canModerate}
+                  onReply={onReply}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onJumpTo={jumpTo}
+                />
+              </Fragment>
+            );
+          })}
+        </TooltipProvider>
       </div>
 
-      {showJump && (
-        <Button
-          type="button"
-          size="sm"
-          variant={newCount > 0 ? "default" : "secondary"}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 gap-1.5 rounded-full shadow-lg cursor-pointer animate-in fade-in slide-in-from-bottom-2"
-          onClick={() => scrollToBottom(true)}
-        >
-          <ArrowDown className="w-4 h-4" />
-          {newCount > 0
-            ? `${newCount} new message${newCount === 1 ? "" : "s"}`
-            : "Jump to latest"}
-        </Button>
+      {showJump &&
+        (newCount > 0 ? (
+          <button
+            type="button"
+            onClick={() => scrollToBottom(true)}
+            className="absolute inset-x-3 bottom-2 flex cursor-pointer items-center justify-between rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-md animate-in fade-in slide-in-from-bottom-1 sm:inset-x-5"
+          >
+            <span>
+              {newCount} new message{newCount === 1 ? "" : "s"}
+            </span>
+            <span className="flex items-center gap-1">
+              Jump to latest
+              <ArrowDown className="size-3.5" />
+            </span>
+          </button>
+        ) : (
+          <Button
+            type="button"
+            size="icon-sm"
+            variant="secondary"
+            aria-label="Jump to latest"
+            title="Jump to latest"
+            className="absolute bottom-3 right-4 cursor-pointer rounded-full border border-border shadow-md animate-in fade-in"
+            onClick={() => scrollToBottom(true)}
+          >
+            <ArrowDown />
+          </Button>
+        ))}
+    </div>
+  );
+}
+
+/** Top of a channel's history: a short intro instead of a splash screen. */
+function ChannelIntro({ channel }: { channel: GuildChannel }) {
+  return (
+    <div className="mb-2 border-b border-border/60 px-4 pt-8 pb-4 sm:px-5">
+      <span className="flex size-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+        <Hash className="size-5" />
+      </span>
+      <h2 className="mt-3 text-lg font-bold tracking-tight">#{channel.name}</h2>
+      <p className="mt-0.5 text-sm text-muted-foreground">
+        This is the very beginning of <span className="font-medium text-foreground">#{channel.name}</span>
+        {channel.created_at && <>, created {format(new Date(channel.created_at), "d MMMM yyyy")}</>}.
+      </p>
+      {channel.topic && (
+        <p className="mt-2.5 max-w-2xl rounded-md border-l-2 border-primary/60 bg-muted/60 px-3 py-1.5 text-sm">
+          {channel.topic}
+        </p>
       )}
     </div>
   );

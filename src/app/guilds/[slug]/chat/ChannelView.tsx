@@ -85,15 +85,13 @@ export default function ChannelView({ slug, channelId }: { slug: string; channel
         onEdit={edit}
         onDelete={setMessageToDelete}
       />
-      <div className="mx-auto w-full max-w-4xl">
-        <MessageComposer
-          key={channelId}
-          channelName={channel.name}
-          replyTo={replyTo}
-          onCancelReply={() => setReplyTo(null)}
-          onSend={onSend}
-        />
-      </div>
+      <MessageComposer
+        key={channelId}
+        channelName={channel.name}
+        replyTo={replyTo}
+        onCancelReply={() => setReplyTo(null)}
+        onSend={onSend}
+      />
 
       <ConfirmDialog
         open={messageToDelete !== null}

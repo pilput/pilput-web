@@ -118,10 +118,10 @@ export const MessageItem = memo(function MessageItem({
       // Focusable by tap so the action bar is reachable on touch screens.
       tabIndex={-1}
       className={cn(
-        "group relative px-3 sm:px-4 py-0.5 outline-none transition-colors",
+        "group relative px-4 sm:px-5 py-0.5 outline-none transition-colors",
         "hover:bg-muted/50 focus-within:bg-muted/50",
-        !compact && "mt-4",
-        fresh && "animate-in fade-in slide-in-from-bottom-1 duration-200",
+        !compact && "mt-2.5 pt-1",
+        fresh && "animate-in fade-in duration-300",
         editing && "bg-muted/50",
         highlighted && "bg-primary/10 hover:bg-primary/10",
       )}
@@ -139,7 +139,7 @@ export const MessageItem = memo(function MessageItem({
               className="flex min-w-0 items-center gap-1.5 cursor-pointer hover:text-foreground transition-colors"
               title="Jump to the original message"
             >
-              <Avatar className="h-4 w-4 shrink-0">
+              <Avatar className="h-4 w-4 shrink-0 rounded">
                 <AvatarImage src={getProfilePicture(reply.author?.image || "")} alt="" />
                 <AvatarFallback className="text-[7px] font-bold">
                   {initials(reply.author?.username)}
@@ -161,14 +161,14 @@ export const MessageItem = memo(function MessageItem({
           {!compact ? (
             username ? (
               <Link href={`/${username}`} tabIndex={-1} aria-hidden>
-                <Avatar className="mt-0.5 h-9 w-9 border border-border hover:opacity-90 transition-opacity">
-                  <AvatarImage src={getProfilePicture(message.author?.image || "")} alt="" />
-                  <AvatarFallback className="text-[10px] font-bold">{initials(username)}</AvatarFallback>
+                <Avatar className="mt-0.5 h-9 w-9 rounded-lg hover:opacity-90 transition-opacity">
+                  <AvatarImage className="rounded-lg" src={getProfilePicture(message.author?.image || "")} alt="" />
+                  <AvatarFallback className="rounded-lg text-[10px] font-bold">{initials(username)}</AvatarFallback>
                 </Avatar>
               </Link>
             ) : (
-              <Avatar className="mt-0.5 h-9 w-9 border border-border">
-                <AvatarFallback className="text-[10px] font-bold">?</AvatarFallback>
+              <Avatar className="mt-0.5 h-9 w-9 rounded-lg">
+                <AvatarFallback className="rounded-lg text-[10px] font-bold">?</AvatarFallback>
               </Avatar>
             )
           ) : (
@@ -191,7 +191,7 @@ export const MessageItem = memo(function MessageItem({
                 <Link
                   href={`/${username}`}
                   className={cn(
-                    "text-sm font-semibold hover:underline",
+                    "text-sm font-bold hover:underline",
                     own && "text-primary",
                   )}
                 >
@@ -247,7 +247,7 @@ export const MessageItem = memo(function MessageItem({
               </p>
             </div>
           ) : (
-            <p className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-word text-foreground/90">
+            <p className="text-sm leading-6 whitespace-pre-wrap wrap-break-word">
               {renderContent(message.content)}
               {message.edited_at && (
                 <span
