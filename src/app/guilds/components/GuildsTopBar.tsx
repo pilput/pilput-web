@@ -7,7 +7,7 @@ import { ChevronRight, Hash, Moon, Sun } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useGuildChatStore } from "@/stores/guild-chat-store";
 import type { GuildStreamStatus } from "@/utils/guild-chat";
 import { GuildAvatar } from "./GuildAvatar";

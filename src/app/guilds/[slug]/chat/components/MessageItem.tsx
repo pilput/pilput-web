@@ -12,7 +12,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { getProfilePicture } from "@/utils/getImage";
 import { GUILD_MESSAGE_MAX_LENGTH, type GuildMessage } from "@/types/guild";
 

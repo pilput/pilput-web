@@ -1,5 +1,5 @@
 import { Bookmark, Edit2, Folder, FolderOpen, Loader2, MoreVertical, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { CornerUpLeft, Loader2, SendHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { GUILD_MESSAGE_MAX_LENGTH, type GuildMessage } from "@/types/guild";
 
 const MAX_HEIGHT_PX = 200;

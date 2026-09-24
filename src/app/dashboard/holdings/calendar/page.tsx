@@ -10,7 +10,7 @@ import CalendarMonthNav from "@/components/dashboard/holdings/calendar/CalendarM
 import CorporateActionCalendarGrid from "@/components/dashboard/holdings/calendar/CorporateActionCalendarGrid";
 import CorporateActionDayPanel from "@/components/dashboard/holdings/calendar/CorporateActionDayPanel";
 import { useCorporateActionsStore } from "@/stores/corporateActionsStore";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import type { CorporateActionItem, CorporateActionType } from "@/types/corporate-action";
 
 type TypeFilter = "all" | CorporateActionType;

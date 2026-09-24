@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, RefreshCw } from "lucide-react";
 import type { Post } from "@/types/post";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface SuccessResponse {
   data: Post[];
@@ -23,14 +23,18 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchRandomPosts = useCallback(async () => {
+  // Returns true on success so callers can react to the outcome.
+  const fetchRandomPosts = useCallback(async (): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const response = await apiClient.get("/api/posts/random?limit=6");
-      const result = response.data as SuccessResponse;
-      setposts(result.data);
+      const response = await apiClient.get<SuccessResponse>(
+        "/api/posts/random?limit=6"
+      );
+      setposts(response.data.data ?? []);
+      return true;
     } catch {
       toast.error("Failed to fetch random posts");
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -38,9 +42,9 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await fetchRandomPosts();
+    const ok = await fetchRandomPosts();
     setIsRefreshing(false);
-    toast.success("New posts loaded!");
+    if (ok) toast.success("New posts loaded!");
   };
 
   useEffect(() => {
@@ -83,42 +87,41 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
       )}
 
       {/* Posts Grid */}
-      <div
-        className={cn(
-          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
-        )}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {isLoading
           ? tempposts.map((post) => <PostItemPulse key={post} />)
-          : posts.map((post) => <PostItem key={post.id} post={post} showStats={false} />)}
+          : posts.map((post) => (
+              <PostItem key={post.id} post={post} showStats={false} />
+            ))}
       </div>
 
       {/* Empty State */}
       {!isLoading && posts.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <p className="text-muted-foreground text-sm mb-4">No posts found</p>
-          <Link href="/blog">
-            <Button size="sm" variant="outline" className="gap-2 rounded-md">
+          <Button asChild size="sm" variant="outline" className="gap-2 rounded-md">
+            <Link href="/blog">
               Browse Blog
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       )}
 
       {/* Explore More Button */}
       {!isLoading && posts.length > 0 && (
         <div className="flex justify-center mt-8">
-          <Link href="/blog">
-            <Button
-              variant="outline"
-              size="lg"
-              className="gap-2 rounded-md px-8"
-            >
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="gap-2 rounded-md px-8"
+          >
+            <Link href="/blog">
               Explore More Posts
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       )}
     </div>

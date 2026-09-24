@@ -6,7 +6,8 @@ import {
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
+import { cn } from "cn";
 import {
   Card,
   CardContent,

@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useGuildChatStore } from "@/stores/guild-chat-store";
 import { authStore } from "@/stores/userStore";
 import { logoutUser } from "@/utils/fetch";

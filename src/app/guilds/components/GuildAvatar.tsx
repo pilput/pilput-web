@@ -1,6 +1,6 @@
 import { Users } from "lucide-react";
 import { getUrlImage } from "@/utils/getImage";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 interface GuildAvatarProps {
   name: string;

@@ -10,7 +10,7 @@ import {
 } from "react";
 import { PanelLeft } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 const STORAGE_KEY = "guilds:sidebar-collapsed";
 

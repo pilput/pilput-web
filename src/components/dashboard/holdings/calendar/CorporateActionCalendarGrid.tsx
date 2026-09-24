@@ -11,7 +11,7 @@ import {
   isSameMonth,
   isToday,
 } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import type { CorporateActionItem } from "@/types/corporate-action";
 
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

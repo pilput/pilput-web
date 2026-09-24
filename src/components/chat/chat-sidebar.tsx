@@ -28,7 +28,7 @@ import {
   SearchX,
   ChevronDown,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { useChatStore, type Conversation } from "@/stores/chat-store";
 import {
   Sidebar,

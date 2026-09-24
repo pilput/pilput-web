@@ -5,7 +5,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Holding } from "@/types/holding";
 import HoldingActionComponent from "./action";
 import HoldingExpandedRow from "./HoldingExpandedRow";
-import { formatCurrency, getPlatformColor, getHoldingTypeColor, cn } from "@/lib/utils";
+import { formatCurrency, getPlatformColor, getHoldingTypeColor } from "@/lib/utils";
+import { cn } from "cn";
 
 interface HoldingTableRowProps {
   holding: Holding;

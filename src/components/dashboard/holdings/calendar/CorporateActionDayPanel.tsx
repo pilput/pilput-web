@@ -10,7 +10,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
+import { cn } from "cn";
 import type { CorporateActionItem } from "@/types/corporate-action";
 
 interface CorporateActionDayPanelProps {

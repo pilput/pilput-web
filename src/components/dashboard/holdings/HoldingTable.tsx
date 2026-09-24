@@ -13,7 +13,8 @@ import type { Holding } from "@/types/holding";
 import HoldingTableRow from "./HoldingTableRow";
 import HoldingTotalRow from "./HoldingTotalRow";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
-import { cn, getPlatformColor, getHoldingTypeColor } from "@/lib/utils";
+import { getPlatformColor, getHoldingTypeColor } from "@/lib/utils";
+import { cn } from "cn";
 
 interface HoldingTableProps {
   holdings: Holding[];

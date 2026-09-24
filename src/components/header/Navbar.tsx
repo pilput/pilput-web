@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ButtonLogged from "./ButtonLogged";
 import { usePathname } from "next/navigation";
 import DarkModeButton from "./Darkmode";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Menu, X } from "lucide-react";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 import { getMainNavItems } from "./nav-items";

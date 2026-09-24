@@ -1,5 +1,6 @@
 import { ArrowDownRight, ArrowUpRight, Award, Building2, Layers, Wallet } from "lucide-react";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
+import { cn } from "cn";
 import type { PortfolioStatistics } from "../hooks/usePortfolioStatistics";
 
 interface OverviewHeroProps {

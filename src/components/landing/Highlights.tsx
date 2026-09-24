@@ -2,7 +2,7 @@
 
 import { BookOpen, Sparkles, PieChart, MessageCircle, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 const highlights = [
   {

@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { BriefcaseBusiness, Mail } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { XIcon } from "@/components/icons/XIcon";

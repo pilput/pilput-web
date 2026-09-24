@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { apiClient } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import type { HoldingMonthlyDataResponse } from "@/types/holding";
 import { parseDecimal } from "@/types/holding";
 

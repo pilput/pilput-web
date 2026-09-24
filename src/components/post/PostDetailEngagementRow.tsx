@@ -5,7 +5,7 @@ import { Eye } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import { LikeDetailDefaultButton } from "@/components/post/LikeButton";
 import { usePostLike } from "@/components/post/usePostLike";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import {
   Tooltip,
   TooltipContent,

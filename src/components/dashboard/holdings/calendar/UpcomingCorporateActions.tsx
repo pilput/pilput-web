@@ -14,7 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { apiClient } from "@/utils/fetch";
 import { getToken } from "@/utils/Auth";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
+import { cn } from "cn";
 import type {
   CorporateActionCalendarResponse,
   CorporateActionItem,
@@ -22,7 +23,10 @@ import type {
 
 const MAX_ITEMS = 5;
 
-async function fetchMonth(month: number, year: number): Promise<CorporateActionItem[]> {
+async function fetchMonth(
+  month: number,
+  year: number,
+): Promise<CorporateActionItem[]> {
   const { data } = await apiClient.get<{
     success: boolean;
     data: CorporateActionCalendarResponse;
@@ -68,8 +72,10 @@ export default function UpcomingCorporateActions() {
 
   const upcoming = useMemo(
     () =>
-      [...actions].sort((a, b) => a.date.localeCompare(b.date)).slice(0, MAX_ITEMS),
-    [actions]
+      [...actions]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, MAX_ITEMS),
+    [actions],
   );
 
   return (
@@ -84,7 +90,12 @@ export default function UpcomingCorporateActions() {
             Dividend &amp; RUPS events coming up
           </CardDescription>
         </div>
-        <Button asChild variant="ghost" size="sm" className="h-8 px-2.5 text-xs gap-1 shrink-0">
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="h-8 px-2.5 text-xs gap-1 shrink-0"
+        >
           <Link href="/dashboard/holdings/calendar">
             Full calendar
             <ArrowRight className="h-3 w-3" />
@@ -95,7 +106,10 @@ export default function UpcomingCorporateActions() {
         {isLoading ? (
           <div className="space-y-2">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-12 rounded-lg bg-muted/40 animate-pulse" />
+              <div
+                key={i}
+                className="h-12 rounded-lg bg-muted/40 animate-pulse"
+              />
             ))}
           </div>
         ) : upcoming.length === 0 ? (
@@ -115,7 +129,7 @@ export default function UpcomingCorporateActions() {
                       "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
                       action.type === "dividend"
                         ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                        : "bg-violet-500/10 text-violet-600 dark:text-violet-400"
+                        : "bg-violet-500/10 text-violet-600 dark:text-violet-400",
                     )}
                   >
                     {action.type === "dividend" ? (
@@ -143,7 +157,9 @@ export default function UpcomingCorporateActions() {
                       {formatCurrency(action.amount, action.currency)}
                     </span>
                   ) : (
-                    <span className="text-[10px] text-muted-foreground">Meeting</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      Meeting
+                    </span>
                   )}
                 </div>
               </div>
