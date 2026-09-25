@@ -11,15 +11,22 @@ import {
   Lock,
   LogOut,
   MessagesSquare,
+  MoreHorizontal,
   Settings,
+  ShieldCheck,
   Trash2,
+  UserPlus,
   Users,
 } from "lucide-react";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 import { useGuildChatStore } from "@/stores/guild-chat-store";
@@ -42,6 +49,7 @@ import type { GuildFormData } from "@/lib/validation";
 import { GuildAvatar } from "../components/GuildAvatar";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { EditGuildDialog } from "./components/EditGuildDialog";
+import { GuildBanner } from "../components/GuildBanner";
 import { MemberList } from "./components/MemberList";
 
 interface GuildDetailClientProps {
@@ -222,9 +230,12 @@ export default function GuildDetailClient({
 
   if (loading && !guild) {
     return (
-      <div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
-        <Skeleton className="h-40 w-full rounded-xl" />
-        <Skeleton className="h-64 w-full rounded-xl" />
+      <div className="w-full max-w-5xl mx-auto px-4 py-6 sm:py-8 space-y-6">
+        <Skeleton className="h-60 w-full rounded-2xl" />
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <Skeleton className="h-72 w-full rounded-2xl" />
+          <Skeleton className="h-48 w-full rounded-2xl" />
+        </div>
       </div>
     );
   }
@@ -255,161 +266,201 @@ export default function GuildDetailClient({
   const isMember = guild.is_member === true;
   const isOwner = guild.my_role === "owner";
   const canManage = isOwner || guild.my_role === "admin";
+  const hasMenu = canManage || (isMember && !isOwner);
+
+  let primaryAction: React.ReactNode = null;
+  if (!isLoggedIn) {
+    primaryAction = (
+      <Button asChild className="cursor-pointer">
+        <Link href={`/login?redirect=/guilds/${guild.slug}`}>Sign in to join</Link>
+      </Button>
+    );
+  } else if (isMember) {
+    primaryAction = (
+      <Button asChild className="cursor-pointer gap-1.5">
+        <Link href={`/guilds/${guild.slug}/chat`}>
+          <MessagesSquare className="w-4 h-4" />
+          Open chat
+        </Link>
+      </Button>
+    );
+  } else if (guild.is_public) {
+    primaryAction = (
+      <Button type="button" className="cursor-pointer gap-1.5" disabled={joining} onClick={onJoin}>
+        {joining ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+        Join guild
+      </Button>
+    );
+  }
+
+  const details = [
+    {
+      icon: guild.is_public ? Globe : Lock,
+      label: "Visibility",
+      value: guild.is_public ? "Public" : "Private",
+    },
+    {
+      icon: Users,
+      label: "Members",
+      value: guild.member_count.toLocaleString(),
+    },
+    ...(guild.created_at
+      ? [
+          {
+            icon: CalendarDays,
+            label: "Created",
+            value: format(new Date(guild.created_at), "d MMM yyyy"),
+          },
+        ]
+      : []),
+    ...(guild.my_role
+      ? [{ icon: ShieldCheck, label: "Your role", value: guild.my_role }]
+      : []),
+  ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8 sm:py-10 space-y-6">
-      <Card className="border-border/70 bg-card/90">
-        <CardContent className="p-5 sm:p-6 space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+    <div className="w-full max-w-5xl mx-auto px-4 py-6 sm:py-8 space-y-6">
+      <section className="overflow-hidden rounded-2xl border border-border/70 bg-card">
+        <GuildBanner guildId={guild.id} />
+
+        <div className="px-5 sm:px-8 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-10 sm:-mt-12">
             <GuildAvatar
               name={guild.name}
               avatarUrl={guild.avatar_url}
-              className="w-16 h-16 text-lg"
+              className="relative w-20 h-20 sm:w-24 sm:h-24 text-2xl rounded-2xl border-4 border-card shadow-sm"
             />
-            <div className="flex-1 min-w-0 space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight">
-                  {guild.name}
-                </h1>
-                <Badge variant="secondary" className="gap-1">
-                  {guild.is_public ? (
-                    <>
-                      <Globe className="w-3 h-3" />
-                      Public
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-3 h-3" />
-                      Private
-                    </>
-                  )}
-                </Badge>
-                {guild.my_role && (
-                  <Badge className="capitalize">{guild.my_role}</Badge>
-                )}
-              </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
-                  <Users className="w-3.5 h-3.5" />
-                  {guild.member_count.toLocaleString()}{" "}
-                  {guild.member_count === 1 ? "member" : "members"}
-                </span>
-                {guild.created_at && (
-                  <span className="inline-flex items-center gap-1">
-                    <CalendarDays className="w-3.5 h-3.5" />
-                    Created {format(new Date(guild.created_at), "d MMM yyyy")}
-                  </span>
-                )}
+            <div className="flex-1 min-w-0 sm:pb-1">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight truncate">
+                {guild.name}
+              </h1>
+              <p className="text-sm text-muted-foreground truncate">
+                /{guild.slug}
                 {guild.owner?.username && (
-                  <Link
-                    href={`/${guild.owner.username}`}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    Owned by @{guild.owner.username}
-                  </Link>
+                  <>
+                    {" · by "}
+                    <Link
+                      href={`/${guild.owner.username}`}
+                      className="font-medium text-foreground/80 hover:text-primary transition-colors"
+                    >
+                      @{guild.owner.username}
+                    </Link>
+                  </>
                 )}
-              </div>
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 sm:pb-1">
+              {primaryAction}
+              {hasMenu && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="icon"
+                      className="cursor-pointer"
+                      aria-label="Guild options"
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    {canManage && (
+                      <DropdownMenuItem className="cursor-pointer" onSelect={() => setEditOpen(true)}>
+                        <Settings />
+                        Guild settings
+                      </DropdownMenuItem>
+                    )}
+                    {isMember && !isOwner && (
+                      <DropdownMenuItem className="cursor-pointer" onSelect={() => setLeaveOpen(true)}>
+                        <LogOut />
+                        Leave guild
+                      </DropdownMenuItem>
+                    )}
+                    {isOwner && (
+                      <>
+                        {canManage && <DropdownMenuSeparator />}
+                        <DropdownMenuItem
+                          variant="destructive"
+                          className="cursor-pointer"
+                          onSelect={() => setDeleteOpen(true)}
+                        >
+                          <Trash2 />
+                          Delete guild
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           </div>
 
-          {guild.description && (
-            <p className="text-sm leading-relaxed whitespace-pre-line">
-              {guild.description}
+          {isLoggedIn && !isMember && !guild.is_public && (
+            <p className="mt-4 rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground">
+              This guild is private — ask an admin for an invite.
             </p>
           )}
+        </div>
+      </section>
 
-          <Separator />
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <div className="space-y-6 min-w-0">
+          <section className="rounded-2xl border border-border/70 bg-card p-5 sm:p-6">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              About
+            </h2>
+            <p
+              className={
+                guild.description
+                  ? "mt-3 text-[15px] leading-relaxed whitespace-pre-line"
+                  : "mt-3 text-sm italic text-muted-foreground"
+              }
+            >
+              {guild.description || "This guild has no description yet."}
+            </p>
+          </section>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {!isLoggedIn ? (
-              <Button asChild className="cursor-pointer">
-                <Link href={`/login?redirect=/guilds/${guild.slug}`}>
-                  Sign in to join
-                </Link>
-              </Button>
-            ) : !isMember ? (
-              guild.is_public ? (
-                <Button
-                  type="button"
-                  className="cursor-pointer"
-                  disabled={joining}
-                  onClick={onJoin}
-                >
-                  {joining && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                  Join guild
-                </Button>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  This guild is private — ask an admin for an invite.
-                </p>
-              )
-            ) : (
-              <>
-                <Button asChild className="cursor-pointer gap-1.5">
-                  <Link href={`/guilds/${guild.slug}/chat`}>
-                    <MessagesSquare className="w-4 h-4" />
-                    Open chat
-                  </Link>
-                </Button>
-                {!isOwner && (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="cursor-pointer gap-1.5"
-                    onClick={() => setLeaveOpen(true)}
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Leave guild
-                  </Button>
-                )}
-              </>
-            )}
+          <section className="rounded-2xl border border-border/70 bg-card p-5 sm:p-6">
+            <div className="flex items-baseline justify-between gap-2 mb-4">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Members
+              </h2>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {membersTotal.toLocaleString()}
+              </span>
+            </div>
+            <MemberList
+              members={members}
+              loading={membersLoading}
+              loadingMore={membersLoadingMore}
+              hasMore={members.length < membersTotal}
+              onLoadMore={() => void loadMembers(members.length)}
+            />
+          </section>
+        </div>
 
-            {canManage && (
-              <Button
-                type="button"
-                variant="secondary"
-                className="cursor-pointer gap-1.5"
-                onClick={() => setEditOpen(true)}
-              >
-                <Settings className="w-4 h-4" />
-                Settings
-              </Button>
-            )}
-
-            {isOwner && (
-              <Button
-                type="button"
-                variant="destructive"
-                className="cursor-pointer gap-1.5 sm:ml-auto"
-                onClick={() => setDeleteOpen(true)}
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete guild
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border-border/70 bg-card/90">
-        <CardContent className="p-5 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-bold">Members</h2>
-            <span className="text-xs text-muted-foreground">
-              {membersTotal.toLocaleString()} total
-            </span>
-          </div>
-          <MemberList
-            members={members}
-            loading={membersLoading}
-            loadingMore={membersLoadingMore}
-            hasMore={members.length < membersTotal}
-            onLoadMore={() => void loadMembers(members.length)}
-          />
-        </CardContent>
-      </Card>
+        <aside className="lg:sticky lg:top-6 self-start rounded-2xl border border-border/70 bg-card p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Details
+          </h2>
+          <dl className="mt-4 space-y-3">
+            {details.map(({ icon: Icon, label, value }) => (
+              <div key={label} className="flex items-center gap-3">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                  <Icon className="w-4 h-4" />
+                </span>
+                <div className="min-w-0">
+                  <dt className="text-xs text-muted-foreground">{label}</dt>
+                  <dd className="text-sm font-medium capitalize truncate">{value}</dd>
+                </div>
+              </div>
+            ))}
+          </dl>
+        </aside>
+      </div>
 
       {canManage && (
         <EditGuildDialog

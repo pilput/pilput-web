@@ -21,6 +21,7 @@ import {
 import { GUILDS_PAGE_SIZE, type Guild } from "@/types/guild";
 import type { GuildFormData } from "@/lib/validation";
 import { CreateGuildDialog } from "./components/CreateGuildDialog";
+import { GuildBanner } from "./components/GuildBanner";
 import { GuildCard } from "./components/GuildCard";
 
 type GuildTab = "discover" | "mine";
@@ -156,28 +157,35 @@ export default function GuildsClient() {
   const hasMore = guilds.length < total;
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-6">
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Guilds
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Communities on pilput. Join one to find people working on the same
-            things as you.
-          </p>
+    <div className="w-full max-w-5xl mx-auto px-4 py-6 sm:py-8 space-y-6">
+      <header className="relative overflow-hidden rounded-2xl border border-border/70 bg-card">
+        <GuildBanner guildId="pilput-guilds" className="absolute inset-0 h-full sm:h-full" />
+        <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-5 px-5 py-8 sm:px-8 sm:py-10">
+          <div className="space-y-2 max-w-lg">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background/70 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground backdrop-blur">
+              <Compass className="w-3 h-3" />
+              Communities
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              Guilds
+            </h1>
+            <p className="text-sm sm:text-[15px] text-muted-foreground">
+              Communities on pilput. Join one to find people working on the same
+              things as you.
+            </p>
+          </div>
+          {isLoggedIn && (
+            <CreateGuildDialog
+              open={createOpen}
+              saving={creating}
+              onOpenChange={setCreateOpen}
+              onSubmit={onCreate}
+            />
+          )}
         </div>
-        {isLoggedIn && (
-          <CreateGuildDialog
-            open={createOpen}
-            saving={creating}
-            onOpenChange={setCreateOpen}
-            onSubmit={onCreate}
-          />
-        )}
       </header>
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="sticky top-0 z-20 -mx-4 flex flex-col gap-3 bg-background/80 px-4 py-2 backdrop-blur sm:flex-row sm:items-center">
         {isLoggedIn && (
           <Tabs
             value={activeTab}
@@ -203,7 +211,7 @@ export default function GuildsClient() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search guilds"
-              className="pl-9"
+              className="pl-9 rounded-full bg-card"
               aria-label="Search guilds"
             />
           </div>
@@ -214,13 +222,15 @@ export default function GuildsClient() {
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <li key={i}>
-              <Skeleton className="h-52 w-full rounded-xl" />
+              <Skeleton className="h-60 w-full rounded-2xl" />
             </li>
           ))}
         </ul>
       ) : guilds.length === 0 ? (
-        <div className="border border-dashed border-border rounded-xl py-16 px-6 text-center space-y-2">
-          <Users className="w-8 h-8 mx-auto text-muted-foreground" />
+        <div className="border border-dashed border-border rounded-2xl py-16 px-6 text-center space-y-2">
+          <span className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+            <Users className="w-6 h-6" />
+          </span>
           <p className="font-semibold">
             {activeTab === "mine"
               ? "You have not joined any guild yet"
