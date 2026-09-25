@@ -5,7 +5,7 @@ import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Eye, MessageCircle } from "lucide-react";
+import { Eye, MessageCircle } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";

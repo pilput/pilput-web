@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { format, addMonths } from "date-fns";
-import { CalendarClock, Coins, Users, ArrowRight } from "lucide-react";
+import { Coins, Users, ArrowRight } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -20,6 +20,7 @@ import type {
   CorporateActionCalendarResponse,
   CorporateActionItem,
 } from "@/types/corporate-action";
+import { CalendarClockIcon } from "@/components/icons/TimeIcons";
 
 const MAX_ITEMS = 5;
 
@@ -83,7 +84,7 @@ export default function UpcomingCorporateActions() {
       <CardHeader className="px-4 pb-3 pt-4 sm:px-5 flex-row items-center justify-between gap-2">
         <div className="min-w-0">
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
-            <CalendarClock className="h-3.5 w-3.5 text-muted-foreground" />
+            <CalendarClockIcon className="h-3.5 w-3.5 text-muted-foreground" />
             Upcoming Corporate Actions
           </CardTitle>
           <CardDescription className="text-xs mt-1">

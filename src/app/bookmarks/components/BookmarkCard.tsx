@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Edit2, Loader2, Tag, Trash2 } from "lucide-react";
+import { ArrowRight, Edit2, Loader2, Tag, Trash2 } from "lucide-react";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { BookmarkFolder, BookmarkRecord } from "@/types/bookmark";
+import { CalendarIcon } from "@/components/icons/TimeIcons";
 
 interface BookmarkCardProps {
   row: BookmarkRecord;
@@ -107,7 +108,7 @@ export function BookmarkCard({ row, folders, busy, onEdit, onRemove, onMove }: B
                   <span className="h-3 w-px bg-border" aria-hidden />
 
                   <span className="inline-flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 opacity-70" />
+                    <CalendarIcon className="w-3.5 h-3.5 opacity-70" />
                     {post.created_at ? new Date(post.created_at).toLocaleDateString([], {
                       month: "short",
                       day: "numeric",

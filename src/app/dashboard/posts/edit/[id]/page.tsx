@@ -32,25 +32,12 @@ const MyEditor = dynamic(() => import("@/components/post/Editor"), {
   ),
 });
 
-import {
-  ImagePlus,
-  X,
-  FileText,
-  Link as LinkIcon,
-  Hash,
-  Save,
-  ArrowLeft,
-  Eye,
-  Loader2,
-  Send,
-  Calendar,
-  Clock,
-  Settings,
-} from "lucide-react";
+import { ImagePlus, X, FileText, Link as LinkIcon, Hash, Save, ArrowLeft, Eye, Loader2, Send, Settings } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { authStore } from "@/stores/userStore";
 import styles from "@/components/post/post-editor.module.scss";
 import contentStyles from "@/components/post/post-content.module.scss";
+import { CalendarIcon, ClockIcon } from "@/components/icons/TimeIcons";
 
 const MAX_TITLE_LENGTH = 150;
 const MAX_SLUG_LENGTH = 200;
@@ -323,12 +310,12 @@ export default function PostEdit() {
               {/* Date / Reading Strip */}
               <div className={contentStyles.postDateStrip}>
                 <span className={contentStyles.postDateItem}>
-                  <Calendar className="w-3.5 h-3.5" aria-hidden />
+                  <CalendarIcon className="w-3.5 h-3.5" aria-hidden />
                   Today
                 </span>
                 <span className={contentStyles.postDateDot} aria-hidden>·</span>
                 <span className={contentStyles.postDateItem}>
-                  <Clock className="w-3.5 h-3.5" aria-hidden />
+                  <ClockIcon className="w-3.5 h-3.5" aria-hidden />
                   {post.published ? "Published" : "Draft"}
                 </span>
               </div>

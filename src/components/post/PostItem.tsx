@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Bookmark, Calendar, Eye, Heart } from "lucide-react";
+import { Bookmark, Eye, Heart } from "lucide-react";
 import { getPostBookmarkCount, getPostLikesCount, type Post } from "@/types/post";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProfilePicture } from "@/utils/getImage";
+import { CalendarIcon } from "@/components/icons/TimeIcons";
 
 const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean }) => {
   const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, " ");
@@ -24,7 +25,7 @@ const PostItem = ({ post, showStats = true }: { post: Post; showStats?: boolean 
         <CardHeader className="space-y-3 pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-              <Calendar className="h-3.5 w-3.5" />
+              <CalendarIcon className="h-3.5 w-3.5" />
               <time dateTime={post.created_at || ""}>{formattedDate}</time>
             </div>
             {post.tags?.[0] && (

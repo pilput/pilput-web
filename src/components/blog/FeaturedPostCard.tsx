@@ -5,7 +5,7 @@ import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Eye, MessageCircle, Sparkles } from "lucide-react";
+import { Eye, MessageCircle, Sparkles } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ClockIcon } from "@/components/icons/TimeIcons";
 
 interface FeaturedPostCardProps {
   post: Post;
@@ -82,7 +83,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                   {post.user?.username || "Anonymous"}
                 </Link>
                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                  <Clock className="w-3 h-3 opacity-70" />
+                  <ClockIcon className="w-3 h-3 opacity-70" />
                   <span>{post.created_at ? format(new Date(post.created_at), "MMMM d, yyyy") : "Draft"}</span>
                 </div>
               </div>

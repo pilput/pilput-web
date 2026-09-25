@@ -5,7 +5,7 @@ import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, Eye, MessageCircle } from "lucide-react";
+import { Eye, MessageCircle } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ClockIcon } from "@/components/icons/TimeIcons";
 
 const PostList = ({ post }: { post: Post }) => {
   const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, "").trim();
@@ -73,7 +74,7 @@ const PostList = ({ post }: { post: Post }) => {
               {post.user?.username || "Anonymous"}
             </Link>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="w-3.5 h-3.5 opacity-70" />
+              <ClockIcon className="w-3.5 h-3.5 opacity-70" />
               <span>{post.created_at ? format(new Date(post.created_at), "MMM d, yyyy") : "Draft"}</span>
             </div>
           </div>

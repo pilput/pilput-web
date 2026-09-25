@@ -6,12 +6,7 @@ import { apiClient } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
 import { notFound } from "next/navigation";
 import { Config } from "@/utils/getConfig";
-import {
-  AtSign,
-  CalendarDays,
-  ExternalLink,
-  Link as LinkIcon,
-} from "lucide-react";
+import { AtSign, ExternalLink, Link as LinkIcon } from "lucide-react";
 import WriterProfileClient from "./WriterProfileClient";
 import ProfileFollowActions from "@/components/writer/ProfileFollowActions";
 import ProfileStats from "@/components/writer/ProfileStats";
@@ -19,6 +14,7 @@ import MutualFollows from "@/components/writer/MutualFollows";
 import type { Writer } from "@/types/writer";
 import { cookies } from "next/headers";
 import { toSafeJsonLd } from "@/utils/sanitize";
+import { CalendarIcon } from "@/components/icons/TimeIcons";
 
 interface SuccessResponse {
   data: Writer;
@@ -127,7 +123,7 @@ export default async function page(props: {
 
                           <div className="flex flex-wrap gap-2">
                             <span className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-background/70 px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                              <CalendarDays
+                              <CalendarIcon
                                 className="h-3.5 w-3.5"
                                 aria-hidden
                               />

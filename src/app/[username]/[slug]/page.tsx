@@ -14,8 +14,9 @@ import PostContent from "@/components/post/PostContent";
 import { PostDetailEngagementRow } from "@/components/post/PostDetailEngagementRow";
 import styles from "@/components/post/post-content.module.scss";
 import { Config } from "@/utils/getConfig";
-import { Calendar, Clock } from "lucide-react";
+
 import { toSafeJsonLd } from "@/utils/sanitize";
+import { CalendarIcon, ClockIcon } from "@/components/icons/TimeIcons";
 
 interface SuccessResponse {
   data: Post;
@@ -199,12 +200,12 @@ export default async function Page(props: {
               {/* Reading time + date strip */}
               <div className={styles.postDateStrip}>
                 <span className={styles.postDateItem}>
-                  <Calendar className="w-3.5 h-3.5" aria-hidden />
+                  <CalendarIcon className="w-3.5 h-3.5" aria-hidden />
                   {post.created_at ? formatDate(post.created_at) : "Draft"}
                 </span>
                 <span className={styles.postDateDot} aria-hidden>·</span>
                 <span className={styles.postDateItem}>
-                  <Clock className="w-3.5 h-3.5" aria-hidden />
+                  <ClockIcon className="w-3.5 h-3.5" aria-hidden />
                   {readingTime} min read
                 </span>
               </div>
