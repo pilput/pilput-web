@@ -5,7 +5,7 @@ import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 import { cn } from "cn";
 import { useGuildChatStore } from "@/stores/guild-chat-store";
 import { authStore } from "@/stores/userStore";
-import { GuildsShellProvider, useGuildsShell } from "./components/GuildsShell";
+import { GuildsShellProvider } from "./components/GuildsShell";
 import { GuildsSidebar } from "./components/GuildsSidebar";
 import { GuildsTopBar } from "./components/GuildsTopBar";
 
@@ -41,14 +41,11 @@ export default function GuildsLayoutClient({
 
 /** The page surface: a raised sheet beside the sidebar on desktop. */
 function ContentPane({ children }: { children: React.ReactNode }) {
-  const { desktopOpen } = useGuildsShell();
   return (
     <main
       className={cn(
         "flex min-w-0 flex-1 flex-col overflow-hidden bg-background",
         "md:my-2 md:mr-2 md:rounded-xl md:border md:border-border/60",
-        "md:transition-[margin] md:duration-300",
-        desktopOpen ? "md:ml-0" : "md:ml-2",
       )}
     >
       <GuildsTopBar />
