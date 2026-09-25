@@ -40,58 +40,51 @@ function clearCookieOptions() {
   };
 }
 
+// Client-side getCookie is synchronous; its Promise overload is server-only.
 export function getToken() {
-  return getCookie(ACCESS_TOKEN_COOKIE);
+  return getCookie(ACCESS_TOKEN_COOKIE) as string | undefined;
 }
 
 export function getRefreshToken() {
-  return getCookie(REFRESH_TOKEN_COOKIE);
+  return getCookie(REFRESH_TOKEN_COOKIE) as string | undefined;
 }
 
 /**
  * Whether an access JWT is still within its `exp`. The signature is NOT
  * checked (the backend does that) — this only tells expired tokens apart.
- * Works in both the browser and the edge runtime (proxy).
  */
-export function isAccessTokenFresh(token: string | undefined | null): boolean {
-  if (!token) {
+export function isAccessTokenFresh(
+  token: string | undefined,
+): token is string {
+  const payload = token?.split(".")[1];
+  if (!payload) {
     return false;
   }
   try {
-    const payload = token.split(".")[1];
-    if (!payload) {
-      return false;
-    }
-    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
-    const { exp } = JSON.parse(atob(padded)) as { exp?: number };
+    const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const { exp } = JSON.parse(json) as { exp?: number };
     // No `exp` claim: let the backend decide.
-    return typeof exp !== "number" || exp * 1000 > Date.now();
+    return exp === undefined || exp * 1000 > Date.now();
   } catch {
     return false;
   }
 }
 
 /**
- * Session check from raw cookie values. The refresh token is the source of
- * truth for "logged in": the access JWT expires after 15m but is renewed
- * transparently as long as a refresh token exists. Without a refresh token
- * the session only lasts while the access JWT itself is unexpired.
+ * The refresh token is the source of truth for "logged in": the access JWT
+ * expires after 15m but is renewed transparently while a refresh token
+ * exists. Without one, the session lasts only as long as the access JWT.
+ * Takes raw values so the proxy can pass request cookies.
  */
 export function hasSessionCookies(
-  accessToken: string | undefined | null,
-  refreshToken: string | undefined | null,
+  accessToken: string | undefined,
+  refreshToken: string | undefined,
 ): boolean {
   return Boolean(refreshToken) || isAccessTokenFresh(accessToken);
 }
 
-/** Client-side "is the user logged in" check (access OR refresh token). */
 export function hasSession(): boolean {
-  // Client-side getCookie is synchronous; the Promise form is server-only.
-  return hasSessionCookies(
-    getToken() as string | undefined,
-    getRefreshToken() as string | undefined,
-  );
+  return hasSessionCookies(getToken(), getRefreshToken());
 }
 
 // Cookies emit no change events, so token writes notify subscribers directly

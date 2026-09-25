@@ -248,14 +248,8 @@ export const apiClient = createClient(Config.apibaseurl);
  * expired but a refresh token exists. Null when there is no session.
  */
 export async function getValidAccessToken(): Promise<string | null> {
-  const token = getToken() as string | undefined;
-  if (token && isAccessTokenFresh(token)) {
-    return token;
-  }
-  if (getRefreshToken()) {
-    return apiClient.refreshAccessToken();
-  }
-  return null;
+  const token = getToken();
+  return isAccessTokenFresh(token) ? token : apiClient.refreshAccessToken();
 }
 
 export async function getDataExternal(
