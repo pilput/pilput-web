@@ -10,7 +10,7 @@ async function getTags(): Promise<TagListItem[]> {
   try {
     const { data: response } = await apiClient.get<{
       data?: Array<{ id?: string | number; name: string; created_at?: string }>;
-    }>("/api/tags");
+    }>("/api/tags", { next: { revalidate } });
 
     return (response.data ?? []).map((tag) => ({
       id: String(tag.id ?? tag.name),

@@ -32,6 +32,8 @@ export type RequestConfig = {
   headers?: Record<string, string>;
   signal?: AbortSignal;
   cache?: RequestCache;
+  /** Next.js fetch cache options (e.g. `{ revalidate: 300 }`). */
+  next?: NextFetchRequestConfig;
 };
 
 export type HttpResponse<T = unknown> = {
@@ -167,7 +169,10 @@ function createClient(baseURL: string) {
             ? undefined
             : requestBody,
         signal: config.signal,
-        cache: config.cache ?? "no-store",
+        // `no-store` opts the route out of static rendering, so only default
+        // to it when the caller hasn't asked for Next.js revalidation.
+        cache: config.cache ?? (config.next ? undefined : "no-store"),
+        next: config.next,
       });
     } catch (e) {
       throw e;
