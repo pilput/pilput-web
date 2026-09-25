@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bookmark } from "lucide-react";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import { bookmarkStore } from "@/stores/bookmarkStore";
 
 export default function ReadingListCard() {
@@ -13,13 +13,13 @@ export default function ReadingListCard() {
   const loaded = bookmarkStore((s) => s.loaded);
 
   useEffect(() => {
-    if (!getToken()) {
+    if (!hasSession()) {
       return;
     }
     void loadBookmarks().catch(() => {});
   }, [loadBookmarks]);
 
-  const showCount = getToken() && loaded && count > 0;
+  const showCount = hasSession() && loaded && count > 0;
 
   return (
     <Card className="glass-card border-glow-hover bg-card/90 transition-all duration-300 py-0">
@@ -38,13 +38,13 @@ export default function ReadingListCard() {
         ) : null}
         <Link
           href={
-            getToken()
+            hasSession()
               ? "/bookmarks"
               : `/login?redirect=${encodeURIComponent("/bookmarks")}`
           }
           className="block w-full text-center px-4 py-2 rounded-lg border border-primary/60 bg-primary text-primary-foreground transition-colors text-sm font-medium cursor-pointer"
         >
-          {getToken() ? "Open reading list" : "Sign in to save posts"}
+          {hasSession() ? "Open reading list" : "Sign in to save posts"}
         </Link>
       </CardContent>
     </Card>

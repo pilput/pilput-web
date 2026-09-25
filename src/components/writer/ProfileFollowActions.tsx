@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { followUser, unfollowUser } from "@/utils/fetch";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import { authStore } from "@/stores/userStore";
 import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ export default function ProfileFollowActions({
 
   useEffect(() => {
     const run = async () => {
-      if (!getToken()) {
+      if (!hasSession()) {
         setAuthChecked(true);
         return;
       }
@@ -62,7 +62,7 @@ export default function ProfileFollowActions({
     me.username === profileUsername;
 
   const onToggleFollow = async () => {
-    if (!getToken()) {
+    if (!hasSession()) {
       toast.error("Please sign in to follow.");
       return;
     }
@@ -97,7 +97,7 @@ export default function ProfileFollowActions({
           </Link>
         </Button>
       ) : authChecked && !isOwnProfile ? (
-        getToken() ? (
+        hasSession() ? (
           <Button
             variant={isFollowing ? "outline" : "default"}
             size="sm"

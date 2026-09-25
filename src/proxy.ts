@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ACCESS_TOKEN_COOKIE } from "@/utils/Auth";
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+  hasSessionCookies,
+} from "@/utils/Auth";
 
 /**
  * Sends logged-in visitors to the feed while keeping "/" as the visible URL,
@@ -8,9 +12,12 @@ import { ACCESS_TOKEN_COOKIE } from "@/utils/Auth";
  * route into per-request dynamic rendering just to branch on a cookie.
  */
 export function proxy(request: NextRequest) {
-  const hasToken = Boolean(request.cookies.get(ACCESS_TOKEN_COOKIE)?.value);
+  const loggedIn = hasSessionCookies(
+    request.cookies.get(ACCESS_TOKEN_COOKIE)?.value,
+    request.cookies.get(REFRESH_TOKEN_COOKIE)?.value,
+  );
 
-  if (hasToken) {
+  if (loggedIn) {
     const url = request.nextUrl.clone();
     url.pathname = "/feed-home";
     return NextResponse.rewrite(url);

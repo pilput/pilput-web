@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import {
   Tooltip,
   TooltipContent,
@@ -84,7 +84,7 @@ export function LikeDetailDefaultButton({
           </motion.button>
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          {!getToken() ? (
+          {!hasSession() ? (
             <span>
               Sign in to like —{" "}
               <Link href={loginHref} className="underline font-medium">
@@ -150,7 +150,7 @@ export default function LikeButton({
             </motion.button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            {!getToken() ? (
+            {!hasSession() ? (
               <span>
                 Sign in to like —{" "}
                 <Link href={loginHref} className="underline font-medium">
@@ -202,7 +202,7 @@ export default function LikeButton({
             </motion.button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            {!getToken() ? (
+            {!hasSession() ? (
               <span>
                 Sign in to like —{" "}
                 <Link href={loginHref} className="underline font-medium">

@@ -1,6 +1,7 @@
 import {
   getToken,
   getRefreshToken,
+  isAccessTokenFresh,
   setTokens,
   clearTokens,
 } from "./Auth";
@@ -241,6 +242,21 @@ function createClient(baseURL: string) {
 
 /** API client (`NEXT_PUBLIC_API_URL`). */
 export const apiClient = createClient(Config.apibaseurl);
+
+/**
+ * An unexpired access token, refreshing first when the JWT is missing or
+ * expired but a refresh token exists. Null when there is no session.
+ */
+export async function getValidAccessToken(): Promise<string | null> {
+  const token = getToken() as string | undefined;
+  if (token && isAccessTokenFresh(token)) {
+    return token;
+  }
+  if (getRefreshToken()) {
+    return apiClient.refreshAccessToken();
+  }
+  return null;
+}
 
 export async function getDataExternal(
   url: string,

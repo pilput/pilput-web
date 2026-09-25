@@ -9,7 +9,7 @@ import {
   updateBookmarkFolder,
   deleteBookmarkFolder,
 } from "@/utils/bookmarks";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import type { ApiEnvelope, BookmarkFolder, BookmarkRecord } from "@/types/bookmark";
 
 interface BookmarkState {
@@ -56,7 +56,7 @@ export const bookmarkStore = create<BookmarkState>()((set, get) => ({
     }),
 
   loadBookmarks: async (force = false) => {
-    if (!getToken()) {
+    if (!hasSession()) {
       return;
     }
     const { loaded } = get();
@@ -80,7 +80,7 @@ export const bookmarkStore = create<BookmarkState>()((set, get) => ({
   },
 
   loadFolders: async (force = false) => {
-    if (!getToken()) {
+    if (!hasSession()) {
       return;
     }
     const { loadedFolders } = get();
@@ -102,7 +102,7 @@ export const bookmarkStore = create<BookmarkState>()((set, get) => ({
   isBookmarked: (postId: string) => Boolean(get().byPostId[postId]),
 
   toggleBookmark: async (postId, body) => {
-    if (!getToken()) {
+    if (!hasSession()) {
       throw new Error("NOT_AUTHENTICATED");
     }
     const res = await toggleBookmarkRequest(postId, body);
@@ -113,31 +113,31 @@ export const bookmarkStore = create<BookmarkState>()((set, get) => ({
   },
 
   createFolder: async (name: string, description?: string) => {
-    if (!getToken()) return;
+    if (!hasSession()) return;
     await createBookmarkFolder({ name, description });
     await get().loadFolders(true);
   },
 
   updateFolder: async (id: string, name: string, description?: string) => {
-    if (!getToken()) return;
+    if (!hasSession()) return;
     await updateBookmarkFolder(id, { name, description });
     await Promise.all([get().loadFolders(true), get().loadBookmarks(true)]);
   },
 
   deleteFolder: async (id: string) => {
-    if (!getToken()) return;
+    if (!hasSession()) return;
     await deleteBookmarkFolder(id);
     await Promise.all([get().loadFolders(true), get().loadBookmarks(true)]);
   },
 
   updateBookmark: async (id: string, name?: string, notes?: string) => {
-    if (!getToken()) return;
+    if (!hasSession()) return;
     await updateBookmarkRequest(id, { name, notes });
     await get().loadBookmarks(true);
   },
 
   moveBookmark: async (id: string, folderId: string | null) => {
-    if (!getToken()) return;
+    if (!hasSession()) return;
     await moveBookmarkRequest(id, folderId);
     await Promise.all([get().loadBookmarks(true), get().loadFolders(true)]);
   },

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AnimatePresence } from "framer-motion";
 import { Bookmark, Loader2 } from "lucide-react";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import { bookmarkStore } from "@/stores/bookmarkStore";
 import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 import type { BookmarkFolder, BookmarkRecord } from "@/types/bookmark";
@@ -56,7 +56,7 @@ export default function BookmarksClient() {
   const [updatingBookmark, setUpdatingBookmark] = useState(false);
 
   useEffect(() => {
-    if (!getToken()) {
+    if (!hasSession()) {
       return;
     }
     void loadBookmarks(true).catch(() => {
@@ -186,7 +186,7 @@ export default function BookmarksClient() {
     setEditBookmarkNotes(row.notes || "");
   };
 
-  if (!getToken()) {
+  if (!hasSession()) {
     return <SignInPrompt />;
   }
 

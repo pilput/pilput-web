@@ -49,6 +49,67 @@ export function getRefreshToken() {
 }
 
 /**
+ * Whether an access JWT is still within its `exp`. The signature is NOT
+ * checked (the backend does that) — this only tells expired tokens apart.
+ * Works in both the browser and the edge runtime (proxy).
+ */
+export function isAccessTokenFresh(token: string | undefined | null): boolean {
+  if (!token) {
+    return false;
+  }
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) {
+      return false;
+    }
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+    const { exp } = JSON.parse(atob(padded)) as { exp?: number };
+    // No `exp` claim: let the backend decide.
+    return typeof exp !== "number" || exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Session check from raw cookie values. The refresh token is the source of
+ * truth for "logged in": the access JWT expires after 15m but is renewed
+ * transparently as long as a refresh token exists. Without a refresh token
+ * the session only lasts while the access JWT itself is unexpired.
+ */
+export function hasSessionCookies(
+  accessToken: string | undefined | null,
+  refreshToken: string | undefined | null,
+): boolean {
+  return Boolean(refreshToken) || isAccessTokenFresh(accessToken);
+}
+
+/** Client-side "is the user logged in" check (access OR refresh token). */
+export function hasSession(): boolean {
+  // Client-side getCookie is synchronous; the Promise form is server-only.
+  return hasSessionCookies(
+    getToken() as string | undefined,
+    getRefreshToken() as string | undefined,
+  );
+}
+
+// Cookies emit no change events, so token writes notify subscribers directly
+// (e.g. useIsLoggedIn re-renders when a failed refresh clears the session).
+const authListeners = new Set<() => void>();
+
+export function subscribeAuth(listener: () => void) {
+  authListeners.add(listener);
+  return () => {
+    authListeners.delete(listener);
+  };
+}
+
+function notifyAuthChange() {
+  authListeners.forEach((listener) => listener());
+}
+
+/**
  * Persist the access token (and, when provided, the rotated refresh token)
  * returned by login / OAuth exchange / refresh endpoints.
  */
@@ -65,6 +126,7 @@ export function setTokens(accessToken: string, refreshToken?: string) {
       cookieOptions(REFRESH_TOKEN_MAX_AGE_MS),
     );
   }
+  notifyAuthChange();
 }
 
 /** Remove both the access and refresh token cookies. */
@@ -74,6 +136,7 @@ export function clearTokens() {
   }
   deleteCookie(ACCESS_TOKEN_COOKIE, clearCookieOptions());
   deleteCookie(REFRESH_TOKEN_COOKIE, clearCookieOptions());
+  notifyAuthChange();
 }
 
 export function logOut() {

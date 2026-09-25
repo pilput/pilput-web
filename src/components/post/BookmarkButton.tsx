@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Bookmark, Folder, Loader2, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import { bookmarkStore } from "@/stores/bookmarkStore";
 import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 import {
@@ -96,7 +96,7 @@ export default function BookmarkButton({
   }
 
   useEffect(() => {
-    if (!getToken()) {
+    if (!hasSession()) {
       return;
     }
     void loadBookmarks().catch(() => {
@@ -105,13 +105,13 @@ export default function BookmarkButton({
   }, [loadBookmarks]);
 
   useEffect(() => {
-    if (isManageOpen && getToken()) {
+    if (isManageOpen && hasSession()) {
       void loadFolders().catch(() => {});
     }
   }, [isManageOpen, loadFolders]);
 
   const onClick = async () => {
-    if (!getToken()) {
+    if (!hasSession()) {
       toast.error("Sign in to save posts to your reading list.");
       return;
     }
@@ -193,7 +193,7 @@ export default function BookmarkButton({
   };
 
   const showSpinner =
-    busy || (Boolean(getToken()) && !loaded && loadingList);
+    busy || (hasSession() && !loaded && loadingList);
 
   return (
     <>
@@ -269,7 +269,7 @@ export default function BookmarkButton({
             )}
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            {!getToken() ? (
+            {!hasSession() ? (
               <span>
                 Sign in to save —{" "}
                 <Link href={loginHref} className="underline font-medium">

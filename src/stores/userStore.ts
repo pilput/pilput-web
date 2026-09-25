@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { apiClient, isHttpError } from "@/utils/fetch";
-import { clearTokens, getToken } from "@/utils/Auth";
+import { apiClient, getValidAccessToken, isHttpError } from "@/utils/fetch";
+import { clearTokens } from "@/utils/Auth";
 import type { Auth } from "@/types/you";
 
 const INITIAL_USER: Auth = {
@@ -40,7 +40,9 @@ export const authStore = create<authDataState>()((set) => ({
       error: false,
     }),
   fetch: async () => {
-    const token = getToken();
+    // Refreshes up front when the access JWT is missing/expired but a refresh
+    // token exists, instead of treating that session as logged out.
+    const token = await getValidAccessToken();
     if (!token) {
       set({
         data: INITIAL_USER,

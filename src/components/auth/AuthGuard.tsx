@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getCookie } from "cookies-next";
+import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -11,16 +11,16 @@ interface AuthGuardProps {
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const token = getCookie("token");
+  const { isLoggedIn, ready } = useIsLoggedIn();
 
   useEffect(() => {
-    if (!token) {
+    if (ready && !isLoggedIn) {
       const redirectParam = encodeURIComponent(pathname);
       router.replace(`/login?redirect=${redirectParam}`);
     }
-  }, [pathname, router, token]);
+  }, [pathname, router, isLoggedIn, ready]);
 
-  if (!token) {
+  if (!ready || !isLoggedIn) {
     return null;
   }
 

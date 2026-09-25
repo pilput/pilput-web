@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { authStore } from "@/stores/userStore";
 import { apiClient } from "@/utils/fetch";
-import { getToken } from "@/utils/Auth";
+import { getToken, hasSession } from "@/utils/Auth";
 
 interface MutualFollowUser {
   id: string;
@@ -36,7 +36,7 @@ export default function MutualFollows({
 
   useEffect(() => {
     const run = async () => {
-      if (!getToken()) {
+      if (!hasSession()) {
         setAuthChecked(true);
         return;
       }

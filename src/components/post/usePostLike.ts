@@ -7,7 +7,7 @@ import {
   type MouseEvent,
 } from "react";
 import { toast } from "sonner";
-import { getToken } from "@/utils/Auth";
+import { hasSession } from "@/utils/Auth";
 import { togglePostLike } from "@/utils/fetch";
 import { ErrorHandlerAPI } from "@/utils/ErrorHandler";
 
@@ -45,7 +45,7 @@ export function usePostLike(
       e.preventDefault();
       e.stopPropagation();
 
-      if (!getToken()) {
+      if (!hasSession()) {
         toast.error("Sign in to like posts.");
         return;
       }
