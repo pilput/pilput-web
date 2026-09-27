@@ -164,6 +164,8 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
               {children}
             </h6>
           ),
+          // The `code` renderer below emits its own <pre> shell
+          pre: ({ children }) => <>{children}</>,
           // Customize code blocks
           code: ({
             node,
@@ -176,7 +178,9 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
             const rawLang = match ? match[1] : "";
             const code = String(children).replace(/\n$/, "");
 
-            if (inline) {
+            // react-markdown >= 9 no longer passes `inline`; fenced blocks
+            // always carry a `language-*` class or span multiple lines.
+            if (inline ?? (!match && !String(children).includes("\n"))) {
               return (
                 <code className="bg-muted rounded px-1.5 text-sm font-mono">
                   {children}
@@ -197,7 +201,7 @@ export function Markdown({ content, className, isStreaming }: MarkdownProps) {
                 </div>
                 <pre className="overflow-x-auto p-4 text-sm leading-relaxed font-mono bg-transparent text-[#c9d1d9]">
                   <code
-                    className={cn("hljs", className)}
+                    className={cn("hljs bg-transparent!", className)}
                     dangerouslySetInnerHTML={{ __html: highlighted.html }}
                   />
                 </pre>

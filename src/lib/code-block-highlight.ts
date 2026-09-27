@@ -1,30 +1,10 @@
-import "@/lib/code-highlight";
+import { HIGHLIGHT_LANGUAGES } from "@/lib/code-highlight";
 
 import { mergeAttributes } from "@tiptap/core";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { createLowlight } from "lowlight";
 
-import bash from "highlight.js/lib/languages/bash";
-import css from "highlight.js/lib/languages/css";
-import javascript from "highlight.js/lib/languages/javascript";
-import json from "highlight.js/lib/languages/json";
-import markdown from "highlight.js/lib/languages/markdown";
-import python from "highlight.js/lib/languages/python";
-import typescript from "highlight.js/lib/languages/typescript";
-import xml from "highlight.js/lib/languages/xml";
-
-const lowlight = createLowlight();
-
-lowlight.register({
-  bash,
-  css,
-  javascript,
-  json,
-  markdown,
-  python,
-  typescript,
-  xml,
-});
+const lowlight = createLowlight(HIGHLIGHT_LANGUAGES);
 
 lowlight.registerAlias({
   javascript: ["js", "jsx", "mjs", "cjs"],
@@ -33,6 +13,10 @@ lowlight.registerAlias({
   markdown: ["md"],
   bash: ["sh", "shell", "zsh"],
   xml: ["html", "svg", "vue"],
+  yaml: ["yml"],
+  go: ["golang"],
+  rust: ["rs"],
+  diff: ["patch"],
 });
 
 /**

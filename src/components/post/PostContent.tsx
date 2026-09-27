@@ -25,7 +25,37 @@ const PostContent = ({ html, className }: PostContentProps) => {
       return;
     }
 
-    const cleanups: Array<() => void> = [];
+    // Delegated so the handler survives effect re-runs (e.g. StrictMode),
+    // where already-enhanced blocks are skipped below.
+    const handleClick = async (event: MouseEvent) => {
+      const copyButton = (event.target as Element | null)?.closest<HTMLButtonElement>(
+        "button[data-code-copy]"
+      );
+      if (!copyButton || !container.contains(copyButton)) {
+        return;
+      }
+
+      const code = copyButton
+        .closest(`.${styles.codeBlockShell}`)
+        ?.querySelector("pre code");
+      const codeText = code?.textContent ?? "";
+      if (!codeText.trim()) {
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(codeText);
+        copyButton.textContent = "Copied";
+      } catch {
+        copyButton.textContent = "Failed";
+      }
+      window.setTimeout(() => {
+        copyButton.textContent = "Copy";
+      }, 1400);
+    };
+
+    container.addEventListener("click", handleClick);
+
     const preBlocks = Array.from(container.querySelectorAll("pre"));
 
     preBlocks.forEach((pre) => {
@@ -62,30 +92,8 @@ const PostContent = ({ html, className }: PostContentProps) => {
       copyButton.className = styles.codeCopyButton;
       copyButton.type = "button";
       copyButton.textContent = "Copy";
+      copyButton.dataset.codeCopy = "";
       copyButton.setAttribute("aria-label", "Copy code to clipboard");
-
-      const clickHandler = async () => {
-        const codeText = code.textContent ?? "";
-        if (!codeText.trim()) {
-          return;
-        }
-
-        try {
-          await navigator.clipboard.writeText(codeText);
-          copyButton.textContent = "Copied";
-          window.setTimeout(() => {
-            copyButton.textContent = "Copy";
-          }, 1400);
-        } catch {
-          copyButton.textContent = "Failed";
-          window.setTimeout(() => {
-            copyButton.textContent = "Copy";
-          }, 1400);
-        }
-      };
-
-      copyButton.addEventListener("click", clickHandler);
-      cleanups.push(() => copyButton.removeEventListener("click", clickHandler));
 
       header.appendChild(language);
       header.appendChild(copyButton);
@@ -102,7 +110,7 @@ const PostContent = ({ html, className }: PostContentProps) => {
     });
 
     return () => {
-      cleanups.forEach((cleanup) => cleanup());
+      container.removeEventListener("click", handleClick);
     };
   }, [safeHtml]);
 

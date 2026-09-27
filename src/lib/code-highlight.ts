@@ -1,23 +1,46 @@
 import hljs from "highlight.js/lib/core";
+import type { LanguageFn } from "highlight.js";
 import bash from "highlight.js/lib/languages/bash";
 import css from "highlight.js/lib/languages/css";
+import diff from "highlight.js/lib/languages/diff";
+import go from "highlight.js/lib/languages/go";
 import javascript from "highlight.js/lib/languages/javascript";
 import json from "highlight.js/lib/languages/json";
 import markdown from "highlight.js/lib/languages/markdown";
 import python from "highlight.js/lib/languages/python";
+import rust from "highlight.js/lib/languages/rust";
+import sql from "highlight.js/lib/languages/sql";
 import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
+import yaml from "highlight.js/lib/languages/yaml";
+
+import { escapeHtml } from "@/utils/sanitize";
 
 import "highlight.js/styles/tomorrow-night-bright.css";
 
-hljs.registerLanguage("bash", bash);
-hljs.registerLanguage("css", css);
-hljs.registerLanguage("javascript", javascript);
-hljs.registerLanguage("json", json);
-hljs.registerLanguage("markdown", markdown);
-hljs.registerLanguage("python", python);
-hljs.registerLanguage("typescript", typescript);
-hljs.registerLanguage("xml", xml);
+/**
+ * Grammars shared by the post viewer / chat (highlight.js) and the TipTap
+ * editor (lowlight). Register new languages here so both stay in sync.
+ */
+export const HIGHLIGHT_LANGUAGES: Record<string, LanguageFn> = {
+  bash,
+  css,
+  diff,
+  go,
+  javascript,
+  json,
+  markdown,
+  python,
+  rust,
+  sql,
+  typescript,
+  xml,
+  yaml,
+};
+
+for (const [name, grammar] of Object.entries(HIGHLIGHT_LANGUAGES)) {
+  hljs.registerLanguage(name, grammar);
+}
 
 const LANG_ALIASES: Record<string, string> = {
   code: "plaintext",
@@ -35,8 +58,10 @@ const LANG_ALIASES: Record<string, string> = {
   sh: "bash",
   shell: "bash",
   zsh: "bash",
-  yml: "plaintext",
-  yaml: "plaintext",
+  yml: "yaml",
+  golang: "go",
+  rs: "rust",
+  patch: "diff",
   html: "xml",
   markup: "xml",
   svg: "xml",
@@ -99,15 +124,17 @@ export function highlightCode(
   const resolved = rawLang ? resolveHighlightLanguage(rawLang) : "plaintext";
   const grammarLang = hasHljsGrammar(resolved) ? resolved : "plaintext";
 
+  // The result is rendered via `dangerouslySetInnerHTML`, so un-highlighted
+  // source must be escaped (hljs output is already escaped).
   if (grammarLang === "plaintext") {
-    return { html: source, language: "plaintext" };
+    return { html: escapeHtml(source), language: "plaintext" };
   }
 
   try {
     const result = hljs.highlight(source, { language: grammarLang });
     return { html: result.value, language: grammarLang };
   } catch {
-    return { html: source, language: "plaintext" };
+    return { html: escapeHtml(source), language: "plaintext" };
   }
 }
 

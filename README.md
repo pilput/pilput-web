@@ -187,7 +187,7 @@ src/
 | **Charts** | Recharts |
 | **Theme** | next-themes |
 | **Notifications** | Sonner |
-| **Markdown** | react-markdown + remark-gfm + rehype-prism-plus |
+| **Markdown** | react-markdown + remark-gfm + highlight.js |
 
 ## 📝 Available Scripts
 

@@ -22,7 +22,7 @@ No test runner is configured (no `test` script; `src/test/` from the README tree
 - **Auth**: JWT access + refresh tokens in cookies via `cookies-next`; see `src/utils/Auth.ts`. Cookies are `secure: true`, `sameSite: "none"`, and domain-scoped to `.NEXT_PUBLIC_DOMAIN` — so they require HTTPS; plain `http://localhost` will silently drop them
 - **State**: Zustand stores in `src/stores/`
 - **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
-- **Rich text**: TipTap v3 editor in `src/components/post/Editor.tsx`; code blocks use **highlight.js/lowlight** (`src/lib/code-block-highlight.ts`, `src/lib/code-highlight.ts`). Prism (`rehype-prism-plus`) is only used for chat Markdown rendering (`src/components/chat/markdown.tsx`)
+- **Rich text**: TipTap v3 editor in `src/components/post/Editor.tsx`; code blocks use **highlight.js/lowlight** (`src/lib/code-block-highlight.ts`, `src/lib/code-highlight.ts`); chat Markdown (`src/components/chat/markdown.tsx`) also uses `highlightCode` from `src/lib/code-highlight.ts`. Register new languages in `HIGHLIGHT_LANGUAGES` there (shared by both)
 - **UI components**: Shadcn UI (new-york, `src/components/ui/`, `components.json`); add new ones via `bunx shadcn@latest add <name>`
 
 ## Conventions
