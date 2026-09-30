@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { getToken, RemoveToken } from "@/utils/Auth";
@@ -6,15 +6,17 @@ import { apiClient, isHttpError } from "@/utils/fetch";
 import type { Tags } from "@/types/post";
 import type {
   EngagementMetrics,
-  OverviewReportResponse,
   OverviewStats,
   PostReport,
+  PostStats,
+  TagPerformance,
   UserReport,
 } from "@/types/report";
 import { defaultEndDate, defaultStartDate } from "../utils";
 
 const USERS_LIMIT = 10;
 const POSTS_LIMIT = 10;
+const TAGS_LIMIT = 10;
 
 export function useReportsData() {
   const router = useRouter();
@@ -23,12 +25,10 @@ export function useReportsData() {
   const [tagId, setTagId] = useState<string>("all");
   const [tags, setTags] = useState<Tags[]>([]);
 
-  const [overview, setOverview] = useState<OverviewStats | null>(null);
   const [engagement, setEngagement] = useState<EngagementMetrics | null>(null);
   const [userReport, setUserReport] = useState<UserReport | null>(null);
   const [postReport, setPostReport] = useState<PostReport | null>(null);
 
-  const [isLoadingOverview, setIsLoadingOverview] = useState(true);
   const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
@@ -49,7 +49,6 @@ export function useReportsData() {
   }, [router]);
 
   const setAllLoading = useCallback(() => {
-    setIsLoadingOverview(true);
     setIsLoadingEngagement(true);
     setIsLoadingUsers(true);
     setIsLoadingPosts(true);
@@ -78,30 +77,18 @@ export function useReportsData() {
 
     async function loadReports() {
       try {
-        const [overviewRes, engagementRes, usersRes] = await Promise.allSettled([
-          apiClient.get<{ success: boolean; data: OverviewReportResponse }>("/api/reports/overview", {
+        const [engagementRes, usersRes] = await Promise.allSettled([
+          apiClient.get<{ success: boolean; data: EngagementMetrics }>("/api/posts/stats/engagement", {
             params: { startDate, endDate },
             headers: { Authorization: `Bearer ${getToken()}` },
           }),
-          apiClient.get<{ success: boolean; data: EngagementMetrics }>("/api/reports/engagement", {
-            params: { startDate, endDate },
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }),
-          apiClient.get<{ success: boolean; data: UserReport }>("/api/reports/users", {
+          apiClient.get<{ success: boolean; data: UserReport }>("/api/users/stats", {
             params: { startDate, endDate, limit: USERS_LIMIT },
             headers: { Authorization: `Bearer ${getToken()}` },
           }),
         ]);
 
         if (ignore) return;
-
-        if (overviewRes.status === "fulfilled" && overviewRes.value.data?.data?.overview) {
-          setOverview(overviewRes.value.data.data.overview);
-        } else if (overviewRes.status === "rejected") {
-          if (!handleAuthError(overviewRes.reason)) {
-            toast.error("Failed to load overview report");
-          }
-        }
 
         if (engagementRes.status === "fulfilled" && engagementRes.value.data?.data) {
           setEngagement(engagementRes.value.data.data);
@@ -120,7 +107,6 @@ export function useReportsData() {
         }
       } finally {
         if (!ignore) {
-          setIsLoadingOverview(false);
           setIsLoadingEngagement(false);
           setIsLoadingUsers(false);
         }
@@ -139,21 +125,28 @@ export function useReportsData() {
 
     async function loadPosts() {
       try {
-        const { data } = await apiClient.get<{ success: boolean; data: PostReport }>(
-          "/api/reports/posts",
-          {
+        const headers = { Authorization: `Bearer ${getToken()}` };
+        const [{ data }, tagRes] = await Promise.all([
+          apiClient.get<{ success: boolean; data: PostStats }>("/api/posts/stats", {
             params: {
               startDate,
               endDate,
               limit: POSTS_LIMIT,
               tagId: tagId !== "all" ? tagId : undefined,
             },
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
+            headers,
+          }),
+          // The tag breakdown is decorative; a failure must not blank the posts section.
+          apiClient
+            .get<{ success: boolean; data: TagPerformance[] }>("/api/tags/stats", {
+              params: { limit: TAGS_LIMIT },
+              headers,
+            })
+            .catch(() => null),
+        ]);
         if (!ignore) {
           if (data?.data) {
-            setPostReport(data.data);
+            setPostReport({ ...data.data, tagPerformance: tagRes?.data?.data ?? [] });
           } else {
             toast.error("Cannot connect to server");
           }
@@ -177,6 +170,21 @@ export function useReportsData() {
       ignore = true;
     };
   }, [startDate, endDate, tagId, handleAuthError]);
+
+  const overview = useMemo<OverviewStats | null>(() => {
+    if (!userReport || !postReport) return null;
+    return {
+      totalUsers: userReport.totalUsers,
+      totalPosts: postReport.totalPosts,
+      totalViews: postReport.totalViews,
+      totalLikes: postReport.totalLikes,
+      totalComments: postReport.totalComments,
+      newUsersToday: userReport.newUsersToday,
+      newPostsToday: postReport.newPostsToday,
+      activeUsersThisWeek: userReport.activeUsersThisWeek,
+    };
+  }, [userReport, postReport]);
+  const isLoadingOverview = isLoadingUsers || isLoadingPosts;
 
   function resetDateRange() {
     setAllLoading();

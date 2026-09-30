@@ -15,6 +15,8 @@ export interface Post {
   bookmark_count: number;
   published: boolean | null;
   published_at?: string | null;
+  /** Set when a moderator hid the post; only the author and admins ever receive such a post. */
+  hidden_at?: string | null;
   user: UserBrief | null;
   tags: Tags[];
   created_at: string | null;

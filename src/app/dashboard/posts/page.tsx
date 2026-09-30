@@ -182,7 +182,19 @@ export default function Posts() {
                         </Tooltip>
                       </TableCell>
                       <TableCell>
-                        {post.published ? (
+                        {post.hidden_at ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge variant="destructive">Hidden</Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-[260px]">
+                                A moderator hid this post after reports. It is not visible to
+                                readers.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : post.published ? (
                           <Badge
                             variant="default"
                             className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"

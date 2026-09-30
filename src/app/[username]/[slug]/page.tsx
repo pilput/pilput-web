@@ -249,6 +249,7 @@ export default async function Page(props: {
                   createdAt={post.created_at || ""}
                   viewCount={post.view_count}
                   initialBookmarkCount={getPostBookmarkCount(post)}
+                  authorUsername={post.user?.username}
                 />
               </div>
             </header>

@@ -3,6 +3,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { Eye } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
+import ReportPostButton from "@/components/post/ReportPostButton";
 import { LikeDetailDefaultButton } from "@/components/post/LikeButton";
 import { usePostLike } from "@/components/post/usePostLike";
 import { cn } from "cn";
@@ -21,6 +22,8 @@ interface PostDetailEngagementRowProps {
   viewCount: number;
   /** From `post.bookmark_count` when the API includes it. */
   initialBookmarkCount: number;
+  /** Hides the report button on the viewer's own post. */
+  authorUsername?: string | null;
 }
 
 export function PostDetailEngagementRow({
@@ -30,6 +33,7 @@ export function PostDetailEngagementRow({
   createdAt,
   viewCount,
   initialBookmarkCount,
+  authorUsername,
 }: PostDetailEngagementRowProps) {
   const { liked, count, busy, onToggle } = usePostLike(
     postId,
@@ -107,6 +111,11 @@ export function PostDetailEngagementRow({
             actionBtnClass,
             "inline-flex min-w-9 items-center justify-center gap-1 px-2",
           )}
+        />
+        <ReportPostButton
+          postId={postId}
+          authorUsername={authorUsername}
+          className={actionBtnClass}
         />
       </div>
     </div>

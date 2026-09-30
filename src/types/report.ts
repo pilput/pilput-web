@@ -1,8 +1,11 @@
 /**
- * Mirrors echobackend/internal/dto/report.go response DTOs exactly.
+ * Mirrors echobackend/internal/dto/stats.go response DTOs exactly.
+ * Served by GET /api/users/stats, /api/posts/stats, /api/posts/stats/engagement
+ * and /api/tags/stats.
  * Field names are camelCase to match the backend's JSON tags.
  */
 
+/** Card data shown on the overview grid, composed client-side from users/stats and posts/stats. */
 export interface OverviewStats {
   totalUsers: number;
   totalPosts: number;
@@ -34,6 +37,8 @@ export interface UserReport {
   totalUsers: number;
   newUsersThisPeriod: number;
   activeUsers: number;
+  newUsersToday: number;
+  activeUsersThisWeek: number;
   topContributors: TopContributor[];
   growthTrend: UserGrowthData[];
 }
@@ -65,14 +70,19 @@ export interface TagPerformance {
   totalLikes: number;
 }
 
-export interface PostReport {
+export interface PostStats {
   totalPosts: number;
   newPostsThisPeriod: number;
   totalViews: number;
   totalLikes: number;
   totalComments: number;
+  newPostsToday: number;
   avgEngagementRate: number;
   topPosts: PostPerformanceData[];
+}
+
+/** posts/stats joined with tags/stats for the dashboard. */
+export interface PostReport extends PostStats {
   tagPerformance: TagPerformance[];
 }
 
@@ -88,9 +98,4 @@ export interface EngagementMetrics {
   avgCommentsPerPost: number;
   avgViewsPerPost: number;
   periodComparison: PeriodComparison;
-}
-
-export interface OverviewReportResponse {
-  overview: OverviewStats;
-  engagement: EngagementMetrics;
 }
