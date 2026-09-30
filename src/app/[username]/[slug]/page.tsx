@@ -288,6 +288,15 @@ export default async function Page(props: {
               </div>
             )}
 
+            {/* User-generated content disclaimer */}
+            <p className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground">
+              The views expressed in this post are those of its author and do not represent
+              pilput. See our{" "}
+              <Link href="/terms" className="underline hover:text-foreground">
+                Terms of Service
+              </Link>
+              .
+            </p>
           </article>
 
           {/* Comments Section */}

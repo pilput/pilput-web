@@ -4,7 +4,7 @@ import Footer from "@/components/footer/Footer";
 import { publicPageMetadata } from "@/lib/public-metadata";
 
 // Bump this whenever the terms text changes.
-const LAST_UPDATED = "September 13, 2026";
+const LAST_UPDATED = "September 30, 2026";
 
 export const metadata = publicPageMetadata({
   title: "Terms of Service",
@@ -73,6 +73,41 @@ export default function TermsPage() {
                 </p>
                 <p className="mb-4">
                   You are solely responsible for your content and must have the rights to share it.
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4">User-Generated Content</h2>
+                <p className="mb-4">
+                  Posts, comments, and other content on pilput are created by users. We do not
+                  pre-screen, verify, or endorse user content, and it does not represent the views of
+                  pilput. We are not responsible for the accuracy, legality, or reliability of any
+                  content published by users, and you rely on it at your own risk.
+                </p>
+                <p className="mb-4">
+                  You agree to indemnify and hold pilput harmless from any claims, losses, or damages
+                  arising from content you publish or from your violation of these terms.
+                </p>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4">Reporting Content</h2>
+                <p className="mb-4">
+                  If you believe any content on pilput is illegal, infringes your rights (including
+                  copyright), or violates these terms, email us at{" "}
+                  <a
+                    href="mailto:cecepjanuardi@proton.me?subject=Content%20Report"
+                    className="text-primary hover:underline"
+                  >
+                    cecepjanuardi@proton.me
+                  </a>{" "}
+                  with the link to the content and the reason for your report. For copyright
+                  complaints, please also describe the original work and confirm that you own it or
+                  are authorized to act on the owner&apos;s behalf.
+                </p>
+                <p className="mb-4">
+                  We review reports and may remove the content or take action against the account
+                  involved.
                 </p>
               </section>
 
