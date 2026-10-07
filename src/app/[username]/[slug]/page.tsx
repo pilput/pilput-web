@@ -34,6 +34,11 @@ const getReadingTime = (html: string): number => {
   return Math.max(1, Math.ceil(words / 200));
 };
 
+const getWordCount = (html: string): number => {
+  const plain = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return plain ? plain.split(" ").length : 0;
+};
+
 const formatDate = (dateStr: string): string => {
   return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
@@ -62,7 +67,8 @@ export async function generateMetadata(props: {
   try {
     const post = await getPost(params.username, params.slug);
     const description = getPostSummary(post.body || "");
-    const image = post.photo_url ? getUrlImage(post.photo_url) : `${baseUrl}/pilput.png`;
+    const hasCover = Boolean(post.photo_url);
+    const image = hasCover ? getUrlImage(post.photo_url as string) : `${baseUrl}/pilput.png`;
     const canonicalUrl = `/${params.username}/${params.slug}`;
 
     return {
@@ -70,6 +76,10 @@ export async function generateMetadata(props: {
       description,
       alternates: {
         canonical: canonicalUrl,
+        // Plain-text version for AI crawlers and readers (see ./md/route.ts).
+        types: {
+          "text/markdown": `${canonicalUrl}/md`,
+        },
       },
       openGraph: {
         type: "article",
@@ -80,17 +90,27 @@ export async function generateMetadata(props: {
         modifiedTime: post.updated_at || post.created_at || undefined,
         authors: [`${baseUrl}/${params.username}`],
         tags: post.tags?.map((tag) => tag.name) || [],
-        images: [
-          {
-            url: image,
-            alt: post.title || "Cover",
-            width: 1200,
-            height: 630,
-          },
-        ],
+        images: hasCover
+          ? [
+              {
+                url: image,
+                alt: post.title || "Cover",
+                width: 1200,
+                height: 630,
+              },
+            ]
+          : [
+              {
+                url: image,
+                alt: post.title || "Cover",
+                width: 512,
+                height: 512,
+              },
+            ],
       },
       twitter: {
-        card: "summary_large_image",
+        // Landscape cover → large card; square brand fallback → compact card.
+        card: hasCover ? "summary_large_image" : "summary",
         title: post.title || "Untitled",
         description,
         images: [image],
@@ -121,18 +141,26 @@ export default async function Page(props: {
   const baseUrl = Config.mainbaseurl;
   const postUrl = `${baseUrl}/${params.username}/${params.slug}`;
   const imageUrl = post.photo_url ? getUrlImage(post.photo_url) : `${baseUrl}/pilput.png`;
+  const readingTime = getReadingTime(post.body || "");
 
   const articleJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
+    description: getPostSummary(post.body || ""),
     image: imageUrl,
+    inLanguage: "en",
     datePublished: post.created_at,
     dateModified: post.updated_at || post.created_at,
+    wordCount: getWordCount(post.body || ""),
+    timeRequired: `PT${readingTime}M`,
     author: {
       "@type": "Person",
       name: post.user?.username || "Anonymous",
       url: post.user?.username ? `${baseUrl}/${post.user.username}` : baseUrl,
+      ...(post.user?.image
+        ? { image: getProfilePicture(post.user.image) }
+        : {}),
     },
     publisher: {
       "@type": "Organization",
@@ -161,7 +189,6 @@ export default async function Page(props: {
     ],
   };
 
-  const readingTime = getReadingTime(post.body || "");
   const authorName = post.user?.username || "Anonymous";
 
   return (

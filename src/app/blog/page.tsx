@@ -4,24 +4,13 @@ import Navigation from "@/components/header/Navbar";
 import { apiClient } from "@/utils/fetch";
 import { postsPerPage } from "@/lib/blog-feed-data";
 import type { Post } from "@/types/post";
-import type { Metadata } from "next";
+import { Config } from "@/utils/getConfig";
+import { toSafeJsonLd } from "@/utils/sanitize";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "Blog - Latest Articles and Stories",
-  description:
-    "Explore latest articles, thoughts, tutorials, and discussions written by the pilput community.",
-  alternates: {
-    canonical: "/blog",
-  },
-  openGraph: {
-    title: "Blog | pilput",
-    description:
-      "Explore latest articles, thoughts, tutorials, and discussions written by the pilput community.",
-    url: "/blog",
-  },
-};
+// Page metadata lives in ./layout.tsx (single source of truth) so crawlers
+// and social scrapers always see one canonical title/description pair.
 
 async function getInitialBlogData(): Promise<{
   posts: Post[];
@@ -64,8 +53,34 @@ async function getInitialBlogData(): Promise<{
 export default async function BlogPage() {
   const { posts, total, tags } = await getInitialBlogData();
 
+  const baseUrl = Config.mainbaseurl;
+  // Collection signal for search + AI crawlers: the SSR first page as ItemList.
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Blog | pilput",
+    url: `${baseUrl}/blog`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: total,
+      itemListElement: posts.slice(0, postsPerPage).map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url:
+          post.slug && post.user?.username
+            ? `${baseUrl}/${post.user.username}/${post.slug}`
+            : `${baseUrl}/blog`,
+        ...(post.title ? { name: post.title } : {}),
+      })),
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
+      />
       <Navigation />
       <Suspense
         fallback={<div className="min-h-screen bg-background animate-pulse" />}

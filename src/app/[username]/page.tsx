@@ -76,6 +76,11 @@ export default async function page(props: {
     url: profileUrl,
     image: writer.image ? getUrlImage(writer.image) : `${baseUrl}/pilput.png`,
     description: writer.profile?.bio || `Writer and creator on pilput`,
+    memberOf: {
+      "@type": "Organization",
+      name: "pilput",
+      url: baseUrl,
+    },
     ...(writer.profile?.website && { sameAs: [writer.profile.website] }),
   };
 
@@ -252,7 +257,8 @@ export async function generateMetadata(props: {
         ],
       },
       twitter: {
-        card: "summary_large_image",
+        // Square avatar → compact card (large-image cards need 1200x630).
+        card: "summary",
         title,
         description,
         images: [profileImage],

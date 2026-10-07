@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     siteName: "pilput",
     images: [
       {
-        url: "/pilput.png",
+        url: `${siteUrl}/pilput.png`,
         width: 512,
         height: 512,
         alt: "pilput",
@@ -61,12 +61,13 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
+    // Square brand mark → compact card (large-image cards need 1200x630).
+    card: "summary",
     title: "pilput - Open Publishing Platform for Creators",
     description:
       "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
     creator: "@pilput_dev",
-    images: ["/pilput.png"],
+    images: [`${siteUrl}/pilput.png`],
   },
   robots: {
     index: true,

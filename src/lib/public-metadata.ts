@@ -31,6 +31,10 @@ export function publicPageMetadata({
     : `/${canonicalPath}`;
   const url = `${siteUrl}${path}`;
   const ogTitle = openGraphTitle ?? title;
+  // Default artwork is the square brand mark — served absolute so scrapers
+  // outside Next.js can resolve it, and paired with the compact `summary`
+  // card (the large-image card expects a 1200x630 landscape asset).
+  const defaultImage = `${siteUrl}/pilput.png`;
 
   return {
     title,
@@ -48,7 +52,7 @@ export function publicPageMetadata({
       siteName: "pilput",
       images: [
         {
-          url: "/pilput.png",
+          url: defaultImage,
           width: 512,
           height: 512,
           alt: ogTitle,
@@ -56,11 +60,11 @@ export function publicPageMetadata({
       ],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title: ogTitle,
       description,
       creator: "@pilput_dev",
-      images: ["/pilput.png"],
+      images: [defaultImage],
     },
     ...(robots !== undefined ? { robots } : {}),
   };

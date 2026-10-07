@@ -18,7 +18,9 @@ export default function robots(): MetadataRoute.Robots {
           "/profile",
           "/login",
           "/register",
-          "/feed-home"
+          "/feed-home",
+          "/bookmarks",
+          "/bookmarks/*",
         ],
       },
     ],
@@ -26,6 +28,8 @@ export default function robots(): MetadataRoute.Robots {
       `${baseUrl}/sitemap.xml`,
       `${baseUrl}/posts/sitemap.xml`,
       `${baseUrl}/tags/sitemap.xml`,
+      `${baseUrl}/users/sitemap.xml`,
+      `${baseUrl}/guilds/sitemap.xml`,
     ],
     host: baseUrl,
   };

@@ -1,5 +1,7 @@
 import Navigation from "@/components/header/Navbar";
 import { apiClient } from "@/utils/fetch";
+import { Config } from "@/utils/getConfig";
+import { toSafeJsonLd } from "@/utils/sanitize";
 import type { Post } from "@/types/post";
 import TagContent from "./TagContent";
 
@@ -47,8 +49,40 @@ export default async function TagPage(props: {
   const allTags = await fetchAllTags();
   const relatedTags = allTags.filter((t) => t !== tag).slice(0, 10);
 
+  const baseUrl = Config.mainbaseurl;
+  let decodedTag = tag;
+  try {
+    decodedTag = decodeURIComponent(tag);
+  } catch {
+    // Keep the raw segment if it is not valid URI encoding.
+  }
+  // Collection signal for search + AI crawlers.
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `#${decodedTag} | pilput`,
+    url: `${baseUrl}/tags/${encodeURIComponent(tag)}`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: total,
+      itemListElement: posts.slice(0, postsPerPage).map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url:
+          post.slug && post.user?.username
+            ? `${baseUrl}/${post.user.username}/${post.slug}`
+            : `${baseUrl}/tags/${encodeURIComponent(tag)}`,
+        ...(post.title ? { name: post.title } : {}),
+      })),
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
+      />
       <Navigation />
       <TagContent
         key={tag}

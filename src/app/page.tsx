@@ -27,7 +27,8 @@ export default function Home() {
       "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
     potentialAction: {
       "@type": "SearchAction",
-      target: `${baseUrl}/blog?search={search_term_string}`,
+      // Must match the blog search param (`q`, see BlogContent).
+      target: `${baseUrl}/blog?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };

@@ -9,6 +9,11 @@ export const metadata = publicPageMetadata({
   canonicalPath: "/bookmarks",
   keywords: ["bookmarks", "reading list", "saved posts", "pilput"],
   openGraphTitle: "Reading list | pilput",
+  // Personal reading list — nothing here is worth indexing.
+  robots: {
+    index: false,
+    follow: false,
+  },
 });
 
 export default function BookmarksPage() {

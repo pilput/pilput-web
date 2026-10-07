@@ -2,6 +2,8 @@ import Navigation from "@/components/header/Navbar";
 import Link from "next/link";
 import { Tag as TagIcon } from "lucide-react";
 import { apiClient } from "@/utils/fetch";
+import { Config } from "@/utils/getConfig";
+import { toSafeJsonLd } from "@/utils/sanitize";
 import TagsBrowser, { type TagListItem } from "./TagsBrowser";
 
 export const revalidate = 300;
@@ -25,9 +27,32 @@ async function getTags(): Promise<TagListItem[]> {
 
 export default async function TagsPage() {
   const tags = await getTags();
+  const baseUrl = Config.mainbaseurl;
+
+  // Collection signal for search + AI crawlers.
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Tags | pilput",
+    url: `${baseUrl}/tags`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: tags.length,
+      itemListElement: tags.slice(0, 100).map((tag, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${baseUrl}/tags/${encodeURIComponent(tag.name)}`,
+        name: `#${tag.name}`,
+      })),
+    },
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
+      />
       <Navigation />
       <div className="min-h-screen bg-background">
         <div className="border-b border-border/60">
