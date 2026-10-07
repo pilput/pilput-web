@@ -24,7 +24,7 @@ export default function Home() {
     name: "pilput",
     url: baseUrl,
     description:
-      "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
+      "PILPUT is an open publishing platform to write and share articles. A clean space to express your thoughts and reach readers.",
     potentialAction: {
       "@type": "SearchAction",
       // Must match the blog search param (`q`, see BlogContent).

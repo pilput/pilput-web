@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   applicationName: "pilput",
   description:
-    "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
+    "PILPUT is an open publishing platform to write and share articles. A clean space to express your thoughts and reach readers.",
   keywords: [
     "publishing",
     "blog",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: "pilput - Open Publishing Platform for Creators",
     description:
-      "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
+      "PILPUT is an open publishing platform to write and share articles. A clean space to express your thoughts and reach readers.",
     siteName: "pilput",
     images: [
       {
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "pilput - Open Publishing Platform for Creators",
     description:
-      "PILPUT is an open publishing platform where anyone can write and share articles with ease. Experience a clean space to express your thoughts and reach readers worldwide.",
+      "PILPUT is an open publishing platform to write and share articles. A clean space to express your thoughts and reach readers.",
     creator: "@pilput_dev",
     images: [`${siteUrl}/pilput.png`],
   },

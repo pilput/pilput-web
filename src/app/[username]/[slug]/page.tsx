@@ -24,7 +24,7 @@ interface SuccessResponse {
   success: boolean;
 }
 
-const getPostSummary = (html: string, maxLength = 160): string => {
+const getPostSummary = (html: string, maxLength = 155): string => {
   const plain = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   return plain.length > maxLength ? `${plain.slice(0, maxLength - 1)}...` : plain;
 };
