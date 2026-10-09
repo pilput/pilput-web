@@ -28,19 +28,20 @@ export const sanitizeHtml = (html: string): string => {
   if (!html) return "";
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: [
-      "p", "br", "hr",
+      "p", "br", "hr", "div",
       "h1", "h2", "h3", "h4", "h5", "h6",
       "strong", "em", "u", "s", "del", "mark",
       "code", "pre", "span",
       "blockquote",
       "ul", "ol", "li",
       "a", "img", "iframe",
-      "table", "thead", "tbody", "tr", "th", "td",
+      "table", "caption", "colgroup", "col", "thead", "tbody", "tfoot", "tr", "th", "td",
     ],
     ALLOWED_ATTR: [
       "href", "target", "rel",
       "src", "alt", "title", "width", "height",
-      "class", "style", "data-language",
+      "class", "style", "data-language", "data-youtube-video",
+      "colspan", "rowspan", "scope", "span",
       "frameborder", "allow", "allowfullscreen",
     ],
   });

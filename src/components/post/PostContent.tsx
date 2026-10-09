@@ -56,6 +56,23 @@ const PostContent = ({ html, className }: PostContentProps) => {
 
     container.addEventListener("click", handleClick);
 
+    // Wrap bare tables in a scroll container so wide tables don't break
+    // the reading column on small screens (mirrors .codeBlockShell above).
+    const tables = Array.from(container.querySelectorAll("table"));
+    tables.forEach((table) => {
+      if (table.closest(`.${styles.tableWrapper}`)) {
+        return;
+      }
+      const parent = table.parentElement;
+      if (!parent) {
+        return;
+      }
+      const wrapper = document.createElement("div");
+      wrapper.className = styles.tableWrapper;
+      parent.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
     const preBlocks = Array.from(container.querySelectorAll("pre"));
 
     preBlocks.forEach((pre) => {

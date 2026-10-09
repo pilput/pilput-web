@@ -88,6 +88,86 @@
 }
 
 // ===========================
+// Shared Table Styles
+// ===========================
+// Mirrors the table styles in post-content.module.scss so tables look the
+// same while editing as they do on the published post page.
+@mixin tableStyles {
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.25em 0;
+    font-size: 0.94em;
+    line-height: 1.65;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  caption {
+    caption-side: bottom;
+    padding-top: 0.75em;
+    font-size: 0.85em;
+    color: var(--muted-foreground);
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 0.6em 0.85em;
+    text-align: left;
+    vertical-align: top;
+    background-clip: padding-box;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  tr:last-child {
+    th,
+    td {
+      border-bottom: none;
+    }
+  }
+
+  th {
+    background: var(--muted);
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  tbody tr:nth-child(even) td {
+    background: color-mix(in oklch, var(--muted) 45%, transparent);
+  }
+
+  // TipTap marks the selected cell when editing tables.
+  .selectedCell {
+    background: color-mix(in oklch, var(--primary) 14%, transparent);
+  }
+
+  .tableWrapper {
+    margin: 1.25em 0;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0;
+
+    table {
+      margin: 0;
+      border: none;
+      border-radius: 0;
+    }
+  }
+}
+
+// ===========================
 // Editor Wrapper
 // ===========================
 .editorWrapper {
@@ -431,6 +511,9 @@
       border-top: 2px solid var(--border);
       margin: 2em 0;
     }
+
+    // Tables
+    @include tableStyles;
 
     // Images
     img {
