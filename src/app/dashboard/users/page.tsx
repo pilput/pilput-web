@@ -73,6 +73,8 @@ export default function ManageUser() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [deletedFilter, setDeletedFilter] = useState<string>("false");
+  const [orderBy, setOrderBy] = useState<string>("created_at");
+  const [orderDirection, setOrderDirection] = useState<string>("desc");
   const limit = 15;
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
@@ -111,7 +113,15 @@ export default function ManageUser() {
       setIsLoading(true);
       try {
         const { data } = await apiClient.get("/api/users", {
-          params: { limit: limit, offset: fetchOffset, deleted: deletedFilter },
+          params: {
+            limit: limit,
+            offset: fetchOffset,
+            deleted: deletedFilter,
+            order_by: orderBy,
+            order_direction: orderDirection,
+            orderBy,
+            orderDirection,
+          },
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
@@ -142,7 +152,7 @@ export default function ManageUser() {
         setIsLoading(false);
       }
     },
-    [limit, deletedFilter, handleAuthError]
+    [limit, deletedFilter, orderBy, orderDirection, handleAuthError]
   );
 
   useEffect(() => {
@@ -152,7 +162,15 @@ export default function ManageUser() {
     async function loadUsers() {
       try {
         const { data } = await apiClient.get("/api/users", {
-          params: { limit, offset, deleted: deletedFilter },
+          params: {
+            limit,
+            offset,
+            deleted: deletedFilter,
+            order_by: orderBy,
+            order_direction: orderDirection,
+            orderBy,
+            orderDirection,
+          },
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
@@ -195,7 +213,7 @@ export default function ManageUser() {
     return () => {
       ignore = true;
     };
-  }, [fetchAuth, offset, deletedFilter, limit, handleAuthError]);
+  }, [fetchAuth, offset, deletedFilter, limit, orderBy, orderDirection, handleAuthError]);
 
   function changeOffset(newOffset: number) {
     if (newOffset >= 0 && newOffset < total) {
@@ -559,6 +577,38 @@ export default function ManageUser() {
                 <SelectItem value="false">Active Only</SelectItem>
                 <SelectItem value="true">Deleted Only</SelectItem>
                 <SelectItem value="all">All Users</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={orderBy}
+              onValueChange={(val) => {
+                setOrderBy(val);
+                setOffset(0);
+              }}
+            >
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Order by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="last_logged_at">Last active</SelectItem>
+                <SelectItem value="created_at">Newest</SelectItem>
+                <SelectItem value="username">Username</SelectItem>
+                <SelectItem value="email">Email</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={orderDirection}
+              onValueChange={(val) => {
+                setOrderDirection(val);
+                setOffset(0);
+              }}
+            >
+              <SelectTrigger className="w-full sm:w-[140px]">
+                <SelectValue placeholder="Direction" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="desc">Descending</SelectItem>
+                <SelectItem value="asc">Ascending</SelectItem>
               </SelectContent>
             </Select>
           </div>
