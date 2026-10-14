@@ -1,5 +1,6 @@
 import type { StateCreator } from "zustand";
 import { getToken } from "@/utils/Auth";
+import { apiClient } from "@/utils/fetch";
 import { Config } from "@/utils/getConfig";
 import type { ChatState, Conversation } from "./types";
 import { asRecord } from "./utils";
@@ -43,18 +44,29 @@ export const createStreamingSlice: StateCreator<
         ? `${Config.apibaseurl}/api/chat/conversations/${conversationId}/messages/stream`
         : `${Config.apibaseurl}/api/chat/conversations/stream`;
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({
-          content,
-          model: get().selectedModel,
-        }),
-        signal: controller.signal,
+      const body = JSON.stringify({
+        content,
+        model: get().selectedModel,
       });
+      const send = (token?: string) =>
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token ?? getToken() ?? ""}`,
+          },
+          body,
+          signal: controller.signal,
+        });
+
+      let response = await send();
+      // Raw fetch bypasses apiClient's refresh, so retry once with a fresh token.
+      if (response.status === 401) {
+        const fresh = await apiClient.refreshAccessToken();
+        if (fresh) {
+          response = await send(fresh);
+        }
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
