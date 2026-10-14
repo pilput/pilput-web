@@ -32,7 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert } from "lucide-react";
+import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -46,6 +46,41 @@ import { clearTokens, getToken, RemoveToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { addUserSchema, type AddUserFormData } from "@/lib/validation";
+
+function SortHeader({
+  column,
+  label,
+  orderBy,
+  orderDirection,
+  onToggle,
+}: {
+  column: string;
+  label: string;
+  orderBy: string;
+  orderDirection: string;
+  onToggle: (column: string) => void;
+}) {
+  const active = orderBy === column;
+  return (
+    <button
+      type="button"
+      onClick={() => onToggle(column)}
+      className="inline-flex items-center gap-1 font-medium hover:text-foreground transition-colors"
+      aria-label={`Sort by ${label} ${active && orderDirection === "desc" ? "ascending" : "descending"}`}
+    >
+      {label}
+      {active ? (
+        orderDirection === "desc" ? (
+          <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
+        ) : (
+          <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
+        )
+      ) : (
+        <ArrowUpDown className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
+      )}
+    </button>
+  );
+}
 
 export default function ManageUser() {
   const router = useRouter();
@@ -73,8 +108,13 @@ export default function ManageUser() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [deletedFilter, setDeletedFilter] = useState<string>("false");
-  const [orderBy, setOrderBy] = useState<string>("created_at");
-  const [orderDirection, setOrderDirection] = useState<string>("desc");
+  // Single sort key "column:direction" so the UI reads as one clear choice
+  // (e.g. "Last active") instead of two separate dropdowns.
+  const [sortKey, setSortKey] = useState<string>("last_logged_at:desc");
+  const [orderBy, orderDirection] = useMemo(() => {
+    const [col, dir] = sortKey.split(":");
+    return [col ?? "created_at", dir === "asc" ? "asc" : "desc"];
+  }, [sortKey]);
   const limit = 15;
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
@@ -220,6 +260,15 @@ export default function ManageUser() {
       setIsLoading(true);
       setOffset(newOffset);
     }
+  }
+
+  function toggleSort(column: string) {
+    setSortKey((prev) => {
+      const [col, dir] = prev.split(":");
+      const nextDir = col === column && dir === "desc" ? "asc" : "desc";
+      return `${column}:${nextDir}`;
+    });
+    setOffset(0);
   }
 
   const currentPage = Math.floor(offset / limit) + 1;
@@ -579,38 +628,29 @@ export default function ManageUser() {
                 <SelectItem value="all">All Users</SelectItem>
               </SelectContent>
             </Select>
-            <Select
-              value={orderBy}
-              onValueChange={(val) => {
-                setOrderBy(val);
-                setOffset(0);
-              }}
-            >
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Order by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="last_logged_at">Last active</SelectItem>
-                <SelectItem value="created_at">Newest</SelectItem>
-                <SelectItem value="username">Username</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select
-              value={orderDirection}
-              onValueChange={(val) => {
-                setOrderDirection(val);
-                setOffset(0);
-              }}
-            >
-              <SelectTrigger className="w-full sm:w-[140px]">
-                <SelectValue placeholder="Direction" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="desc">Descending</SelectItem>
-                <SelectItem value="asc">Ascending</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <ArrowUpDown className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden="true" />
+              <Select
+                value={sortKey}
+                onValueChange={(val) => {
+                  setSortKey(val);
+                  setOffset(0);
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[220px]" aria-label="Sort users">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="last_logged_at:desc">Last active</SelectItem>
+                  <SelectItem value="created_at:desc">Newest members</SelectItem>
+                  <SelectItem value="created_at:asc">Oldest members</SelectItem>
+                  <SelectItem value="last_logged_at:asc">Least recently active</SelectItem>
+                  <SelectItem value="username:asc">Username A–Z</SelectItem>
+                  <SelectItem value="username:desc">Username Z–A</SelectItem>
+                  <SelectItem value="email:asc">Email A–Z</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="p-2 sm:p-4 md:p-6">
@@ -626,11 +666,19 @@ export default function ManageUser() {
                   <TableRow>
                     <TableHead className="w-12">#</TableHead>
                     <TableHead className="min-w-[200px]">User</TableHead>
-                    <TableHead className="hidden md:table-cell">Username</TableHead>
-                    <TableHead className="hidden lg:table-cell">Email</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      <SortHeader column="username" label="Username" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      <SortHeader column="email" label="Email" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                    </TableHead>
                     <TableHead>Role</TableHead>
-                    <TableHead className="hidden lg:table-cell">Joined</TableHead>
-                    <TableHead className="hidden xl:table-cell">Last logged</TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      <SortHeader column="created_at" label="Joined" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                    </TableHead>
+                    <TableHead className="hidden xl:table-cell">
+                      <SortHeader column="last_logged_at" label="Last active" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
