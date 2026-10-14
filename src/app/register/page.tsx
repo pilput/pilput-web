@@ -37,6 +37,8 @@ type Inputs = {
   email: string;
   username: string;
   password: string;
+  first_name: string;
+  last_name: string;
 };
 
 interface RegisterResponse {
@@ -49,9 +51,11 @@ interface RegisterResponse {
 }
 
 const UserSchema = z.object({
-  username: z.string().min(5).max(20),
+  username: z.string().min(3).max(20),
   email: z.string().email(),
-  password: z.string().min(6).max(255),
+  password: z.string().min(8).max(100),
+  first_name: z.string().min(1, "First name is required").max(100),
+  last_name: z.string().min(1, "Last name is required").max(100),
 });
 
 export default function Signup() {
@@ -99,7 +103,7 @@ export default function Signup() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     // Reset if empty or too short
-    if (!username || username.trim().length < 5) {
+    if (!username || username.trim().length < 3) {
       setUsernameStatus("idle");
       setUsernameMessage("");
       return;
@@ -168,6 +172,41 @@ export default function Signup() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="first_name">First Name</Label>
+                  <Input
+                    id="first_name"
+                    placeholder="John"
+                    {...register("first_name")}
+                    aria-invalid={errors.first_name ? "true" : "false"}
+                    autoComplete="given-name"
+                    disabled={isSubmitting}
+                  />
+                  {errors.first_name && (
+                    <p className="text-sm text-red-500">
+                      {errors.first_name.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="last_name">Last Name</Label>
+                  <Input
+                    id="last_name"
+                    placeholder="Doe"
+                    {...register("last_name")}
+                    aria-invalid={errors.last_name ? "true" : "false"}
+                    autoComplete="family-name"
+                    disabled={isSubmitting}
+                  />
+                  {errors.last_name && (
+                    <p className="text-sm text-red-500">
+                      {errors.last_name.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <div className="relative">
