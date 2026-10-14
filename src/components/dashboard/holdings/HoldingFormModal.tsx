@@ -109,7 +109,7 @@ export default function HoldingFormModal({
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
               editingHolding 
-                ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" 
+                ? "bg-teal-100 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400" 
                 : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
             }`}>
               {editingHolding ? (

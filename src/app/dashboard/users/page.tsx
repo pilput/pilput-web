@@ -559,7 +559,7 @@ export default function ManageUser() {
             <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Users</span>
             <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">{total}</div>
           </div>
-          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+          <div className="p-2.5 rounded-xl bg-primary/10 text-primary ring-1 ring-border/40 group-hover:scale-105 transition-transform">
             <Users className="h-5 w-5" />
           </div>
         </div>

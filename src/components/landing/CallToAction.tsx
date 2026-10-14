@@ -25,7 +25,7 @@ const CallToAction = () => {
           {/* Ambient accent glows */}
           <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/12 blur-3xl animate-blob-float" />
           <div
-            className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-purple-500/12 blur-3xl animate-blob-float"
+            className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-teal-500/12 blur-3xl animate-blob-float"
             style={{ animationDelay: "-9s" }}
           />
 
@@ -40,7 +40,7 @@ const CallToAction = () => {
 
               <h2 className="mt-5 text-3xl font-black leading-tight tracking-tight text-balance text-foreground sm:text-4xl lg:text-5xl">
                 Turn a draft into something{" "}
-                <span className="bg-linear-to-r from-primary via-indigo-600 to-purple-600 bg-clip-text text-transparent dark:via-indigo-400 dark:to-purple-400">
+                <span className="bg-linear-to-r from-primary via-emerald-600 to-teal-600 bg-clip-text text-transparent dark:via-emerald-400 dark:to-teal-400">
                   people can read.
                 </span>
               </h2>

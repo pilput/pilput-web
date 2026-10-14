@@ -48,7 +48,7 @@ export default function Community() {
 
       {/* Decorative Glow Blobs */}
       <div className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-primary/10 blur-3xl animate-blob-float pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-80 h-80 rounded-full bg-purple-500/10 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-6s" }} />
+      <div className="absolute bottom-1/4 -right-20 w-80 h-80 rounded-full bg-teal-500/10 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-6s" }} />
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 flex max-w-3xl flex-col items-center text-center sm:mb-16 landing-reveal">
@@ -62,7 +62,7 @@ export default function Community() {
 
           <h2 className="mt-5 text-3xl font-black leading-[1.1] tracking-tight text-balance text-foreground sm:text-4xl lg:text-5xl">
             Explore what the community{" "}
-            <span className="block bg-linear-to-r from-primary via-indigo-600 to-purple-600 bg-clip-text pb-1 text-transparent dark:via-indigo-400 dark:to-purple-400">
+            <span className="block bg-linear-to-r from-primary via-emerald-600 to-teal-600 bg-clip-text pb-1 text-transparent dark:via-emerald-400 dark:to-teal-400">
               is publishing.
             </span>
           </h2>

@@ -82,7 +82,7 @@ const Navbar = () => {
             >
               <span className="flex items-baseline text-xl font-black tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
                 pilput
-                <span className="ml-0.5 h-1.5 w-1.5 translate-y-0 rounded-full bg-linear-to-br from-primary to-purple-500 transition-transform duration-300 group-hover:scale-125" />
+                <span className="ml-0.5 h-1.5 w-1.5 translate-y-0 rounded-full bg-linear-to-br from-primary to-emerald-400 transition-transform duration-300 group-hover:scale-125" />
               </span>
             </Link>
 

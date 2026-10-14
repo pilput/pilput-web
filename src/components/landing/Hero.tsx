@@ -189,7 +189,7 @@ const Hero = () => {
           <div className="mt-7 max-w-4xl space-y-6 landing-reveal landing-delay-1">
             <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
               Write and publish
-              <span className="block bg-linear-to-r from-primary via-indigo-600 to-purple-600 bg-clip-text pb-1 text-transparent dark:via-indigo-400 dark:to-purple-400">
+              <span className="block bg-linear-to-r from-primary via-emerald-600 to-teal-600 bg-clip-text pb-1 text-transparent dark:via-emerald-400 dark:to-teal-400">
                 ideas worth reading.
               </span>
             </h1>
@@ -235,7 +235,7 @@ const Hero = () => {
           <div className="relative mt-12 w-full max-w-5xl landing-reveal landing-delay-3 group">
             {/* Ambient glows behind the editor */}
             <div className="absolute -top-12 -left-12 w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-blob-float pointer-events-none" />
-            <div className="absolute -bottom-12 -right-12 w-72 h-72 rounded-full bg-purple-500/25 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-8s" }} />
+            <div className="absolute -bottom-12 -right-12 w-72 h-72 rounded-full bg-teal-500/20 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-8s" }} />
 
             <div className="overflow-hidden rounded-2xl border border-border/45 bg-card/85 text-left backdrop-blur-xl relative z-10 transition-all duration-500 border-glow-hover">
               <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3.5 bg-muted/20 select-none">

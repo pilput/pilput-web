@@ -257,7 +257,7 @@ export default function ManageTags() {
               </div>
             )}
           </div>
-          <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
+          <div className="p-2.5 rounded-xl bg-primary/10 text-primary ring-1 ring-border/40 group-hover:scale-105 transition-transform">
             <TagIcon className="h-5 w-5" />
           </div>
         </div>

@@ -44,10 +44,10 @@ const HeroBackground = () => {
     let tick = 0;
 
     const isDark = resolvedTheme === "dark";
-    // Primary accent – blue-500 equivalent
-    const accentH = 217;
-    const accentS = 91;
-    const accentL = 60;
+    // Primary accent – emerald-500 equivalent
+    const accentH = 155;
+    const accentS = 75;
+    const accentL = 48;
 
     const handleMouseMove = (e: MouseEvent) => {
       // Coalesce bursts of mousemove events — the draw loop reads the latest

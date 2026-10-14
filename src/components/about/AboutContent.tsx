@@ -123,11 +123,11 @@ const AboutContent = () => {
               <p className="text-sm text-muted-foreground leading-relaxed">Optimized for speed and performance</p>
             </div>
 
-            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-blue-500/20">
-              <div className="bg-blue-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/20 transition-all duration-300 group-hover:scale-110">
-                <PenSquare className="h-8 w-8 text-blue-500" />
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-teal-500/20">
+              <div className="bg-teal-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-teal-500/20 transition-all duration-300 group-hover:scale-110">
+                <PenSquare className="h-8 w-8 text-teal-500" />
               </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-blue-500 transition-colors">Simple Editor</h3>
+              <h3 className="font-semibold text-lg mb-2 group-hover:text-teal-500 transition-colors">Simple Editor</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Intuitive writing experience</p>
             </div>
 

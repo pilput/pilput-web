@@ -70,7 +70,7 @@ export default function TagsBrowser({ tags }: { tags: TagListItem[] }) {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-linear-to-br from-primary to-teal-600 rounded-lg flex items-center justify-center">
                         <Hash className="w-4 h-4 text-white" />
                       </div>
                       <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">

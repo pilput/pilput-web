@@ -16,7 +16,7 @@ const MissionSection = () => {
       description: "Pushing the boundaries of what's possible in digital publishing",
     },
     {
-      icon: <Target className="h-8 w-8 text-blue-500" />,
+      icon: <Target className="h-8 w-8 text-emerald-500" />,
       title: "Accessibility",
       description: "Making publishing accessible to everyone, everywhere",
     },
@@ -174,7 +174,7 @@ const MissionSection = () => {
           {values.map((value, index) => {
             const colors = [
               { bg: "from-yellow-500/10 to-orange-500/10", border: "border-yellow-500/20" },
-              { bg: "from-blue-500/10 to-indigo-500/10", border: "border-blue-500/20" },
+              { bg: "from-emerald-500/10 to-teal-500/10", border: "border-emerald-500/20" },
               { bg: "from-orange-500/10 to-red-500/10", border: "border-orange-500/20" },
               { bg: "from-red-500/10 to-pink-500/10", border: "border-red-500/20" }
             ][index % 4];

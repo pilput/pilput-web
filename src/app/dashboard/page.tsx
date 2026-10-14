@@ -62,7 +62,7 @@ function Page() {
       value: totalViews.toLocaleString(),
       helper: "Total article views",
       icon: Users,
-      iconColor: "text-blue-500 bg-blue-500/10",
+      iconColor: "text-emerald-500 bg-emerald-500/10",
     },
     {
       title: "Social Feedback",
@@ -76,7 +76,7 @@ function Page() {
       value: `${publishedPostsCount} Posts`,
       helper: `${totalPostsCount} total posts written`,
       icon: FileText,
-      iconColor: "text-indigo-500 bg-indigo-500/10",
+      iconColor: "text-teal-500 bg-teal-500/10",
     },
   ];
 

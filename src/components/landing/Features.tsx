@@ -82,15 +82,15 @@ const Features = () => {
         <div className="absolute inset-0 overflow-hidden opacity-5 dark:opacity-[0.08] transition-opacity duration-500 group-hover:opacity-12">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.05)_1px,transparent_1px)] bg-[size:14px_24px]" />
           <div className="absolute top-0 left-0 p-8 transform -translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
-            <TrendingUp className="w-32 h-32 text-indigo-500" />
+            <TrendingUp className="w-32 h-32 text-teal-500" />
           </div>
         </div>
       ),
       stats: "All-in-one",
       cta: "Go to Dashboard",
       href: "/dashboard/holdings",
-      glow: "from-indigo-500/10 to-transparent",
-      accentColor: "border-indigo-500/20 text-indigo-600 dark:text-indigo-400 bg-indigo-500/10",
+      glow: "from-teal-500/10 to-transparent",
+      accentColor: "border-teal-500/20 text-teal-600 dark:text-teal-400 bg-teal-500/10",
     },
   ];
 
