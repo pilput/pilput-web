@@ -124,24 +124,24 @@ export default function Component() {
                 <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="hsl(var(--chart-1))"
+                    stopColor="var(--chart-1)"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="hsl(var(--chart-1))"
+                    stopColor="var(--chart-1)"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
                 <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="hsl(var(--chart-2))"
+                    stopColor="var(--chart-2)"
                     stopOpacity={0.8}
                   />
                   <stop
                     offset="95%"
-                    stopColor="hsl(var(--chart-2))"
+                    stopColor="var(--chart-2)"
                     stopOpacity={0.1}
                   />
                 </linearGradient>
@@ -175,7 +175,7 @@ export default function Component() {
                 dataKey="mobile"
                 type="natural"
                 fill="url(#fillMobile)"
-                stroke="hsl(var(--chart-2))"
+                stroke="var(--chart-2)"
                 stackId="a"
                 name="Mobile"
               />
@@ -183,7 +183,7 @@ export default function Component() {
                 dataKey="desktop"
                 type="natural"
                 fill="url(#fillDesktop)"
-                stroke="hsl(var(--chart-1))"
+                stroke="var(--chart-1)"
                 stackId="a"
                 name="Desktop"
               />
@@ -193,14 +193,14 @@ export default function Component() {
         )}
         <div className="mt-4 grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2 rounded-lg bg-primary/5 p-3">
-            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-1))]" />
+            <div className="h-3 w-3 rounded-full bg-chart-1" />
             <div className="flex-1">
               <p className="text-sm text-muted-foreground">Desktop Users</p>
               <p className="text-lg font-bold">{totals.desktop.toLocaleString()}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-primary/5 p-3">
-            <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-2))]" />
+            <div className="h-3 w-3 rounded-full bg-chart-2" />
             <div className="flex-1">
               <p className="text-sm text-muted-foreground">Mobile Users</p>
               <p className="text-lg font-bold">{totals.mobile.toLocaleString()}</p>

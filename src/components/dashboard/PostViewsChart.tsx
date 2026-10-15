@@ -101,24 +101,24 @@ export default function PostViewsChart() {
                 <linearGradient id="fillViews" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="hsl(var(--chart-1))"
+                    stopColor="var(--chart-1)"
                     stopOpacity={0.4}
                   />
                   <stop
                     offset="95%"
-                    stopColor="hsl(var(--chart-1))"
+                    stopColor="var(--chart-1)"
                     stopOpacity={0.02}
                   />
                 </linearGradient>
                 <linearGradient id="fillCumulative" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="hsl(var(--chart-2))"
+                    stopColor="var(--chart-2)"
                     stopOpacity={0.2}
                   />
                   <stop
                     offset="95%"
-                    stopColor="hsl(var(--chart-2))"
+                    stopColor="var(--chart-2)"
                     stopOpacity={0.0}
                   />
                 </linearGradient>
@@ -174,7 +174,7 @@ export default function PostViewsChart() {
                         <div className="space-y-1">
                           <div className="flex justify-between items-center gap-6">
                             <span className="flex items-center gap-1.5">
-                              <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-1))]" />
+                              <span className="h-2 w-2 rounded-full bg-chart-1" />
                               Daily Views:
                             </span>
                             <span className="font-bold tabular-nums">
@@ -183,7 +183,7 @@ export default function PostViewsChart() {
                           </div>
                           <div className="flex justify-between items-center gap-6">
                             <span className="flex items-center gap-1.5">
-                              <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-2))]" />
+                              <span className="h-2 w-2 rounded-full bg-chart-2" />
                               Cumulative Views:
                             </span>
                             <span className="font-bold tabular-nums">
@@ -202,7 +202,7 @@ export default function PostViewsChart() {
                 dataKey="views"
                 type="monotone"
                 fill="url(#fillViews)"
-                stroke="hsl(var(--chart-1))"
+                stroke="var(--chart-1)"
                 strokeWidth={2}
                 name="Daily Views"
               />
@@ -211,7 +211,7 @@ export default function PostViewsChart() {
                 dataKey="cumulative_views"
                 type="monotone"
                 fill="url(#fillCumulative)"
-                stroke="hsl(var(--chart-2))"
+                stroke="var(--chart-2)"
                 strokeWidth={1.5}
                 strokeDasharray="4 4"
                 name="Cumulative Views"

@@ -261,7 +261,7 @@ export default function MonthlyHoldingsChart({
       {[
         { name: "Total Invested", color: "var(--chart-2)" },
         { name: "Current Value", color: "var(--chart-1)" },
-        { name: "Holdings Count", color: "var(--chart-3, #f97316)", dashed: true },
+        { name: "Holdings Count", color: "var(--chart-3)", dashed: true },
       ].map((item) => (
         <div
           key={item.name}
@@ -402,7 +402,7 @@ export default function MonthlyHoldingsChart({
                     type="monotone"
                     dataKey="holdingsCount"
                     name="Holdings Count"
-                    stroke="var(--chart-3, #f97316)"
+                    stroke="var(--chart-3)"
                     strokeWidth={2}
                     dot={false}
                     activeDot={{ r: 4 }}

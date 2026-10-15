@@ -5,9 +5,10 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, L
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import type { Holding } from "@/types/holding"
 import { formatCurrency } from "@/lib/utils"
+import { chartColor } from "@/lib/chart-theme"
 
 function getAllocationColor(index: number) {
-  return `var(--chart-${(index % 5) + 1})`
+  return chartColor(index)
 }
 
 interface OverviewChartProps {

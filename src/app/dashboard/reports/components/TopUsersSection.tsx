@@ -83,8 +83,8 @@ export function TopUsersSection({ userReport, isLoading }: TopUsersSectionProps)
               <AreaChart data={growthChartData} margin={{ left: 0, right: 12, top: 12, bottom: 0 }}>
                 <defs>
                   <linearGradient id="fillCumulativeUsers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0.02} />
+                    <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="var(--chart-2)" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" className="opacity-30" />
@@ -132,7 +132,7 @@ export function TopUsersSection({ userReport, isLoading }: TopUsersSectionProps)
                   dataKey="newUsers"
                   type="monotone"
                   fill="transparent"
-                  stroke="hsl(var(--chart-1))"
+                  stroke="var(--chart-1)"
                   strokeWidth={2}
                   name="New Users"
                 />
@@ -140,7 +140,7 @@ export function TopUsersSection({ userReport, isLoading }: TopUsersSectionProps)
                   dataKey="cumulativeUsers"
                   type="monotone"
                   fill="url(#fillCumulativeUsers)"
-                  stroke="hsl(var(--chart-2))"
+                  stroke="var(--chart-2)"
                   strokeWidth={1.5}
                   name="Cumulative Users"
                 />

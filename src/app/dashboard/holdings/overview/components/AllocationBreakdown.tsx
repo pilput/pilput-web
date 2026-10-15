@@ -1,9 +1,6 @@
 import { Building2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-function holdingsChartColorVar(index: number) {
-  return `var(--chart-${(index % 5) + 1})`;
-}
+import { chartColor as holdingsChartColorVar } from "@/lib/chart-theme";
 
 interface AllocationBreakdownProps {
   platformDistribution: { platform: string; value: number; percent: number }[];

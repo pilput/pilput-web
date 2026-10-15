@@ -52,14 +52,14 @@ export default function Component() {
               tickMargin={8}
             />
             <Tooltip />
-            <Bar dataKey="sessions" fill="#06b6d4" radius={4} />
-            <Bar dataKey="pageViews" fill="#8b5cf6" radius={4} />
+            <Bar dataKey="sessions" fill="var(--chart-1)" radius={4} />
+            <Bar dataKey="pageViews" fill="var(--chart-2)" radius={4} />
             <Line
               dataKey="bounceRate"
               type="monotone"
-              stroke="#dc2626"
+              stroke="var(--chart-3)"
               strokeWidth={3}
-              dot={{ fill: "#dc2626", strokeWidth: 2, r: 4 }}
+              dot={{ fill: "var(--chart-3)", strokeWidth: 2, r: 4 }}
             />
           </ComposedChart>
         </ResponsiveContainer>

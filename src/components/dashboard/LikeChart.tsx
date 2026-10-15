@@ -212,7 +212,7 @@ export default function LikeChart() {
               <Bar
                 dataKey="count"
                 name="Likes"
-                fill="hsl(var(--chart-1))"
+                fill="var(--chart-1)"
                 radius={4}
               />
             </BarChart>
