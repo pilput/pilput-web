@@ -411,7 +411,7 @@
     outline: none;
     min-height: 380px;
     font-size: 1.0625rem;
-    line-height: 1.85;
+    line-height: 1.7;
     letter-spacing: -0.003em;
     color: var(--foreground);
 
@@ -430,7 +430,7 @@
       font-weight: 600;
       color: var(--foreground);
       margin-top: 1.5em;
-      margin-bottom: 0.5em;
+      margin-bottom: 0.4em;
     }
     h1 { font-size: 1.875rem; }
     h2 { font-size: 1.5rem; }
@@ -438,7 +438,7 @@
 
     // Paragraphs
     p {
-      margin-bottom: 1em;
+      margin-bottom: 0.9em;
       color: var(--foreground);
     }
 

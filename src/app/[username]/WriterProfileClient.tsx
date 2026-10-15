@@ -1,6 +1,7 @@
 "use client";
 
 import PostsUser from "@/components/writer/posts";
+import { Suspense } from "react";
 
 interface WriterProfileClientProps {
   username: string;
@@ -26,7 +27,9 @@ export default function WriterProfileClient({
           @{username}
         </p>
       </div>
-      <PostsUser key={username} username={username} showHeading={false} />
+      <Suspense fallback={null}>
+        <PostsUser key={username} username={username} showHeading={false} />
+      </Suspense>
     </section>
   );
 }

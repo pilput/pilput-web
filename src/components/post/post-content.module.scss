@@ -173,7 +173,7 @@
   @include codeThemeVars;
 
   font-size: 1.125rem;
-  line-height: 1.85;
+  line-height: 1.7;
   letter-spacing: -0.003em;
   color: var(--foreground);
   max-width: none;
@@ -195,19 +195,19 @@
 
   h2 {
     font-size: 1.5rem;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
   }
 
   h3 {
     font-size: 1.25rem;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
   }
 
   // Paragraphs
   p {
-    margin-bottom: 1.65em;
+    margin-bottom: 1.1em;
     color: var(--foreground);
   }
 
@@ -323,7 +323,7 @@
     margin: 1em 0;
 
     li {
-      margin-bottom: 0.5em;
+      margin-bottom: 0.35em;
       color: var(--foreground);
 
       p {

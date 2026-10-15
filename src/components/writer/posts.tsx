@@ -1,7 +1,8 @@
 "use client";
 
 import { Paginate } from "@/components/common/Paginate";
-import { postsPerPage } from "@/lib/blog-feed-data";
+import { parseBlogPageQueryParam, postsPerPage } from "@/lib/blog-feed-data";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { apiClient } from "@/utils/fetch";
 import { useCallback, useEffect, useState } from "react";
 import PostList from "../post/PostList";
@@ -23,12 +24,22 @@ function Posts(props: {
   const [posts, setposts] = useState<Post[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = parseBlogPageQueryParam(searchParams.get("page"));
 
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (page > 0) params.set("page", String(page + 1));
+      else params.delete("page");
+      const qs = params.toString();
+      router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [pathname, router, searchParams],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -83,10 +94,10 @@ function Posts(props: {
           )}
           <div className="text-sm text-muted-foreground">Loading posts...</div>
         </div>
-        <div className="grid gap-6">
-          {[...Array(3)].map((_, i) => (
+        <div className="grid gap-6 sm:grid-cols-2">
+          {[...Array(4)].map((_, i) => (
             <div key={i} className="flex flex-col gap-4">
-              <Skeleton className="h-48 rounded-lg" />
+              <Skeleton className="aspect-16/9.5 rounded-lg" />
               <div className="flex flex-col gap-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
@@ -144,7 +155,7 @@ function Posts(props: {
         </div>
       ) : (
         <>
-          <div className="grid gap-6">
+          <div className="grid gap-6 sm:grid-cols-2">
             {posts.map((post) => (
               <PostList key={post.id} post={post} />
             ))}
