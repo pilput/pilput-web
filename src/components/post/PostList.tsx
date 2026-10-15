@@ -22,19 +22,33 @@ import {
 } from "@/components/ui/tooltip";
 import { ClockIcon } from "@/components/icons/TimeIcons";
 
+// Gradient presets for posts without a cover image, picked deterministically per post.
+const FALLBACK_COVERS = [
+  "from-emerald-500/25 via-teal-400/10 to-sky-500/20",
+  "from-sky-500/25 via-indigo-400/10 to-violet-500/20",
+  "from-amber-400/25 via-orange-400/10 to-rose-500/20",
+  "from-violet-500/25 via-fuchsia-400/10 to-pink-500/20",
+];
+
+const pickFallbackCover = (seed: string) => {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  return FALLBACK_COVERS[Math.abs(hash) % FALLBACK_COVERS.length];
+};
+
 const PostList = ({ post }: { post: Post }) => {
   const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
 
   return (
     <motion.article 
-      className="group relative glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
+      className="group relative flex h-full flex-col glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       layout
     >
       {/* Cover Image */}
-      {post.photo_url && (
+      {post.photo_url ? (
         <div className="relative overflow-hidden aspect-[16/9.5] border-b border-border/40 w-full">
           <Image
             className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
@@ -45,9 +59,24 @@ const PostList = ({ post }: { post: Post }) => {
             priority={false}
           />
         </div>
+      ) : (
+        <div
+          className={`relative overflow-hidden aspect-[16/9.5] border-b border-border/40 w-full bg-gradient-to-br ${pickFallbackCover(post.id || post.title || "")}`}
+          aria-hidden
+        >
+          <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:18px_18px] text-foreground/20" />
+          <span className="absolute -bottom-6 right-4 select-none text-[9rem] font-black leading-none text-foreground/10 transition-transform duration-500 group-hover:scale-[1.05]">
+            {(post.title || "U").trim().charAt(0).toUpperCase()}
+          </span>
+          {tags[0] && (
+            <span className="absolute left-6 top-6 sm:left-7 sm:top-7 rounded-full bg-background/70 px-3 py-1 text-[11px] font-bold tracking-wide text-foreground/80 backdrop-blur">
+              #{tags[0].name}
+            </span>
+          )}
+        </div>
       )}
 
-      <div className="p-6 sm:p-7 space-y-6">
+      <div className="flex flex-1 flex-col p-6 sm:p-7 gap-6">
         {/* Author Info */}
         <div className="flex items-center gap-3">
           <motion.div 
@@ -146,7 +175,7 @@ const PostList = ({ post }: { post: Post }) => {
         )}
 
         {/* Engagement */}
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-1 border-t border-border/40">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-1 border-t border-border/40">
           <div className="flex items-center gap-0.5 sm:gap-1">
             <LikeButton
               postId={post.id}
