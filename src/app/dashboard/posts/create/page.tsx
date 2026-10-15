@@ -375,7 +375,7 @@ export default function PostCreate() {
                   {isUploading ? "Uploading header..." : "Add a cover image"}
                 </span>
                 <span className="text-xs text-muted-foreground/70">
-                  Drag and drop or click to upload (PNG, JPG up to 5MB)
+                  Drag and drop or click to upload (PNG, JPG up to 1MB)
                 </span>
                 <input
                   ref={fileInputRef}
