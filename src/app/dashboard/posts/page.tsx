@@ -10,8 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { postsStore } from "@/stores/posts-store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { parseBlogPageQueryParam } from "@/lib/blog-feed-data";
 import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
 import { format } from "date-fns";
@@ -35,16 +37,94 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Paginate } from "@/components/common/Paginate";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Suspense } from "react";
 
-export default function Posts() {
+export default function PostsPage() {
+  return (
+    <Suspense fallback={<div className="w-full animate-pulse" />}>
+      <PostsContent />
+    </Suspense>
+  );
+}
+
+function PostsContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const skipUrlSyncFromRouter = useRef(false);
+
+  const parseStatus = (raw: string | null) =>
+    raw === "published" || raw === "draft" ? raw : "all";
+
   const limit = 15;
-  const [offset, setOffset] = useState(0);
-  const [search, setSearch] = useState("");
+  const [offset, setOffset] = useState(
+    () => parseBlogPageQueryParam(searchParams.get("page")) * limit
+  );
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const debouncedSearch = useDebouncedValue(search, 300);
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState(() => parseStatus(searchParams.get("status")));
   const poststore = postsStore();
   const { fetch: fetchPosts } = poststore;
   const currentPage = Math.floor(offset / limit) + 1;
+  const currentPageIndex = currentPage - 1;
+
+  const replacePostsQuery = useCallback(
+    (pageIndex: number, q: string, st: string) => {
+      const params = new URLSearchParams();
+      if (pageIndex > 0) params.set("page", String(pageIndex + 1));
+      const dq = q.trim();
+      if (dq) params.set("q", dq);
+      if (st !== "all") params.set("status", st);
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router]
+  );
+
+  useLayoutEffect(() => {
+    if (skipUrlSyncFromRouter.current) {
+      skipUrlSyncFromRouter.current = false;
+      return;
+    }
+    setOffset(parseBlogPageQueryParam(searchParams.get("page")) * limit);
+    setSearch(searchParams.get("q") ?? "");
+    const rawStatus = searchParams.get("status");
+    setStatus(rawStatus === "published" || rawStatus === "draft" ? rawStatus : "all");
+  }, [searchParams, limit]);
+
+  useEffect(() => {
+    const urlPage = parseBlogPageQueryParam(searchParams.get("page"));
+    const urlQ = (searchParams.get("q") ?? "").trim();
+    const urlStatusRaw = searchParams.get("status");
+    const urlStatus = urlStatusRaw === "published" || urlStatusRaw === "draft" ? urlStatusRaw : "all";
+    const sq = search.trim();
+    if (urlPage === currentPageIndex && urlQ === sq && urlStatus === status) return;
+    skipUrlSyncFromRouter.current = true;
+    replacePostsQuery(currentPageIndex, search, status);
+  }, [currentPageIndex, search, status, replacePostsQuery, searchParams]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+    setOffset(0);
+  }, []);
+
+  const handleStatusChange = useCallback((value: string) => {
+    setStatus(value);
+    setOffset(0);
+  }, []);
+
+  const getPageHref = useCallback(
+    (pageIndex: number) => {
+      const params = new URLSearchParams();
+      if (pageIndex > 0) params.set("page", String(pageIndex + 1));
+      const sq = search.trim();
+      if (sq) params.set("q", sq);
+      if (status !== "all") params.set("status", status);
+      const qs = params.toString();
+      return qs ? `?${qs}` : pathname;
+    },
+    [search, status, pathname]
+  );
 
   const publishedFilter =
     status === "published" ? true : status === "draft" ? false : undefined;
@@ -92,6 +172,7 @@ export default function Posts() {
   function clearFilters() {
     setSearch("");
     setStatus("all");
+    setOffset(0);
   }
 
   return (
@@ -128,11 +209,11 @@ export default function Posts() {
               <Input
                 placeholder="Search posts..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={status} onValueChange={setStatus}>
+            <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -361,6 +442,7 @@ export default function Posts() {
               total={poststore.total}
               length={poststore.posts.length}
               currentPage={currentPage - 1}
+              getPageHref={getPageHref}
             />
           </div>
         </CardContent>

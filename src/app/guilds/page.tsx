@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { publicPageMetadata } from "@/lib/public-metadata";
 import GuildsClient from "./GuildsClient";
 
@@ -11,5 +12,9 @@ export const metadata = publicPageMetadata({
 });
 
 export default function GuildsPage() {
-  return <GuildsClient />;
+  return (
+    <Suspense fallback={<div className="min-h-screen animate-pulse" />}>
+      <GuildsClient />
+    </Suspense>
+  );
 }

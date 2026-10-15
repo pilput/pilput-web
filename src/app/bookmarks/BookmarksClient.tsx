@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { AnimatePresence } from "framer-motion";
 import { Bookmark, Loader2 } from "lucide-react";
@@ -19,6 +20,10 @@ import { EmptyState } from "./components/EmptyState";
 import type { FolderSelection } from "./components/types";
 
 export default function BookmarksClient() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const skipUrlSyncFromRouter = useRef(false);
   const loadBookmarks = bookmarkStore((s) => s.loadBookmarks);
   const loadFolders = bookmarkStore((s) => s.loadFolders);
   const bookmarks = bookmarkStore((s) => s.bookmarks);
@@ -33,8 +38,13 @@ export default function BookmarksClient() {
   const updateBookmark = bookmarkStore((s) => s.updateBookmark);
   const moveBookmark = bookmarkStore((s) => s.moveBookmark);
 
-  const [selectedFolderId, setSelectedFolderId] = useState<FolderSelection>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFolderId, setSelectedFolderId] = useState<FolderSelection>(() => {
+    const raw = searchParams.get("folder");
+    if (!raw || raw === "all") return "all";
+    if (raw === "uncategorized") return "uncategorized";
+    return raw;
+  });
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
   const [removingId, setRemovingId] = useState<string | null>(null);
 
   const [folderOpen, setFolderOpen] = useState(false);
@@ -54,6 +64,44 @@ export default function BookmarksClient() {
   const [editBookmarkName, setEditBookmarkName] = useState("");
   const [editBookmarkNotes, setEditBookmarkNotes] = useState("");
   const [updatingBookmark, setUpdatingBookmark] = useState(false);
+
+  const replaceBookmarksQuery = useCallback(
+    (folder: FolderSelection, q: string) => {
+      const params = new URLSearchParams();
+      if (folder !== "all") params.set("folder", String(folder));
+      const dq = q.trim();
+      if (dq) params.set("q", dq);
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router]
+  );
+
+  useLayoutEffect(() => {
+    if (skipUrlSyncFromRouter.current) {
+      skipUrlSyncFromRouter.current = false;
+      return;
+    }
+    const raw = searchParams.get("folder");
+    setSelectedFolderId(
+      !raw || raw === "all" ? "all" : raw === "uncategorized" ? "uncategorized" : raw
+    );
+    setSearchQuery(searchParams.get("q") ?? "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const urlFolderRaw = searchParams.get("folder");
+    const urlFolder: FolderSelection =
+      !urlFolderRaw || urlFolderRaw === "all"
+        ? "all"
+        : urlFolderRaw === "uncategorized"
+          ? "uncategorized"
+          : urlFolderRaw;
+    const urlQ = (searchParams.get("q") ?? "").trim();
+    if (urlFolder === selectedFolderId && urlQ === searchQuery.trim()) return;
+    skipUrlSyncFromRouter.current = true;
+    replaceBookmarksQuery(selectedFolderId, searchQuery);
+  }, [selectedFolderId, searchQuery, replaceBookmarksQuery, searchParams]);
 
   useEffect(() => {
     if (!hasSession()) {

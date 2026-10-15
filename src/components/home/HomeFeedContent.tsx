@@ -162,6 +162,13 @@ const HomeFeedContent = ({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const getPageHref = useCallback((pageIndex: number) => {
+    const params = new URLSearchParams();
+    if (pageIndex > 0) params.set("page", String(pageIndex + 1));
+    const qs = params.toString();
+    return qs ? `?${qs}` : pathname;
+  }, [pathname]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -284,6 +291,7 @@ const HomeFeedContent = ({
                     }
                     goToPage={(page) => onPageChange(page)}
                     length={posts.length}
+                    getPageHref={getPageHref}
                   />
                 </div>
               )}

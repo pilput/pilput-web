@@ -33,8 +33,8 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert, ArrowUpDown, ArrowUp, ArrowDown, UserSearch } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -47,6 +47,8 @@ import { clearTokens, getToken, RemoveToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
 import { getProfilePicture } from "@/utils/getImage";
 import { addUserSchema, type AddUserFormData } from "@/lib/validation";
+import { parseBlogPageQueryParam } from "@/lib/blog-feed-data";
+import { Suspense } from "react";
 
 function SortHeader({
   column,
@@ -83,8 +85,19 @@ function SortHeader({
   );
 }
 
-export default function ManageUser() {
+export default function ManageUserPage() {
+  return (
+    <Suspense fallback={<div className="w-full animate-pulse" />}>
+      <ManageUserContent />
+    </Suspense>
+  );
+}
+
+function ManageUserContent() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const skipUrlSyncFromRouter = useRef(false);
   const auth = authStore((state) => state.data);
   const fetchAuth = authStore((state) => state.fetch);
   const [users, setusers] = useState<User[]>([]);
@@ -106,19 +119,98 @@ export default function ManageUser() {
       last_name: "",
     },
   });
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<string>("all");
-  const [deletedFilter, setDeletedFilter] = useState<string>("false");
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
+  const [roleFilter, setRoleFilter] = useState<string>(() => {
+    const v = searchParams.get("role");
+    return v === "admin" || v === "user" ? v : "all";
+  });
+  const [deletedFilter, setDeletedFilter] = useState<string>(() => {
+    const v = searchParams.get("status");
+    return v === "true" || v === "all" ? v : "false";
+  });
   // Single sort key "column:direction" so the UI reads as one clear choice
   // (e.g. "Last active") instead of two separate dropdowns.
-  const [sortKey, setSortKey] = useState<string>("last_logged_at:desc");
+  const [sortKey, setSortKey] = useState<string>(() => searchParams.get("sort") ?? "last_logged_at:desc");
   const [orderBy, orderDirection] = useMemo(() => {
     const [col, dir] = sortKey.split(":");
     return [col ?? "created_at", dir === "asc" ? "asc" : "desc"];
   }, [sortKey]);
   const limit = 15;
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(
+    () => parseBlogPageQueryParam(searchParams.get("page")) * limit
+  );
   const [total, setTotal] = useState(0);
+  const currentPageIndex = Math.floor(offset / limit);
+
+  const replaceUsersQuery = useCallback(
+    (pageIndex: number, q: string, role: string, statusFilter: string, sort: string) => {
+      const params = new URLSearchParams();
+      if (pageIndex > 0) params.set("page", String(pageIndex + 1));
+      const dq = q.trim();
+      if (dq) params.set("q", dq);
+      if (role !== "all") params.set("role", role);
+      if (statusFilter !== "false") params.set("status", statusFilter);
+      if (sort !== "last_logged_at:desc") params.set("sort", sort);
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router]
+  );
+
+  useLayoutEffect(() => {
+    if (skipUrlSyncFromRouter.current) {
+      skipUrlSyncFromRouter.current = false;
+      return;
+    }
+    setOffset(parseBlogPageQueryParam(searchParams.get("page")) * limit);
+    setSearch(searchParams.get("q") ?? "");
+    const role = searchParams.get("role");
+    setRoleFilter(role === "admin" || role === "user" ? role : "all");
+    const st = searchParams.get("status");
+    setDeletedFilter(st === "true" || st === "all" ? st : "false");
+    setSortKey(searchParams.get("sort") ?? "last_logged_at:desc");
+  }, [searchParams, limit]);
+
+  useEffect(() => {
+    const urlPage = parseBlogPageQueryParam(searchParams.get("page"));
+    const urlQ = (searchParams.get("q") ?? "").trim();
+    const urlRoleRaw = searchParams.get("role");
+    const urlRole = urlRoleRaw === "admin" || urlRoleRaw === "user" ? urlRoleRaw : "all";
+    const urlStatusRaw = searchParams.get("status");
+    const urlStatus = urlStatusRaw === "true" || urlStatusRaw === "all" ? urlStatusRaw : "false";
+    const urlSort = searchParams.get("sort") ?? "last_logged_at:desc";
+    const sq = search.trim();
+    if (
+      urlPage === currentPageIndex &&
+      urlQ === sq &&
+      urlRole === roleFilter &&
+      urlStatus === deletedFilter &&
+      urlSort === sortKey
+    )
+      return;
+    skipUrlSyncFromRouter.current = true;
+    replaceUsersQuery(currentPageIndex, search, roleFilter, deletedFilter, sortKey);
+  }, [currentPageIndex, search, roleFilter, deletedFilter, sortKey, replaceUsersQuery, searchParams]);
+
+  const getPageHref = useCallback(
+    (pageIndex: number) => {
+      const params = new URLSearchParams();
+      if (pageIndex > 0) params.set("page", String(pageIndex + 1));
+      const sq = search.trim();
+      if (sq) params.set("q", sq);
+      if (roleFilter !== "all") params.set("role", roleFilter);
+      if (deletedFilter !== "false") params.set("status", deletedFilter);
+      if (sortKey !== "last_logged_at:desc") params.set("sort", sortKey);
+      const qs = params.toString();
+      return qs ? `?${qs}` : pathname;
+    },
+    [search, roleFilter, deletedFilter, sortKey, pathname]
+  );
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+    setOffset(0);
+  }, []);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -599,11 +691,17 @@ export default function ManageUser() {
               <Input
                 placeholder="Search users..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <Select
+              value={roleFilter}
+              onValueChange={(val) => {
+                setRoleFilter(val);
+                setOffset(0);
+              }}
+            >
               <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
@@ -844,6 +942,7 @@ export default function ManageUser() {
               total={total}
               length={users.length}
               currentPage={currentPage - 1}
+              getPageHref={getPageHref}
             />
           </div>
         </CardContent>

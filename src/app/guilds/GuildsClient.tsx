@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Compass, Loader2, Search, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,11 +28,45 @@ type GuildTab = "discover" | "mine";
 
 export default function GuildsClient() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const skipUrlSyncFromRouter = useRef(false);
   const { isLoggedIn, ready } = useIsLoggedIn();
 
-  const [tab, setTab] = useState<GuildTab>("discover");
-  const [searchInput, setSearchInput] = useState("");
+  const parseTab = (raw: string | null): GuildTab =>
+    raw === "mine" ? "mine" : "discover";
+  const [tab, setTab] = useState<GuildTab>(() => parseTab(searchParams.get("tab")));
+  const [searchInput, setSearchInput] = useState(() => searchParams.get("q") ?? "");
   const search = useDebouncedValue(searchInput, 400);
+
+  const replaceGuildsQuery = useCallback(
+    (nextTab: GuildTab, q: string) => {
+      const params = new URLSearchParams();
+      if (nextTab !== "discover") params.set("tab", nextTab);
+      const dq = q.trim();
+      if (dq) params.set("q", dq);
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router]
+  );
+
+  useLayoutEffect(() => {
+    if (skipUrlSyncFromRouter.current) {
+      skipUrlSyncFromRouter.current = false;
+      return;
+    }
+    setTab(parseTab(searchParams.get("tab")));
+    setSearchInput(searchParams.get("q") ?? "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const urlTab = parseTab(searchParams.get("tab"));
+    const urlQ = (searchParams.get("q") ?? "").trim();
+    if (urlTab === tab && urlQ === searchInput.trim()) return;
+    skipUrlSyncFromRouter.current = true;
+    replaceGuildsQuery(tab, searchInput);
+  }, [tab, searchInput, replaceGuildsQuery, searchParams]);
 
   const [guilds, setGuilds] = useState<Guild[]>([]);
   const [total, setTotal] = useState(0);

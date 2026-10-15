@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navigation from "@/components/header/Navbar";
 import Footer from "@/components/footer/Footer";
 import BookmarksClient from "./BookmarksClient";
@@ -21,7 +22,9 @@ export default function BookmarksPage() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       <main className="flex-1 w-full flex flex-col">
-        <BookmarksClient />
+        <Suspense fallback={<div className="flex-1 animate-pulse" />}>
+          <BookmarksClient />
+        </Suspense>
       </main>
       <Footer />
     </div>
