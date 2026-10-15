@@ -10,6 +10,7 @@ import MonthlyHoldingsChart from "@/components/dashboard/holdings/MonthlyHolding
 import HoldingComparison from "@/components/dashboard/holdings/HoldingComparison";
 import HoldingFilter from "@/components/dashboard/holdings/HoldingFilter";
 import UpcomingCorporateActions from "@/components/dashboard/holdings/calendar/UpcomingCorporateActions";
+import MyHoldingsCorporateActions from "@/components/dashboard/holdings/calendar/MyHoldingsCorporateActions";
 import { useCollapsedSections } from "./hooks/useCollapsedSections";
 import { usePortfolioStatistics } from "./hooks/usePortfolioStatistics";
 import { CollapsibleSection } from "./components/CollapsibleSection";
@@ -135,7 +136,10 @@ export default function HoldingOverviewPage() {
 
       {/* ── Section: Corporate Actions ──────────────────── */}
       <CollapsibleSection id="actions" label="Corporate Actions" collapsed={!!collapsed.actions} onToggle={toggleSection}>
-        <UpcomingCorporateActions />
+        <div className="grid gap-4 md:gap-5 lg:grid-cols-2">
+          <MyHoldingsCorporateActions holdings={holdings} />
+          <UpcomingCorporateActions />
+        </div>
       </CollapsibleSection>
 
       {/* ── Section: Allocation ─────────────────────────── */}

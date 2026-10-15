@@ -12,31 +12,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { apiClient } from "@/utils/fetch";
-import { getToken } from "@/utils/Auth";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "cn";
-import type {
-  CorporateActionCalendarResponse,
-  CorporateActionItem,
-} from "@/types/corporate-action";
+import type { CorporateActionItem } from "@/types/corporate-action";
+import { fetchCorporateActionsMonth as fetchMonth } from "./fetchCorporateActions";
 import { CalendarClockIcon } from "@/components/icons/TimeIcons";
 
 const MAX_ITEMS = 5;
-
-async function fetchMonth(
-  month: number,
-  year: number,
-): Promise<CorporateActionItem[]> {
-  const { data } = await apiClient.get<{
-    success: boolean;
-    data: CorporateActionCalendarResponse;
-  }>("/api/holdings/calendar", {
-    headers: { Authorization: `Bearer ${getToken()}` },
-    params: { month, year },
-  });
-  return data?.data?.actions ?? [];
-}
 
 export default function UpcomingCorporateActions() {
   const [actions, setActions] = useState<CorporateActionItem[]>([]);
