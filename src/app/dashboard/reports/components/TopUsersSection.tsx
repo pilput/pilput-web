@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Activity, Trophy, UserPlus, Users } from "lucide-react";
+import { Activity, Trophy, UserPlus, Users, UserSearch } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { UserReport } from "@/types/report";
+import { EmptyState } from "@/components/common/EmptyState";
 import { StatCard } from "./StatCard";
 import { displayName } from "../utils";
 
@@ -178,8 +179,12 @@ export function TopUsersSection({ userReport, isLoading }: TopUsersSectionProps)
                   ))
                 ) : !userReport || userReport.topContributors.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                      No contributors found for this period.
+                    <TableCell colSpan={5} className="py-4">
+                      <EmptyState
+                        icon={UserSearch}
+                        title="No contributors found for this period"
+                        description="Pick a wider date range to see top contributors."
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
-import { EyeOff, Flag, Loader2 } from "lucide-react";
+import { EyeOff, Flag, Loader2, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { EmptyState } from "@/components/common/EmptyState";
 import { getToken, RemoveToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
 import {
@@ -262,8 +263,27 @@ export default function ModerationPage() {
                   ))
                 ) : groups.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
-                      {status === "pending" ? "Nothing to review." : "No posts here."}
+                    <TableCell colSpan={5} className="py-4">
+                      <EmptyState
+                        icon={ShieldCheck}
+                        title={
+                          status === "pending"
+                            ? "All clear — nothing to review"
+                            : "No posts here"
+                        }
+                        description={
+                          status === "pending"
+                            ? "New reports from readers will appear here."
+                            : "Try a different status tab."
+                        }
+                        actions={[
+                          {
+                            label: "Refresh",
+                            variant: "outline",
+                            onClick: () => setReloadKey((k) => k + 1),
+                          },
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (

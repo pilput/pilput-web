@@ -7,10 +7,26 @@ import { postsStore } from "@/stores/posts-store";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Users, Heart, FileText, BookOpen } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const LikeChart = dynamic(() => import("@/components/dashboard/LikeChart"), { ssr: false });
-const PostViewsChart = dynamic(() => import("@/components/dashboard/PostViewsChart"), { ssr: false });
-const TopPostsWidget = dynamic(() => import("@/components/dashboard/TopPostsWidget"), { ssr: false });
+const LikeChart = dynamic(() => import("@/components/dashboard/LikeChart"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[380px] w-full rounded-2xl" />,
+});
+const PostViewsChart = dynamic(
+  () => import("@/components/dashboard/PostViewsChart"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[380px] w-full rounded-2xl" />,
+  }
+);
+const TopPostsWidget = dynamic(
+  () => import("@/components/dashboard/TopPostsWidget"),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[380px] w-full rounded-2xl" />,
+  }
+);
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,6 +55,7 @@ function Page() {
   const fetchPosts = postsStore((state) => state.fetch);
   const fetchAnalytics = postsStore((state) => state.fetchAnalytics);
   const analytics = postsStore((state) => state.analytics);
+  const analyticsLoading = postsStore((state) => state.analyticsLoading);
 
   useEffect(() => {
     fetchPosts(1, 0);
@@ -116,9 +133,13 @@ function Page() {
                   </div>
                 </div>
                 <div className="mt-4">
-                  <div className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                    {kpi.value}
-                  </div>
+                  {analyticsLoading ? (
+                    <Skeleton className="h-7 w-24" />
+                  ) : (
+                    <div className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                      {kpi.value}
+                    </div>
+                  )}
                   <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                     {kpi.helper}
                   </div>

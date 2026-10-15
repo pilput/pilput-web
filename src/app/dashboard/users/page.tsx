@@ -32,7 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert, ArrowUpDown, ArrowUp, ArrowDown, UserSearch } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -41,6 +41,7 @@ import { toast } from "sonner";
 import type { User } from "@/types/user";
 import UserActionComponent from "@/components/user/action";
 import { Paginate } from "@/components/common/Paginate";
+import { EmptyState } from "@/components/common/EmptyState";
 import { authStore } from "@/stores/userStore";
 import { clearTokens, getToken, RemoveToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
@@ -720,11 +721,37 @@ export default function ManageUser() {
                         <TableRow>
                           <TableCell
                             colSpan={8}
-                            className="h-24 text-center text-muted-foreground"
+                            className="py-4"
                           >
-                            {users.length === 0
-                              ? "No users yet."
-                              : "No users match your search or filter."}
+                            <EmptyState
+                              icon={UserSearch}
+                              title={
+                                users.length === 0
+                                  ? "No users yet"
+                                  : "No users match your search or filter"
+                              }
+                              description={
+                                users.length === 0
+                                  ? "Newly registered users will appear here."
+                                  : "Try a different keyword, role, or status filter."
+                              }
+                              actions={
+                                users.length === 0
+                                  ? []
+                                  : [
+                                      {
+                                        label: "Clear filters",
+                                        variant: "outline",
+                                        onClick: () => {
+                                          setSearch("");
+                                          setRoleFilter("all");
+                                          setDeletedFilter("false");
+                                          setOffset(0);
+                                        },
+                                      },
+                                    ]
+                              }
+                            />
                           </TableCell>
                         </TableRow>
                         )

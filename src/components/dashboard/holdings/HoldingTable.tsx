@@ -12,9 +12,10 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Holding } from "@/types/holding";
 import HoldingTableRow from "./HoldingTableRow";
 import HoldingTotalRow from "./HoldingTotalRow";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, Wallet } from "lucide-react";
 import { getPlatformColor, getHoldingTypeColor } from "@/lib/utils";
 import { cn } from "cn";
+import { EmptyState } from "@/components/common/EmptyState";
 
 interface HoldingTableProps {
   holdings: Holding[];
@@ -23,6 +24,8 @@ interface HoldingTableProps {
   toggleExpand: (id: number) => void;
   onEdit: (holding: Holding) => void;
   hideValues?: boolean;
+  onAdd?: () => void;
+  onResetFilter?: () => void;
 }
 
 type SortConfig = {
@@ -89,6 +92,8 @@ export default function HoldingTable({
   toggleExpand,
   onEdit,
   hideValues = false,
+  onAdd,
+  onResetFilter,
 }: HoldingTableProps) {
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "name",
@@ -202,6 +207,18 @@ export default function HoldingTable({
       setSelectedType("all");
     }
   };
+
+  const clearTableFilter = () => {
+    setFilterType("all");
+    setSelectedPlatform("all");
+    setSelectedType("all");
+    onResetFilter?.();
+  };
+
+  const hasTableFilter =
+    filterType !== "all" ||
+    selectedPlatform !== "all" ||
+    selectedType !== "all";
 
   return (
     <div className="bg-card">
@@ -380,21 +397,27 @@ export default function HoldingTable({
               <TableRow>
                 <TableCell
                   colSpan={10}
-                  className="text-center py-12"
+                  className="text-center py-6"
                 >
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                      <svg className="w-6 h-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">No holdings found</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Try another month/year or add a new holding
-                      </p>
-                    </div>
-                  </div>
+                  <EmptyState
+                    icon={Wallet}
+                    title="No holdings found"
+                    description="Try another month/year, clear the table filter, or add a new holding."
+                    actions={[
+                      ...(hasTableFilter || onResetFilter
+                        ? [
+                            {
+                              label: "Clear filter",
+                              variant: "outline" as const,
+                              onClick: clearTableFilter,
+                            },
+                          ]
+                        : []),
+                      ...(onAdd
+                        ? [{ label: "Add holding", onClick: onAdd }]
+                        : []),
+                    ]}
+                  />
                 </TableCell>
               </TableRow>
             ) : (

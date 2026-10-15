@@ -16,7 +16,7 @@ import Link from "next/link";
 import ActionComponent from "@/components/post/dashboard/action";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, Eye, Bookmark } from "lucide-react";
+import { Search, Plus, Eye, Bookmark, FileSearch, RotateCcw } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -33,6 +33,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Paginate } from "@/components/common/Paginate";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/common/EmptyState";
 
 export default function Posts() {
   const limit = 15;
@@ -83,6 +85,14 @@ export default function Posts() {
   };
 
   const filteredPosts = poststore.posts;
+  const isLoading = poststore.loading;
+  const hasError = poststore.error;
+  const hasActiveFilter = debouncedSearch !== "" || status !== "all";
+
+  function clearFilters() {
+    setSearch("");
+    setStatus("all");
+  }
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -164,7 +174,91 @@ export default function Posts() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredPosts.map((post) => (
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <Skeleton className="h-4 w-6" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-[220px]" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-20" />
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <Skeleton className="h-4 w-[120px]" />
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="mx-auto h-4 w-10" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="mx-auto h-4 w-10" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="ml-auto h-8 w-16" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : hasError ? (
+                    <TableRow>
+                      <TableCell colSpan={9} className="py-4">
+                        <EmptyState
+                          icon={RotateCcw}
+                          title="Failed to load posts"
+                          description="Something went wrong while fetching your posts. Please try again."
+                          actions={[
+                            { label: "Retry", onClick: refetchPosts },
+                          ]}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ) : filteredPosts.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={9} className="py-4">
+                        <EmptyState
+                          icon={FileSearch}
+                          title={
+                            hasActiveFilter
+                              ? "No posts match your filters"
+                              : "No posts yet"
+                          }
+                          description={
+                            hasActiveFilter
+                              ? "Try a different keyword or status filter."
+                              : "Write your first article to get started."
+                          }
+                          actions={
+                            hasActiveFilter
+                              ? [
+                                  {
+                                    label: "Clear filters",
+                                    variant: "outline",
+                                    onClick: clearFilters,
+                                  },
+                                  {
+                                    label: "Add new post",
+                                    href: "/dashboard/posts/create",
+                                  },
+                                ]
+                              : [
+                                  {
+                                    label: "Add new post",
+                                    href: "/dashboard/posts/create",
+                                  },
+                                ]
+                          }
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredPosts.map((post) => (
                     <TableRow key={post.id}>
                       <TableCell className="font-medium">
                         {poststore.posts.indexOf(post) + 1 + offset}
@@ -238,7 +332,8 @@ export default function Posts() {
                         <ActionComponent post={post} refetchPosts={refetchPosts} />
                       </TableCell>
                     </TableRow>
-                  ))}
+                    ))
+                  )}
                 </TableBody>
               </Table>
               </TooltipProvider>
@@ -247,9 +342,15 @@ export default function Posts() {
 
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-sm text-muted-foreground text-center sm:text-left">
-              Showing {offset + 1} to{" "}
-              {Math.min(offset + limit, poststore.total)} of {poststore.total}{" "}
-              posts
+              {poststore.total === 0 ? (
+                <>No posts found</>
+              ) : (
+                <>
+                  Showing {offset + 1} to{" "}
+                  {Math.min(offset + limit, poststore.total)} of{" "}
+                  {poststore.total} posts
+                </>
+              )}
             </div>
             <Paginate
               prev={() => changeOffset(offset - limit)}

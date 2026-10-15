@@ -137,6 +137,12 @@ export default function HoldingTableRow({
           size="icon"
           className="h-8 w-8 hover:bg-muted"
           onClick={() => toggleExpand(holding.id)}
+          aria-label={
+            expandedRows.has(holding.id)
+              ? `Collapse details for ${holding.name}`
+              : `Expand details for ${holding.name}`
+          }
+          aria-expanded={expandedRows.has(holding.id)}
         >
           {expandedRows.has(holding.id) ? (
             <ChevronUp className="w-4 h-4 text-muted-foreground" />

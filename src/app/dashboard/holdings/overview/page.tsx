@@ -86,7 +86,7 @@ export default function HoldingOverviewPage() {
                   {monthLabel}
                 </span>
               </div>
-              <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 hidden sm:block">
+              <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
                 Analyze your investment performance across all assets.
               </p>
             </div>
@@ -96,6 +96,8 @@ export default function HoldingOverviewPage() {
             size="icon"
             onClick={() => setHideValues(!hideValues)}
             title={hideValues ? "Show values" : "Hide values"}
+            aria-label={hideValues ? "Show values" : "Hide values"}
+            aria-pressed={hideValues}
             className="shrink-0"
           >
             {hideValues ? (

@@ -61,6 +61,7 @@ const HeaderActions = ({
           onClick={onSyncPrices}
           disabled={isSyncing}
           title="Fetch latest prices for holdings with symbols (current calendar month)"
+          aria-label="Sync latest prices"
         >
           <RefreshCw
             className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin" : ""}`}
@@ -72,6 +73,8 @@ const HeaderActions = ({
           size="sm"
           className="h-8 gap-1.5 text-xs sm:text-sm hover:bg-muted/80 rounded-lg transition-colors"
           onClick={onOpenDuplicate}
+          title="Duplicate holdings to another month"
+          aria-label="Duplicate holdings"
         >
           <Copy className="w-3.5 h-3.5" />
           <span className="hidden md:inline">Duplicate</span>
@@ -82,6 +85,12 @@ const HeaderActions = ({
           className="h-8 gap-1.5 text-xs sm:text-sm hover:bg-muted/80 rounded-lg transition-colors"
           onClick={onExportCsv}
           disabled={!canExport}
+          title={
+            canExport
+              ? "Export visible holdings to CSV"
+              : "No holdings to export for this period"
+          }
+          aria-label="Export holdings to CSV"
         >
           <Download className="w-3.5 h-3.5" />
           <span className="hidden md:inline">Export</span>
@@ -290,6 +299,18 @@ export default function HoldingsPage() {
     }
   }, [syncHoldings]);
 
+  const handleResetPeriod = useCallback(async () => {
+    const now = new Date();
+    const month = (now.getMonth() + 1).toString();
+    const year = now.getFullYear().toString();
+    setFilterMonth(month);
+    setFilterYear(year);
+    await fetchHoldings({
+      month: now.getMonth() + 1,
+      year: now.getFullYear(),
+    });
+  }, [fetchHoldings]);
+
   const filteredHoldings = useMemo(() => {
     const month = parseInt(filterMonth, 10);
     const year = parseInt(filterYear, 10);
@@ -436,6 +457,8 @@ export default function HoldingsPage() {
               toggleExpand={toggleExpand}
               onEdit={openEditModal}
               hideValues={hideValues}
+              onAdd={openAddModal}
+              onResetFilter={handleResetPeriod}
             />
           </div>
         </CardContent>

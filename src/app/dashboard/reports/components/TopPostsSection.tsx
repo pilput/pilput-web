@@ -1,4 +1,4 @@
-import { BarChart3, Eye, FileText, Heart, MessageCircle, Tags as TagsIcon, TrendingUp } from "lucide-react";
+import { BarChart3, Eye, FileText, Heart, MessageCircle, Tags as TagsIcon, TrendingUp, FileSearch } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import type { Tags } from "@/types/post";
 import type { PostReport } from "@/types/report";
+import { EmptyState } from "@/components/common/EmptyState";
 import { StatCard } from "./StatCard";
 import { displayName } from "../utils";
 
@@ -146,8 +147,27 @@ export function TopPostsSection({
                   ))
                 ) : !postReport || postReport.topPosts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                      No posts found for this period.
+                    <TableCell colSpan={7} className="py-4">
+                      <EmptyState
+                        icon={FileSearch}
+                        title="No posts found for this period"
+                        description={
+                          tagId !== "all"
+                            ? "Try clearing the tag filter or picking a wider date range."
+                            : "Publish or pick a wider date range to see top posts."
+                        }
+                        actions={
+                          tagId !== "all"
+                            ? [
+                                {
+                                  label: "Clear tag filter",
+                                  variant: "outline",
+                                  onClick: () => onTagIdChange("all"),
+                                },
+                              ]
+                            : []
+                        }
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (

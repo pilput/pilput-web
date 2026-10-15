@@ -106,7 +106,7 @@ export default function CorporateActionsCalendarPage() {
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
                 Corporate Actions Calendar
               </h1>
-              <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 hidden sm:block">
+              <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
                 Dividend ex-dates and RUPS meetings for stocks on the IDX exchange.
               </p>
             </div>
@@ -155,10 +155,21 @@ export default function CorporateActionsCalendarPage() {
       <div className="grid gap-4 md:gap-5 lg:grid-cols-3">
         <div
           className={cn(
-            "lg:col-span-2 min-w-0 transition-opacity",
+            "lg:col-span-2 min-w-0 transition-opacity relative",
             isLoading && "opacity-60 pointer-events-none"
           )}
+          aria-busy={isLoading}
         >
+          {isLoading && (
+            <div
+              className="absolute inset-0 z-10 flex items-center justify-center gap-2 text-sm text-muted-foreground"
+              role="status"
+              aria-label="Loading corporate actions"
+            >
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary" />
+              Loading…
+            </div>
+          )}
           <CorporateActionCalendarGrid
             month={appliedMonth}
             year={appliedYear}
