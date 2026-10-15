@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { AtSign, FileText, UsersRound } from "lucide-react";
 import FollowListDialog, {
   type FollowListType,
 } from "@/components/writer/FollowListDialog";
@@ -24,58 +23,44 @@ export default function ProfileStats({
   const stats: Array<{
     label: string;
     value: number;
-    icon: typeof UsersRound;
     type: FollowListType | null;
   }> = [
-    { label: "Followers", value: followersCount, icon: UsersRound, type: "followers" },
-    { label: "Following", value: followingCount, icon: AtSign, type: "following" },
-    { label: "Posts", value: postsCount, icon: FileText, type: null },
+    { label: "Followers", value: followersCount, type: "followers" },
+    { label: "Following", value: followingCount, type: "following" },
+    { label: "Posts", value: postsCount, type: null },
   ];
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:grid-cols-1">
+      <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
         {stats.map((stat) => {
-          const Icon = stat.icon;
           const clickable = stat.type !== null && stat.value > 0;
 
           const content = (
             <>
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-medium text-muted-foreground">
-                  {stat.label}
-                </span>
-                <Icon className="h-3.5 w-3.5 text-primary/70" aria-hidden />
-              </div>
-              <div className="mt-2 text-2xl font-bold tabular-nums tracking-tight text-foreground">
+              <dd className="text-base font-semibold tabular-nums text-foreground">
                 {stat.value.toLocaleString()}
-              </div>
+              </dd>
+              <dt className="text-sm text-muted-foreground">{stat.label}</dt>
             </>
           );
 
-          if (clickable) {
-            return (
-              <button
-                key={stat.label}
-                type="button"
-                onClick={() => setOpenList(stat.type)}
-                className="rounded-lg border border-border/60 bg-muted/25 px-3 py-3 text-left transition-colors hover:bg-muted/50 sm:px-4"
-              >
-                {content}
-              </button>
-            );
-          }
-
-          return (
-            <div
+          return clickable ? (
+            <button
               key={stat.label}
-              className="rounded-lg border border-border/60 bg-muted/25 px-3 py-3 sm:px-4"
+              type="button"
+              onClick={() => setOpenList(stat.type)}
+              className="flex cursor-pointer items-baseline gap-1.5 underline-offset-4 hover:underline"
             >
+              {content}
+            </button>
+          ) : (
+            <div key={stat.label} className="flex items-baseline gap-1.5">
               {content}
             </div>
           );
         })}
-      </div>
+      </dl>
 
       {openList && (
         <FollowListDialog

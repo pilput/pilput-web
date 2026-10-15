@@ -1,6 +1,6 @@
 import Navigation from "@/components/header/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import type { Metadata } from "next";
 import { apiClient } from "@/utils/fetch";
 import { getUrlImage } from "@/utils/getImage";
@@ -97,7 +97,7 @@ export default async function page(props: {
             <div className="mx-auto max-w-5xl">
               <Card className="overflow-hidden border-border/70 bg-card/90 py-0 backdrop-blur">
                 <CardHeader className="relative border-b border-border/60 p-0">
-                  <div className="h-24 bg-linear-to-r from-primary/20 via-chart-2/15 to-chart-4/15 sm:h-32" />
+                  <div className="h-20 bg-linear-to-r from-primary/20 via-chart-2/15 to-chart-4/15 sm:h-24" />
                   <div className="px-5 pb-6 sm:px-8 sm:pb-8">
                     <div className="-mt-10 flex flex-col gap-5 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
                       <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end">
@@ -120,11 +120,18 @@ export default async function page(props: {
                             <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                               {fullName || writer.username}
                             </h1>
-                            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                              <AtSign className="h-3.5 w-3.5" aria-hidden />
+                            <p className="mt-1 flex items-center gap-1 text-base font-semibold text-primary sm:text-lg">
+                              <AtSign className="h-4 w-4 sm:h-4.5 sm:w-4.5" aria-hidden />
                               {writer.username}
                             </p>
                           </div>
+
+                          <ProfileStats
+                            writerId={writer.id}
+                            followersCount={writer.followers_count ?? 0}
+                            followingCount={writer.following_count ?? 0}
+                            postsCount={writer.posts_count ?? 0}
+                          />
 
                           <div className="flex flex-wrap gap-2">
                             <span className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-background/70 px-2.5 py-1 text-xs font-medium text-muted-foreground">
@@ -170,34 +177,18 @@ export default async function page(props: {
                         />
                       </div>
                     </div>
+
+                    {writer.profile?.bio ? (
+                      <p className="mt-5 max-w-3xl text-base leading-7 text-foreground/80">
+                        {writer.profile.bio}
+                      </p>
+                    ) : (
+                      <p className="mt-5 text-sm text-muted-foreground">
+                        @{writer.username} has not added a bio yet.
+                      </p>
+                    )}
                   </div>
                 </CardHeader>
-
-                <CardContent className="space-y-6 px-5 py-6 sm:px-8 sm:py-8">
-                  <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-                    <div className="space-y-3">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        About
-                      </p>
-                      {writer.profile?.bio ? (
-                        <p className="max-w-3xl text-base leading-7 text-foreground/80">
-                          {writer.profile.bio}
-                        </p>
-                      ) : (
-                        <p className="max-w-3xl text-base leading-7 text-muted-foreground">
-                          @{writer.username} has not added a bio yet.
-                        </p>
-                      )}
-                    </div>
-
-                    <ProfileStats
-                      writerId={writer.id}
-                      followersCount={writer.followers_count ?? 0}
-                      followingCount={writer.following_count ?? 0}
-                      postsCount={writer.posts_count ?? 0}
-                    />
-                  </div>
-                </CardContent>
               </Card>
             </div>
           </div>
