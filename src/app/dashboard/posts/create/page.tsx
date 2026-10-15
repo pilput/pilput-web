@@ -85,7 +85,7 @@ export default function PostCreate() {
         },
       );
 
-      const photoUrl = response.data.photo_url;
+      const photoUrl = response.data.data.path;
       updatePhotoUrl(photoUrl);
       setErrorImage("");
       toast.success("Image uploaded successfully!");
