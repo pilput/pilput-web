@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Eye, MessageCircle } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
+import PostCoverFallback from "@/components/post/PostCoverFallback";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
 import {
@@ -32,7 +33,7 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
       whileHover={{ y: -4 }}
     >
       {/* Cover Image */}
-      {post.photo_url && (
+      {post.photo_url ? (
         <div className="relative overflow-hidden aspect-[16/10] border-b border-border/40 w-full shrink-0">
           <Image
             className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
@@ -42,6 +43,8 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
+      ) : (
+        <PostCoverFallback post={post} className="aspect-[16/10] border-b border-border/40 shrink-0" />
       )}
 
       {/* Content Area */}
