@@ -6,6 +6,7 @@ import { getToken } from "@/utils/Auth";
 import { apiClient } from "@/utils/fetch";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
+import { toastSpamRejection } from "@/utils/spam";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
@@ -167,9 +168,9 @@ export default function PostEdit() {
     }
 
     const toastId = toast.loading(published ? "Publishing post..." : "Saving draft...");
-    const success = await updatePost(published);
+    const result = await updatePost(published);
 
-    if (success) {
+    if (result.ok) {
       setErrorTitle("");
       setErrorImage("");
       toast.success(
@@ -179,7 +180,7 @@ export default function PostEdit() {
       setTimeout(() => {
         router.push("/dashboard/posts");
       }, 1000);
-    } else {
+    } else if (!toastSpamRejection(result.error, toastId)) {
       toast.error(
         published
           ? "Failed to publish post. Please try again."

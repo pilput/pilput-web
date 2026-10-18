@@ -44,7 +44,10 @@ interface UpdatePostState {
   removeTagAt: (index: number) => void;
   updatePostId: (id: string) => void;
   fetchPostById: (id: string) => Promise<Post | null>;
-  updatePost: (published?: boolean) => Promise<boolean>;
+  /** On failure, `error` is the thrown request error so the page can explain it. */
+  updatePost: (
+    published?: boolean,
+  ) => Promise<{ ok: true } | { ok: false; error: unknown }>;
   resetStore: () => void;
   error: boolean;
   total: number;
@@ -143,7 +146,7 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
     const { postId, post } = get();
     const token = getToken();
 
-    if (!postId) return false;
+    if (!postId) return { ok: false, error: new Error("No post selected") };
 
     set(() => ({ isUpdating: true, error: false }));
 
@@ -161,11 +164,11 @@ export const updatePostStore = create<UpdatePostState>()((set, get) => ({
         post: { ...state.post, published: published ?? state.post.published },
         isUpdating: false,
       }));
-      return true;
+      return { ok: true };
     } catch (error) {
       console.error("Error updating post:", error);
       set(() => ({ isUpdating: false, error: true }));
-      return false;
+      return { ok: false, error };
     }
   },
   resetStore: () =>

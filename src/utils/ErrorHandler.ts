@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { isHttpError } from "./fetch";
 import { clearTokens } from "./Auth";
+import { toastSpamRejection } from "./spam";
 
 export const ErrorHandlerAPI = (error: unknown) => {
   // Log the error for debugging purposes
@@ -51,6 +52,10 @@ export const ErrorHandlerAPI = (error: unknown) => {
     }
 
     toast.error("Session expired. Please log in again.");
+    return error.response;
+  }
+
+  if (toastSpamRejection(error)) {
     return error.response;
   }
 

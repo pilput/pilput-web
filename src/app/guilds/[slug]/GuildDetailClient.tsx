@@ -40,6 +40,7 @@ import {
   leaveGuild,
   updateGuild,
 } from "@/utils/guilds";
+import { toastSpamRejection } from "@/utils/spam";
 import {
   GUILD_MEMBERS_PAGE_SIZE,
   type Guild,
@@ -207,7 +208,9 @@ export default function GuildDetailClient({
       }
       syncWorkspace();
     } catch (error) {
-      toast.error(guildErrorMessage(error, "Could not update the guild."));
+      if (!toastSpamRejection(error)) {
+        toast.error(guildErrorMessage(error, "Could not update the guild."));
+      }
     } finally {
       setSaving(false);
     }

@@ -18,6 +18,7 @@ import {
   guildErrorMessage,
   joinGuild,
 } from "@/utils/guilds";
+import { toastSpamRejection } from "@/utils/spam";
 import { GUILDS_PAGE_SIZE, type Guild } from "@/types/guild";
 import type { GuildFormData } from "@/lib/validation";
 import { CreateGuildDialog } from "./components/CreateGuildDialog";
@@ -161,7 +162,9 @@ export default function GuildsClient() {
       }
       void load(0);
     } catch (error) {
-      toast.error(guildErrorMessage(error, "Could not create the guild."));
+      if (!toastSpamRejection(error)) {
+        toast.error(guildErrorMessage(error, "Could not create the guild."));
+      }
     } finally {
       setCreating(false);
     }

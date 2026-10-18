@@ -6,6 +6,7 @@ import { getToken } from "@/utils/Auth";
 import { apiClient, isHttpError } from "@/utils/fetch";
 import { getUrlImage, getProfilePicture } from "@/utils/getImage";
 import { convertToSlug } from "@/utils/slug";
+import { toastSpamRejection } from "@/utils/spam";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
@@ -170,6 +171,9 @@ export default function PostCreate() {
     } catch (error) {
       if (isHttpError(error)) {
         console.error("Submit error:", error.message);
+        if (toastSpamRejection(error, toastId)) {
+          return;
+        }
         if (error.response?.status === 422) {
           toast.error("Validation error. Please check your inputs.", {
             id: toastId,
