@@ -32,7 +32,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { Search, UserPlus, Users, Shield, User as UserIcon, ShieldAlert, ArrowUpDown, ArrowUp, ArrowDown, UserSearch } from "lucide-react";
+import { Search, UserPlus, Users, ShieldAlert, ArrowUpDown, ArrowUp, ArrowDown, UserSearch } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -646,7 +646,7 @@ function ManageUserContent() {
       </Dialog>
 
       {/* KPI Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
           <div>
             <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Users</span>
@@ -654,30 +654,6 @@ function ManageUserContent() {
           </div>
           <div className="p-2.5 rounded-xl bg-primary/10 text-primary ring-1 ring-border/40 group-hover:scale-105 transition-transform">
             <Users className="h-5 w-5" />
-          </div>
-        </div>
-
-        <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
-          <div>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Administrators</span>
-            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
-              {users.filter(u => u.is_super_admin).length}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
-            <Shield className="h-5 w-5" />
-          </div>
-        </div>
-
-        <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
-          <div>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Standard Users</span>
-            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
-              {total - users.filter(u => u.is_super_admin).length}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-500 ring-1 ring-border/40 group-hover:scale-105 transition-transform">
-            <UserIcon className="h-5 w-5" />
           </div>
         </div>
       </div>
