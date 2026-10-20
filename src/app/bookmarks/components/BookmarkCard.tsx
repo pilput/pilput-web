@@ -89,17 +89,19 @@ export function BookmarkCard({ row, folders, busy, onEdit, onRemove, onMove }: B
                           alt=""
                         />
                         <AvatarFallback className="text-[9px] font-bold">
-                          {post.user.username ? post.user.username[0]?.toUpperCase() : "U"}
+                          {post.user.username
+                            ? post.user.username[0]?.toUpperCase()
+                            : "U"}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="truncate">
-                        {post.user.username}
-                      </span>
+                      <span className="truncate">{post.user.username}</span>
                     </Link>
                   ) : (
                     <div className="inline-flex items-center gap-1.5 min-w-0 text-muted-foreground">
                       <Avatar className="h-5 w-5 border border-border">
-                        <AvatarFallback className="text-[9px] font-bold">A</AvatarFallback>
+                        <AvatarFallback className="text-[9px] font-bold">
+                          A
+                        </AvatarFallback>
                       </Avatar>
                       <span>Anonymous</span>
                     </div>
@@ -109,11 +111,13 @@ export function BookmarkCard({ row, folders, busy, onEdit, onRemove, onMove }: B
 
                   <span className="inline-flex items-center gap-1">
                     <CalendarIcon className="w-3.5 h-3.5 opacity-70" />
-                    {post.created_at ? new Date(post.created_at).toLocaleDateString([], {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    }) : "Draft"}
+                    {post.created_at
+                      ? new Date(post.created_at).toLocaleDateString([], {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "Draft"}
                   </span>
                 </div>
 
@@ -132,11 +136,17 @@ export function BookmarkCard({ row, folders, busy, onEdit, onRemove, onMove }: B
 
               <div className="flex flex-wrap items-center justify-between gap-4 pt-3.5 border-t border-border/40">
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" asChild className="h-8 text-xs font-semibold cursor-pointer">
-                    <Link href={href} className="inline-flex items-center">
-                      Read post
-                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                    </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 text-xs font-semibold cursor-pointer"
+                    render={
+                      <Link href={href} className="inline-flex items-center" />
+                    }
+                    nativeButton={false}
+                  >
+                    Read post
+                    <ArrowRight className="w-3.5 h-3.5 ml-1" />
                   </Button>
                   <Button
                     variant="ghost"

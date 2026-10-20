@@ -96,20 +96,22 @@ export default function ReportPostButton({ postId, authorUsername, className }: 
 
   return (
     <>
-      <TooltipProvider delayDuration={200}>
+      <TooltipProvider delay={200}>
         <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              onClick={openDialog}
-              aria-label="Report post"
-              className={cn(
-                "inline-flex items-center justify-center text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                className,
-              )}
-            >
-              <Flag className="h-4 w-4" aria-hidden />
-            </button>
+          <TooltipTrigger
+            render={
+              <button
+                type="button"
+                onClick={openDialog}
+                aria-label="Report post"
+                className={cn(
+                  "inline-flex items-center justify-center text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  className,
+                )}
+              />
+            }
+          >
+            <Flag className="h-4 w-4" aria-hidden />
           </TooltipTrigger>
           <TooltipContent side="bottom">
             <p>Report post</p>
@@ -129,11 +131,16 @@ export default function ReportPostButton({ postId, authorUsername, className }: 
           <DialogHeader>
             <DialogTitle>Report this post</DialogTitle>
             <DialogDescription>
-              Reports are anonymous to the author. Pick the reason that fits best.
+              Reports are anonymous to the author. Pick the reason that fits
+              best.
             </DialogDescription>
           </DialogHeader>
 
-          <div role="radiogroup" aria-label="Reason" className="flex flex-col gap-2">
+          <div
+            role="radiogroup"
+            aria-label="Reason"
+            className="flex flex-col gap-2"
+          >
             {POST_REPORT_REASONS.map((r) => {
               const selected = reason === r.value;
               return (
@@ -151,7 +158,9 @@ export default function ReportPostButton({ postId, authorUsername, className }: 
                   )}
                 >
                   <span className="text-sm font-medium">{r.label}</span>
-                  <span className="text-xs text-muted-foreground">{r.description}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {r.description}
+                  </span>
                 </button>
               );
             })}
@@ -159,7 +168,12 @@ export default function ReportPostButton({ postId, authorUsername, className }: 
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="report-details">
-              Details {detailsRequired ? "" : <span className="text-muted-foreground">(optional)</span>}
+              Details{" "}
+              {detailsRequired ? (
+                ""
+              ) : (
+                <span className="text-muted-foreground">(optional)</span>
+              )}
             </Label>
             <Textarea
               id="report-details"
@@ -175,11 +189,21 @@ export default function ReportPostButton({ postId, authorUsername, className }: 
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)} disabled={submitting}>
+            <Button
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={submitting}
+            >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={submit} disabled={!canSubmit}>
-              {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />}
+            <Button
+              variant="destructive"
+              onClick={submit}
+              disabled={!canSubmit}
+            >
+              {submitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
+              )}
               Submit report
             </Button>
           </DialogFooter>

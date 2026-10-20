@@ -63,15 +63,19 @@ export function CreateGuildDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="shrink-0 cursor-pointer font-semibold gap-1.5 self-start md:self-auto">
-          <Plus className="w-4 h-4" />
-          New guild
-        </Button>
+      <DialogTrigger
+        render={
+          <Button className="shrink-0 cursor-pointer font-semibold gap-1.5 self-start md:self-auto" />
+        }
+      >
+        <Plus className="w-4 h-4" />
+        New guild
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg text-left max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold">Create a guild</DialogTitle>
+          <DialogTitle className="text-lg font-bold">
+            Create a guild
+          </DialogTitle>
           <DialogDescription>
             You become its owner, and can invite others by sharing the link.
           </DialogDescription>

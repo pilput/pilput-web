@@ -34,11 +34,13 @@ export function CreateFolderDialog({
 }: CreateFolderDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="shrink-0 cursor-pointer font-semibold gap-1.5 self-start md:self-auto">
-          <FolderPlus className="w-4 h-4" />
-          New Folder
-        </Button>
+      <DialogTrigger
+        render={
+          <Button className="shrink-0 cursor-pointer font-semibold gap-1.5 self-start md:self-auto" />
+        }
+      >
+        <FolderPlus className="w-4 h-4" />
+        New Folder
       </DialogTrigger>
       <DialogContent className="sm:max-w-md text-left">
         <DialogHeader>

@@ -227,21 +227,21 @@ export default function HoldingTable({
         {/* Main Filter Tabs: ALL, Platform, Type */}
         <Tabs value={filterType} onValueChange={handleFilterTypeChange}>
           <TabsList className="w-full sm:w-auto flex-wrap h-auto bg-background/70 p-1 border border-border/60 shadow-xs">
-            <TabsTrigger 
-              value="all" 
-              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs"
+            <TabsTrigger
+              value="all"
+              className="text-xs sm:text-sm data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
             >
               All Holdings
             </TabsTrigger>
-            <TabsTrigger 
-              value="platform" 
-              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs"
+            <TabsTrigger
+              value="platform"
+              className="text-xs sm:text-sm data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
             >
               By Platform
             </TabsTrigger>
-            <TabsTrigger 
-              value="type" 
-              className="text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xs"
+            <TabsTrigger
+              value="type"
+              className="text-xs sm:text-sm data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
             >
               By Type
             </TabsTrigger>
@@ -252,21 +252,24 @@ export default function HoldingTable({
         {filterType === "platform" && uniquePlatforms.length > 0 && (
           <Tabs value={selectedPlatform} onValueChange={setSelectedPlatform}>
             <TabsList className="flex-wrap h-auto gap-2 w-full sm:w-auto bg-transparent p-0">
-              <TabsTrigger 
-                value="all" 
-                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md uppercase tracking-tight"
+              <TabsTrigger
+                value="all"
+                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-active:bg-primary data-active:text-primary-foreground rounded-md uppercase tracking-tight"
               >
                 All Platforms
               </TabsTrigger>
               {uniquePlatforms.map((platform) => (
-                <TabsTrigger 
-                  key={platform} 
-                  value={platform} 
+                <TabsTrigger
+                  key={platform}
+                  value={platform}
                   className={cn(
                     "text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 transition-all rounded-md uppercase tracking-tight",
-                    "data-[state=active]:ring-1 data-[state=active]:ring-current",
-                    getPlatformColor(platform).split(" ").filter(c => !c.startsWith("border-")).join(" "),
-                    "data-[state=active]:font-bold"
+                    "data-active:ring-1 data-active:ring-current",
+                    getPlatformColor(platform)
+                      .split(" ")
+                      .filter((c) => !c.startsWith("border-"))
+                      .join(" "),
+                    "data-active:font-bold",
                   )}
                 >
                   {platform}
@@ -279,21 +282,24 @@ export default function HoldingTable({
         {filterType === "type" && uniqueTypes.length > 0 && (
           <Tabs value={selectedType} onValueChange={setSelectedType}>
             <TabsList className="flex-wrap h-auto gap-2 w-full sm:w-auto bg-transparent p-0">
-              <TabsTrigger 
-                value="all" 
-                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4"
+              <TabsTrigger
+                value="all"
+                className="text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 data-active:bg-primary data-active:text-primary-foreground rounded-full px-4"
               >
                 All Types
               </TabsTrigger>
               {uniqueTypes.map((type) => (
-                <TabsTrigger 
-                  key={type.id} 
-                  value={type.id.toString()} 
+                <TabsTrigger
+                  key={type.id}
+                  value={type.id.toString()}
                   className={cn(
                     "text-xs sm:text-sm bg-muted/30 hover:bg-muted/50 transition-all rounded-full px-4",
-                    "data-[state=active]:ring-1 data-[state=active]:ring-current",
-                    getHoldingTypeColor(type.name).split(" ").filter(c => !c.startsWith("border-")).join(" "),
-                    "data-[state=active]:font-semibold"
+                    "data-active:ring-1 data-active:ring-current",
+                    getHoldingTypeColor(type.name)
+                      .split(" ")
+                      .filter((c) => !c.startsWith("border-"))
+                      .join(" "),
+                    "data-active:font-semibold",
                   )}
                 >
                   {type.name}
@@ -306,10 +312,14 @@ export default function HoldingTable({
         {/* Filter Summary */}
         <div className="flex items-center justify-between">
           <p className="text-xs sm:text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{sortedHoldings.length}</span>
-            {" "}of{" "}
-            <span className="font-medium text-foreground">{holdings.length}</span>
-            {" "}holdings
+            <span className="font-medium text-foreground">
+              {sortedHoldings.length}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium text-foreground">
+              {holdings.length}
+            </span>{" "}
+            holdings
             {filterType !== "all" && (
               <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                 Filtered
@@ -323,7 +333,9 @@ export default function HoldingTable({
         <Table className="min-w-[900px]">
           <TableHeader>
             <TableRow className="bg-muted/30 hover:bg-muted/30 border-b border-border/70">
-              <TableHead className="w-10 sm:w-12 font-semibold text-xs sm:text-sm text-center text-muted-foreground">#</TableHead>
+              <TableHead className="w-10 sm:w-12 font-semibold text-xs sm:text-sm text-center text-muted-foreground">
+                #
+              </TableHead>
               <HeaderCell
                 label="Name"
                 columnKey="name"
@@ -374,31 +386,50 @@ export default function HoldingTable({
                 onSort={handleSort}
               />
               <TableHead className="w-10 text-center"></TableHead>
-              <TableHead className="w-20 sm:w-24 font-semibold text-xs sm:text-sm text-center">Actions</TableHead>
+              <TableHead className="w-20 sm:w-24 font-semibold text-xs sm:text-sm text-center">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i} className="hover:bg-muted/30">
-                  <TableCell><Skeleton className="h-4 w-6 mx-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-12 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-4 mx-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-8 w-16 mx-auto" /></TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-6 mx-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-32" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-12 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-4 mx-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-8 w-16 mx-auto" />
+                  </TableCell>
                 </TableRow>
               ))
             ) : sortedHoldings.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={10}
-                  className="text-center py-6"
-                >
+                <TableCell colSpan={10} className="text-center py-6">
                   <EmptyState
                     icon={Wallet}
                     title="No holdings found"

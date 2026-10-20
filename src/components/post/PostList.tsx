@@ -28,7 +28,7 @@ const PostList = ({ post }: { post: Post }) => {
   const tags = post.tags || [];
 
   return (
-    <motion.article 
+    <motion.article
       className="group relative flex h-full flex-col glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
@@ -47,13 +47,16 @@ const PostList = ({ post }: { post: Post }) => {
           />
         </div>
       ) : (
-        <PostCoverFallback post={post} className="aspect-[16/9.5] border-b border-border/40" />
+        <PostCoverFallback
+          post={post}
+          className="aspect-[16/9.5] border-b border-border/40"
+        />
       )}
 
       <div className="flex flex-1 flex-col p-6 sm:p-7 gap-6">
         {/* Author Info */}
         <div className="flex items-center gap-3">
-          <motion.div 
+          <motion.div
             className="shrink-0 relative"
             whileHover={{ scale: 1.05 }}
           >
@@ -78,7 +81,11 @@ const PostList = ({ post }: { post: Post }) => {
             </Link>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <ClockIcon className="w-3.5 h-3.5 opacity-70" />
-              <span>{post.created_at ? format(new Date(post.created_at), "MMM d, yyyy") : "Draft"}</span>
+              <span>
+                {post.created_at
+                  ? format(new Date(post.created_at), "MMM d, yyyy")
+                  : "Draft"}
+              </span>
             </div>
           </div>
         </div>
@@ -98,7 +105,8 @@ const PostList = ({ post }: { post: Post }) => {
           </Link>
 
           <p className="text-xs sm:text-sm text-muted-foreground/90 leading-relaxed line-clamp-3">
-            {plaintext.slice(0, 150)}{plaintext.length > 150 ? '...' : ''}
+            {plaintext.slice(0, 150)}
+            {plaintext.length > 150 ? "..." : ""}
           </p>
         </div>
 
@@ -122,15 +130,17 @@ const PostList = ({ post }: { post: Post }) => {
               </motion.div>
             ))}
             {tags.length > 3 && (
-              <TooltipProvider delayDuration={200}>
+              <TooltipProvider delay={200}>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span
-                      className="text-xs text-muted-foreground px-2 py-1 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2"
-                      tabIndex={0}
-                    >
-                      +{tags.length - 3} more
-                    </span>
+                  <TooltipTrigger
+                    render={
+                      <span
+                        className="text-xs text-muted-foreground px-2 py-1 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2"
+                        tabIndex={0}
+                      />
+                    }
+                  >
+                    +{tags.length - 3} more
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-xs text-left">
                     <p className="mb-1.5 font-medium text-background">

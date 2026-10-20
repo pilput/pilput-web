@@ -49,22 +49,26 @@ const ButtonLogged = () => {
 
       {/* Separate dropdown trigger */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="rounded-l-none rounded-r-full px-2 pr-3"
-            aria-label="Account menu"
-          >
-            <ChevronDown className="h-4 w-4" />
-          </Button>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-l-none rounded-r-full px-2 pr-3"
+              aria-label="Account menu"
+            />
+          }
+        >
+          <ChevronDown className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-45">
-          <DropdownMenuItem asChild>
-            <Link href="/account" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Account Settings
-            </Link>
+          <DropdownMenuItem
+            render={
+              <Link href="/account" className="flex items-center gap-2" />
+            }
+          >
+            <Settings className="h-4 w-4" />
+            Account Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem

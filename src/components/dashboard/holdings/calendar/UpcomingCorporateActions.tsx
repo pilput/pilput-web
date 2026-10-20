@@ -74,15 +74,14 @@ export default function UpcomingCorporateActions() {
           </CardDescription>
         </div>
         <Button
-          asChild
           variant="ghost"
           size="sm"
           className="h-8 px-2.5 text-xs gap-1 shrink-0"
+          render={<Link href="/dashboard/holdings/calendar" />}
+          nativeButton={false}
         >
-          <Link href="/dashboard/holdings/calendar">
-            Full calendar
-            <ArrowRight className="h-3 w-3" />
-          </Link>
+          Full calendar
+          <ArrowRight className="h-3 w-3" />
         </Button>
       </CardHeader>
       <CardContent className="px-4 pb-4 sm:px-5">

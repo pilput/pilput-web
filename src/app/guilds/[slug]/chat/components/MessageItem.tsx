@@ -296,20 +296,22 @@ function ActionButton({
 }) {
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-label={label}
-          onClick={onClick}
-          className={cn(
-            "size-7 cursor-pointer text-muted-foreground hover:text-foreground",
-            destructive && "hover:bg-destructive/10 hover:text-destructive",
-          )}
-        >
-          {children}
-        </Button>
+      <TooltipTrigger
+        render={
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label={label}
+            onClick={onClick}
+            className={cn(
+              "size-7 cursor-pointer text-muted-foreground hover:text-foreground",
+              destructive && "hover:bg-destructive/10 hover:text-destructive",
+            )}
+          />
+        }
+      >
+        {children}
       </TooltipTrigger>
       <TooltipContent side="top">{label}</TooltipContent>
     </Tooltip>

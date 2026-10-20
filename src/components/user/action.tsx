@@ -199,20 +199,17 @@ const UserActionComponent = ({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+        <DropdownMenuTrigger
+          render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+        >
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           {!user.deleted_at && (
             <DropdownMenuItem>
-              <Link
-                href={`/${user.username}`}
-                className="flex items-center"
-              >
+              <Link href={`/${user.username}`} className="flex items-center">
                 <Eye className="mr-2 h-4 w-4" />
                 <span>View Profile</span>
               </Link>
@@ -261,7 +258,8 @@ const UserActionComponent = ({
               Delete User
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this user? This action cannot be undone.
+              Are you sure you want to delete this user? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
@@ -349,7 +347,8 @@ const UserActionComponent = ({
               Restore User
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to restore this user? This will make the user account active again.
+              Are you sure you want to restore this user? This will make the
+              user account active again.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">

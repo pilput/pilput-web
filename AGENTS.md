@@ -23,7 +23,7 @@ No test runner is configured (no `test` script; `src/test/` from the README tree
 - **State**: Zustand stores in `src/stores/`
 - **Forms**: React Hook Form + Zod schemas in `src/lib/validation.ts`
 - **Rich text**: TipTap v3 editor in `src/components/post/Editor.tsx`; code blocks use **highlight.js/lowlight** (`src/lib/code-block-highlight.ts`, `src/lib/code-highlight.ts`); chat Markdown (`src/components/chat/markdown.tsx`) also uses `highlightCode` from `src/lib/code-highlight.ts`. Register new languages in `HIGHLIGHT_LANGUAGES` there (shared by both)
-- **UI components**: Shadcn UI (new-york, `src/components/ui/`, `components.json`); add new ones via `bunx shadcn@latest add <name>`
+- **UI components**: Shadcn UI on **Base UI** (`@base-ui/react`, style `base-vega`, `src/components/ui/`, `components.json`); use the `render` prop instead of Radix `asChild`; add new ones via `bunx shadcn@latest add <name>`
 
 ## Conventions
 

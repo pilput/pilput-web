@@ -474,11 +474,13 @@ function ManageUserContent() {
             Revoke all sessions
           </Button>
           <Dialog open={modaluser} onOpenChange={setmodaluser}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0">
-                <UserPlus className="h-4 w-4" />
-                Add new user
-              </Button>
+            <DialogTrigger
+              render={
+                <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0" />
+              }
+            >
+              <UserPlus className="h-4 w-4" />
+              Add new user
             </DialogTrigger>
             <DialogContent className="max-w-[95vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
@@ -615,7 +617,11 @@ function ManageUserContent() {
             </p>
             <div className="space-y-2">
               <Label htmlFor="revoke-all-confirm">
-                Type <span className="font-mono font-semibold">{REVOKE_ALL_PHRASE}</span> to confirm
+                Type{" "}
+                <span className="font-mono font-semibold">
+                  {REVOKE_ALL_PHRASE}
+                </span>{" "}
+                to confirm
               </Label>
               <Input
                 id="revoke-all-confirm"
@@ -637,7 +643,9 @@ function ManageUserContent() {
             <Button
               variant="destructive"
               onClick={onRevokeAllSessions}
-              disabled={isRevokingAll || revokeAllConfirmation !== REVOKE_ALL_PHRASE}
+              disabled={
+                isRevokingAll || revokeAllConfirmation !== REVOKE_ALL_PHRASE
+              }
             >
               {isRevokingAll ? "Revoking..." : "Revoke all sessions"}
             </Button>
@@ -649,8 +657,12 @@ function ManageUserContent() {
       <div className="grid grid-cols-1 gap-4">
         <div className="glass-card border-glow-hover rounded-2xl transition-all duration-300 group flex items-center justify-between p-5">
           <div>
-            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Total Users</span>
-            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">{total}</div>
+            <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">
+              Total Users
+            </span>
+            <div className="text-2xl font-bold tracking-tight text-foreground mt-1.5">
+              {total}
+            </div>
           </div>
           <div className="p-2.5 rounded-xl bg-primary/10 text-primary ring-1 ring-border/40 group-hover:scale-105 transition-transform">
             <Users className="h-5 w-5" />
@@ -704,7 +716,10 @@ function ManageUserContent() {
               </SelectContent>
             </Select>
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <ArrowUpDown className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden="true" />
+              <ArrowUpDown
+                className="h-4 w-4 text-muted-foreground shrink-0"
+                aria-hidden="true"
+              />
               <Select
                 value={sortKey}
                 onValueChange={(val) => {
@@ -712,14 +727,23 @@ function ManageUserContent() {
                   setOffset(0);
                 }}
               >
-                <SelectTrigger className="w-full sm:w-[220px]" aria-label="Sort users">
+                <SelectTrigger
+                  className="w-full sm:w-[220px]"
+                  aria-label="Sort users"
+                >
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="last_logged_at:desc">Last active</SelectItem>
-                  <SelectItem value="created_at:desc">Newest members</SelectItem>
+                  <SelectItem value="last_logged_at:desc">
+                    Last active
+                  </SelectItem>
+                  <SelectItem value="created_at:desc">
+                    Newest members
+                  </SelectItem>
                   <SelectItem value="created_at:asc">Oldest members</SelectItem>
-                  <SelectItem value="last_logged_at:asc">Least recently active</SelectItem>
+                  <SelectItem value="last_logged_at:asc">
+                    Least recently active
+                  </SelectItem>
                   <SelectItem value="username:asc">Username A–Z</SelectItem>
                   <SelectItem value="username:desc">Username Z–A</SelectItem>
                   <SelectItem value="email:asc">Email A–Z</SelectItem>
@@ -742,163 +766,186 @@ function ManageUserContent() {
                     <TableHead className="w-12">#</TableHead>
                     <TableHead className="min-w-[200px]">User</TableHead>
                     <TableHead className="hidden md:table-cell">
-                      <SortHeader column="username" label="Username" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                      <SortHeader
+                        column="username"
+                        label="Username"
+                        orderBy={orderBy}
+                        orderDirection={orderDirection}
+                        onToggle={toggleSort}
+                      />
                     </TableHead>
                     <TableHead className="hidden lg:table-cell">
-                      <SortHeader column="email" label="Email" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                      <SortHeader
+                        column="email"
+                        label="Email"
+                        orderBy={orderBy}
+                        orderDirection={orderDirection}
+                        onToggle={toggleSort}
+                      />
                     </TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead className="hidden lg:table-cell">
-                      <SortHeader column="created_at" label="Joined" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                      <SortHeader
+                        column="created_at"
+                        label="Joined"
+                        orderBy={orderBy}
+                        orderDirection={orderDirection}
+                        onToggle={toggleSort}
+                      />
                     </TableHead>
                     <TableHead className="hidden xl:table-cell">
-                      <SortHeader column="last_logged_at" label="Last active" orderBy={orderBy} orderDirection={orderDirection} onToggle={toggleSort} />
+                      <SortHeader
+                        column="last_logged_at"
+                        label="Last active"
+                        orderBy={orderBy}
+                        orderDirection={orderDirection}
+                        onToggle={toggleSort}
+                      />
                     </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {isLoading
-                    ? Array.from({ length: 5 }).map((_, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="text-muted-foreground">
-                            <Skeleton className="h-4 w-6" />
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Skeleton className="h-10 w-10 rounded-full shrink-0" />
-                              <Skeleton className="h-4 w-[120px]" />
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <Skeleton className="h-4 w-[100px]" />
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell">
-                            <Skeleton className="h-4 w-[180px]" />
-                          </TableCell>
-                          <TableCell>
-                            <Skeleton className="h-6 w-20" />
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell">
-                            <Skeleton className="h-4 w-24" />
-                          </TableCell>
-                          <TableCell className="hidden xl:table-cell">
-                            <Skeleton className="h-4 w-24" />
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Skeleton className="h-8 w-[80px] ml-auto" />
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    : filteredUsers.length === 0
-                      ? (
-                        <TableRow>
-                          <TableCell
-                            colSpan={8}
-                            className="py-4"
-                          >
-                            <EmptyState
-                              icon={UserSearch}
-                              title={
-                                users.length === 0
-                                  ? "No users yet"
-                                  : "No users match your search or filter"
-                              }
-                              description={
-                                users.length === 0
-                                  ? "Newly registered users will appear here."
-                                  : "Try a different keyword, role, or status filter."
-                              }
-                              actions={
-                                users.length === 0
-                                  ? []
-                                  : [
-                                      {
-                                        label: "Clear filters",
-                                        variant: "outline",
-                                        onClick: () => {
-                                          setSearch("");
-                                          setRoleFilter("all");
-                                          setDeletedFilter("false");
-                                          setOffset(0);
-                                        },
-                                      },
-                                    ]
-                              }
-                            />
-                          </TableCell>
-                        </TableRow>
-                        )
-                      : filteredUsers.map((user, index) => (
-                          <TableRow key={user.id}>
-                            <TableCell className="text-muted-foreground tabular-nums">
-                              {index + 1 + offset}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-3">
-                                <Avatar className="h-9 w-9 shrink-0">
-                                  <AvatarImage
-                                    src={getProfilePicture(user.image ?? "")}
-                                    alt={user.username}
-                                    className="object-cover"
-                                  />
-                                  <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
-                                    {user.username.substring(0, 2).toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <span className="font-medium">{user.first_name} {user.last_name}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-muted-foreground hidden md:table-cell">
-                              {user.username}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground hidden lg:table-cell">
-                              {user.email}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex flex-wrap gap-1.5">
-                                {user.is_super_admin ? (
-                                  <Badge
-                                    variant="default"
-                                    className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"
-                                  >
-                                    Admin
-                                  </Badge>
-                                ) : (
-                                  <Badge
-                                    variant="outline"
-                                    className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
-                                  >
-                                    User
-                                  </Badge>
-                                )}
-                                {user.deleted_at && (
-                                  <Badge
-                                    variant="destructive"
-                                    className="bg-red-600/10 text-red-600 border border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900"
-                                  >
-                                    Deleted
-                                  </Badge>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
-                              {format(user.created_at, "MMM dd, yyyy")}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden xl:table-cell">
-                              {user.last_logged_at
-                                ? format(user.last_logged_at, "MMM dd, yyyy HH:mm")
-                                : "—"}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <UserActionComponent
-                                user={user}
-                                auth={auth}
-                                refetchUsers={refetchUsers}
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="text-muted-foreground">
+                          <Skeleton className="h-4 w-6" />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                            <Skeleton className="h-4 w-[120px]" />
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <Skeleton className="h-4 w-[100px]" />
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Skeleton className="h-4 w-[180px]" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-20" />
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell className="hidden xl:table-cell">
+                          <Skeleton className="h-4 w-24" />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-8 w-[80px] ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : filteredUsers.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="py-4">
+                        <EmptyState
+                          icon={UserSearch}
+                          title={
+                            users.length === 0
+                              ? "No users yet"
+                              : "No users match your search or filter"
+                          }
+                          description={
+                            users.length === 0
+                              ? "Newly registered users will appear here."
+                              : "Try a different keyword, role, or status filter."
+                          }
+                          actions={
+                            users.length === 0
+                              ? []
+                              : [
+                                  {
+                                    label: "Clear filters",
+                                    variant: "outline",
+                                    onClick: () => {
+                                      setSearch("");
+                                      setRoleFilter("all");
+                                      setDeletedFilter("false");
+                                      setOffset(0);
+                                    },
+                                  },
+                                ]
+                          }
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredUsers.map((user, index) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="text-muted-foreground tabular-nums">
+                          {index + 1 + offset}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9 shrink-0">
+                              <AvatarImage
+                                src={getProfilePicture(user.image ?? "")}
+                                alt={user.username}
+                                className="object-cover"
                               />
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                              <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
+                                {user.username.substring(0, 2).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="font-medium">
+                              {user.first_name} {user.last_name}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground hidden md:table-cell">
+                          {user.username}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground hidden lg:table-cell">
+                          {user.email}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1.5">
+                            {user.is_super_admin ? (
+                              <Badge
+                                variant="default"
+                                className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"
+                              >
+                                Admin
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant="outline"
+                                className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
+                              >
+                                User
+                              </Badge>
+                            )}
+                            {user.deleted_at && (
+                              <Badge
+                                variant="destructive"
+                                className="bg-red-600/10 text-red-600 border border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900"
+                              >
+                                Deleted
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
+                          {format(user.created_at, "MMM dd, yyyy")}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden xl:table-cell">
+                          {user.last_logged_at
+                            ? format(user.last_logged_at, "MMM dd, yyyy HH:mm")
+                            : "—"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <UserActionComponent
+                            user={user}
+                            auth={auth}
+                            refetchUsers={refetchUsers}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -906,8 +953,8 @@ function ManageUserContent() {
 
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-sm text-muted-foreground text-center sm:text-left">
-              Showing {offset + 1} to{" "}
-              {Math.min(offset + limit, total)} of {total} users
+              Showing {offset + 1} to {Math.min(offset + limit, total)} of{" "}
+              {total} users
             </div>
             <Paginate
               prev={() => changeOffset(offset - limit)}

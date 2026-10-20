@@ -68,15 +68,23 @@ export default function HoldingOverviewPage() {
 
   return (
     <div className="flex w-full flex-col gap-6 sm:gap-8">
-
       {/* ── Page Header ─────────────────────────────────── */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <Button variant="ghost" size="icon" className="shrink-0 -ml-2" asChild>
-              <Link href="/dashboard/holdings" aria-label="Back to holdings">
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0 -ml-2"
+              render={
+                <Link
+                  href="/dashboard/holdings"
+                  aria-label="Back to holdings"
+                />
+              }
+              nativeButton={false}
+            >
+              <ArrowLeft className="w-4 h-4" />
             </Button>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
@@ -125,7 +133,12 @@ export default function HoldingOverviewPage() {
       </div>
 
       {/* ── Section: Summary ────────────────────────────── */}
-      <CollapsibleSection id="summary" label="Summary" collapsed={!!collapsed.summary} onToggle={toggleSection}>
+      <CollapsibleSection
+        id="summary"
+        label="Summary"
+        collapsed={!!collapsed.summary}
+        onToggle={toggleSection}
+      >
         <HoldingSummaryCards
           holdings={holdings}
           summary={summary}
@@ -135,7 +148,12 @@ export default function HoldingOverviewPage() {
       </CollapsibleSection>
 
       {/* ── Section: Corporate Actions ──────────────────── */}
-      <CollapsibleSection id="actions" label="Corporate Actions" collapsed={!!collapsed.actions} onToggle={toggleSection}>
+      <CollapsibleSection
+        id="actions"
+        label="Corporate Actions"
+        collapsed={!!collapsed.actions}
+        onToggle={toggleSection}
+      >
         <div className="grid gap-4 md:gap-5 lg:grid-cols-2">
           <MyHoldingsCorporateActions holdings={holdings} />
           <UpcomingCorporateActions />
@@ -143,7 +161,12 @@ export default function HoldingOverviewPage() {
       </CollapsibleSection>
 
       {/* ── Section: Allocation ─────────────────────────── */}
-      <CollapsibleSection id="allocation" label="Allocation" collapsed={!!collapsed.allocation} onToggle={toggleSection}>
+      <CollapsibleSection
+        id="allocation"
+        label="Allocation"
+        collapsed={!!collapsed.allocation}
+        onToggle={toggleSection}
+      >
         <AllocationSection
           statistics={statistics}
           holdings={holdings}
@@ -153,13 +176,23 @@ export default function HoldingOverviewPage() {
 
       {/* ── Section: Performance ────────────────────────── */}
       {statistics && (
-        <CollapsibleSection id="performance" label="Performance" collapsed={!!collapsed.performance} onToggle={toggleSection}>
+        <CollapsibleSection
+          id="performance"
+          label="Performance"
+          collapsed={!!collapsed.performance}
+          onToggle={toggleSection}
+        >
           <PerformanceSection statistics={statistics} hideValues={hideValues} />
         </CollapsibleSection>
       )}
 
       {/* ── Section: Trends ─────────────────────────────── */}
-      <CollapsibleSection id="trends" label="Trends" collapsed={!!collapsed.trends} onToggle={toggleSection}>
+      <CollapsibleSection
+        id="trends"
+        label="Trends"
+        collapsed={!!collapsed.trends}
+        onToggle={toggleSection}
+      >
         <div className="space-y-4 md:space-y-5">
           <MonthlyHoldingsChart />
           <div className="glass-card border-glow-hover rounded-2xl p-3 sm:p-4 lg:p-5 transition-all duration-300">
@@ -172,7 +205,6 @@ export default function HoldingOverviewPage() {
           </div>
         </div>
       </CollapsibleSection>
-
     </div>
   );
 }

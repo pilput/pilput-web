@@ -31,8 +31,12 @@ export function ChatGate({ slug, children }: { slug: string; children: React.Rea
         title="Sign in to chat"
         description="Guild channels are for members only."
       >
-        <Button asChild className="cursor-pointer">
-          <Link href={`/login?redirect=/guilds/${slug}/chat`}>Sign in</Link>
+        <Button
+          className="cursor-pointer"
+          render={<Link href={`/login?redirect=/guilds/${slug}/chat`} />}
+          nativeButton={false}
+        >
+          Sign in
         </Button>
       </ChatNotice>
     );
@@ -54,8 +58,13 @@ export function ChatGate({ slug, children }: { slug: string; children: React.Rea
         title="Guild not found"
         description="It may have been deleted, or it is private and you are not a member."
       >
-        <Button asChild variant="secondary" className="cursor-pointer">
-          <Link href="/guilds">Explore guilds</Link>
+        <Button
+          variant="secondary"
+          className="cursor-pointer"
+          render={<Link href="/guilds" />}
+          nativeButton={false}
+        >
+          Explore guilds
         </Button>
       </ChatNotice>
     );
@@ -85,11 +94,21 @@ export function ChatGate({ slug, children }: { slug: string; children: React.Rea
             : "This guild is private — ask an admin for an invite."
         }
       >
-        <Button asChild variant="secondary" className="cursor-pointer">
-          <Link href={`/guilds/${guild.slug}`}>View guild</Link>
+        <Button
+          variant="secondary"
+          className="cursor-pointer"
+          render={<Link href={`/guilds/${guild.slug}`} />}
+          nativeButton={false}
+        >
+          View guild
         </Button>
         {guild.is_public && (
-          <Button type="button" className="cursor-pointer" disabled={joining} onClick={onJoin}>
+          <Button
+            type="button"
+            className="cursor-pointer"
+            disabled={joining}
+            onClick={onJoin}
+          >
             {joining && <Loader2 className="animate-spin" />}
             Join guild
           </Button>

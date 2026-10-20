@@ -210,28 +210,28 @@ function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              asChild
               tooltip="Pilput Dashboard"
               className="hover:bg-sidebar-accent/60 transition-colors group/brand"
+              render={
+                <Link href="/dashboard" className="flex items-center gap-3" />
+              }
             >
-              <Link href="/dashboard" className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs ring-1 ring-primary/25 transition-transform duration-200 group-hover/brand:scale-105">
-                  <span className="text-sm font-black tracking-tight">P</span>
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold tracking-tight text-foreground text-sm">
-                      pilput<span className="text-primary font-black">.</span>
-                    </span>
-                    <span className="rounded-md border border-primary/20 bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary tracking-wide uppercase">
-                      Console
-                    </span>
-                  </div>
-                  <span className="truncate text-[11px] text-muted-foreground">
-                    Workspace & Analytics
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs ring-1 ring-primary/25 transition-transform duration-200 group-hover/brand:scale-105">
+                <span className="text-sm font-black tracking-tight">P</span>
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold tracking-tight text-foreground text-sm">
+                    pilput<span className="text-primary font-black">.</span>
+                  </span>
+                  <span className="rounded-md border border-primary/20 bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary tracking-wide uppercase">
+                    Console
                   </span>
                 </div>
-              </Link>
+                <span className="truncate text-[11px] text-muted-foreground">
+                  Workspace & Analytics
+                </span>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -251,44 +251,50 @@ function AppSidebar() {
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton
-                        asChild
                         isActive={isActive}
                         tooltip={item.title}
                         className={cn(
                           "relative font-medium transition-all duration-150 group/btn",
                           "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/60",
-                          "data-[active=true]:bg-primary/10 data-[active=true]:text-primary dark:data-[active=true]:bg-primary/20 data-[active=true]:font-semibold"
+                          "data-[active=true]:bg-primary/10 data-[active=true]:text-primary dark:data-[active=true]:bg-primary/20 data-[active=true]:font-semibold",
                         )}
-                      >
-                        <Link href={item.url} className="flex items-center gap-2.5">
-                          {isActive && (
-                            <span
-                              aria-hidden="true"
-                              className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-primary group-data-[collapsible=icon]:hidden"
-                            />
-                          )}
-                          <item.icon
-                            className={cn(
-                              "size-4 shrink-0 transition-transform duration-200 group-hover/btn:scale-105",
-                              isActive
-                                ? "text-primary"
-                                : "text-muted-foreground group-hover/btn:text-foreground"
-                            )}
+                        render={
+                          <Link
+                            href={item.url}
+                            className="flex items-center gap-2.5"
                           />
-                          <span className="truncate">{item.title}</span>
-                        </Link>
+                        }
+                      >
+                        {isActive && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-primary group-data-[collapsible=icon]:hidden"
+                          />
+                        )}
+                        <item.icon
+                          className={cn(
+                            "size-4 shrink-0 transition-transform duration-200 group-hover/btn:scale-105",
+                            isActive
+                              ? "text-primary"
+                              : "text-muted-foreground group-hover/btn:text-foreground",
+                          )}
+                        />
+                        <span className="truncate">{item.title}</span>
                       </SidebarMenuButton>
 
                       {item.actionUrl && (
                         <SidebarMenuAction
-                          asChild
                           showOnHover
                           className="hover:bg-primary/10 hover:text-primary transition-colors"
+                          render={
+                            <Link
+                              href={item.actionUrl}
+                              title={item.actionTooltip || "Create"}
+                            />
+                          }
                         >
-                          <Link href={item.actionUrl} title={item.actionTooltip || "Create"}>
-                            <Plus className="size-3.5" />
-                            <span className="sr-only">{item.actionTooltip}</span>
-                          </Link>
+                          <Plus className="size-3.5" />
+                          <span className="sr-only">{item.actionTooltip}</span>
                         </SidebarMenuAction>
                       )}
 
@@ -312,45 +318,45 @@ function AppSidebar() {
           {/* Back to Website */}
           <SidebarMenuItem>
             <SidebarMenuButton
-              asChild
               tooltip="Back to Website"
               className="text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/60 transition-colors"
+              render={<Link href="/" className="flex items-center gap-2.5" />}
             >
-              <Link href="/" className="flex items-center gap-2.5">
-                <ArrowLeft className="size-4 shrink-0 text-muted-foreground group-hover/menu-button:text-foreground transition-colors" />
-                <span className="truncate">Back to Website</span>
-              </Link>
+              <ArrowLeft className="size-4 shrink-0 text-muted-foreground group-hover/menu-button:text-foreground transition-colors" />
+              <span className="truncate">Back to Website</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           {/* User Account / Dropdown */}
           <SidebarMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  tooltip={displayName}
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent/60 transition-colors"
-                >
-                  <Avatar className="h-8 w-8 rounded-lg border border-border/60 shrink-0">
-                    <AvatarImage
-                      src={getProfilePicture(user.image)}
-                      alt={`@${user.username}`}
-                    />
-                    <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold text-xs">
-                      {userInitial}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-xs leading-tight group-data-[collapsible=icon]:hidden">
-                    <span className="truncate font-semibold text-foreground">
-                      {displayName}
-                    </span>
-                    <span className="truncate text-[11px] text-muted-foreground">
-                      {user.email || `@${user.username}`}
-                    </span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden shrink-0" />
-                </SidebarMenuButton>
+              <DropdownMenuTrigger
+                render={
+                  <SidebarMenuButton
+                    size="lg"
+                    tooltip={displayName}
+                    className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground hover:bg-sidebar-accent/60 transition-colors"
+                  />
+                }
+              >
+                <Avatar className="h-8 w-8 rounded-lg border border-border/60 shrink-0">
+                  <AvatarImage
+                    src={getProfilePicture(user.image)}
+                    alt={`@${user.username}`}
+                  />
+                  <AvatarFallback className="rounded-lg bg-primary/10 text-primary font-semibold text-xs">
+                    {userInitial}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-xs leading-tight group-data-[collapsible=icon]:hidden">
+                  <span className="truncate font-semibold text-foreground">
+                    {displayName}
+                  </span>
+                  <span className="truncate text-[11px] text-muted-foreground">
+                    {user.email || `@${user.username}`}
+                  </span>
+                </div>
+                <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden shrink-0" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-56 rounded-lg shadow-lg border border-border/60"
@@ -387,17 +393,22 @@ function AppSidebar() {
                   )}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href={`/${user.username}`} className="cursor-pointer">
-                    <UserIcon className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
+                <DropdownMenuItem
+                  render={
+                    <Link
+                      href={`/${user.username}`}
+                      className="cursor-pointer"
+                    />
+                  }
+                >
+                  <UserIcon className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/account" className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Account Settings</span>
-                  </Link>
+                <DropdownMenuItem
+                  render={<Link href="/account" className="cursor-pointer" />}
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Account Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -425,9 +436,11 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 glass-navbar px-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4 flex-1">
             <Tooltip>
-              <TooltipTrigger asChild>
-                <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
+                }
+              ></TooltipTrigger>
               <TooltipContent side="bottom" align="start">
                 <div className="flex items-center gap-1.5 text-xs">
                   <span>Toggle sidebar</span>
@@ -444,9 +457,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-6 bg-muted/10 p-4 md:p-6">
-          <main className="flex-1">
-            {children}
-          </main>
+          <main className="flex-1">{children}</main>
         </div>
       </SidebarInset>
     </SidebarProvider>

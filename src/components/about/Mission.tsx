@@ -37,25 +37,32 @@ const MissionSection = () => {
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse"
+        style={{ animationDelay: "2s" }}
+      />
 
       <div className="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <div className="mb-6">
-            <Badge variant="secondary" className="mb-4 mx-auto bg-linear-to-r from-primary/20 to-secondary/20 border-primary/30">
+            <Badge
+              variant="secondary"
+              className="mb-4 mx-auto bg-linear-to-r from-primary/20 to-secondary/20 border-primary/30"
+            >
               <Star className="inline-block mr-2 h-3 w-3" />
               Our Mission
             </Badge>
           </div>
-          
+
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent mb-6 leading-tight">
             Building the Future of Publishing
           </h2>
-          
+
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We&apos;re on a mission to simplify publishing and empower creators worldwide
-            to share their stories without barriers. Our platform combines intuitive
-            tools with elegant design to create an effortless creative experience.
+            We&apos;re on a mission to simplify publishing and empower creators
+            worldwide to share their stories without barriers. Our platform
+            combines intuitive tools with elegant design to create an effortless
+            creative experience.
           </p>
         </div>
 
@@ -75,8 +82,9 @@ const MissionSection = () => {
                 </h3>
 
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  We believe the best writing happens in a space that feels comfortable and inspiring. 
-                  Our platform is designed to recreate that cozy corner café atmosphere where creativity 
+                  We believe the best writing happens in a space that feels
+                  comfortable and inspiring. Our platform is designed to
+                  recreate that cozy corner café atmosphere where creativity
                   flourishes and words flow effortlessly.
                 </p>
 
@@ -124,19 +132,21 @@ const MissionSection = () => {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold">Our Vision</h3>
-                    <p className="text-sm text-muted-foreground">What drives us forward</p>
+                    <p className="text-sm text-muted-foreground">
+                      What drives us forward
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    We envision a world where every voice can be heard, where creators
-                    have the tools and platform they need to reach global audiences
-                    easily and effectively.
+                    We envision a world where every voice can be heard, where
+                    creators have the tools and platform they need to reach
+                    global audiences easily and effectively.
                   </p>
                   <p>
                     Our commitment to community and accessibility ensures that
-                    premium publishing tools are available to everyone, regardless
-                    of their technical background.
+                    premium publishing tools are available to everyone,
+                    regardless of their technical background.
                   </p>
                 </div>
               </CardContent>
@@ -152,17 +162,20 @@ const MissionSection = () => {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold">Our Commitment</h3>
-                    <p className="text-sm text-muted-foreground">What we stand for</p>
+                    <p className="text-sm text-muted-foreground">
+                      What we stand for
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    We&apos;re committed to building a sustainable, community-first platform that
-                    prioritizes creator rights, privacy, and meaningful connections.
+                    We&apos;re committed to building a sustainable,
+                    community-first platform that prioritizes creator rights,
+                    privacy, and meaningful connections.
                   </p>
                   <p>
-                    Every feature we build is designed to make your writing journey
-                    smoother, more enjoyable, and more impactful.
+                    Every feature we build is designed to make your writing
+                    journey smoother, more enjoyable, and more impactful.
                   </p>
                 </div>
               </CardContent>
@@ -173,16 +186,30 @@ const MissionSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-16">
           {values.map((value, index) => {
             const colors = [
-              { bg: "from-yellow-500/10 to-orange-500/10", border: "border-yellow-500/20" },
-              { bg: "from-emerald-500/10 to-teal-500/10", border: "border-emerald-500/20" },
-              { bg: "from-orange-500/10 to-red-500/10", border: "border-orange-500/20" },
-              { bg: "from-red-500/10 to-pink-500/10", border: "border-red-500/20" }
+              {
+                bg: "from-yellow-500/10 to-orange-500/10",
+                border: "border-yellow-500/20",
+              },
+              {
+                bg: "from-emerald-500/10 to-teal-500/10",
+                border: "border-emerald-500/20",
+              },
+              {
+                bg: "from-orange-500/10 to-red-500/10",
+                border: "border-orange-500/20",
+              },
+              {
+                bg: "from-red-500/10 to-pink-500/10",
+                border: "border-red-500/20",
+              },
             ][index % 4];
 
             return (
               <div key={value.title} className="group">
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50 rounded-2xl p-6 h-full transition-all duration-300 hover:-translate-y-1">
-                  <CardContent className={`p-6 rounded-xl bg-linear-to-br ${colors.bg} ${colors.border} border space-y-4`}>
+                  <CardContent
+                    className={`p-6 rounded-xl bg-linear-to-br ${colors.bg} ${colors.border} border space-y-4`}
+                  >
                     <motion.div
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.6 }}
@@ -191,7 +218,9 @@ const MissionSection = () => {
                       {value.icon}
                     </motion.div>
                     <h4 className="text-lg font-semibold">{value.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{value.description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {value.description}
+                    </p>
                   </CardContent>
                 </Card>
               </div>
@@ -206,29 +235,28 @@ const MissionSection = () => {
             </h3>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
               Whether you&apos;re a writer, storyteller, or simply someone who
-              believes in the power of shared ideas, there&apos;s a place for you here.
+              believes in the power of shared ideas, there&apos;s a place for
+              you here.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                asChild
                 size="lg"
                 className="bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-6 rounded-full transition-all duration-300 hover:scale-105"
+                render={<Link href="/register" />}
+                nativeButton={false}
               >
-                <Link href="/register">
-                  <Users className="mr-2 h-5 w-5" />
-                  Become a Creator
-                </Link>
+                <Users className="mr-2 h-5 w-5" />
+                Become a Creator
               </Button>
               <Button
-                asChild
                 variant="outline"
                 size="lg"
                 className="px-8 py-6 rounded-full transition-all duration-300 hover:scale-105"
+                render={<Link href="/explore" />}
+                nativeButton={false}
               >
-                <Link href="/explore">
-                  Explore Stories
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+                Explore Stories
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
           </div>

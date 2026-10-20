@@ -122,32 +122,30 @@ export default function NotFound() {
             Oops! This page went on an adventure
           </h1>
           <p className="mx-auto mt-4 max-w-md animate-in fade-in-0 slide-in-from-bottom-2 text-base leading-relaxed text-pretty text-muted-foreground duration-500 delay-100 sm:text-lg lg:mx-0">
-            The link might be broken, the post was deleted, or it never
-            existed. Let&apos;s get you back to great stories.
+            The link might be broken, the post was deleted, or it never existed.
+            Let&apos;s get you back to great stories.
           </p>
 
           <div className="mt-7 flex animate-in fade-in-0 slide-in-from-bottom-2 flex-col gap-3 duration-500 delay-150 sm:flex-row sm:justify-center lg:justify-start">
             <Button
-              asChild
               size="lg"
               className="h-12 rounded-xl px-6 text-sm font-semibold"
+              render={<Link href="/" />}
+              nativeButton={false}
             >
-              <Link href="/">
-                <House className="size-4" aria-hidden />
-                Back to home
-                <ArrowRight className="size-4" aria-hidden />
-              </Link>
+              <House className="size-4" aria-hidden />
+              Back to home
+              <ArrowRight className="size-4" aria-hidden />
             </Button>
             <Button
-              asChild
               variant="outline"
               size="lg"
               className="h-12 rounded-xl border-border/80 bg-background/60 px-6 text-sm font-semibold backdrop-blur hover:border-primary/30"
+              render={<Link href="/blog" />}
+              nativeButton={false}
             >
-              <Link href="/blog">
-                <BookOpenText className="size-4" aria-hidden />
-                Explore articles
-              </Link>
+              <BookOpenText className="size-4" aria-hidden />
+              Explore articles
             </Button>
           </div>
 

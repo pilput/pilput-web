@@ -53,15 +53,20 @@ function DefaultErrorFallback({ error, reset }: { error?: Error; reset: () => vo
           </div>
           <CardTitle className="text-xl">Something went wrong</CardTitle>
           <CardDescription>
-            {error?.message || "An unexpected error occurred. Please try again."}
+            {error?.message ||
+              "An unexpected error occurred. Please try again."}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <Button onClick={reset} className="mr-2">
             Try again
           </Button>
-          <Button variant="outline" asChild>
-            <Link href="/">Go home</Link>
+          <Button
+            variant="outline"
+            render={<Link href="/" />}
+            nativeButton={false}
+          >
+            Go home
           </Button>
         </CardContent>
       </Card>

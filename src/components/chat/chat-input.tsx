@@ -83,22 +83,27 @@ export function ChatInput({
               </div>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      type="submit"
-                      size="icon"
-                      className="h-10 w-10 shrink-0 rounded-lg bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-transparent disabled:text-muted-foreground"
-                      disabled={isDisabled || !message.trim()}
-                    >
-                      {isDisabled ? (
-                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
-                      ) : (
-                        <Send className="h-4 w-4" aria-hidden="true" />
-                      )}
-                      <span className="sr-only">Send message</span>
-                    </Button>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        type="submit"
+                        size="icon"
+                        className="h-10 w-10 shrink-0 rounded-lg bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring transition-all disabled:bg-transparent disabled:text-muted-foreground"
+                        disabled={isDisabled || !message.trim()}
+                      />
+                    }
+                  >
+                    {isDisabled ? (
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+                    ) : (
+                      <Send className="h-4 w-4" aria-hidden="true" />
+                    )}
+                    <span className="sr-only">Send message</span>
                   </TooltipTrigger>
-                  <TooltipContent side="top" className="flex items-center gap-2">
+                  <TooltipContent
+                    side="top"
+                    className="flex items-center gap-2"
+                  >
                     {message.trim() ? (
                       <>
                         <span>Send with {selectedModelName}</span>

@@ -15,7 +15,9 @@ const AboutMe = () => {
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet the Creator</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Meet the Creator
+            </h2>
             <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
           </div>
 
@@ -29,8 +31,8 @@ const AboutMe = () => {
             >
               <div className="relative z-10 bg-card border border-border rounded-2xl p-2 transition-transform duration-300 group-hover:scale-[1.02]">
                 <div className="relative aspect-square rounded-xl overflow-hidden bg-muted">
-                  <Image 
-                    src="https://avatars.githubusercontent.com/u/48351693?v=4" 
+                  <Image
+                    src="https://avatars.githubusercontent.com/u/48351693?v=4"
                     alt="Cecep Januardi"
                     fill
                     className="object-cover"
@@ -51,7 +53,9 @@ const AboutMe = () => {
             >
               <div>
                 <h3 className="text-3xl font-bold mb-2">Cecep Januardi</h3>
-                <p className="text-xl text-primary font-medium">Full Stack Developer</p>
+                <p className="text-xl text-primary font-medium">
+                  Full Stack Developer
+                </p>
                 <div className="flex items-center gap-2 text-muted-foreground mt-2">
                   <MapPin className="h-4 w-4" />
                   <span>West Sumatera, Indonesia</span>
@@ -59,9 +63,10 @@ const AboutMe = () => {
               </div>
 
               <p className="text-muted-foreground text-lg leading-relaxed">
-                I am a passionate Full Stack Developer specializing in building scalable web applications. 
-                With expertise in the JavaScript ecosystem and Go, I love creating open-source tools 
-                and platforms that help developers and creators.
+                I am a passionate Full Stack Developer specializing in building
+                scalable web applications. With expertise in the JavaScript
+                ecosystem and Go, I love creating open-source tools and
+                platforms that help developers and creators.
               </p>
 
               <div className="space-y-4">
@@ -70,8 +75,19 @@ const AboutMe = () => {
                   Tech Stack
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {["TypeScript", "Go", "React", "Next.js", "Laravel", "Node.js"].map((tech) => (
-                    <Badge key={tech} variant="secondary" className="px-3 py-1 hover:bg-primary/20 transition-colors cursor-default">
+                  {[
+                    "TypeScript",
+                    "Go",
+                    "React",
+                    "Next.js",
+                    "Laravel",
+                    "Node.js",
+                  ].map((tech) => (
+                    <Badge
+                      key={tech}
+                      variant="secondary"
+                      className="px-3 py-1 hover:bg-primary/20 transition-colors cursor-default"
+                    >
                       {tech}
                     </Badge>
                   ))}
@@ -79,25 +95,69 @@ const AboutMe = () => {
               </div>
 
               <div className="flex flex-wrap gap-4 pt-4">
-                <Button variant="outline" size="icon" asChild className="hover:text-primary hover:border-primary/50 transition-colors">
-                  <Link href="https://github.com/cecep31" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
-                    <GitHubIcon className="h-5 w-5" />
-                  </Link>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="hover:text-primary hover:border-primary/50 transition-colors"
+                  render={
+                    <Link
+                      href="https://github.com/cecep31"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="GitHub Profile"
+                    />
+                  }
+                  nativeButton={false}
+                >
+                  <GitHubIcon className="h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="icon" asChild className="hover:text-blue-600 hover:border-blue-600/50 transition-colors">
-                  <Link href="https://linkedin.com/in/cecep31/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
-                    <BriefcaseBusiness className="h-5 w-5" />
-                  </Link>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="hover:text-blue-600 hover:border-blue-600/50 transition-colors"
+                  render={
+                    <Link
+                      href="https://linkedin.com/in/cecep31/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="LinkedIn Profile"
+                    />
+                  }
+                  nativeButton={false}
+                >
+                  <BriefcaseBusiness className="h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="icon" asChild className="hover:text-foreground hover:border-foreground/50 transition-colors">
-                  <Link href="https://x.com/cecep_januardi" target="_blank" rel="noopener noreferrer" aria-label="X profile">
-                    <XIcon className="h-5 w-5" />
-                  </Link>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="hover:text-foreground hover:border-foreground/50 transition-colors"
+                  render={
+                    <Link
+                      href="https://x.com/cecep_januardi"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="X profile"
+                    />
+                  }
+                  nativeButton={false}
+                >
+                  <XIcon className="h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="icon" asChild className="hover:text-purple-500 hover:border-purple-500/50 transition-colors">
-                  <Link href="https://pilput.net" target="_blank" rel="noopener noreferrer" aria-label="Personal Website">
-                    <Globe className="h-5 w-5" />
-                  </Link>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="hover:text-purple-500 hover:border-purple-500/50 transition-colors"
+                  render={
+                    <Link
+                      href="https://pilput.net"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Personal Website"
+                    />
+                  }
+                  nativeButton={false}
+                >
+                  <Globe className="h-5 w-5" />
                 </Button>
               </div>
             </motion.div>

@@ -78,7 +78,7 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
             <RefreshCw
               className={cn(
                 "h-4 w-4 transition-transform duration-300",
-                isRefreshing && "animate-spin"
+                isRefreshing && "animate-spin",
               )}
             />
             Refresh
@@ -99,11 +99,15 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
       {!isLoading && posts.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <p className="text-muted-foreground text-sm mb-4">No posts found</p>
-          <Button asChild size="sm" variant="outline" className="gap-2 rounded-md">
-            <Link href="/blog">
-              Browse Blog
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-2 rounded-md"
+            render={<Link href="/blog" />}
+            nativeButton={false}
+          >
+            Browse Blog
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       )}
@@ -112,15 +116,14 @@ const PostsRandomList = ({ showHeader = true }: { showHeader?: boolean }) => {
       {!isLoading && posts.length > 0 && (
         <div className="flex justify-center mt-8">
           <Button
-            asChild
             variant="outline"
             size="lg"
             className="gap-2 rounded-md px-8"
+            render={<Link href="/blog" />}
+            nativeButton={false}
           >
-            <Link href="/blog">
-              Explore More Posts
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            Explore More Posts
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       )}

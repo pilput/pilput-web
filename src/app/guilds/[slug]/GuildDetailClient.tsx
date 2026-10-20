@@ -253,12 +253,21 @@ export default function GuildDetailClient({
           {!isLoggedIn && " Signing in may help."}
         </p>
         <div className="flex items-center justify-center gap-2 pt-2">
-          <Button asChild variant="secondary" className="cursor-pointer">
-            <Link href="/guilds">Browse guilds</Link>
+          <Button
+            variant="secondary"
+            className="cursor-pointer"
+            render={<Link href="/guilds" />}
+            nativeButton={false}
+          >
+            Browse guilds
           </Button>
           {!isLoggedIn && (
-            <Button asChild className="cursor-pointer">
-              <Link href={`/login?redirect=/guilds/${slug}`}>Sign in</Link>
+            <Button
+              className="cursor-pointer"
+              render={<Link href={`/login?redirect=/guilds/${slug}`} />}
+              nativeButton={false}
+            >
+              Sign in
             </Button>
           )}
         </div>
@@ -274,17 +283,23 @@ export default function GuildDetailClient({
   let primaryAction: React.ReactNode = null;
   if (!isLoggedIn) {
     primaryAction = (
-      <Button asChild className="cursor-pointer">
-        <Link href={`/login?redirect=/guilds/${guild.slug}`}>Sign in to join</Link>
+      <Button
+        className="cursor-pointer"
+        render={<Link href={`/login?redirect=/guilds/${guild.slug}`} />}
+        nativeButton={false}
+      >
+        Sign in to join
       </Button>
     );
   } else if (isMember) {
     primaryAction = (
-      <Button asChild className="cursor-pointer gap-1.5">
-        <Link href={`/guilds/${guild.slug}/chat`}>
-          <MessagesSquare className="w-4 h-4" />
-          Open chat
-        </Link>
+      <Button
+        className="cursor-pointer gap-1.5"
+        render={<Link href={`/guilds/${guild.slug}/chat`} />}
+        nativeButton={false}
+      >
+        <MessagesSquare className="w-4 h-4" />
+        Open chat
       </Button>
     );
   } else if (guild.is_public) {
@@ -358,26 +373,34 @@ export default function GuildDetailClient({
               {primaryAction}
               {hasMenu && (
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="icon"
-                      className="cursor-pointer"
-                      aria-label="Guild options"
-                    >
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="icon"
+                        className="cursor-pointer"
+                        aria-label="Guild options"
+                      />
+                    }
+                  >
+                    <MoreHorizontal className="w-4 h-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     {canManage && (
-                      <DropdownMenuItem className="cursor-pointer" onSelect={() => setEditOpen(true)}>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onSelect={() => setEditOpen(true)}
+                      >
                         <Settings />
                         Guild settings
                       </DropdownMenuItem>
                     )}
                     {isMember && !isOwner && (
-                      <DropdownMenuItem className="cursor-pointer" onSelect={() => setLeaveOpen(true)}>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onSelect={() => setLeaveOpen(true)}
+                      >
                         <LogOut />
                         Leave guild
                       </DropdownMenuItem>
@@ -457,7 +480,9 @@ export default function GuildDetailClient({
                 </span>
                 <div className="min-w-0">
                   <dt className="text-xs text-muted-foreground">{label}</dt>
-                  <dd className="text-sm font-medium capitalize truncate">{value}</dd>
+                  <dd className="text-sm font-medium capitalize truncate">
+                    {value}
+                  </dd>
                 </div>
               </div>
             ))}

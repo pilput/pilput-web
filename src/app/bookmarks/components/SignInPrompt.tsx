@@ -11,15 +11,24 @@ export function SignInPrompt() {
           <div className="mx-auto w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
             <Bookmark className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Your Reading List</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Your Reading List
+          </h1>
           <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-            Keep track of articles, thoughts, and stories you want to read later. Sign in to save posts to your private library.
+            Keep track of articles, thoughts, and stories you want to read
+            later. Sign in to save posts to your private library.
           </p>
           <div className="pt-2">
-            <Button asChild className="w-full sm:w-auto px-8 py-5 font-semibold cursor-pointer">
-              <Link href={`/login?redirect=${encodeURIComponent("/bookmarks")}`}>
-                Sign in to Pilput
-              </Link>
+            <Button
+              className="w-full sm:w-auto px-8 py-5 font-semibold cursor-pointer"
+              render={
+                <Link
+                  href={`/login?redirect=${encodeURIComponent("/bookmarks")}`}
+                />
+              }
+              nativeButton={false}
+            >
+              Sign in to Pilput
             </Button>
           </div>
         </div>

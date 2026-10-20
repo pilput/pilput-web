@@ -192,11 +192,13 @@ export default function ManageTags() {
           </p>
         </div>
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0">
-              <Plus className="h-4 w-4" />
-              Create tag
-            </Button>
+          <DialogTrigger
+            render={
+              <Button className="flex items-center gap-2 w-full sm:w-auto font-semibold shrink-0" />
+            }
+          >
+            <Plus className="h-4 w-4" />
+            Create tag
           </DialogTrigger>
           <DialogContent className="max-w-[95vw] sm:max-w-md">
             <DialogHeader>
@@ -387,7 +389,10 @@ export default function ManageTags() {
                         </TableCell>
                         <TableCell className="text-right">
                           {tag.id !== undefined && (
-                            <TagActionComponent tag={tag} refetchTags={fetchTags} />
+                            <TagActionComponent
+                              tag={tag}
+                              refetchTags={fetchTags}
+                            />
                           )}
                         </TableCell>
                       </TableRow>

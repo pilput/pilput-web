@@ -184,7 +184,10 @@ function PostsContent() {
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
               Posts Management
             </h1>
-            <Badge variant="secondary" className="font-semibold text-xs py-0.5 px-2.5 bg-muted/65 hover:bg-muted/80 text-muted-foreground border border-border/60 rounded-full transition-colors shrink-0">
+            <Badge
+              variant="secondary"
+              className="font-semibold text-xs py-0.5 px-2.5 bg-muted/65 hover:bg-muted/80 text-muted-foreground border border-border/60 rounded-full transition-colors shrink-0"
+            >
               {poststore.total} posts
             </Badge>
           </div>
@@ -229,194 +232,225 @@ function PostsContent() {
           <div className="overflow-x-auto -mx-2 sm:-mx-4 md:-mx-6">
             <div className="min-w-[880px] px-2 sm:px-4 md:px-6">
               <TooltipProvider>
-              <Table>
-                <TableCaption className="pb-4">Total {poststore.total} posts found</TableCaption>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">#</TableHead>
-                    <TableHead className="min-w-[200px]">Title</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">Slug</TableHead>
-                    <TableHead className="hidden lg:table-cell">Created</TableHead>
-                    <TableHead className="hidden lg:table-cell">Updated</TableHead>
-                    <TableHead className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span>Views</span>
-                      </div>
-                    </TableHead>
-                    <TableHead className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Bookmark className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span>Bookmarks</span>
-                      </div>
-                    </TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell>
-                          <Skeleton className="h-4 w-6" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4 w-[220px]" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-6 w-20" />
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          <Skeleton className="h-4 w-[120px]" />
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          <Skeleton className="h-4 w-24" />
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell">
-                          <Skeleton className="h-4 w-24" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="mx-auto h-4 w-10" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="mx-auto h-4 w-10" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="ml-auto h-8 w-16" />
+                <Table>
+                  <TableCaption className="pb-4">
+                    Total {poststore.total} posts found
+                  </TableCaption>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">#</TableHead>
+                      <TableHead className="min-w-[200px]">Title</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Slug
+                      </TableHead>
+                      <TableHead className="hidden lg:table-cell">
+                        Created
+                      </TableHead>
+                      <TableHead className="hidden lg:table-cell">
+                        Updated
+                      </TableHead>
+                      <TableHead className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span>Views</span>
+                        </div>
+                      </TableHead>
+                      <TableHead className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Bookmark className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span>Bookmarks</span>
+                        </div>
+                      </TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isLoading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell>
+                            <Skeleton className="h-4 w-6" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-[220px]" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-6 w-20" />
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <Skeleton className="h-4 w-[120px]" />
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <Skeleton className="h-4 w-24" />
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <Skeleton className="h-4 w-24" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="mx-auto h-4 w-10" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="mx-auto h-4 w-10" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="ml-auto h-8 w-16" />
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : hasError ? (
+                      <TableRow>
+                        <TableCell colSpan={9} className="py-4">
+                          <EmptyState
+                            icon={RotateCcw}
+                            title="Failed to load posts"
+                            description="Something went wrong while fetching your posts. Please try again."
+                            actions={[
+                              { label: "Retry", onClick: refetchPosts },
+                            ]}
+                          />
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : hasError ? (
-                    <TableRow>
-                      <TableCell colSpan={9} className="py-4">
-                        <EmptyState
-                          icon={RotateCcw}
-                          title="Failed to load posts"
-                          description="Something went wrong while fetching your posts. Please try again."
-                          actions={[
-                            { label: "Retry", onClick: refetchPosts },
-                          ]}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ) : filteredPosts.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={9} className="py-4">
-                        <EmptyState
-                          icon={FileSearch}
-                          title={
-                            hasActiveFilter
-                              ? "No posts match your filters"
-                              : "No posts yet"
-                          }
-                          description={
-                            hasActiveFilter
-                              ? "Try a different keyword or status filter."
-                              : "Write your first article to get started."
-                          }
-                          actions={
-                            hasActiveFilter
-                              ? [
-                                  {
-                                    label: "Clear filters",
-                                    variant: "outline",
-                                    onClick: clearFilters,
-                                  },
-                                  {
-                                    label: "Add new post",
-                                    href: "/dashboard/posts/create",
-                                  },
-                                ]
-                              : [
-                                  {
-                                    label: "Add new post",
-                                    href: "/dashboard/posts/create",
-                                  },
-                                ]
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredPosts.map((post) => (
-                    <TableRow key={post.id}>
-                      <TableCell className="font-medium">
-                        {poststore.posts.indexOf(post) + 1 + offset}
-                      </TableCell>
-                      <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="max-w-[200px] sm:max-w-[300px] md:max-w-[400px] truncate font-medium">
-                              {post.title}
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-[320px] break-words">{post.title}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell>
-                        {post.hidden_at ? (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Badge variant="destructive">Hidden</Badge>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-[260px]">
-                                A moderator hid this post after reports. It is not visible to
-                                readers.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        ) : post.published ? (
-                          <Badge
-                            variant="default"
-                            className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"
-                          >
-                            Published
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="outline"
-                            className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
-                          >
-                            Draft
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <code className="block max-w-[150px] lg:max-w-[280px] truncate rounded bg-muted px-1.5 py-0.5 text-[11px] font-mono text-muted-foreground">
-                              /{post.slug}
-                            </code>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-[320px] break-all">/{post.slug}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
-                        {post.created_at ? format(new Date(post.created_at), "MMM dd, yyyy") : "Draft"}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
-                        {post.updated_at ? format(new Date(post.updated_at), "MMM dd, yyyy") : "-"}
-                      </TableCell>
-                      <TableCell className="text-center tabular-nums">
-                        {post.view_count ?? 0}
-                      </TableCell>
-                      <TableCell className="text-center tabular-nums">
-                        {post.bookmark_count ?? 0}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <ActionComponent post={post} refetchPosts={refetchPosts} />
-                      </TableCell>
-                    </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                    ) : filteredPosts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={9} className="py-4">
+                          <EmptyState
+                            icon={FileSearch}
+                            title={
+                              hasActiveFilter
+                                ? "No posts match your filters"
+                                : "No posts yet"
+                            }
+                            description={
+                              hasActiveFilter
+                                ? "Try a different keyword or status filter."
+                                : "Write your first article to get started."
+                            }
+                            actions={
+                              hasActiveFilter
+                                ? [
+                                    {
+                                      label: "Clear filters",
+                                      variant: "outline",
+                                      onClick: clearFilters,
+                                    },
+                                    {
+                                      label: "Add new post",
+                                      href: "/dashboard/posts/create",
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      label: "Add new post",
+                                      href: "/dashboard/posts/create",
+                                    },
+                                  ]
+                            }
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredPosts.map((post) => (
+                        <TableRow key={post.id}>
+                          <TableCell className="font-medium">
+                            {poststore.posts.indexOf(post) + 1 + offset}
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip>
+                              <TooltipTrigger
+                                render={
+                                  <div className="max-w-[200px] sm:max-w-[300px] md:max-w-[400px] truncate font-medium" />
+                                }
+                              >
+                                {post.title}
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-[320px] break-words">
+                                  {post.title}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            {post.hidden_at ? (
+                              <Tooltip>
+                                <TooltipTrigger
+                                  render={<Badge variant="destructive" />}
+                                >
+                                  Hidden
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="max-w-[260px]">
+                                    A moderator hid this post after reports. It
+                                    is not visible to readers.
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : post.published ? (
+                              <Badge
+                                variant="default"
+                                className="border-0 bg-emerald-600 text-white dark:bg-emerald-500"
+                              >
+                                Published
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant="outline"
+                                className="border-amber-500/50 bg-amber-500/10 text-amber-800 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200"
+                              >
+                                Draft
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <Tooltip>
+                              <TooltipTrigger
+                                render={
+                                  <code className="block max-w-[150px] lg:max-w-[280px] truncate rounded bg-muted px-1.5 py-0.5 text-[11px] font-mono text-muted-foreground" />
+                                }
+                              >
+                                /{post.slug}
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-[320px] break-all">
+                                  /{post.slug}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
+                            {post.created_at
+                              ? format(
+                                  new Date(post.created_at),
+                                  "MMM dd, yyyy",
+                                )
+                              : "Draft"}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground whitespace-nowrap text-sm hidden lg:table-cell">
+                            {post.updated_at
+                              ? format(
+                                  new Date(post.updated_at),
+                                  "MMM dd, yyyy",
+                                )
+                              : "-"}
+                          </TableCell>
+                          <TableCell className="text-center tabular-nums">
+                            {post.view_count ?? 0}
+                          </TableCell>
+                          <TableCell className="text-center tabular-nums">
+                            {post.bookmark_count ?? 0}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <ActionComponent
+                              post={post}
+                              refetchPosts={refetchPosts}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
               </TooltipProvider>
             </div>
           </div>

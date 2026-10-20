@@ -90,11 +90,14 @@ export default function ProfileFollowActions({
   return (
     <div className="flex items-center gap-2">
       {authChecked && isOwnProfile ? (
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/account">
-            <Edit2 className="w-4 h-4 mr-2" />
-            Edit Profile
-          </Link>
+        <Button
+          variant="outline"
+          size="sm"
+          render={<Link href="/account" />}
+          nativeButton={false}
+        >
+          <Edit2 className="w-4 h-4 mr-2" />
+          Edit Profile
         </Button>
       ) : authChecked && !isOwnProfile ? (
         hasSession() ? (
@@ -114,25 +117,25 @@ export default function ProfileFollowActions({
             {isFollowing ? "Following" : "Follow"}
           </Button>
         ) : (
-          <Button variant="default" size="sm" asChild>
-            <Link href={loginHref}>
-              <UserPlus className="w-4 h-4 mr-2" />
-              Follow
-            </Link>
+          <Button
+            variant="default"
+            size="sm"
+            render={<Link href={loginHref} />}
+            nativeButton={false}
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            Follow
           </Button>
         )
       ) : (
         <Button variant="outline" size="sm" disabled className="min-w-[120px]">
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          …
+          <Loader2 className="w-4 h-4 mr-2 animate-spin" />…
         </Button>
       )}
 
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+        <DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
+          <MoreHorizontal className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem className="cursor-pointer">

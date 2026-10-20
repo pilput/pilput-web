@@ -51,15 +51,19 @@ export default function HoldingHeader({
       {showOverviewLink && (
         <div className="mt-3 ml-12 sm:ml-[52px]">
           <Button
-            asChild
             variant="link"
             size="sm"
             className="h-auto p-0 text-xs sm:text-sm font-medium text-primary hover:text-primary/80"
+            render={
+              <Link
+                href="/dashboard/holdings/overview"
+                className="inline-flex items-center gap-1.5"
+              />
+            }
+            nativeButton={false}
           >
-            <Link href="/dashboard/holdings/overview" className="inline-flex items-center gap-1.5">
-              <BarChart3 className="w-3.5 h-3.5" />
-              Open portfolio overview
-            </Link>
+            <BarChart3 className="w-3.5 h-3.5" />
+            Open portfolio overview
           </Button>
         </div>
       )}

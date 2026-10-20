@@ -153,12 +153,16 @@ function GuildRail() {
   const viewing = routeGuild && !myGuilds.some((g) => g.slug === routeGuild.slug) ? routeGuild : null;
 
   return (
-    <TooltipProvider delayDuration={200}>
+    <TooltipProvider delay={200}>
       <nav
         aria-label="Guilds"
         className="flex h-full w-16 shrink-0 flex-col items-center gap-2 overflow-y-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <RailItem href="/guilds" label="Explore guilds" active={!route.slug && pathname === "/guilds"}>
+        <RailItem
+          href="/guilds"
+          label="Explore guilds"
+          active={!route.slug && pathname === "/guilds"}
+        >
           <span className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background transition-[border-radius] group-hover/rail:rounded-lg">
             <Compass className="size-5" />
           </span>
@@ -171,9 +175,15 @@ function GuildRail() {
         {ready &&
           isLoggedIn &&
           (myGuildsLoading && myGuilds.length === 0
-            ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="size-10 shrink-0 rounded-xl" />)
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="size-10 shrink-0 rounded-xl" />
+              ))
             : myGuilds.map((guild) => (
-                <GuildRailItem key={guild.id} guild={guild} active={guild.slug === route.slug} />
+                <GuildRailItem
+                  key={guild.id}
+                  guild={guild}
+                  active={guild.slug === route.slug}
+                />
               )))}
       </nav>
     </TooltipProvider>
@@ -216,15 +226,17 @@ function RailItem({
         )}
       />
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Link
-            href={href}
-            aria-label={label}
-            aria-current={active ? "page" : undefined}
-            className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-          >
-            {children}
-          </Link>
+        <TooltipTrigger
+          render={
+            <Link
+              href={href}
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
+              className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+            />
+          }
+        >
+          {children}
         </TooltipTrigger>
         <TooltipContent side="right">{label}</TooltipContent>
       </Tooltip>
@@ -506,27 +518,36 @@ function ChannelRow({
         {unread && (
           <span
             aria-label="Unread messages"
-            className={cn("size-1.5 shrink-0 rounded-full bg-foreground", canManage && "group-hover/channel:hidden")}
+            className={cn(
+              "size-1.5 shrink-0 rounded-full bg-foreground",
+              canManage && "group-hover/channel:hidden",
+            )}
           />
         )}
       </Link>
       {canManage && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label={`Manage #${channel.name}`}
-              className="absolute right-1 top-1/2 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-muted-foreground opacity-0 hover:bg-sidebar-border hover:text-foreground focus-visible:opacity-100 group-hover/channel:opacity-100 data-[state=open]:opacity-100"
-            >
-              <MoreHorizontal className="size-3.5" />
-            </button>
+          <DropdownMenuTrigger
+            render={
+              <button
+                type="button"
+                aria-label={`Manage #${channel.name}`}
+                className="absolute right-1 top-1/2 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-muted-foreground opacity-0 hover:bg-sidebar-border hover:text-foreground focus-visible:opacity-100 group-hover/channel:opacity-100 data-open:opacity-100"
+              />
+            }
+          >
+            <MoreHorizontal className="size-3.5" />
           </DropdownMenuTrigger>
           <DropdownMenuContent side="right" align="start" className="w-40">
             <DropdownMenuItem className="cursor-pointer" onSelect={onEdit}>
               <Pencil />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" className="cursor-pointer" onSelect={onDelete}>
+            <DropdownMenuItem
+              variant="destructive"
+              className="cursor-pointer"
+              onSelect={onDelete}
+            >
               <Trash2 />
               Delete
             </DropdownMenuItem>
@@ -572,57 +593,71 @@ function UserRow() {
   return (
     <div className="shrink-0 border-t border-sidebar-border p-2">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            type="button"
-            className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-md px-2 text-left transition-colors hover:bg-sidebar-accent/60 data-[state=open]:bg-sidebar-accent"
-          >
-            <Avatar className="size-6 rounded-md">
-              <AvatarImage className="rounded-md" src={getProfilePicture(user.image)} alt="" />
-              <AvatarFallback className="rounded-md text-[10px] font-semibold">
-                {(user.username?.[0] || "U").toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <span className="min-w-0 flex-1 truncate font-medium">{displayName}</span>
-            <Settings className="size-3.5 shrink-0 text-muted-foreground" />
-          </button>
+        <DropdownMenuTrigger
+          render={
+            <button
+              type="button"
+              className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-md px-2 text-left transition-colors hover:bg-sidebar-accent/60 data-open:bg-sidebar-accent"
+            />
+          }
+        >
+          <Avatar className="size-6 rounded-md">
+            <AvatarImage
+              className="rounded-md"
+              src={getProfilePicture(user.image)}
+              alt=""
+            />
+            <AvatarFallback className="rounded-md text-[10px] font-semibold">
+              {(user.username?.[0] || "U").toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <span className="min-w-0 flex-1 truncate font-medium">
+            {displayName}
+          </span>
+          <Settings className="size-3.5 shrink-0 text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side="top"
           align="start"
           sideOffset={6}
-          className="w-(--radix-dropdown-menu-trigger-width) min-w-52"
+          className="w-(--anchor-width) min-w-52"
         >
           <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
             {user.username ? `@${user.username}` : displayName}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href={`/${user.username}`} className="cursor-pointer">
-              <UserIcon />
-              Profile
-            </Link>
+          <DropdownMenuItem
+            render={
+              <Link href={`/${user.username}`} className="cursor-pointer" />
+            }
+          >
+            <UserIcon />
+            Profile
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/dashboard" className="cursor-pointer">
-              <LayoutDashboard />
-              Dashboard
-            </Link>
+          <DropdownMenuItem
+            render={<Link href="/dashboard" className="cursor-pointer" />}
+          >
+            <LayoutDashboard />
+            Dashboard
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/account" className="cursor-pointer">
-              <Settings />
-              Account settings
-            </Link>
+          <DropdownMenuItem
+            render={<Link href="/account" className="cursor-pointer" />}
+          >
+            <Settings />
+            Account settings
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/" className="cursor-pointer">
-              <ArrowLeft />
-              Back to pilput
-            </Link>
+          <DropdownMenuItem
+            render={<Link href="/" className="cursor-pointer" />}
+          >
+            <ArrowLeft />
+            Back to pilput
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" className="cursor-pointer" onClick={handleLogout}>
+          <DropdownMenuItem
+            variant="destructive"
+            className="cursor-pointer"
+            onClick={handleLogout}
+          >
             <LogOut />
             Log out
           </DropdownMenuItem>

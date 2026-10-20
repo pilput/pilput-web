@@ -82,7 +82,9 @@ export function FolderSidebar({
         <h3 className="font-bold text-sm tracking-wide text-foreground/80 uppercase">
           Folders
         </h3>
-        {loadingFolders && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />}
+        {loadingFolders && (
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
+        )}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -92,7 +94,14 @@ export function FolderSidebar({
           label="All Bookmarks"
           count={totalCount}
           icon={
-            <Bookmark className={cn("w-4 h-4 shrink-0", selectedFolderId === "all" ? "text-primary fill-primary/10" : "text-muted-foreground/85")} />
+            <Bookmark
+              className={cn(
+                "w-4 h-4 shrink-0",
+                selectedFolderId === "all"
+                  ? "text-primary fill-primary/10"
+                  : "text-muted-foreground/85",
+              )}
+            />
           }
         />
 
@@ -102,7 +111,14 @@ export function FolderSidebar({
           label="Uncategorized"
           count={uncategorizedCount}
           icon={
-            <FolderOpen className={cn("w-4 h-4 shrink-0", selectedFolderId === "uncategorized" ? "text-primary fill-primary/10" : "text-muted-foreground/85")} />
+            <FolderOpen
+              className={cn(
+                "w-4 h-4 shrink-0",
+                selectedFolderId === "uncategorized"
+                  ? "text-primary fill-primary/10"
+                  : "text-muted-foreground/85",
+              )}
+            />
           }
         />
 
@@ -116,18 +132,28 @@ export function FolderSidebar({
                 label={f.name}
                 count={f.bookmark_count ?? 0}
                 icon={
-                  <Folder className={cn("w-4 h-4 shrink-0", selectedFolderId === f.id ? "text-primary fill-primary/10" : "text-muted-foreground/80")} />
+                  <Folder
+                    className={cn(
+                      "w-4 h-4 shrink-0",
+                      selectedFolderId === f.id
+                        ? "text-primary fill-primary/10"
+                        : "text-muted-foreground/80",
+                    )}
+                  />
                 }
                 actions={
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 opacity-0 group-hover:opacity-100 hover:bg-muted/80 rounded-md cursor-pointer transition-opacity"
-                      >
-                        <MoreVertical className="w-3.5 h-3.5" />
-                      </Button>
+                    <DropdownMenuTrigger
+                      onClick={(e) => e.stopPropagation()}
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 opacity-0 group-hover:opacity-100 hover:bg-muted/80 rounded-md cursor-pointer transition-opacity"
+                        />
+                      }
+                    >
+                      <MoreVertical className="w-3.5 h-3.5" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-40 text-left">
                       <DropdownMenuItem

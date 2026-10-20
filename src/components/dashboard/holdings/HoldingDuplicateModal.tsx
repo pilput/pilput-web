@@ -95,8 +95,18 @@ function HoldingDuplicateModalForm({
       <DialogHeader className="space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400 flex items-center justify-center">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
+              />
             </svg>
           </div>
           <div>
@@ -112,7 +122,12 @@ function HoldingDuplicateModalForm({
           <div className="space-y-3">
             <Label className="text-sm font-semibold">Source Period</Label>
             <div className="space-y-2">
-              <Label htmlFor="fromMonth" className="text-xs text-muted-foreground">Month</Label>
+              <Label
+                htmlFor="fromMonth"
+                className="text-xs text-muted-foreground"
+              >
+                Month
+              </Label>
               <Select
                 value={formData.fromMonth}
                 onValueChange={(val) =>
@@ -132,7 +147,12 @@ function HoldingDuplicateModalForm({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="fromYear" className="text-xs text-muted-foreground">Year</Label>
+              <Label
+                htmlFor="fromYear"
+                className="text-xs text-muted-foreground"
+              >
+                Year
+              </Label>
               <Input
                 id="fromYear"
                 type="number"
@@ -153,7 +173,12 @@ function HoldingDuplicateModalForm({
           <div className="space-y-3">
             <Label className="text-sm font-semibold">Target Period</Label>
             <div className="space-y-2">
-              <Label htmlFor="toMonth" className="text-xs text-muted-foreground">Month</Label>
+              <Label
+                htmlFor="toMonth"
+                className="text-xs text-muted-foreground"
+              >
+                Month
+              </Label>
               <Select
                 value={formData.toMonth}
                 onValueChange={(val) =>
@@ -173,7 +198,9 @@ function HoldingDuplicateModalForm({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="toYear" className="text-xs text-muted-foreground">Year</Label>
+              <Label htmlFor="toYear" className="text-xs text-muted-foreground">
+                Year
+              </Label>
               <Input
                 id="toYear"
                 type="number"
@@ -195,10 +222,23 @@ function HoldingDuplicateModalForm({
         <div className="flex items-center justify-between rounded-lg border p-4 bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/30">
           <div className="space-y-0.5 flex-1">
             <div className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="w-4 h-4 text-amber-600 dark:text-amber-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
-              <Label htmlFor="overwrite-mode" className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+              <Label
+                htmlFor="overwrite-mode"
+                className="text-sm font-semibold text-amber-900 dark:text-amber-100"
+              >
                 Overwrite target period
               </Label>
             </div>
@@ -212,7 +252,7 @@ function HoldingDuplicateModalForm({
             onCheckedChange={(checked) =>
               setFormData({ ...formData, overwrite: checked })
             }
-            className="data-[state=checked]:bg-amber-600"
+            className="data-checked:bg-amber-600"
           />
         </div>
 
@@ -229,8 +269,18 @@ function HoldingDuplicateModalForm({
             type="submit"
             className="min-w-[160px] gap-2 bg-violet-600 hover:bg-violet-700"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
+              />
             </svg>
             Duplicate Holdings
           </Button>

@@ -84,20 +84,27 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                 </Link>
                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                   <ClockIcon className="w-3 h-3 opacity-70" />
-                  <span>{post.created_at ? format(new Date(post.created_at), "MMMM d, yyyy") : "Draft"}</span>
+                  <span>
+                    {post.created_at
+                      ? format(new Date(post.created_at), "MMMM d, yyyy")
+                      : "Draft"}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Title & Excerpt */}
             <div className="space-y-2">
-              <Link href={`/${post.user?.username || "anonymous"}/${post.slug || ""}`}>
+              <Link
+                href={`/${post.user?.username || "anonymous"}/${post.slug || ""}`}
+              >
                 <h2 className="font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-tight leading-snug text-foreground group-hover:text-primary transition-colors duration-300">
                   {post.title || "Untitled"}
                 </h2>
               </Link>
               <p className="text-xs sm:text-sm text-muted-foreground/95 leading-relaxed line-clamp-3">
-                {plaintext.slice(0, 180)}{plaintext.length > 180 ? "..." : ""}
+                {plaintext.slice(0, 180)}
+                {plaintext.length > 180 ? "..." : ""}
               </p>
             </div>
 
@@ -114,12 +121,14 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                   </Link>
                 ))}
                 {tags.length > 3 && (
-                  <TooltipProvider delayDuration={200}>
+                  <TooltipProvider delay={200}>
                     <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="text-[10px] text-muted-foreground px-1.5 py-0.5 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2">
-                          +{tags.length - 3} more
-                        </span>
+                      <TooltipTrigger
+                        render={
+                          <span className="text-[10px] text-muted-foreground px-1.5 py-0.5 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2" />
+                        }
+                      >
+                        +{tags.length - 3} more
                       </TooltipTrigger>
                       <TooltipContent side="top" className="max-w-xs text-left">
                         <p className="mb-1 font-medium text-background text-[11px]">

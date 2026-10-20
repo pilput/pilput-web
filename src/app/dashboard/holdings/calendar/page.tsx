@@ -97,17 +97,27 @@ export default function CorporateActionsCalendarPage() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <Button variant="ghost" size="icon" className="shrink-0 -ml-2" asChild>
-              <Link href="/dashboard/holdings/overview" aria-label="Back to overview">
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0 -ml-2"
+              render={
+                <Link
+                  href="/dashboard/holdings/overview"
+                  aria-label="Back to overview"
+                />
+              }
+              nativeButton={false}
+            >
+              <ArrowLeft className="w-4 h-4" />
             </Button>
             <div className="min-w-0">
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
                 Corporate Actions Calendar
               </h1>
               <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
-                Dividend ex-dates and RUPS meetings for stocks on the IDX exchange.
+                Dividend ex-dates and RUPS meetings for stocks on the IDX
+                exchange.
               </p>
             </div>
           </div>
@@ -124,7 +134,10 @@ export default function CorporateActionsCalendarPage() {
 
         {/* Type filter + stats */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as TypeFilter)}>
+          <Tabs
+            value={typeFilter}
+            onValueChange={(v) => setTypeFilter(v as TypeFilter)}
+          >
             <TabsList>
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="dividend">Dividends</TabsTrigger>
@@ -135,7 +148,8 @@ export default function CorporateActionsCalendarPage() {
           <div className="flex flex-wrap gap-2">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium">
               <Coins className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-              {stats.dividendCount} dividend{stats.dividendCount === 1 ? "" : "s"}
+              {stats.dividendCount} dividend
+              {stats.dividendCount === 1 ? "" : "s"}
             </div>
             <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium">
               <Users className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
@@ -156,7 +170,7 @@ export default function CorporateActionsCalendarPage() {
         <div
           className={cn(
             "lg:col-span-2 min-w-0 transition-opacity relative",
-            isLoading && "opacity-60 pointer-events-none"
+            isLoading && "opacity-60 pointer-events-none",
           )}
           aria-busy={isLoading}
         >
@@ -178,7 +192,10 @@ export default function CorporateActionsCalendarPage() {
             onSelectDate={setSelectedDate}
           />
         </div>
-        <CorporateActionDayPanel date={selectedDate} actions={selectedActions} />
+        <CorporateActionDayPanel
+          date={selectedDate}
+          actions={selectedActions}
+        />
       </div>
     </div>
   );

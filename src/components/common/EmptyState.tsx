@@ -35,20 +35,20 @@ export function EmptyState({
       className={cn(
         "flex flex-col items-center justify-center text-center",
         compact ? "gap-2.5 py-8" : "gap-3 py-12",
-        className
+        className,
       )}
     >
       <div
         className={cn(
           "flex items-center justify-center rounded-full bg-muted/60 ring-1 ring-border/50",
-          compact ? "h-11 w-11" : "h-14 w-14"
+          compact ? "h-11 w-11" : "h-14 w-14",
         )}
         aria-hidden="true"
       >
         <Icon
           className={cn(
             "text-muted-foreground",
-            compact ? "h-5 w-5" : "h-6 w-6"
+            compact ? "h-5 w-5" : "h-6 w-6",
           )}
         />
       </div>
@@ -68,9 +68,10 @@ export function EmptyState({
                 key={action.label}
                 variant={action.variant ?? "default"}
                 size="sm"
-                asChild
+                render={<a href={action.href} />}
+                nativeButton={false}
               >
-                <a href={action.href}>{action.label}</a>
+                {action.label}
               </Button>
             ) : (
               <Button
@@ -81,7 +82,7 @@ export function EmptyState({
               >
                 {action.label}
               </Button>
-            )
+            ),
           )}
         </div>
       ) : null}

@@ -63,17 +63,19 @@ const DashboardTopBar = () => {
         <div className="flex items-center gap-1 md:gap-2 ml-auto">
           {/* Theme Toggle */}
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="relative rounded-md"
-                aria-label="Toggle theme"
-              >
-                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              </Button>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleTheme}
+                  className="relative rounded-md"
+                  aria-label="Toggle theme"
+                />
+              }
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </TooltipTrigger>
             <TooltipContent>
               <p>Toggle theme</p>
@@ -82,21 +84,23 @@ const DashboardTopBar = () => {
 
           {/* User Menu */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-10 w-10 rounded-full"
-              >
-                <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={getProfilePicture(user.image)}
-                    alt={`@${user.username}`}
-                  />
-                  <AvatarFallback>{user.username?.[0] || "U"}</AvatarFallback>
-                </Avatar>
-              </Button>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full"
+                />
+              }
+            >
+              <Avatar className="h-10 w-10">
+                <AvatarImage
+                  src={getProfilePicture(user.image)}
+                  alt={`@${user.username}`}
+                />
+                <AvatarFallback>{user.username?.[0] || "U"}</AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
@@ -108,26 +112,25 @@ const DashboardTopBar = () => {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/${user.username}`}
-                  className="cursor-pointer"
-                >
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </Link>
+              <DropdownMenuItem
+                render={
+                  <Link href={`/${user.username}`} className="cursor-pointer" />
+                }
+              >
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/account" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Account Settings</span>
-                </Link>
+              <DropdownMenuItem
+                render={<Link href="/account" className="cursor-pointer" />}
+              >
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Account Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/" className="cursor-pointer">
-                  <Home className="mr-2 h-4 w-4" />
-                  <span>Go Home</span>
-                </Link>
+              <DropdownMenuItem
+                render={<Link href="/" className="cursor-pointer" />}
+              >
+                <Home className="mr-2 h-4 w-4" />
+                <span>Go Home</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout} className="cursor-pointer">

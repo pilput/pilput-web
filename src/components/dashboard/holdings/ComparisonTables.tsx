@@ -24,12 +24,21 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
   };
 
   return (
-    <Accordion type="multiple" defaultValue={["type-breakdown", "platform-breakdown"]} className="w-full space-y-3 sm:space-y-4">
-      <AccordionItem value="type-breakdown" className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300 px-3 sm:px-4">
+    <Accordion
+      multiple
+      defaultValue={["type-breakdown", "platform-breakdown"]}
+      className="w-full space-y-3 sm:space-y-4"
+    >
+      <AccordionItem
+        value="type-breakdown"
+        className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300 px-3 sm:px-4"
+      >
         <AccordionTrigger className="hover:no-underline py-3 sm:py-4">
           <div className="flex items-center gap-2">
             <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
-            <span className="font-semibold text-xs sm:text-sm">Performance by Asset Type</span>
+            <span className="font-semibold text-xs sm:text-sm">
+              Performance by Asset Type
+            </span>
           </div>
         </AccordionTrigger>
         <AccordionContent>
@@ -38,30 +47,59 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-xs sm:text-sm">Type</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Invested</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Current Value</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Profit/Loss</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Previous Value</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Change</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Change %</TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Invested
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Current Value
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Profit/Loss
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Previous Value
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Change
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Change %
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {typeComparison && typeComparison.length > 0 ? (
                   typeComparison.map((item) => (
                     <TableRow key={item.name}>
-                      <TableCell className="font-medium text-xs sm:text-sm">{item.name}</TableCell>
-                      <TableCell className="text-right text-xs sm:text-sm">{formatNumber(item.to.invested)}</TableCell>
-                      <TableCell className="text-right font-bold text-xs sm:text-sm">{formatNumber(item.to.current)}</TableCell>
-                      <TableCell className={`text-right text-xs sm:text-sm ${getChangeColor(item.to.profitLoss)}`}>
-                        {item.to.profitLoss > 0 ? "+" : ""}{formatNumber(item.to.profitLoss)}
+                      <TableCell className="font-medium text-xs sm:text-sm">
+                        {item.name}
                       </TableCell>
-                      <TableCell className="text-right text-muted-foreground text-xs sm:text-sm">{formatNumber(item.from.current)}</TableCell>
-                      <TableCell className={`text-right text-xs sm:text-sm ${getChangeColor(item.currentValueDiff)}`}>
-                        {item.currentValueDiff > 0 ? "+" : ""}{formatNumber(item.currentValueDiff)}
+                      <TableCell className="text-right text-xs sm:text-sm">
+                        {formatNumber(item.to.invested)}
+                      </TableCell>
+                      <TableCell className="text-right font-bold text-xs sm:text-sm">
+                        {formatNumber(item.to.current)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right text-xs sm:text-sm ${getChangeColor(item.to.profitLoss)}`}
+                      >
+                        {item.to.profitLoss > 0 ? "+" : ""}
+                        {formatNumber(item.to.profitLoss)}
+                      </TableCell>
+                      <TableCell className="text-right text-muted-foreground text-xs sm:text-sm">
+                        {formatNumber(item.from.current)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right text-xs sm:text-sm ${getChangeColor(item.currentValueDiff)}`}
+                      >
+                        {item.currentValueDiff > 0 ? "+" : ""}
+                        {formatNumber(item.currentValueDiff)}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Badge variant="outline" className={`text-[10px] sm:text-xs ${getChangeColor(item.currentValueDiff)}`}>
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] sm:text-xs ${getChangeColor(item.currentValueDiff)}`}
+                        >
                           {formatPercentage(item.currentValueDiffPercentage)}
                         </Badge>
                       </TableCell>
@@ -69,7 +107,10 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground text-xs sm:text-sm py-4">
+                    <TableCell
+                      colSpan={7}
+                      className="text-center text-muted-foreground text-xs sm:text-sm py-4"
+                    >
                       No type breakdown available.
                     </TableCell>
                   </TableRow>
@@ -80,11 +121,16 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
         </AccordionContent>
       </AccordionItem>
 
-      <AccordionItem value="platform-breakdown" className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300 px-3 sm:px-4">
+      <AccordionItem
+        value="platform-breakdown"
+        className="glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-300 px-3 sm:px-4"
+      >
         <AccordionTrigger className="hover:no-underline py-3 sm:py-4">
           <div className="flex items-center gap-2">
             <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
-            <span className="font-semibold text-xs sm:text-sm">Performance by Platform</span>
+            <span className="font-semibold text-xs sm:text-sm">
+              Performance by Platform
+            </span>
           </div>
         </AccordionTrigger>
         <AccordionContent>
@@ -93,30 +139,60 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-xs sm:text-sm">Platform</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Invested</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Current Value</TableHead>
-                   <TableHead className="text-right text-xs sm:text-sm">Profit/Loss</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Previous Value</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Change</TableHead>
-                  <TableHead className="text-right text-xs sm:text-sm">Change %</TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Invested
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Current Value
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Profit/Loss
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Previous Value
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Change
+                  </TableHead>
+                  <TableHead className="text-right text-xs sm:text-sm">
+                    Change %
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.platformComparison && data.platformComparison.length > 0 ? (
+                {data.platformComparison &&
+                data.platformComparison.length > 0 ? (
                   data.platformComparison.map((item) => (
                     <TableRow key={item.name}>
-                      <TableCell className="font-medium text-xs sm:text-sm">{item.name}</TableCell>
-                      <TableCell className="text-right text-xs sm:text-sm">{formatNumber(item.to.invested)}</TableCell>
-                       <TableCell className="text-right font-bold text-xs sm:text-sm">{formatNumber(item.to.current)}</TableCell>
-                       <TableCell className={`text-right text-xs sm:text-sm ${getChangeColor(item.to.profitLoss)}`}>
-                        {item.to.profitLoss > 0 ? "+" : ""}{formatNumber(item.to.profitLoss)}
+                      <TableCell className="font-medium text-xs sm:text-sm">
+                        {item.name}
                       </TableCell>
-                      <TableCell className="text-right text-muted-foreground text-xs sm:text-sm">{formatNumber(item.from.current)}</TableCell>
-                      <TableCell className={`text-right text-xs sm:text-sm ${getChangeColor(item.currentValueDiff)}`}>
-                        {item.currentValueDiff > 0 ? "+" : ""}{formatNumber(item.currentValueDiff)}
+                      <TableCell className="text-right text-xs sm:text-sm">
+                        {formatNumber(item.to.invested)}
+                      </TableCell>
+                      <TableCell className="text-right font-bold text-xs sm:text-sm">
+                        {formatNumber(item.to.current)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right text-xs sm:text-sm ${getChangeColor(item.to.profitLoss)}`}
+                      >
+                        {item.to.profitLoss > 0 ? "+" : ""}
+                        {formatNumber(item.to.profitLoss)}
+                      </TableCell>
+                      <TableCell className="text-right text-muted-foreground text-xs sm:text-sm">
+                        {formatNumber(item.from.current)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right text-xs sm:text-sm ${getChangeColor(item.currentValueDiff)}`}
+                      >
+                        {item.currentValueDiff > 0 ? "+" : ""}
+                        {formatNumber(item.currentValueDiff)}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Badge variant="outline" className={`text-[10px] sm:text-xs ${getChangeColor(item.currentValueDiff)}`}>
+                        <Badge
+                          variant="outline"
+                          className={`text-[10px] sm:text-xs ${getChangeColor(item.currentValueDiff)}`}
+                        >
                           {formatPercentage(item.currentValueDiffPercentage)}
                         </Badge>
                       </TableCell>
@@ -124,7 +200,10 @@ export default function ComparisonTables({ data, hideValues = false }: Compariso
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground text-xs sm:text-sm py-4">
+                    <TableCell
+                      colSpan={7}
+                      className="text-center text-muted-foreground text-xs sm:text-sm py-4"
+                    >
                       No platform breakdown available.
                     </TableCell>
                   </TableRow>

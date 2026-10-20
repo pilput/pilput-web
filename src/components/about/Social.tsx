@@ -81,29 +81,32 @@ export default function Social() {
                     "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105 border-border/50 bg-card/50 backdrop-blur-sm",
                     social.hoverColor,
                   )}
-                  asChild
+                  render={
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full"
+                    />
+                  }
+                  nativeButton={false}
                 >
-                  <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full"
-                  >
-                    <div className="p-4 rounded-full bg-background/80 transition-all duration-300">
-                      <Icon
-                        className={cn(
-                          "h-8 w-8 transition-colors duration-300",
-                          social.color,
-                        )}
-                      />
-                    </div>
-                    <div className="space-y-1 text-center">
-                      <span className="font-bold text-lg text-foreground block">{social.name}</span>
-                      <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                        {social.description}
-                      </p>
-                    </div>
-                  </a>
+                  <div className="p-4 rounded-full bg-background/80 transition-all duration-300">
+                    <Icon
+                      className={cn(
+                        "h-8 w-8 transition-colors duration-300",
+                        social.color,
+                      )}
+                    />
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="font-bold text-lg text-foreground block">
+                      {social.name}
+                    </span>
+                    <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                      {social.description}
+                    </p>
+                  </div>
                 </Button>
               );
             })}

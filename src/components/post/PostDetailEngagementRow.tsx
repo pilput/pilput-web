@@ -55,17 +55,19 @@ export function PostDetailEngagementRow({
           "flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground",
         )}
       >
-        <TooltipProvider delayDuration={200}>
+        <TooltipProvider delay={200}>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <span
-                tabIndex={0}
-                className="cursor-default rounded-sm tabular-nums outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                {formatDistanceToNow(new Date(createdAt), {
-                  addSuffix: true,
-                })}
-              </span>
+            <TooltipTrigger
+              render={
+                <span
+                  tabIndex={0}
+                  className="cursor-default rounded-sm tabular-nums outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                />
+              }
+            >
+              {formatDistanceToNow(new Date(createdAt), {
+                addSuffix: true,
+              })}
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p>

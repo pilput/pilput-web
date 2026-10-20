@@ -209,16 +209,20 @@ export function MessageList({
           <ChannelIntro channel={channel} />
         )}
 
-        <TooltipProvider delayDuration={300}>
+        <TooltipProvider delay={300}>
           {messages.map((message, i) => {
             const prev = messages[i - 1];
             const newDay =
-              !!message.created_at && dayKey(message.created_at) !== dayKey(prev?.created_at ?? null);
+              !!message.created_at &&
+              dayKey(message.created_at) !== dayKey(prev?.created_at ?? null);
             const own = message.author_id === currentUserId;
             return (
               <Fragment key={message.id}>
                 {newDay && message.created_at && (
-                  <div className="mt-4 mb-1 flex items-center gap-3 px-4 sm:px-5" role="separator">
+                  <div
+                    className="mt-4 mb-1 flex items-center gap-3 px-4 sm:px-5"
+                    role="separator"
+                  >
                     <span className="text-xs font-semibold text-foreground/80">
                       {dayLabel(message.created_at)}
                     </span>

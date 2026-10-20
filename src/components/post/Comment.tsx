@@ -300,9 +300,11 @@ const Comment = ({ postId }: { postId: string }) => {
                         {data.user?.username || "Anonymous User"}
                       </span>
                       <span className="text-sm text-muted-foreground">
-                        {data.created_at ? formatDistanceToNow(new Date(data.created_at), {
-                          addSuffix: true,
-                        }) : "Just now"}
+                        {data.created_at
+                          ? formatDistanceToNow(new Date(data.created_at), {
+                              addSuffix: true,
+                            })
+                          : "Just now"}
                       </span>
                     </div>
                     <p className="text-foreground/90 leading-relaxed mb-3">
@@ -332,7 +334,8 @@ const Comment = ({ postId }: { postId: string }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                Showing page {pagination.page} of {pagination.totalPages} ({pagination.total} total comments)
+                Showing page {pagination.page} of {pagination.totalPages} (
+                {pagination.total} total comments)
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -344,34 +347,39 @@ const Comment = ({ postId }: { postId: string }) => {
                   <ChevronLeft className="w-4 h-4 mr-1" />
                   Previous
                 </Button>
-                
+
                 {/* Page numbers */}
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (pagination.totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= pagination.totalPages - 2) {
-                      pageNum = pagination.totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    
-                    return (
-                      <Button
-                        key={pageNum}
-                        variant={currentPage === pageNum ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(pageNum)}
-                        disabled={isLoading}
-                        className="w-9 h-9 p-0"
-                      >
-                        {pageNum}
-                      </Button>
-                    );
-                  })}
+                  {Array.from(
+                    { length: Math.min(5, pagination.totalPages) },
+                    (_, i) => {
+                      let pageNum;
+                      if (pagination.totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= pagination.totalPages - 2) {
+                        pageNum = pagination.totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
+
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={
+                            currentPage === pageNum ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => handlePageChange(pageNum)}
+                          disabled={isLoading}
+                          className="w-9 h-9 p-0"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    },
+                  )}
                 </div>
 
                 <Button
@@ -450,11 +458,15 @@ const Comment = ({ postId }: { postId: string }) => {
               community.
             </p>
             <div className="flex gap-3 justify-center">
-              <Button asChild>
-                <Link href="/login">Log In</Link>
+              <Button render={<Link href="/login" />} nativeButton={false}>
+                Log In
               </Button>
-              <Button variant="outline" asChild>
-                <Link href="/register">Sign Up</Link>
+              <Button
+                variant="outline"
+                render={<Link href="/register" />}
+                nativeButton={false}
+              >
+                Sign Up
               </Button>
             </div>
           </CardContent>

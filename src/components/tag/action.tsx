@@ -130,11 +130,11 @@ const TagActionComponent = ({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+        <DropdownMenuTrigger
+          render={<Button variant="ghost" className="h-8 w-8 p-0" />}
+        >
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
@@ -202,7 +202,10 @@ const TagActionComponent = ({
               Update the tag name. Changes will be saved immediately.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
+          <form
+            onSubmit={editForm.handleSubmit(onEditSubmit)}
+            className="space-y-4"
+          >
             <div className="space-y-2">
               <Label htmlFor="edit-tag-name">Name</Label>
               <Input
