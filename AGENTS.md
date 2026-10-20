@@ -7,7 +7,7 @@ bun run dev        # dev server (http://localhost:3000)
 bun run build      # production build
 bun run start      # production server
 bun run lint       # ESLint (eslint-config-next/core-web-vitals)
-bun run typecheck  # tsc --noEmit
+bun run typecheck  # bun --check (built-in type checker, Bun 1.4.3+)
 bun run check      # typecheck + lint
 ```
 
