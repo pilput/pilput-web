@@ -274,6 +274,20 @@ export default function HoldingFormModal({
                   required
                 />
               </div>
+              <div className="space-y-2 col-span-2 md:col-span-1">
+                <Label htmlFor="units">Units</Label>
+                <Input
+                  id="units"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0"
+                  maxLength={HOLDING_FORM_LIMITS.optionalNumericRawMax}
+                  value={formData.units}
+                  onChange={(e) =>
+                    setFormData({ ...formData, units: e.target.value })
+                  }
+                />
+              </div>
               <div className="space-y-2 col-span-2">
                 <Label htmlFor="notes">Notes</Label>
                 <Textarea
@@ -320,23 +334,8 @@ export default function HoldingFormModal({
                   className="overflow-hidden"
                 >
                   <div className="grid grid-cols-2 gap-4 pt-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="units">Units</Label>
-                      <Input
-                        id="units"
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        maxLength={HOLDING_FORM_LIMITS.optionalNumericRawMax}
-                        value={formData.units}
-                        onChange={(e) =>
-                          setFormData({ ...formData, units: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
                       <div className="space-y-2">
-                        <Label htmlFor="avg_buy_price" className="text-xs">
+                        <Label htmlFor="avg_buy_price">
                           Avg Buy Price
                         </Label>
                         <Input
@@ -355,7 +354,7 @@ export default function HoldingFormModal({
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="current_price" className="text-xs">
+                        <Label htmlFor="current_price">
                           Current Price
                         </Label>
                         <Input
@@ -373,7 +372,6 @@ export default function HoldingFormModal({
                           }
                         />
                       </div>
-                    </div>
                   </div>
                 </motion.div>
               )}
