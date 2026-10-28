@@ -9,6 +9,7 @@ import { convertToSlug } from "@/utils/slug";
 import { toastSpamRejection } from "@/utils/spam";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
+import { hasTooManyLinks, MAX_POST_LINKS } from "@/lib/post-links";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -144,6 +145,11 @@ export default function PostCreate() {
 
     if (!post.body.trim() || post.body === "<p></p>") {
       toast.error("Content is required");
+      return;
+    }
+
+    if (hasTooManyLinks(post.body)) {
+      toast.error(`Content can contain at most ${MAX_POST_LINKS} links`);
       return;
     }
 
