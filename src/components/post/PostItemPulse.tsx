@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 
 const PostItemPulse = () => {
   return (
-    <Card className="h-full border-border/50 bg-card/50 backdrop-blur-sm flex flex-col overflow-hidden">
+    <Card className="h-full border-border/50 bg-card flex flex-col overflow-hidden">
       <CardHeader className="space-y-3 pb-3">
         <div className="flex items-center justify-between">
           <Skeleton className="h-3 w-24 rounded-full" />

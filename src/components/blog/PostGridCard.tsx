@@ -26,7 +26,7 @@ const PostGridCard = ({ post }: PostGridCardProps) => {
 
   return (
     <motion.article
-      className="group flex flex-col h-full relative glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350 bg-card/30 backdrop-blur-sm"
+      className="group flex flex-col h-full relative bg-card border border-border/60 border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}

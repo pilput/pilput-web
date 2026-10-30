@@ -29,7 +29,7 @@ const PostList = ({ post }: { post: Post }) => {
 
   return (
     <motion.article
-      className="group relative flex h-full flex-col glass-card border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
+      className="group relative flex h-full flex-col bg-card border border-border/60 border-glow-hover rounded-2xl overflow-hidden transition-all duration-350"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       layout

@@ -4,7 +4,7 @@ import FeaturedPostCard from "@/components/blog/FeaturedPostCard";
 import PostGridCard from "@/components/blog/PostGridCard";
 import PostListPulse from "@/components/post/PostListPulse";
 import { Paginate } from "@/components/common/Paginate";
-import { Filter, X, FileQuestion, Sparkles, Rss } from "lucide-react";
+import { Filter, X, FileQuestion, Newspaper, Rss } from "lucide-react";
 import type { Post } from "@/types/post";
 
 interface BlogPostsProps {
@@ -50,14 +50,14 @@ const BlogPosts = ({
           className={
             isFeed
               ? "flex flex-wrap items-center gap-3 border-b border-border/60 pb-4"
-              : "flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5  backdrop-blur-md"
+              : "flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5"
           }
         >
           <div className="flex items-center gap-2 text-sm text-foreground font-bold">
             {isFeed ? (
               <Rss className="w-4 h-4 text-primary" />
             ) : (
-              <Sparkles className="w-4 h-4 text-primary" />
+              <Newspaper className="w-4 h-4 text-primary" />
             )}
             {isFeed
               ? total

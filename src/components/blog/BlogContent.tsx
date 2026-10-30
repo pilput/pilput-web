@@ -239,7 +239,7 @@ const BlogContent = ({
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full border border-primary/60 backdrop-blur-md"
+          className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full border border-primary/60"
           aria-label="Scroll to top"
         >
           <ArrowUp className="w-5 h-5" />

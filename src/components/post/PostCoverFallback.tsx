@@ -1,11 +1,11 @@
 import type { Post } from "@/types/post";
 
-// Gradient presets for posts without a cover image, picked deterministically per post.
+// Flat, low-contrast surfaces for posts without a cover image, picked deterministically per post.
 const FALLBACK_COVERS = [
-  "from-emerald-500/25 via-teal-400/10 to-sky-500/20",
-  "from-sky-500/25 via-indigo-400/10 to-violet-500/20",
-  "from-amber-400/25 via-orange-400/10 to-rose-500/20",
-  "from-violet-500/25 via-fuchsia-400/10 to-pink-500/20",
+  "bg-muted",
+  "bg-primary/10",
+  "bg-secondary",
+  "bg-chart-4/15",
 ];
 
 const pickFallbackCover = (seed: string) => {
@@ -26,7 +26,7 @@ const PostCoverFallback = ({
 
   return (
     <div
-      className={`relative overflow-hidden w-full bg-gradient-to-br ${pickFallbackCover(post.id || post.title || "")} ${className}`}
+      className={`relative overflow-hidden w-full ${pickFallbackCover(post.id || post.title || "")} ${className}`}
       aria-hidden
     >
       <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:18px_18px] text-foreground/20" />
@@ -34,7 +34,7 @@ const PostCoverFallback = ({
         {(post.title || "U").trim().charAt(0).toUpperCase()}
       </span>
       {firstTag && (
-        <span className="absolute left-5 top-5 rounded-full bg-background/70 px-3 py-1 text-[11px] font-bold tracking-wide text-foreground/80 backdrop-blur">
+        <span className="absolute left-5 top-5 rounded-full bg-background px-3 py-1 text-[11px] font-bold tracking-wide text-foreground/80">
           #{firstTag.name}
         </span>
       )}

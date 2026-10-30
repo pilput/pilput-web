@@ -25,7 +25,6 @@ interface Feature {
   stats: string;
   cta: string;
   href: string;
-  glow: string;
   accentColor: string;
 }
 
@@ -49,7 +48,6 @@ const Features = () => {
       stats: "Clean & Simple",
       cta: "Start writing",
       href: "/dashboard/posts/create",
-      glow: "from-primary/10 to-transparent",
       accentColor: "border-primary/20 text-primary bg-primary/10",
     },
     {
@@ -62,15 +60,14 @@ const Features = () => {
         <div className="absolute inset-0 overflow-hidden opacity-5 dark:opacity-[0.08] transition-opacity duration-500 group-hover:opacity-12">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.05)_1px,transparent_1px)] bg-[size:14px_24px]" />
           <div className="absolute bottom-0 left-0 p-8 transform -translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
-            <MessageCircle className="w-32 h-32 text-purple-500" />
+            <MessageCircle className="w-32 h-32 text-primary" />
           </div>
         </div>
       ),
       stats: "Smart Assistant",
       cta: "Try Assistant",
       href: "/chat",
-      glow: "from-purple-500/10 to-transparent",
-      accentColor: "border-purple-500/20 text-purple-600 dark:text-purple-400 bg-purple-500/10",
+      accentColor: "border-primary/20 text-primary bg-primary/10",
     },
     {
       id: "holdings",
@@ -82,21 +79,19 @@ const Features = () => {
         <div className="absolute inset-0 overflow-hidden opacity-5 dark:opacity-[0.08] transition-opacity duration-500 group-hover:opacity-12">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.05)_1px,transparent_1px)] bg-[size:14px_24px]" />
           <div className="absolute top-0 left-0 p-8 transform -translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
-            <TrendingUp className="w-32 h-32 text-teal-500" />
+            <TrendingUp className="w-32 h-32 text-primary" />
           </div>
         </div>
       ),
       stats: "All-in-one",
       cta: "Go to Dashboard",
       href: "/dashboard/holdings",
-      glow: "from-teal-500/10 to-transparent",
-      accentColor: "border-teal-500/20 text-teal-600 dark:text-teal-400 bg-teal-500/10",
+      accentColor: "border-primary/20 text-primary bg-primary/10",
     },
   ];
 
   return (
-    <section className="relative overflow-hidden border-b border-border/40 py-20 sm:py-24 lg:py-28 bg-linear-to-b from-transparent to-muted/20">
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/20 to-transparent" />
+    <section className="relative overflow-hidden border-b border-border/40 py-20 sm:py-24 lg:py-28">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-12 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl space-y-4">
@@ -129,18 +124,10 @@ const Features = () => {
               <article
                 className={cn(
                   "group relative h-[350px] w-full overflow-hidden rounded-2xl",
-                  "glass-card border-glow-hover  ",
+                  "border border-border/50 bg-card border-glow-hover",
                   "transition-all duration-500 ease-out hover:-translate-y-1.5"
                 )}
               >
-                {/* Custom glow gradient on hover */}
-                <div
-                  className={cn(
-                    "absolute -inset-px bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl -z-10",
-                    feature.glow
-                  )}
-                />
-
                 {feature.background}
                 <div className="relative h-full flex flex-col p-6 sm:p-8 z-10">
                   <div className="mb-auto">

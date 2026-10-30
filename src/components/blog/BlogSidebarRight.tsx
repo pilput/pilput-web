@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, Sparkles, Hash } from "lucide-react";
+import { TrendingUp, Flame, Hash } from "lucide-react";
 import TrendingPosts from "@/components/post/TrendingPosts";
 import { apiClient } from "@/utils/fetch";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
         <Card className="bg-card border border-border/70 transition-all duration-300 py-0">
           <CardContent className="p-5">
             <h3 className="font-bold text-foreground mb-3 flex items-center gap-2 text-base">
-              <Sparkles className="w-4 h-4 text-primary" />
+              <Flame className="w-4 h-4 text-primary" />
               Trending Stories
             </h3>
             <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />

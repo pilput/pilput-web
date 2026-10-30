@@ -306,7 +306,7 @@ const HomeFeedContent = ({
 
               {/* Trending Topics */}
               {tags.length > 0 && (
-                <Card className="glass-card border-glow-hover bg-card/90 py-0">
+                <Card className="bg-card border border-border/60 border-glow-hover py-0">
                   <CardContent className="p-5">
                     <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-primary" />
@@ -328,7 +328,7 @@ const HomeFeedContent = ({
               )}
 
               {/* Trending Posts Widget */}
-              <Card className="glass-card border-glow-hover bg-card/90 py-0">
+              <Card className="bg-card border border-border/60 border-glow-hover py-0">
                 <CardContent className="p-5">
                   <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-primary" />
@@ -346,7 +346,7 @@ const HomeFeedContent = ({
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full border border-primary/60 backdrop-blur-md transition-all duration-350"
+          className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full border border-primary/60 transition-all duration-350"
           aria-label="Scroll to top"
         >
           <ArrowUp className="w-5 h-5" />

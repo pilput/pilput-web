@@ -57,12 +57,12 @@ const socialLinks: SocialLink[] = [
 
 export default function Social() {
   return (
-    <section className="w-full border-t border-border/50 bg-linear-to-b from-background to-primary/5 py-24 relative overflow-hidden">
+    <section className="w-full border-t border-border/50 bg-background py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
       
       <div className="container mx-auto max-w-7xl px-4 relative z-10">
         <CardHeader className="text-center pb-12">
-          <CardTitle className="text-4xl md:text-5xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-4">
+          <CardTitle className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
             Let&apos;s Connect!
           </CardTitle>
           <CardDescription className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -78,7 +78,7 @@ export default function Social() {
                   key={social.name}
                   variant="outline"
                   className={cn(
-                    "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105 border-border/50 bg-card/50 backdrop-blur-sm",
+                    "group h-auto py-8 px-6 flex flex-col items-center gap-4 transition-all duration-300 hover:scale-105 border-border/50 bg-card",
                     social.hoverColor,
                   )}
                   render={

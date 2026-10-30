@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { TrendingUp, Eye, Heart, Bookmark, User, Sparkles } from "lucide-react";
+import { TrendingUp, Eye, Heart, Bookmark, User, Flame } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
@@ -81,8 +81,8 @@ const TrendingPosts = ({ posts, isLoading, layout = "sidebar" }: TrendingPostsPr
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute top-2 left-2 flex gap-1">
-                     <span className="bg-background/90 backdrop-blur text-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-border/50 flex items-center gap-1">
-                       <Sparkles className="w-3 h-3 text-primary" />
+                     <span className="bg-background text-foreground text-[10px] font-bold px-2 py-0.5 rounded-full border border-border/50 flex items-center gap-1">
+                       <Flame className="w-3 h-3 text-primary" />
                        Trending
                      </span>
                   </div>

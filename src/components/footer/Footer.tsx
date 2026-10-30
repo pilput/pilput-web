@@ -43,15 +43,14 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-border/60 bg-background/80 backdrop-blur-xl overflow-hidden">
-      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/6 rounded-full blur-[100px]" />
+    <footer className="relative border-t border-border/60 bg-background overflow-hidden">
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
           <div className="space-y-5">
             <Link
               href="/"
-              className="inline-block text-xl font-bold tracking-tight bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+              className="inline-block text-xl font-bold tracking-tight text-foreground"
             >
               pilput.net
             </Link>
@@ -91,7 +90,7 @@ const Footer = () => {
           ))}
         </div>
 
-        <div className="my-10 h-px w-full bg-linear-to-r from-transparent via-border/70 to-transparent" />
+        <div className="my-10 h-px w-full bg-border/70" />
 
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground/70">

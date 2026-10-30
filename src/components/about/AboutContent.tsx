@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { Zap, Shield, PenSquare, Sparkles, Users, Globe, Code } from "lucide-react";
+import { Zap, Shield, PenSquare, Users, Globe, Code } from "lucide-react";
 
 const AboutContent = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -36,15 +36,6 @@ const AboutContent = () => {
     <section className="pt-8 pb-20 md:pt-12 md:pb-28 bg-background relative overflow-hidden">
       {/* Enhanced background decoration */}
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02] bg-size-[50px_50px]" />
-      <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
-      <div
-        className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[100px] animate-pulse"
-        style={{ animationDelay: "1s" }}
-      />
-      <div
-        className="absolute top-1/2 right-1/3 w-48 h-48 bg-purple-500/20 rounded-full blur-[80px] animate-pulse"
-        style={{ animationDelay: "2s" }}
-      />
 
       <div className="container mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -90,7 +81,7 @@ const AboutContent = () => {
 
             <motion.h1
               variants={itemVariants}
-              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 bg-linear-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent"
+              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 text-foreground"
             >
               About <span className="font-extrabold text-primary">pilput</span>
             </motion.h1>
@@ -108,18 +99,16 @@ const AboutContent = () => {
             variants={itemVariants}
             className="max-w-4xl mx-auto text-center mb-12"
           >
-            <div className="bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-8 hover:bg-card/60 transition-all duration-300 group">
+            <div className="bg-card border border-border/50 rounded-2xl p-8 transition-all duration-300 group">
               <p className="text-lg md:text-xl text-foreground/90 leading-relaxed mb-6">
                 A clean, fast, and secure publishing platform built for modern
                 creators. Share your stories, connect with readers, and grow
                 your audience.
               </p>
               <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Sparkles className="h-4 w-4 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
                 <span className="group-hover:text-foreground transition-colors">
                   Built with passion for writers worldwide
                 </span>
-                <Sparkles className="h-4 w-4 text-yellow-500 group-hover:text-yellow-400 transition-colors" />
               </div>
             </div>
           </motion.div>
@@ -128,11 +117,11 @@ const AboutContent = () => {
             variants={itemVariants}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16"
           >
-            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-yellow-500/20">
-              <div className="bg-yellow-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-500/20 transition-all duration-300 group-hover:scale-110">
-                <Zap className="h-8 w-8 text-yellow-500" />
+            <div className="bg-card border border-border/30 rounded-xl p-6 text-center transition-all duration-300 group hover:-translate-y-1 hover:border-primary/20">
+              <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                <Zap className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-yellow-500 transition-colors">
+              <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Lightning Fast
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -140,11 +129,11 @@ const AboutContent = () => {
               </p>
             </div>
 
-            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-teal-500/20">
-              <div className="bg-teal-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-teal-500/20 transition-all duration-300 group-hover:scale-110">
-                <PenSquare className="h-8 w-8 text-teal-500" />
+            <div className="bg-card border border-border/30 rounded-xl p-6 text-center transition-all duration-300 group hover:-translate-y-1 hover:border-primary/20">
+              <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                <PenSquare className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-teal-500 transition-colors">
+              <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Simple Editor
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -152,11 +141,11 @@ const AboutContent = () => {
               </p>
             </div>
 
-            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-green-500/20">
-              <div className="bg-green-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-green-500/20 transition-all duration-300 group-hover:scale-110">
-                <Shield className="h-8 w-8 text-green-500" />
+            <div className="bg-card border border-border/30 rounded-xl p-6 text-center transition-all duration-300 group hover:-translate-y-1 hover:border-primary/20">
+              <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                <Shield className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-green-500 transition-colors">
+              <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Secure &amp; Reliable
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -164,11 +153,11 @@ const AboutContent = () => {
               </p>
             </div>
 
-            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6 text-center hover:bg-card/50 transition-all duration-300 group hover:-translate-y-1 hover:border-purple-500/20">
-              <div className="bg-purple-500/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-500/20 transition-all duration-300 group-hover:scale-110">
-                <Code className="h-8 w-8 text-purple-500" />
+            <div className="bg-card border border-border/30 rounded-xl p-6 text-center transition-all duration-300 group hover:-translate-y-1 hover:border-primary/20">
+              <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
+                <Code className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2 group-hover:text-purple-500 transition-colors">
+              <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
                 Open Source
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -184,7 +173,7 @@ const AboutContent = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="lg"
-                className="bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white px-8 py-6 rounded-full transition-all duration-300 text-lg font-semibold"
+                className="px-8 py-6 rounded-full transition-all duration-300 text-lg font-semibold"
                 aria-label="Explore stories"
                 render={<Link href="/explore" className="flex items-center" />}
                 nativeButton={false}

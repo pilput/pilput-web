@@ -31,7 +31,7 @@ export default function ReportsPage() {
     <div className="flex flex-col gap-6 w-full">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
             Reports
           </h1>
           <p className="text-sm text-muted-foreground mt-0.5">

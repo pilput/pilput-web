@@ -6,7 +6,6 @@ import {
   Ghost,
   House,
   MapPin,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -22,27 +21,20 @@ export default function NotFound() {
       {/* Backdrop — same language as the landing hero */}
       <div className="absolute inset-0 bg-linear-to-b from-muted/40 via-background/60 to-background dark:from-muted/10" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.06)_1px,transparent_1px)] bg-size-[32px_32px] opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
-      <div className="pointer-events-none absolute -top-24 -left-24 h-80 w-80 rounded-full bg-primary/15 blur-3xl animate-blob-float" />
-      <div
-        className="pointer-events-none absolute -right-24 -bottom-24 h-80 w-80 rounded-full bg-teal-500/15 blur-3xl animate-blob-float"
-        style={{ animationDelay: "-8s" }}
-      />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-8 lg:py-20">
         {/* Playful illustration */}
         <div className="relative mx-auto w-full max-w-md animate-in fade-in-0 zoom-in-95 duration-500 lg:max-w-none">
-          <div className="relative overflow-hidden rounded-[2rem] border border-border/50 bg-card/80 p-8 shadow-xl shadow-primary/5 backdrop-blur-xl sm:p-10">
-            <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary via-emerald-500 to-teal-500" />
-            <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-primary/10 blur-2xl" />
+          <div className="relative overflow-hidden rounded-[2rem] border border-border/50 bg-card p-8 sm:p-10">
+            <div className="absolute inset-x-0 top-0 h-1 bg-primary" />
 
             <div className="relative flex items-center justify-between">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold text-primary">
-                <Sparkles className="size-3.5" aria-hidden />
+                <MapPin className="size-3.5" aria-hidden />
                 lost &amp; found
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                <span className="size-1.5 animate-pulse rounded-full bg-primary" />
                 error 404
               </span>
             </div>
@@ -77,8 +69,8 @@ export default function NotFound() {
             <div className="mx-auto mt-5 h-3 w-48 rounded-full bg-foreground/10 blur-md" />
 
             {/* Floating stickers */}
-            <div className="landing-float absolute top-24 -left-1 flex items-center gap-2 rounded-2xl border border-border/60 bg-background/90 px-3 py-2 shadow-lg backdrop-blur sm:left-4">
-              <span className="flex size-8 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+            <div className="landing-float absolute top-24 -left-1 flex items-center gap-2 rounded-2xl border border-border/60 bg-background px-3 py-2 shadow-lg sm:left-4">
+              <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <MapPin className="size-4" aria-hidden />
               </span>
               <span className="text-left leading-tight">
@@ -89,10 +81,10 @@ export default function NotFound() {
               </span>
             </div>
             <div
-              className="landing-float absolute -right-1 bottom-16 flex items-center gap-2 rounded-2xl border border-border/60 bg-background/90 px-3 py-2 shadow-lg backdrop-blur sm:right-4"
+              className="landing-float absolute -right-1 bottom-16 flex items-center gap-2 rounded-2xl border border-border/60 bg-background px-3 py-2 shadow-lg sm:right-4"
               style={{ animationDelay: "-1.1s" }}
             >
-              <span className="flex size-8 items-center justify-center rounded-xl bg-violet-500/15 text-violet-600 dark:text-violet-400">
+              <span className="flex size-8 items-center justify-center rounded-xl bg-muted text-foreground">
                 <Ghost className="size-4" aria-hidden />
               </span>
               <span className="text-left leading-tight">
@@ -140,7 +132,7 @@ export default function NotFound() {
             <Button
               variant="outline"
               size="lg"
-              className="h-12 rounded-xl border-border/80 bg-background/60 px-6 text-sm font-semibold backdrop-blur hover:border-primary/30"
+              className="h-12 rounded-xl border-border/80 bg-background px-6 text-sm font-semibold hover:border-primary/30"
               render={<Link href="/blog" />}
               nativeButton={false}
             >
@@ -149,7 +141,7 @@ export default function NotFound() {
             </Button>
           </div>
 
-          <div className="mt-8 animate-in fade-in-0 slide-in-from-bottom-2 rounded-2xl border border-border/50 bg-card/60 p-4 text-left backdrop-blur duration-500 delay-200 sm:p-5">
+          <div className="mt-8 animate-in fade-in-0 slide-in-from-bottom-2 rounded-2xl border border-border/50 bg-card p-4 text-left duration-500 delay-200 sm:p-5">
             <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
               Popular destinations
             </p>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { getProfilePicture, getUrlImage } from "@/utils/getImage";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Eye, MessageCircle, Sparkles } from "lucide-react";
+import { Eye, MessageCircle, Star } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
 import { motion } from "framer-motion";
@@ -32,7 +32,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
 
   return (
     <motion.article
-      className="group relative glass-card border-glow-hover rounded-3xl overflow-hidden transition-all duration-350 bg-card/40 backdrop-blur-md"
+      className="group relative bg-card border border-border/60 border-glow-hover rounded-3xl overflow-hidden transition-all duration-350"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -52,7 +52,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
             />
             <div className="absolute top-3 left-3 z-10 flex gap-2">
               <span className="bg-primary text-primary-foreground text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-full flex items-center gap-1.5 uppercase">
-                <Sparkles className="w-3 h-3 fill-current" />
+                <Star className="w-3 h-3 fill-current" />
                 Featured Story
               </span>
             </div>

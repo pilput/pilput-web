@@ -16,7 +16,7 @@ export function EmptyState({ searching, folderName, onClearSearch }: EmptyStateP
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="border-dashed border-2 border-border bg-card/45 backdrop-blur-xs">
+      <Card className="border-dashed border-2 border-border bg-card">
         <CardContent className="py-16 text-center text-muted-foreground space-y-4">
           <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center">
             <BookOpen className="w-5 h-5 text-muted-foreground" />

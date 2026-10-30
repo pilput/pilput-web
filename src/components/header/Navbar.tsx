@@ -82,12 +82,12 @@ const Navbar = () => {
             >
               <span className="flex items-baseline text-xl font-black tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
                 pilput
-                <span className="ml-0.5 h-1.5 w-1.5 translate-y-0 rounded-full bg-linear-to-br from-primary to-emerald-400 transition-transform duration-300 group-hover:scale-125" />
+                <span className="ml-0.5 h-1.5 w-1.5 translate-y-0 rounded-full bg-primary transition-transform duration-300 group-hover:scale-125" />
               </span>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <ul className="relative mx-auto hidden items-center gap-1 rounded-full border border-border/50 bg-muted/40 p-1 backdrop-blur-sm md:flex">
+            <ul className="relative mx-auto hidden items-center gap-1 rounded-full border border-border/50 bg-muted/60 p-1 md:flex">
               {navigation.map((item) => {
                 const active = pathname === item.href;
                 return (
@@ -155,7 +155,7 @@ const Navbar = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 onClick={() => closeMenu()}
-                className="fixed inset-x-0 bottom-0 top-16 -z-10 bg-background/60 backdrop-blur-sm md:hidden"
+                className="fixed inset-x-0 bottom-0 top-16 -z-10 bg-background/80 md:hidden"
                 aria-hidden="true"
               />
               <motion.div
@@ -165,7 +165,7 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute inset-x-0 top-full origin-top border-b border-border/60 bg-background/95 px-4 pb-4 pt-2 shadow-lg backdrop-blur-xl sm:px-6 md:hidden"
+                className="absolute inset-x-0 top-full origin-top border-b border-border/60 bg-background px-4 pb-4 pt-2 shadow-lg sm:px-6 md:hidden"
               >
                 <ul className="space-y-1">
                   {navigation.map((item) => {

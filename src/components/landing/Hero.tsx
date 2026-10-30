@@ -9,7 +9,6 @@ import {
   Globe2,
   PenLine,
   ShieldCheck,
-  Sparkles,
   Zap,
   Bold,
   Italic,
@@ -24,7 +23,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import HeroBackground from "./HeroBackground";
 import { cn } from "cn";
 
 const trustItems = [
@@ -168,20 +166,15 @@ const Hero = () => {
   return (
     <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border/40 pt-12 pb-20 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-28">
       <div className="absolute inset-0 bg-background" />
-      <div className="absolute inset-0 bg-linear-to-b from-muted/30 via-background/50 to-background dark:from-muted/10" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.02)_1px,transparent_1px)] bg-size-[32px_32px] opacity-60" />
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent" />
-
-      <HeroBackground />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <div className="landing-reveal">
             <Badge
               variant="outline"
-              className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary transition-all duration-300 animate-pulse-slow cursor-default"
+              className="h-8 rounded-full border-primary/20 bg-primary/5 px-3.5 text-xs font-semibold text-primary cursor-default"
             >
-              <Sparkles className="mr-2 h-3.5 w-3.5" />
               Built for focused publishing
             </Badge>
           </div>
@@ -189,7 +182,7 @@ const Hero = () => {
           <div className="mt-7 max-w-4xl space-y-6 landing-reveal landing-delay-1">
             <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
               Write and publish
-              <span className="block bg-linear-to-r from-primary via-emerald-600 to-teal-600 bg-clip-text pb-1 text-transparent dark:via-emerald-400 dark:to-teal-400">
+              <span className="block pb-1 text-primary">
                 ideas worth reading.
               </span>
             </h1>
@@ -204,7 +197,7 @@ const Hero = () => {
             <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold bg-linear-to-r from-primary to-primary/90 text-primary-foreground hover:brightness-105 transition-all duration-300 sm:min-w-48 cursor-pointer border-0"
+                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold sm:min-w-48 cursor-pointer"
               >
                 <PenLine className="mr-2 h-4 w-4" />
                 Start writing
@@ -216,7 +209,7 @@ const Hero = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-12 w-full rounded-xl border-border/80 bg-background/55 px-6 text-sm font-semibold backdrop-blur-md hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer"
+                className="h-12 w-full rounded-xl border-border/80 bg-background px-6 text-sm font-semibold hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer"
               >
                 <BookOpenText className="mr-2 h-4 w-4" />
                 Read articles
@@ -233,11 +226,8 @@ const Hero = () => {
           </p>
 
           <div className="relative mt-12 w-full max-w-5xl landing-reveal landing-delay-3 group">
-            {/* Ambient glows behind the editor */}
-            <div className="absolute -top-12 -left-12 w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-blob-float pointer-events-none" />
-            <div className="absolute -bottom-12 -right-12 w-72 h-72 rounded-full bg-teal-500/20 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-8s" }} />
 
-            <div className="overflow-hidden rounded-2xl border border-border/45 bg-card/85 text-left backdrop-blur-xl relative z-10 transition-all duration-500 border-glow-hover">
+            <div className="overflow-hidden rounded-2xl border border-border/45 bg-card text-left relative z-10 transition-all duration-500 border-glow-hover">
               <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3.5 bg-muted/20 select-none">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />

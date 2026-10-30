@@ -211,7 +211,7 @@ export default function TagContent({
           <div className="lg:w-80 shrink-0">
             <div className="sticky top-24 space-y-6">
               {/* Tag Stats */}
-              <Card className="glass-card border-glow-hover bg-card/90 py-0">
+              <Card className="bg-card border border-border/60 border-glow-hover py-0">
                 <CardContent className="p-5">
                   <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                     <Eye className="w-5 h-5 text-primary" />
@@ -240,7 +240,7 @@ export default function TagContent({
 
               {/* Related Tags */}
               {relatedTags.length > 0 && (
-                <Card className="glass-card border-glow-hover bg-card/90 py-0">
+                <Card className="bg-card border border-border/60 border-glow-hover py-0">
                   <CardContent className="p-5">
                     <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-primary" />

@@ -19,7 +19,7 @@ export default function OAuthCallbackPage() {
 
         <Suspense
           fallback={
-            <Card className="relative z-10 w-full max-w-md border-border/70 bg-card/95 p-8 backdrop-blur-xl glass-card">
+            <Card className="relative z-10 w-full max-w-md border-border/70 bg-card p-8">
               <div className="flex items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>

@@ -101,9 +101,8 @@ function Page() {
     <div className="flex flex-col gap-6 md:gap-8">
       {/* Welcome Header Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-muted/40 p-6 border border-border/40">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-12 translate-x-12 pointer-events-none" />
         <div className="relative z-10 flex flex-col gap-2">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-primary bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
             Welcome back, {user.first_name || user.username || "there"}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground max-w-2xl leading-relaxed">

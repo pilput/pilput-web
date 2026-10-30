@@ -66,11 +66,11 @@ export default function TagsBrowser({ tags }: { tags: TagListItem[] }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {sortedTags.map((tag) => (
             <Link key={tag.id} href={`/tags/${encodeURIComponent(tag.name)}`}>
-              <Card className="glass-card border-border/60 hover:scale-[1.02] transition-all duration-300 cursor-pointer group">
+              <Card className="bg-card border-border/60 hover:border-primary/40 transition-all duration-300 cursor-pointer group">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-linear-to-br from-primary to-teal-600 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                         <Hash className="w-4 h-4 text-white" />
                       </div>
                       <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
@@ -110,7 +110,7 @@ export default function TagsBrowser({ tags }: { tags: TagListItem[] }) {
 
       {!searchTerm && recentTags.length > 0 && (
         <div className="mt-12">
-          <Card className="glass-card border-glow-hover bg-card/90 py-0">
+          <Card className="bg-card border border-border/60 border-glow-hover py-0">
             <CardContent className="p-5">
               <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-primary" />

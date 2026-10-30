@@ -5,7 +5,7 @@ import RandomPosts from "@/components/post/RandomPosts";
 import PostItemPulse from "@/components/post/PostItemPulse";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Sparkles, RefreshCw, ArrowRight } from "lucide-react";
+import { RefreshCw, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "cn";
 
@@ -46,23 +46,18 @@ export default function Community() {
     <section ref={sectionRef} className="relative overflow-hidden bg-background py-20 sm:py-24 lg:py-28">
       <div className="absolute inset-x-0 top-0 h-44 bg-linear-to-b from-muted/55 to-transparent dark:from-muted/20" />
 
-      {/* Decorative Glow Blobs */}
-      <div className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-primary/10 blur-3xl animate-blob-float pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-80 h-80 rounded-full bg-teal-500/10 blur-3xl animate-blob-float pointer-events-none" style={{ animationDelay: "-6s" }} />
-
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 flex max-w-3xl flex-col items-center text-center sm:mb-16 landing-reveal">
           <Badge
             variant="outline"
-            className="h-8 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/8 px-3.5 text-xs font-semibold text-primary backdrop-blur-md transition-all duration-300 cursor-default"
+            className="h-8 rounded-full border-primary/20 bg-primary/5 px-3.5 text-xs font-semibold text-primary cursor-default"
           >
-            <Sparkles className="mr-2 h-3.5 w-3.5" />
             Fresh reads
           </Badge>
 
           <h2 className="mt-5 text-3xl font-black leading-[1.1] tracking-tight text-balance text-foreground sm:text-4xl lg:text-5xl">
             Explore what the community{" "}
-            <span className="block bg-linear-to-r from-primary via-emerald-600 to-teal-600 bg-clip-text pb-1 text-transparent dark:via-emerald-400 dark:to-teal-400">
+            <span className="block pb-1 text-primary">
               is publishing.
             </span>
           </h2>
@@ -103,7 +98,7 @@ export default function Community() {
             size="lg"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="w-full sm:w-auto h-12 rounded-xl px-7 gap-2 border-border/70 bg-background/80 backdrop-blur-md cursor-pointer hover:bg-muted/30 transition-colors"
+            className="w-full sm:w-auto h-12 rounded-xl px-7 gap-2 border-border/70 bg-background cursor-pointer hover:bg-muted/30 transition-colors"
           >
             <RefreshCw
               className={cn(
@@ -116,7 +111,7 @@ export default function Community() {
           <Link href="/blog" className="w-full sm:w-auto">
             <Button
               size="lg"
-              className="w-full sm:w-auto h-12 group rounded-xl px-7 gap-2 bg-linear-to-r from-primary to-primary/95 text-primary-foreground hover:brightness-110 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto h-12 group rounded-xl px-7 gap-2 cursor-pointer"
             >
               Explore all articles
               <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />

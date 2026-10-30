@@ -2,7 +2,7 @@ import Navbar from "@/components/header/Navbar";
 import PostListPulse from "@/components/post/PostListPulse";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles, TrendingUp } from "lucide-react";
+import { Newspaper, TrendingUp } from "lucide-react";
 
 export default function BlogLoading() {
   return (
@@ -10,7 +10,7 @@ export default function BlogLoading() {
       <Navbar />
 
       {/* Hero Skeleton */}
-      <div className="relative overflow-hidden border-b border-border/70 bg-background/90 backdrop-blur">
+      <div className="relative overflow-hidden border-b border-border/70 bg-background">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
           <div className="text-center mb-6 space-y-3 flex flex-col items-center">
             <Skeleton className="h-5 w-36 rounded-full" />
@@ -38,7 +38,7 @@ export default function BlogLoading() {
           <div className="flex-1 min-w-0">
             {/* Toolbar Skeleton */}
             <div className="sticky top-3 z-20 mb-6">
-              <div className="flex items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5 backdrop-blur-md">
+              <div className="flex items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5">
                 <Skeleton className="h-4 w-20 rounded" />
                 <Skeleton className="h-4 w-24 rounded" />
               </div>
@@ -61,7 +61,7 @@ export default function BlogLoading() {
               <Card className="bg-card border border-border/70 py-0">
                 <CardContent className="p-5 space-y-4">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" />
+                    <Newspaper className="w-4 h-4 text-primary" />
                     <Skeleton className="h-5 w-32 rounded" />
                   </div>
                   <div className="space-y-3">
