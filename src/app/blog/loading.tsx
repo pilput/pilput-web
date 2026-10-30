@@ -37,7 +37,7 @@ export default function BlogLoading() {
           {/* Main Posts Column */}
           <div className="flex-1 min-w-0">
             {/* Toolbar Skeleton */}
-            <div className="sticky top-3 z-20 mb-6">
+            <div className="sticky top-20 z-20 mb-6">
               <div className="flex items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5">
                 <Skeleton className="h-4 w-20 rounded" />
                 <Skeleton className="h-4 w-24 rounded" />

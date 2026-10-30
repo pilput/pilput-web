@@ -29,6 +29,13 @@ const FALLBACK_TRENDING_TAGS = [
   "javascript",
 ];
 
+/** Smooth scrolling only when the user hasn't asked for reduced motion. */
+function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
+}
+
 interface BlogContentProps {
   initialPosts?: Post[];
   initialTotal?: number;
@@ -98,7 +105,7 @@ const BlogContent = ({
   }, [handleSearchQueryChange]);
 
   const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }, []);
 
   useEffect(() => {
@@ -191,7 +198,7 @@ const BlogContent = ({
 
   const onPageChange = useCallback((page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }, []);
 
   const getPageHref = useCallback(
@@ -207,7 +214,7 @@ const BlogContent = ({
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <main id="main-content" className="min-h-screen bg-background">
       <BlogHero
         searchQuery={searchQuery}
         setSearchQuery={handleSearchQueryChange}
@@ -238,14 +245,15 @@ const BlogContent = ({
       {/* Scroll to Top Button */}
       {showScrollTop && (
         <button
+          type="button"
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-primary text-primary-foreground rounded-full border border-primary/60"
+          className="fixed bottom-6 right-6 z-40 flex size-12 items-center justify-center rounded-full border border-primary/60 bg-primary text-primary-foreground shadow-lg cursor-pointer transition-colors duration-200 hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:bottom-8 sm:right-8"
           aria-label="Scroll to top"
         >
-          <ArrowUp className="w-5 h-5" />
+          <ArrowUp className="w-5 h-5" aria-hidden="true" />
         </button>
       )}
-    </div>
+    </main>
   );
 };
 

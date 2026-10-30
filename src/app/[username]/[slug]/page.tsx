@@ -1,5 +1,6 @@
 import Footer from "@/components/footer/Footer";
 import Navigation from "@/components/header/Navbar";
+import SkipToContent from "@/components/a11y/SkipToContent";
 import Comment from "@/components/post/Comment";
 import { apiClient } from "@/utils/fetch";
 import Image from "next/image";
@@ -202,9 +203,10 @@ export default async function Page(props: {
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
       />
       <ViewRecorder postId={post.id} />
+      <SkipToContent />
       <Navigation />
 
-      <div className={styles.postViewWrapper}>
+      <main id="main-content" className={styles.postViewWrapper}>
         <div className={styles.postViewContainer}>
           <article>
             {/* Header */}
@@ -228,7 +230,11 @@ export default async function Page(props: {
               <div className={styles.postDateStrip}>
                 <span className={styles.postDateItem}>
                   <CalendarIcon className="w-3.5 h-3.5" aria-hidden />
-                  {post.created_at ? formatDate(post.created_at) : "Draft"}
+                  {post.created_at ? (
+                    <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
+                  ) : (
+                    "Draft"
+                  )}
                 </span>
                 <span className={styles.postDateDot} aria-hidden>·</span>
                 <span className={styles.postDateItem}>
@@ -286,7 +292,7 @@ export default async function Page(props: {
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 border border-border">
                 <Image
                   src={getUrlImage(post.photo_url)}
-                  alt={post.title || "Cover"}
+                  alt=""
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 800px"
@@ -320,7 +326,7 @@ export default async function Page(props: {
             <p className="mt-8 border-t border-border pt-4 text-xs text-muted-foreground">
               The views expressed in this post are those of its author and do not represent
               pilput. See our{" "}
-              <Link href="/terms" className="underline hover:text-foreground">
+              <Link href="/terms" className="underline underline-offset-2 hover:text-foreground rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 Terms of Service
               </Link>
               .
@@ -328,17 +334,20 @@ export default async function Page(props: {
           </article>
 
           {/* Comments Section */}
-          <section id="comments" className={styles.commentsSection}>
+          <section id="comments" aria-labelledby="comments-heading" className={styles.commentsSection}>
             <div className={styles.commentsSectionHeader}>
-              <h2>Comments</h2>
+              <h2 id="comments-heading">Comments</h2>
               {post.comments_count != null && post.comments_count > 0 && (
-                <span className={styles.commentsCount}>{post.comments_count}</span>
+                <span className={styles.commentsCount}>
+                  {post.comments_count}
+                  <span className="sr-only"> comments</span>
+                </span>
               )}
             </div>
             <Comment postId={post.id} />
           </section>
         </div>
-      </div>
+      </main>
 
       <Footer />
     </>

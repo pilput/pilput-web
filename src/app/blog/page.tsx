@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import BlogContent from "@/components/blog/BlogContent";
 import Navigation from "@/components/header/Navbar";
+import SkipToContent from "@/components/a11y/SkipToContent";
 import { apiClient } from "@/utils/fetch";
 import { postsPerPage } from "@/lib/blog-feed-data";
 import type { Post } from "@/types/post";
@@ -81,6 +82,7 @@ export default async function BlogPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
       />
+      <SkipToContent />
       <Navigation />
       <Suspense
         fallback={<div className="min-h-screen bg-background animate-pulse" />}

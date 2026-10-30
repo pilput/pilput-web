@@ -208,44 +208,33 @@ const Comment = ({ postId }: { postId: string }) => {
 
   return (
     <div>
-      {/* Header */}
-      <Card className="mb-6">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
-                <MessageCircle className="w-5 h-5" />
-              </div>
-              <div>
-                <CardTitle className="text-xl">Discussion</CardTitle>
-                <p className="text-muted-foreground text-sm">
-                  Share your thoughts and join the conversation
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing || isLoading}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw
-                className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </Button>
-          </div>
-        </CardHeader>
-      </Card>
+      {/* Toolbar: the section heading lives on the page */}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          Share your thoughts and join the conversation.
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleRefresh}
+          disabled={isRefreshing || isLoading}
+          className="h-10 gap-2 cursor-pointer sm:h-8"
+        >
+          <RefreshCw
+            className={`w-4 h-4 ${isRefreshing ? "motion-safe:animate-spin" : ""}`}
+            aria-hidden="true"
+          />
+          Refresh
+        </Button>
+      </div>
 
       {/* Comments List */}
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-6" aria-live="polite" aria-busy={isLoading}>
         {isLoading ? (
           <Card>
             <CardContent className="p-8 text-center">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                <MessageCircle className="w-8 h-8 text-muted-foreground" />
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4 motion-safe:animate-pulse">
+                <MessageCircle className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
               </div>
               <p className="text-muted-foreground text-sm">
                 Loading comments...
@@ -258,18 +247,23 @@ const Comment = ({ postId }: { postId: string }) => {
               {/* Add a comment button for logged-in users */}
               {isLoggedIn ? (
                 <Button
-                  onClick={() =>
-                    document
-                      .getElementById("comment-input")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="mb-4"
+                  onClick={() => {
+                    const input = document.getElementById("comment-text");
+                    input?.scrollIntoView({
+                      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                        ? "auto"
+                        : "smooth",
+                      block: "center",
+                    });
+                    input?.focus({ preventScroll: true });
+                  }}
+                  className="mb-4 cursor-pointer"
                 >
                   Add Comment
                 </Button>
               ) : null}
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="w-8 h-8 text-muted-foreground" />
+                <MessageCircle className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
               </div>
               <CardTitle className="mb-2">No comments yet</CardTitle>
               <p className="text-muted-foreground text-sm">
@@ -279,7 +273,7 @@ const Comment = ({ postId }: { postId: string }) => {
           </Card>
         ) : (
           comments.map((data) => (
-            <Card key={data.id} className="mb-4">
+            <Card key={data.id} className="mb-4" role="article" aria-label={`Comment by ${data.user?.username || "Anonymous User"}`}>
               <CardContent className="p-6">
                 <div className="flex gap-4">
                   {/* Avatar */}
@@ -295,31 +289,23 @@ const Comment = ({ postId }: { postId: string }) => {
 
                   {/* Comment Content */}
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-2">
                       <span className="font-semibold text-foreground">
                         {data.user?.username || "Anonymous User"}
                       </span>
-                      <span className="text-sm text-muted-foreground">
-                        {data.created_at
-                          ? formatDistanceToNow(new Date(data.created_at), {
-                              addSuffix: true,
-                            })
-                          : "Just now"}
-                      </span>
+                      {data.created_at ? (
+                        <time dateTime={data.created_at} className="text-sm text-muted-foreground">
+                          {formatDistanceToNow(new Date(data.created_at), {
+                            addSuffix: true,
+                          })}
+                        </time>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">Just now</span>
+                      )}
                     </div>
-                    <p className="text-foreground/90 leading-relaxed mb-3">
+                    <p className="text-foreground/90 leading-relaxed whitespace-pre-line wrap-break-word">
                       {data.text}
                     </p>
-
-                    {/* Actions */}
-                    {isLoggedIn && (
-                      <div className="flex items-center gap-3">
-                        <Button variant="ghost" size="sm">
-                          <MessageCircle className="w-4 h-4 mr-1" />
-                          Reply
-                        </Button>
-                      </div>
-                    )}
                   </div>
                 </div>
               </CardContent>
@@ -332,7 +318,7 @@ const Comment = ({ postId }: { postId: string }) => {
       {pagination && pagination.totalPages > 1 && (
         <Card className="mb-6">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
+            <nav aria-label="Comment pages" className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm text-muted-foreground">
                 Showing page {pagination.page} of {pagination.totalPages} (
                 {pagination.total} total comments)
@@ -344,7 +330,7 @@ const Comment = ({ postId }: { postId: string }) => {
                   onClick={handlePrevPage}
                   disabled={currentPage === 1 || isLoading}
                 >
-                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  <ChevronLeft className="w-4 h-4 mr-1" aria-hidden="true" />
                   Previous
                 </Button>
 
@@ -373,7 +359,9 @@ const Comment = ({ postId }: { postId: string }) => {
                           size="sm"
                           onClick={() => handlePageChange(pageNum)}
                           disabled={isLoading}
-                          className="w-9 h-9 p-0"
+                          aria-label={`Page ${pageNum}`}
+                          aria-current={currentPage === pageNum ? "page" : undefined}
+                          className="w-9 h-9 p-0 cursor-pointer"
                         >
                           {pageNum}
                         </Button>
@@ -389,10 +377,10 @@ const Comment = ({ postId }: { postId: string }) => {
                   disabled={currentPage === pagination.totalPages || isLoading}
                 >
                   Next
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                  <ChevronRight className="w-4 h-4 ml-1" aria-hidden="true" />
                 </Button>
               </div>
-            </div>
+            </nav>
           </CardContent>
         </Card>
       )}
@@ -403,7 +391,7 @@ const Comment = ({ postId }: { postId: string }) => {
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
-                <Edit3 className="w-4 h-4" />
+                <Edit3 className="w-4 h-4" aria-hidden="true" />
               </div>
               <div className="flex-1">
                 <CardTitle className="text-lg">Add Comment</CardTitle>
@@ -422,7 +410,11 @@ const Comment = ({ postId }: { postId: string }) => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
+                  <label htmlFor="comment-text" className="sr-only">
+                    Your comment
+                  </label>
                   <Textarea
+                    id="comment-text"
                     value={comment}
                     required
                     onChange={(e) => setcomment(e.target.value)}
@@ -430,13 +422,15 @@ const Comment = ({ postId }: { postId: string }) => {
                     rows={3}
                     disabled={isSubmitting}
                   />
-                  <div className="flex justify-between items-center mt-3">
+                  <div className="flex flex-wrap justify-between items-center gap-3 mt-3">
                     <span className="text-sm text-muted-foreground">
                       Be respectful and constructive
                     </span>
                     <Button
                       type="submit"
                       disabled={!comment.trim() || isSubmitting}
+                      aria-busy={isSubmitting}
+                      className="h-10 cursor-pointer"
                     >
                       {isSubmitting ? "Posting..." : "Post Comment"}
                     </Button>
@@ -450,7 +444,7 @@ const Comment = ({ postId }: { postId: string }) => {
         <Card>
           <CardContent className="text-center py-8">
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <LogIn className="w-8 h-8 text-muted-foreground" />
+              <LogIn className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
             </div>
             <CardTitle className="mb-2">Join the Discussion</CardTitle>
             <p className="text-muted-foreground text-sm mb-6">

@@ -24,28 +24,31 @@ const ButtonLogged = () => {
 
   if (!isLoggedIn) {
     return (
-      <Link href="/login">
-        <Button size="sm" className="gap-2 rounded-full px-4 shadow-sm">
-          <LogIn className="h-4 w-4" />
-          Login
-        </Button>
-      </Link>
+      <Button
+        size="sm"
+        nativeButton={false}
+        render={<Link href="/login" />}
+        className="gap-2 rounded-full px-4 shadow-sm cursor-pointer"
+      >
+        <LogIn className="h-4 w-4" aria-hidden="true" />
+        Login
+      </Button>
     );
   }
 
   return (
     <div className="flex items-center">
       {/* Dashboard button */}
-      <Link href="/dashboard">
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2 rounded-l-full rounded-r-none border-r-0 pl-4"
-        >
-          <LayoutDashboard className="h-4 w-4" />
-          Dashboard
-        </Button>
-      </Link>
+      <Button
+        variant="outline"
+        size="sm"
+        nativeButton={false}
+        render={<Link href="/dashboard" />}
+        className="gap-2 rounded-l-full rounded-r-none border-r-0 pl-4 cursor-pointer"
+      >
+        <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+        Dashboard
+      </Button>
 
       {/* Separate dropdown trigger */}
       <DropdownMenu>
@@ -59,7 +62,7 @@ const ButtonLogged = () => {
             />
           }
         >
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown className="h-4 w-4" aria-hidden="true" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-45">
           <DropdownMenuItem

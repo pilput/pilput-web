@@ -94,7 +94,7 @@ function ToolbarButton({
       aria-label={label}
       aria-pressed={onToggle ? pressed : undefined}
       className={cn(
-        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition cursor-pointer",
+        "p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
         pressed &&
           "bg-primary/15 text-primary hover:bg-primary/20 hover:text-primary"
       )}
@@ -194,27 +194,27 @@ const Hero = () => {
           </div>
 
           <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row landing-reveal landing-delay-2">
-            <Link href="/register" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="group h-12 w-full rounded-xl px-6 text-sm font-semibold sm:min-w-48 cursor-pointer"
-              >
-                <PenLine className="mr-2 h-4 w-4" />
-                Start writing
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-350 group-hover:translate-x-1" />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              nativeButton={false}
+              render={<Link href="/register" />}
+              className="group h-12 w-full rounded-xl px-6 text-sm font-semibold sm:w-auto sm:min-w-48 cursor-pointer"
+            >
+              <PenLine className="mr-2 h-4 w-4" aria-hidden="true" />
+              Start writing
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+            </Button>
 
-            <Link href="/blog" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-12 w-full rounded-xl border-border/80 bg-background px-6 text-sm font-semibold hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 sm:min-w-48 cursor-pointer"
-              >
-                <BookOpenText className="mr-2 h-4 w-4" />
-                Read articles
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="lg"
+              nativeButton={false}
+              render={<Link href="/blog" />}
+              className="h-12 w-full rounded-xl border-border/80 bg-background px-6 text-sm font-semibold hover:bg-muted/40 hover:border-primary/30 transition-colors duration-200 sm:w-auto sm:min-w-48 cursor-pointer"
+            >
+              <BookOpenText className="mr-2 h-4 w-4" aria-hidden="true" />
+              Read articles
+            </Button>
           </div>
 
           <p className="mt-4 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-xs font-medium text-muted-foreground landing-reveal landing-delay-2">
@@ -342,7 +342,7 @@ const Hero = () => {
                         )}
                       >
                         {titleText}
-                        <span className="inline-block w-0.5 h-6 ml-0.5 bg-primary animate-cursor-blink align-middle" />
+                        <span aria-hidden="true" className="inline-block w-0.5 h-6 ml-0.5 bg-primary animate-cursor-blink align-middle" />
                       </p>
 
                       <div
@@ -385,7 +385,7 @@ const Hero = () => {
                           With Pilput, you get{" "}
                           <span
                             className={cn(
-                              "bg-primary/15 text-foreground px-1 py-0.5 rounded cursor-pointer relative group/hl font-semibold transition-all",
+                              "bg-primary/15 text-foreground px-1 py-0.5 rounded relative group/hl font-semibold transition-colors",
                               activeFormats.bold &&
                                 "font-black text-primary bg-primary/20",
                               activeFormats.italic && "italic",
@@ -393,7 +393,7 @@ const Hero = () => {
                             )}
                           >
                             {articlesData[selectedTag].highlight}
-                            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 hidden group-hover/hl:flex items-center gap-1.5 bg-card text-foreground border border-border rounded-lg px-2.5 py-1.5 z-30 whitespace-nowrap text-[11px] transition-all">
+                            <span aria-hidden="true" className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 hidden group-hover/hl:flex items-center gap-1.5 bg-card text-foreground border border-border rounded-lg px-2.5 py-1.5 z-30 whitespace-nowrap text-[11px] transition-all">
                               <span className="font-bold text-primary">
                                 Bold
                               </span>
@@ -445,8 +445,9 @@ const Hero = () => {
                           key={tag}
                           type="button"
                           onClick={() => handleTagChange(tag)}
+                          aria-pressed={selectedTag === tag}
                           className={cn(
-                            "rounded-full px-3 py-1 text-[10px] font-bold transition-all cursor-pointer border",
+                            "min-h-8 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors duration-200 cursor-pointer border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
                             selectedTag === tag
                               ? "bg-primary text-primary-foreground border-primary "
                               : "bg-primary/5 border-primary/10 text-primary hover:bg-primary/15"
@@ -466,10 +467,10 @@ const Hero = () => {
                     {trustItems.map((item) => (
                       <div
                         key={item.title}
-                        className="flex gap-3.5 rounded-xl border border-border/40 bg-background/50 p-4 hover:border-primary/30 hover:bg-background/80 transition-all duration-300"
+                        className="flex gap-3.5 rounded-xl border border-border/40 bg-background/50 p-4"
                       >
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-transform duration-300">
-                          <item.icon className="h-4.5 w-4.5" />
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <item.icon className="h-4.5 w-4.5" aria-hidden="true" />
                         </div>
                         <div>
                           <p className="text-sm font-bold text-foreground">

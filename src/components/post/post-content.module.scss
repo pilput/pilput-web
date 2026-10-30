@@ -651,3 +651,30 @@
   border-radius: 999px;
   line-height: 1;
 }
+
+// Keyboard focus: one consistent ring for links/buttons on the post page.
+.postContent a,
+.postContent .codeCopyButton,
+.breadcrumbLink,
+.authorSection,
+.tagLink {
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .postContent .codeCopyButton,
+  .breadcrumbLink,
+  .authorName,
+  .tagLink,
+  .tagLink::before {
+    transition: none;
+  }
+
+  .postContent .codeCopyButton:active {
+    transform: none;
+  }
+}

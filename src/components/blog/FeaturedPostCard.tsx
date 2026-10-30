@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Eye, MessageCircle, Star } from "lucide-react";
 import BookmarkButton from "@/components/post/BookmarkButton";
 import LikeButton from "@/components/post/LikeButton";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   getPostBookmarkCount,
   getPostLikesCount,
@@ -29,30 +29,30 @@ interface FeaturedPostCardProps {
 const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
   const plaintext = (post.body || "").replace(/(<([^>]+)>)/gi, "").trim();
   const tags = post.tags || [];
+  const reduceMotion = useReducedMotion();
 
   return (
     <motion.article
-      className="group relative bg-card border border-border/60 border-glow-hover rounded-3xl overflow-hidden transition-all duration-350"
-      initial={{ opacity: 0, y: 20 }}
+      className="group relative cursor-pointer bg-card border border-border/60 border-glow-hover rounded-3xl overflow-hidden transition-[transform,border-color] duration-200 motion-safe:hover:-translate-y-1 has-[.card-link:focus-visible]:ring-2 has-[.card-link:focus-visible]:ring-ring has-[.card-link:focus-visible]:ring-offset-2 has-[.card-link:focus-visible]:ring-offset-background"
+      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3 }}
     >
       <div className="flex flex-col lg:flex-row min-h-[320px]">
         {/* Cover Image */}
         {post.photo_url && (
           <div className="relative w-full lg:w-[48%] aspect-[16/10] lg:aspect-auto min-h-[200px] lg:min-h-full overflow-hidden border-b lg:border-b-0 lg:border-r border-border/40">
             <Image
-              className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              className="object-cover motion-safe:group-hover:scale-[1.02] transition-transform duration-300"
               src={getUrlImage(post.photo_url)}
-              alt={post.title || "Cover"}
+              alt=""
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
             />
             <div className="absolute top-3 left-3 z-10 flex gap-2">
-              <span className="bg-primary text-primary-foreground text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-full flex items-center gap-1.5 uppercase">
-                <Star className="w-3 h-3 fill-current" />
+              <span className="bg-primary text-primary-foreground text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full flex items-center gap-1.5 uppercase">
+                <Star className="w-3 h-3 fill-current" aria-hidden="true" />
                 Featured Story
               </span>
             </div>
@@ -64,8 +64,13 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
           <div className="space-y-3">
             {/* Author Info */}
             <div className="flex items-center gap-2.5">
-              <Link href={`/${post.user?.username || "anonymous"}`}>
-                <Avatar className="h-8 w-8 border border-primary/20 hover:scale-105 transition-transform">
+              <Link
+                href={`/${post.user?.username || "anonymous"}`}
+                className="relative z-10 rounded-full"
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                <Avatar className="h-9 w-9 border border-primary/20">
                   <AvatarImage
                     src={getProfilePicture(post.user?.image || "")}
                     alt={post.user?.username || "Author"}
@@ -78,12 +83,12 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
               <div className="min-w-0">
                 <Link
                   href={`/${post.user?.username || "anonymous"}`}
-                  className="block font-bold text-xs hover:text-primary transition-colors leading-none mb-0.5"
+                  className="relative z-10 block font-bold text-sm hover:text-primary transition-colors duration-200 leading-none mb-1"
                 >
                   {post.user?.username || "Anonymous"}
                 </Link>
-                <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                  <ClockIcon className="w-3 h-3 opacity-70" />
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <ClockIcon className="w-3 h-3 opacity-70" aria-hidden="true" />
                   <span>
                     {post.created_at
                       ? format(new Date(post.created_at), "MMMM d, yyyy")
@@ -97,12 +102,13 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
             <div className="space-y-2">
               <Link
                 href={`/${post.user?.username || "anonymous"}/${post.slug || ""}`}
+                className="block card-link outline-none after:absolute after:inset-0 after:z-0 after:content-['']"
               >
-                <h2 className="font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-tight leading-snug text-foreground group-hover:text-primary transition-colors duration-300">
+                <h2 className="font-extrabold text-xl sm:text-2xl lg:text-3xl tracking-tight leading-snug text-foreground group-hover:text-primary transition-colors duration-200">
                   {post.title || "Untitled"}
                 </h2>
               </Link>
-              <p className="text-xs sm:text-sm text-muted-foreground/95 leading-relaxed line-clamp-3">
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-3">
                 {plaintext.slice(0, 180)}
                 {plaintext.length > 180 ? "..." : ""}
               </p>
@@ -110,12 +116,12 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
 
             {/* Tags */}
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-0.5">
+              <div className="relative z-10 flex flex-wrap gap-1.5 pt-0.5">
                 {tags.slice(0, 3).map((tag) => (
                   <Link
                     key={tag.id}
                     href={`/tags/${encodeURIComponent(tag.name)}`}
-                    className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-primary bg-primary/5 rounded-full border border-primary/20 hover:bg-primary/10 transition-colors"
+                    className="inline-flex items-center px-2.5 py-1 text-xs font-semibold text-primary bg-primary/5 rounded-full border border-primary/20 hover:bg-primary/10 transition-colors duration-200"
                   >
                     #{tag.name}
                   </Link>
@@ -125,7 +131,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                     <Tooltip>
                       <TooltipTrigger
                         render={
-                          <span className="text-[10px] text-muted-foreground px-1.5 py-0.5 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2" />
+                          <button type="button" className="text-xs text-muted-foreground px-1.5 py-1 cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60" />
                         }
                       >
                         +{tags.length - 3} more
@@ -149,7 +155,7 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
 
           {/* Engagement Section */}
           <div className="flex items-center justify-between pt-4 border-t border-border/40">
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="relative z-10 flex items-center gap-1 sm:gap-2">
               <LikeButton
                 postId={post.id}
                 initialLiked={post.is_liked_by_current_user ?? false}
@@ -167,14 +173,14 @@ const FeaturedPostCard = ({ post }: FeaturedPostCardProps) => {
                 className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
                 aria-label={`${post.comments_count || 0} comments`}
               >
-                <MessageCircle className="h-4 w-4 shrink-0 stroke-[1.75]" />
+                <MessageCircle className="h-4 w-4 shrink-0 stroke-[1.75]" aria-hidden="true" />
                 <span className="tabular-nums text-[13px]">
                   {post.comments_count || 0}
                 </span>
               </Link>
             </div>
             <div className="flex items-center gap-1.5 text-xs tabular-nums text-muted-foreground">
-              <Eye className="h-3.5 w-3.5 shrink-0 opacity-70" />
+              <Eye className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden="true" />
               <span>{post.view_count?.toLocaleString() || 0} views</span>
             </div>
           </div>

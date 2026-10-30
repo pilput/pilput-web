@@ -43,10 +43,10 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
     <div className="lg:w-80 w-full shrink-0">
       <div className="sticky top-24 space-y-6">
         {/* Trending Posts */}
-        <Card className="bg-card border border-border/70 transition-all duration-300 py-0">
+        <Card className="bg-card border border-border/70 py-0">
           <CardContent className="p-5">
             <h3 className="font-bold text-foreground mb-3 flex items-center gap-2 text-base">
-              <Flame className="w-4 h-4 text-primary" />
+              <Flame className="w-4 h-4 text-primary" aria-hidden="true" />
               Trending Stories
             </h3>
             <TrendingPosts posts={trendingPosts} isLoading={isTrendingLoading} />
@@ -54,21 +54,21 @@ const BlogSidebarRight = ({ trendingTags }: BlogSidebarRightProps) => {
         </Card>
 
         {/* Trending Topics */}
-        <Card className="bg-card border border-border/70 transition-all duration-300 py-0">
+        <Card className="bg-card border border-border/70 py-0">
           <CardContent className="p-5">
             <h3 className="font-bold text-foreground mb-3 flex items-center gap-2 text-base">
-              <TrendingUp className="w-4 h-4 text-primary" />
+              <TrendingUp className="w-4 h-4 text-primary" aria-hidden="true" />
               Popular Topics
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {Array.isArray(trendingTags) && trendingTags.length > 0 ? (
-                trendingTags.slice(0, 10).map((tag, index) => (
+                trendingTags.slice(0, 10).map((tag) => (
                   <Link
-                    key={index}
+                    key={tag}
                     href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all duration-200 border border-border/50"
+                    className="group inline-flex min-h-8 items-center gap-1 px-3 py-1 bg-muted rounded-full text-xs font-semibold text-foreground/80 hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-colors duration-200 border border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
                   >
-                    <Hash className="w-3 h-3 text-muted-foreground/60 group-hover:text-primary" />
+                    <Hash className="w-3 h-3 text-muted-foreground group-hover:text-primary" aria-hidden="true" />
                     {tag}
                   </Link>
                 ))

@@ -1,13 +1,13 @@
 "use client";
 import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ButtonLogged from "./ButtonLogged";
 import { usePathname } from "next/navigation";
 import DarkModeButton from "./Darkmode";
 import { cn } from "cn";
 import { Menu, X } from "lucide-react";
 import { useIsLoggedIn } from "@/hooks/useIsLoggedIn";
-import { getMainNavItems } from "./nav-items";
+import { getMainNavItems, isNavItemActive } from "./nav-items";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const Navbar = () => {
@@ -19,6 +19,8 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const { isLoggedIn } = useIsLoggedIn();
   const reduceMotion = useReducedMotion();
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   const navigation = useMemo(() => getMainNavItems(isLoggedIn), [isLoggedIn]);
 
@@ -38,8 +40,36 @@ const Navbar = () => {
   useEffect(() => {
     if (!showmenu) return;
 
+    const header = headerRef.current;
+    const focusables = () =>
+      Array.from(
+        header?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      ).filter((el) => el.offsetParent !== null);
+
+    // Move focus into the panel so keyboard and screen-reader users land in the menu.
+    header?.querySelector<HTMLElement>("#mobile-navigation a[href]")?.focus();
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeMenu();
+      if (event.key === "Escape") {
+        closeMenu();
+        toggleRef.current?.focus();
+        return;
+      }
+      // Keep Tab inside the header while the page behind is covered.
+      if (event.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -66,6 +96,7 @@ const Navbar = () => {
 
   return (
     <header
+        ref={headerRef}
         data-scrolled={scrolled || showmenu}
         className="nav-surface sticky top-0 z-50 w-full"
       >
@@ -82,14 +113,14 @@ const Navbar = () => {
             >
               <span className="flex items-baseline text-xl font-black tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
                 pilput
-                <span className="ml-0.5 h-1.5 w-1.5 translate-y-0 rounded-full bg-primary transition-transform duration-300 group-hover:scale-125" />
+                <span aria-hidden="true" className="ml-0.5 h-1.5 w-1.5 translate-y-0 rounded-full bg-primary transition-transform duration-300 group-hover:scale-125" />
               </span>
             </Link>
 
             {/* Desktop Navigation Links */}
             <ul className="relative mx-auto hidden items-center gap-1 rounded-full border border-border/50 bg-muted/60 p-1 md:flex">
               {navigation.map((item) => {
-                const active = pathname === item.href;
+                const active = isNavItemActive(pathname, item.href);
                 return (
                   <li key={`${item.href}-${item.name}`} className="relative">
                     <Link
@@ -128,17 +159,18 @@ const Navbar = () => {
 
             {/* Mobile menu toggle button */}
             <button
+              ref={toggleRef}
               type="button"
               onClick={toggleMenu}
-              className="shrink-0 cursor-pointer rounded-xl border border-border/60 bg-background/80 p-2 outline-none transition-colors hover:bg-muted/65 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
+              className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-border/60 bg-background/80 outline-none transition-colors hover:bg-muted/65 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:hidden"
               aria-label={showmenu ? "Close menu" : "Open menu"}
               aria-expanded={showmenu}
               aria-controls="mobile-navigation"
             >
               {showmenu ? (
-                <X className="h-4.5 w-4.5 text-foreground" />
+                <X className="h-5 w-5 text-foreground" aria-hidden="true" />
               ) : (
-                <Menu className="h-4.5 w-4.5 text-foreground" />
+                <Menu className="h-5 w-5 text-foreground" aria-hidden="true" />
               )}
             </button>
           </nav>
@@ -161,22 +193,25 @@ const Navbar = () => {
               <motion.div
                 key="panel"
                 id="mobile-navigation"
-                initial={{ opacity: 0, y: -8 }}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Main menu"
                 className="absolute inset-x-0 top-full origin-top border-b border-border/60 bg-background px-4 pb-4 pt-2 shadow-lg sm:px-6 md:hidden"
               >
                 <ul className="space-y-1">
                   {navigation.map((item) => {
-                    const active = pathname === item.href;
+                    const active = isNavItemActive(pathname, item.href);
                     return (
                       <li key={`${item.href}-${item.name}`}>
                         <Link
                           href={item.href}
                           onClick={() => closeMenu()}
                           className={cn(
-                            "block rounded-xl px-4 py-2.5 text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                            "flex min-h-11 items-center rounded-xl px-4 py-3 text-base font-semibold outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ring",
                             active
                               ? "bg-primary/10 text-primary"
                               : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"

@@ -261,7 +261,7 @@
   }
 
   .nav-surface[data-scrolled="true"] {
-    background-color: color-mix(in oklch, var(--background) 72%, transparent);
+    background-color: color-mix(in oklch, var(--background) 85%, transparent);
     backdrop-filter: blur(16px) saturate(140%);
     border-bottom-color: color-mix(in oklch, var(--border) 70%, transparent);
     box-shadow: 0 8px 24px -16px color-mix(in oklch, var(--foreground) 35%, transparent);

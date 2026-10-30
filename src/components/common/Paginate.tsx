@@ -86,7 +86,9 @@ export function Paginate(props: MyComponentProps) {
           <PaginationItem>
             <PaginationPrevious 
               href={hrefFor(Math.max(0, props.currentPage - 1))}
-              className={props.offset <= 0 ? "pointer-events-none opacity-50" : ""}
+              className={props.offset <= 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              aria-disabled={props.offset <= 0 || undefined}
+              tabIndex={props.offset <= 0 ? -1 : undefined}
               onClick={(e) => {
                 e.preventDefault();
                 if (props.offset > 0) props.prev();
@@ -109,6 +111,7 @@ export function Paginate(props: MyComponentProps) {
                 <PaginationLink 
                   href={hrefFor(pageIndex)}
                   isActive={pageIndex === props.currentPage}
+                  className="cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     if (pageIndex !== props.currentPage) {
@@ -131,8 +134,10 @@ export function Paginate(props: MyComponentProps) {
               className={
                 props.length + props.offset >= props.total
                   ? "pointer-events-none opacity-50"
-                  : ""
+                  : "cursor-pointer"
               }
+              aria-disabled={props.length + props.offset >= props.total || undefined}
+              tabIndex={props.length + props.offset >= props.total ? -1 : undefined}
               onClick={(e) => {
                 e.preventDefault();
                 if (props.length + props.offset < props.total) props.next();

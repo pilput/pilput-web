@@ -12,3 +12,9 @@ export function getMainNavItems(isLoggedIn: boolean): NavItem[] {
     { name: "Chat", href: "/chat" },
   ];
 }
+
+/** "/" only matches itself; other items also match their sub-pages (e.g. /blog/…). */
+export function isNavItemActive(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}

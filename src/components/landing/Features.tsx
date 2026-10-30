@@ -118,14 +118,14 @@ const Features = () => {
             <Link
               key={feature.id}
               href={feature.href}
-              className="block landing-reveal"
+              className="group/card block rounded-2xl landing-reveal cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               style={{ animationDelay: `${300 + index * 100}ms` }}
             >
               <article
                 className={cn(
-                  "group relative h-[350px] w-full overflow-hidden rounded-2xl",
+                  "group relative h-full min-h-[350px] w-full overflow-hidden rounded-2xl",
                   "border border-border/50 bg-card border-glow-hover",
-                  "transition-all duration-500 ease-out hover:-translate-y-1.5"
+                  "transition-[transform,border-color] duration-300 ease-out hover:-translate-y-1 group-focus-visible/card:border-primary/40"
                 )}
               >
                 {feature.background}
@@ -134,11 +134,11 @@ const Features = () => {
                     <div className="flex items-center justify-between mb-6">
                       <div
                         className={cn(
-                          "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3  border",
+                          "w-12 h-12 rounded-xl flex items-center justify-center border",
                           feature.accentColor
                         )}
                       >
-                        <feature.icon className="w-5 h-5" />
+                        <feature.icon className="w-5 h-5" aria-hidden="true" />
                       </div>
                       <Badge
                         variant="outline"
@@ -147,20 +147,20 @@ const Features = () => {
                         {feature.stats}
                       </Badge>
                     </div>
-                    <h3 className="mb-3 text-xl font-bold tracking-tight sm:text-2xl group-hover:text-primary transition-colors duration-300">
+                    <h3 className="mb-3 text-xl font-bold tracking-tight sm:text-2xl group-hover:text-primary transition-colors duration-200">
                       {feature.title}
                     </h3>
-                    <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                    <p className="text-sm leading-relaxed text-muted-foreground">
                       {feature.description}
                     </p>
                   </div>
 
-                  <div className="mt-8 flex items-center text-sm font-bold text-primary group/btn">
+                  <div className="mt-8 flex items-center text-sm font-bold text-primary">
                     <span className="mr-2 relative overflow-hidden inline-block pb-0.5">
                       {feature.cta}
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover/btn:w-full" />
+                      <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-200 group-hover:scale-x-100" />
                     </span>
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1.5" />
+                    <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
                   </div>
                 </div>
               </article>

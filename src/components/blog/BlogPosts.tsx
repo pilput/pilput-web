@@ -45,19 +45,23 @@ const BlogPosts = ({
   return (
     <div className="flex-1 min-w-0">
       {/* Toolbar */}
-      <div className="sticky top-3 z-20 mb-6">
+      <div className="sticky top-20 z-20 mb-6">
         <div
           className={
             isFeed
-              ? "flex flex-wrap items-center gap-3 border-b border-border/60 pb-4"
+              ? "flex flex-wrap items-center gap-3 border-b border-border/60 bg-background/95 pb-4 backdrop-blur"
               : "flex flex-wrap items-center gap-3 bg-card/90 border border-border/70 rounded-2xl px-5 py-3.5"
           }
         >
-          <div className="flex items-center gap-2 text-sm text-foreground font-bold">
+          <div
+            className="flex items-center gap-2 text-sm text-foreground font-bold"
+            role="status"
+            aria-live="polite"
+          >
             {isFeed ? (
-              <Rss className="w-4 h-4 text-primary" />
+              <Rss className="w-4 h-4 text-primary" aria-hidden="true" />
             ) : (
-              <Newspaper className="w-4 h-4 text-primary" />
+              <Newspaper className="w-4 h-4 text-primary" aria-hidden="true" />
             )}
             {isFeed
               ? total
@@ -72,14 +76,15 @@ const BlogPosts = ({
           </div>
           {searchQuery && (
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-foreground text-xs border border-border/60">
-              <Filter className="w-3 h-3 text-primary" />
+              <Filter className="w-3 h-3 text-primary" aria-hidden="true" />
               Searching &quot;{searchQuery}&quot;
               <button
+                type="button"
                 onClick={onClearSearch}
-                className="text-muted-foreground hover:text-foreground cursor-pointer"
+                className="-my-1 -mr-2 flex size-7 items-center justify-center rounded-full text-muted-foreground hover:bg-background hover:text-foreground transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
                 aria-label="Clear search filter"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </div>
           )}
@@ -109,7 +114,7 @@ const BlogPosts = ({
             className="text-center py-20 px-4 bg-card/50 rounded-2xl border border-dashed border-border/70"
           >
             <div className="w-20 h-20 mx-auto mb-6 bg-muted/50 rounded-full flex items-center justify-center">
-              <FileQuestion className="w-10 h-10 text-muted-foreground/60" />
+              <FileQuestion className="w-10 h-10 text-muted-foreground/60" aria-hidden="true" />
             </div>
             <h3 className="text-xl font-bold text-foreground mb-2">
               {searchQuery
@@ -123,8 +128,9 @@ const BlogPosts = ({
             </p>
             {searchQuery && (
               <button
+                type="button"
                 onClick={onClearSearch}
-                className="mt-6 px-4 py-2 text-sm font-semibold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors cursor-pointer"
+                className="mt-6 min-h-10 px-4 py-2 text-sm font-semibold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
               >
                 Clear filters
               </button>
@@ -134,7 +140,7 @@ const BlogPosts = ({
 
         {/* Skeletons while loading */}
         {isLoading && (
-          <div key="loading" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div key="loading" className="grid grid-cols-1 md:grid-cols-2 gap-6" aria-hidden="true">
             {Array(showFeatured ? 4 : 6)
               .fill(0)
               .map((_, i) => (

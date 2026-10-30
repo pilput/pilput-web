@@ -47,17 +47,17 @@ const CallToAction = () => {
                     key={benefit}
                     className="flex items-center gap-2 rounded-full border border-border/50 bg-background px-3.5 py-1.5 text-sm font-medium text-muted-foreground"
                   >
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     <span>{benefit}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-border/40 bg-background p-6 border-glow-hover transition-all duration-500 sm:p-7">
+            <div className="rounded-2xl border border-border/40 bg-background p-6 sm:p-7">
               <div className="mb-6 flex items-center gap-3.5 border-b border-border/40 pb-5">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
-                  <PenLine className="h-5 w-5" />
+                  <PenLine className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="font-bold tracking-tight text-foreground">
@@ -70,25 +70,25 @@ const CallToAction = () => {
               </div>
 
               <div className="space-y-3">
-                <Link href="/register" className="block">
-                  <Button
-                    size="lg"
-                    className="group h-12 w-full rounded-xl text-sm font-semibold"
-                  >
-                    Start writing
-                    <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Button>
-                </Link>
-                <Link href="/blog" className="block">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="h-12 w-full rounded-xl border-border/70 bg-background text-sm font-semibold transition-all duration-300 hover:border-primary/30 hover:bg-muted/40"
-                  >
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    Browse articles first
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  nativeButton={false}
+                  render={<Link href="/register" />}
+                  className="group h-12 w-full rounded-xl text-sm font-semibold cursor-pointer"
+                >
+                  Start writing
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  nativeButton={false}
+                  render={<Link href="/blog" />}
+                  className="h-12 w-full rounded-xl border-border/70 bg-background text-sm font-semibold cursor-pointer transition-colors duration-200 hover:border-primary/30 hover:bg-muted/40"
+                >
+                  <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Browse articles first
+                </Button>
               </div>
             </div>
           </div>

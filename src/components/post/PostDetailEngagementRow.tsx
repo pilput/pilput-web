@@ -42,7 +42,7 @@ export function PostDetailEngagementRow({
   );
 
   const actionBtnClass =
-    "h-9 min-w-9 shrink-0 rounded-md border border-border/80 bg-background px-2 ";
+    "h-11 min-w-11 sm:h-9 sm:min-w-9 shrink-0 cursor-pointer rounded-md border border-border/80 bg-background px-2 ";
 
   return (
     <div
@@ -111,7 +111,7 @@ export function PostDetailEngagementRow({
           variant="compact"
           className={cn(
             actionBtnClass,
-            "inline-flex min-w-9 items-center justify-center gap-1 px-2",
+            "inline-flex items-center justify-center gap-1 px-2",
           )}
         />
         <ReportPostButton

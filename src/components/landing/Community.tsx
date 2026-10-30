@@ -69,8 +69,9 @@ export default function Community() {
 
         {/* Feed container with smooth transition animation on refresh */}
         <div
+          aria-busy={isRefreshing}
           className={cn(
-            "relative transition-all duration-500 ease-in-out landing-reveal landing-delay-1",
+            "relative transition-[opacity,transform,filter] duration-300 ease-in-out landing-reveal landing-delay-1",
             isRefreshing
               ? "opacity-20 scale-[0.985] blur-xs pointer-events-none"
               : "opacity-100 scale-100 blur-none"
@@ -105,18 +106,19 @@ export default function Community() {
                 "h-4 w-4 transition-transform duration-500",
                 isRefreshing && "animate-spin"
               )}
+              aria-hidden="true"
             />
             Refresh feed
           </Button>
-          <Link href="/blog" className="w-full sm:w-auto">
-            <Button
-              size="lg"
-              className="w-full sm:w-auto h-12 group rounded-xl px-7 gap-2 cursor-pointer"
-            >
-              Explore all articles
-              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
+          <Button
+            size="lg"
+            nativeButton={false}
+            render={<Link href="/blog" />}
+            className="w-full sm:w-auto h-12 group rounded-xl px-7 gap-2 cursor-pointer"
+          >
+            Explore all articles
+            <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+          </Button>
         </div>
       </div>
     </section>
