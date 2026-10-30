@@ -58,7 +58,7 @@ const AboutMe = () => {
                 </p>
                 <div className="flex items-center gap-2 text-muted-foreground mt-2">
                   <MapPin className="h-4 w-4" />
-                  <span>West Sumatera, Indonesia</span>
+                  <span>Indonesia</span>
                 </div>
               </div>
 
